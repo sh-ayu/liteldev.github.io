@@ -1,7 +1,7 @@
 import { BASE } from "./base-path";
 import { Suspense, use, useEffect, useLayoutEffect, useMemo, useRef, type ReactNode } from "react";
 import { useLocation, useNavigationType } from "react-router";
-import { GlobalBar, PaintedBackdrop, SiteFooter, ThemeProvider } from "./kit-ui";
+import { GlobalBar, PaintedBackdrop, SiteFooter, ThemeProvider, useSiteSearch } from "./kit-ui";
 import { ErrorBoundary, ErrorMessage } from "./components/error-boundary";
 import { Header } from "./components/header";
 import { KitExactLink, KitRouterLink, localizeHref } from "./components/router-link";
@@ -203,6 +203,9 @@ function Shell({ initialLocale, children }: { initialLocale?: Locale; children: 
   // the page in each language; for a page that does not exist, the listing
   const missing = usePageStore().peek(pathname)?.kind === "not-found";
   const alternates = localeAlternates(missing ? BASE : pathname);
+  // the search of every LeviMC site (levimc.org, the docs, the tutorials, the FAQ and these pages) in the bar;
+  // "/" stays the shortcut of this site's own filter
+  const siteSearch = useSiteSearch({ locale: chrome, slashKey: false });
   return (
     <LocaleContext value={i18n}>
       <div className="kit-shell" lang={locale.lang}>
@@ -223,7 +226,9 @@ function Shell({ initialLocale, children }: { initialLocale?: Locale; children: 
             current: locale.code,
             linkComponent: KitExactLink,
           }}
+          search={siteSearch.bar}
         />
+        {siteSearch.dialog}
         {children}
         <SiteFooter locale={chrome} siteOrigin={SITE_ORIGIN} linkComponent={KitRouterLink} isAppPath={isAppPath} />
       </div>

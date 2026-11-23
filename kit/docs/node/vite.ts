@@ -57,6 +57,24 @@ function chromeOnlyLocales(site: Pick<SiteData, 'locales'>): string[] {
   return ['x-kit-content', ...UI_LOCALES.filter((u) => !bases.has(u.toLowerCase().split('-')[0]!))];
 }
 
+/**
+ * dist/_kit/search-docs.json (kit 2.27): every document of the site's search indexes, per locale, with its absolute
+ * URL and full text. levimc.org's deploy builds the site-wide search of every LeviMC site from these files
+ * (`scripts/search-index.mjs`); the site's own indexes (assets/search-*.json) stay its fallback.
+ */
+export const SEARCH_DOCS_FILE = '_kit/search-docs.json';
+
+export function searchDocsJson(b: Pick<BuiltSite, 'site' | 'searchDocs'>): Record<string, unknown> {
+  const locales: Record<string, unknown> = {};
+  for (const l of b.site.locales) {
+    locales[l.code] = {
+      lang: l.lang,
+      docs: (b.searchDocs.get(l.code) ?? []).map((d) => ({ url: pathUrl(b.site, d.path), title: d.title, page: d.page, crumbs: d.crumbs, text: d.text })),
+    };
+  }
+  return { title: b.site.title, base: b.site.base, project: b.site.project ?? null, locales };
+}
+
 /** dist/_kit/nav.json: the docs' sections and resources per locale (generates the Doxygen API header, kit 2.19). */
 export function navJson(site: SiteData): Record<string, unknown> {
   const abs = (link: string, external?: boolean) => (external ? link : pathUrl(site, link));
@@ -331,6 +349,7 @@ export function kitDocs(userConfig: DocsConfig, options: KitDocsPluginOptions = 
       // (localeFirst: at the host root, written in writeBundle)
       if (!cfg.localeFirst) this.emitFile({ type: 'asset', fileName: '.nojekyll', source: '' });
       this.emitFile({ type: 'asset', fileName: '_kit/nav.json', source: JSON.stringify(navJson(b.site), null, 2) + '\n' });
+      this.emitFile({ type: 'asset', fileName: SEARCH_DOCS_FILE, source: JSON.stringify(searchDocsJson(b)) });
       // moved pages: a redirect page at each old URL
       // the route paths served under base (with localeFirst: the default locale's), relative to base
       const routeFiles = new Set(

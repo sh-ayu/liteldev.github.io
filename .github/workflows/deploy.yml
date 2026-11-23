@@ -133,6 +133,10 @@ jobs:
       # is, without its 404.html (the site's own forwards and shows the 404); a file both publish fails the build.
       - run: node scripts/docs-sites.mjs merge dist
 
+      # The site-wide search: one index per language over every page above (levimc.org, the blog, Mods, the
+      # tutorials, the FAQ, every project's docs) → dist/_search/, which the search of every LeviMC site loads.
+      - run: node scripts/search-index.mjs dist
+
       # Internal links, redirect-needing links and #anchors (GitHub Pages semantics).
       - run: npm run linkcheck
 

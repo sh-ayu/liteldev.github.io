@@ -1,4 +1,7 @@
 // levimc-kit — shared React components for every LeviMC site.
+export { useSiteSearch, type UseSiteSearchOptions } from './SiteSearch';
+export { SearchDialog, type SearchDialogProps, type SearchStrings } from './SearchDialog';
+export { loadSiteSearch, loadSearchIndex, preloadSiteSearch, searchLanguageOf, searchSiteOf, SITE_SEARCH_MANIFEST, type SearchHit, type SearchIndex } from './site-search';
 export { GlobalBar, GlobalNavList, BrandMark, type GlobalBarProps, type GlobalBarLanguages, type GlobalNavListProps } from './GlobalBar';
 export { SiteFooter, type SiteFooterProps } from './SiteFooter';
 export { ThemeSwitcher, ThemeToggle, type ThemeSwitcherProps, type ThemeToggleProps } from './ThemeToggle';

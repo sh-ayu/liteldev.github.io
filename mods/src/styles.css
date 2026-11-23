@@ -5,6 +5,8 @@
  */
 @import "tailwindcss" source(none);
 @import "../kit/theme/index.css";
+/* the site-wide search dialog (the bar's search button, Ctrl/⌘+K) */
+@import "../kit/theme/search.css";
 @source "../kit/components";
 @source "./";
 /* README footnote headings use GitHub's `sr-only` class. */

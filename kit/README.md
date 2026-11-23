@@ -966,6 +966,25 @@ External link verdicts: `ok`, `ok-redirect` (`/releases/latest` and allow-listed
 
 ## Changelog
 
+### 2.27.0
+
+**One search for every LeviMC site.** The search of a docs site found only that site's pages, and levimc.org, the blog
+and LeviMC Mods had no search at all. Now levimc.org's deploy indexes every page it publishes — levimc.org, the blog,
+Mods, the tutorials, the FAQ and each project's docs — into one index per language (`scripts/search-index.mjs` →
+`/_search/manifest.json` and `/_search/<language>.<hash>.json`), and every site's search searches that.
+* Docs engine: each build also writes `_kit/search-docs.json` (under base): the documents of its search indexes with
+  their absolute URLs and full text, which the site-wide index takes as they are (`searchExclude` applied). The
+  site's own `assets/search-*.json` stay its fallback (the dev server, a site not deployed with levimc.org).
+* Components: `SearchDialog` (the docs' search dialog, now shared; styles in `theme/search.css`), `useSiteSearch` (the
+  bar's search button, Ctrl/⌘+K and "/" for apps that are not docs sites) and `site-search.ts` (`loadSiteSearch`,
+  `searchLanguageOf` …). `useFocusTrap` moved to `components/focus.ts`. A result shows its site first in its
+  breadcrumbs, and results of the site the reader is on rank a little higher.
+* The index of a language holds its pages, the pages that have one URL in one language (blog posts), and the English
+  pages of every site with no page in that language (LeviLauncher's Japanese readers find the LeviLamina docs).
+* The search field reads "Search LeviMC…" (搜索 LeviMC…) instead of "Search the docs…".
+* **Migration**: an app with its own stylesheet that shows the dialog imports `kit/theme/search.css` (a docs site
+  needs nothing: its `styles.css` does); apps that use `useSiteSearch` depend on `minisearch`.
+
 ### 2.26.1
 
 * **Korean and Japanese heading ids are composed (NFC).** The VitePress slug (`slug: 'vitepress'`) decomposes the

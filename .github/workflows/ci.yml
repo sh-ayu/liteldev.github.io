@@ -79,7 +79,7 @@ jobs:
       # the docs (docs/README.md): the tutorials, the FAQ and every docs/<Project>/ root, with this checkout's kit; then the
       # merge into dist/ (a file two builds publish fails). The link check of the whole site runs in the deploy.
       - name: docs
-        run: node scripts/docs-sites.mjs build && node scripts/docs-sites.mjs merge dist
+        run: node scripts/docs-sites.mjs build && node scripts/docs-sites.mjs merge dist && node scripts/search-index.mjs dist
 
   kit:
     needs: changes

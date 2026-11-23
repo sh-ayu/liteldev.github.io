@@ -31,6 +31,11 @@ export interface BuiltSite {
   pages: Map<string, BuiltPage>;
   /** locale → serialised MiniSearch index */
   searchIndexes: Map<string, string>;
+  /**
+   * The documents of each locale's index, with their full text (kit 2.27): what levimc.org's site-wide search
+   * (`scripts/search-index.mjs`) indexes with every other LeviMC site's pages. Paths are site paths (see pathUrl).
+   */
+  searchDocs: Map<string, SearchDoc[]>;
   assets: Map<string, AssetRef>;
   warnings: string[];
   tokenCss: string;
@@ -239,9 +244,11 @@ export async function buildSite(cfg: ResolvedConfig, opts: { changed?: Set<strin
 
   // ---- search (one MiniSearch index per locale)
   const searchIndexes = new Map<string, string>();
+  const searchDocs = new Map<string, SearchDoc[]>();
   const excluded = cfg.searchExclude?.length ? picomatch(cfg.searchExclude) : null;
   for (const loc of cfg.locales) {
     const ms = new MiniSearch<SearchDoc>(searchOptions);
+    const docs: SearchDoc[] = [];
     let id = 0;
     for (const r of scan.routes.filter((x) => x.locale === loc.code)) {
       if (excluded?.(r.key)) continue;
@@ -249,20 +256,23 @@ export async function buildSite(cfg: ResolvedConfig, opts: { changed?: Set<strin
       const pageTitle = page.route.title;
       const crumbs = page.route.sidebar ? (sidebars[page.route.sidebar]?.title ?? '') : '';
       for (const s of page.render.sections) {
-        ms.add({
+        const doc: SearchDoc = {
           id: id++,
           title: s.title || pageTitle,
           page: pageTitle,
           crumbs,
           path: r.path + (s.id ? `#${s.id}` : ''),
           text: s.text.slice(0, 4000),
-        });
+        };
+        ms.add(doc);
+        docs.push(doc);
       }
     }
     // keep stored snippet text short; the full text is in the inverted index
     const json = JSON.parse(JSON.stringify(ms)) as { storedFields: Record<string, { text?: string }> };
     for (const v of Object.values(json.storedFields)) if (v.text && v.text.length > SNIPPET_STORE_CHARS) v.text = v.text.slice(0, SNIPPET_STORE_CHARS);
     searchIndexes.set(loc.code, JSON.stringify(json));
+    searchDocs.set(loc.code, docs);
   }
 
   const site: SiteData = {
@@ -297,7 +307,7 @@ export async function buildSite(cfg: ResolvedConfig, opts: { changed?: Set<strin
     header: { tabsRow: cfg.header?.tabsRow ?? 'auto' },
   };
 
-  return { cfg, scan, site, routes, pages, searchIndexes, assets, warnings, tokenCss: styles.css() };
+  return { cfg, scan, site, routes, pages, searchIndexes, searchDocs, assets, warnings, tokenCss: styles.css() };
 }
 
 export function assetUrl(cfg: ResolvedConfig, src: string): string {

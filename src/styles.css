@@ -3,6 +3,8 @@
 @import "../kit/theme/tailwind.css";
 /* the themed 404 card comes from the kit's docs layout */
 @import "../kit/docs/app/docs.css";
+/* the site-wide search dialog */
+@import "../kit/theme/search.css";
 @source "./";
 
 @layer components {

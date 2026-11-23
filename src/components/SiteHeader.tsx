@@ -1,5 +1,5 @@
-import { Link, useLocation } from 'react-router';
-import { GlobalBar, type LinkLikeProps, type SiteId } from '../../kit/components';
+import { Link, useLocation, useNavigate } from 'react-router';
+import { GlobalBar, useSiteSearch, type LinkLikeProps, type SiteId } from '../../kit/components';
 import { useI18n, LOCALES } from '../i18n';
 import { isOtherSitePath } from '../other-sites';
 import { localeAlternates, localizePath, SITE_ORIGIN, type RouteId } from '../routes';
@@ -56,6 +56,17 @@ export default function SiteHeader({ current }: { current: RouteId | null }) {
   const { locale, chrome } = useI18n();
   const { pathname } = useLocation();
   const alternates = localeAlternates(pathname);
+  const navigate = useNavigate();
+  // the site-wide search (every LeviMC site: these pages, the blog, Mods, the tutorials, the FAQ, every project's
+  // docs): the app's own pages open inside the app, the rest (and a #section, which the app does not scroll to)
+  // load in full
+  const search = useSiteSearch({
+    locale: chrome,
+    onNavigate: (url) => {
+      if (isAppPath(url) && !url.includes('#')) navigate(url);
+      else window.location.href = url;
+    },
+  });
   const options = LOCALES.map(({ code, label, lang }) => ({
     code,
     label,
@@ -65,15 +76,19 @@ export default function SiteHeader({ current }: { current: RouteId | null }) {
   }));
 
   return (
-    <GlobalBar
-      current={current ? BAR_TAB[current] : undefined}
-      locale={chrome}
-      sticky
-      siteOrigin={SITE_ORIGIN}
-      linkComponent={RouterLink}
-      // every same-site link goes through RouterLink, which adds the locale (the other builds' too)
-      isAppPath={() => true}
-      languages={{ options, current: locale, linkComponent: ExactLink }}
-    />
+    <>
+      <GlobalBar
+        current={current ? BAR_TAB[current] : undefined}
+        locale={chrome}
+        sticky
+        siteOrigin={SITE_ORIGIN}
+        linkComponent={RouterLink}
+        // every same-site link goes through RouterLink, which adds the locale (the other builds' too)
+        isAppPath={() => true}
+        languages={{ options, current: locale, linkComponent: ExactLink }}
+        search={search.bar}
+      />
+      {search.dialog}
+    </>
   );
 }
