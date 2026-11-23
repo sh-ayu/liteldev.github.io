@@ -174,6 +174,7 @@ xianyubb/meshgate-agent
 xianyubb/org_out
 xianyubb/Organization
 xianyubb/Strengthen
+XiaViolet/YsmBedrock
 yhzx233/CustomMap
 yhzx233/FixChunkLeak
 YoumiHa/Lip-Sese
