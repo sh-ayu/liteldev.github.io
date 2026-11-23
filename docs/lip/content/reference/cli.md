@@ -52,8 +52,6 @@ Commands for developing packages:
 | Command | Does |
 | --- | --- |
 | [`lip pkg init`](commands/pkg_init.md) | Creates a `lip.toml` for a new package. |
-| [`lip pkg pack`](commands/pkg_pack.md) | Packs a directory into a ZIP archive. |
-| [`lip pkg view`](commands/pkg_view.md) | Shows the package file and the versions of a package, as JSON. |
 | [`lip pkg migrate`](commands/pkg_migrate.md) | Migrates the `tooth.json` in the current directory to `lip.toml`. |
 
 A command for lip itself:
@@ -114,7 +112,7 @@ The **workspace** of every command is the current working directory. A relative 
 
 ## Output
 
-- A **result** is the data a command is asked for. It goes to standard output. Only `list`, `pkg view`, `config get`, `config list`, `daemon status` and `self-update --check` have one.
+- A **result** is the data a command is asked for. It goes to standard output. Only `list`, `config get`, `config list`, `daemon status` and `self-update --check` have one.
 - A **message** is everything else: progress, information, warnings, errors, the final success line. It goes to standard error. Its wording may change between versions; do not parse it.
 - Help goes to standard output.
 
@@ -131,7 +129,7 @@ These commands take `--json`. Standard output then receives only the result, as 
 | [`lip config list --json`](commands/config.md#output) | An object that maps each key to its value, or `null`. |
 | [`lip daemon status --json`](commands/daemon.md#output) | `{ "running": false }`, or `{ "running": true, "version": "...", "pid": ... }`. |
 
-[`lip pkg view`](commands/pkg_view.md) always writes JSON and has no `--json` option. Without `--json`, the layout of a result is for people and may change.
+Without `--json`, the layout of a result is for people and may change.
 
 ## Exit status
 
@@ -146,7 +144,7 @@ A command that fails for another reason than a usage error may write a **failure
 
 ## Package arguments
 
-`install`, `update` and `pkg view` take **package arguments**. lip classifies each one by the first rule that applies:
+`install` and `update` take **package arguments**. lip classifies each one by the first rule that applies:
 
 1. **URL.** An argument that starts with `https://` is the URL of a ZIP archive. Any other scheme followed by `://`, such as `http://` or `file://`, is invalid.
 2. **Local path.** Take the argument without the part from its last `#` on, or the whole argument when it names an existing file or directory. It is a local path when that part

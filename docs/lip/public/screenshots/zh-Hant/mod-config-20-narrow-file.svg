@@ -35,9 +35,8 @@
 <text x="229" y="162.5" textLength="72" lengthAdjust="spacingAndGlyphs" fill="#9ad17b">[x] true</text>
 <text x="44.5" y="182.5" text-anchor="middle">≡</text>
 <text x="44.5" y="202.5" text-anchor="middle" fill="#ffffff">≈</text>
-<text x="44.5" y="222.5" text-anchor="middle">□</text>
-<text x="44.5" y="242.5" text-anchor="middle">†</text>
-<text x="40" y="262.5" textLength="9" lengthAdjust="spacingAndGlyphs">*</text>
+<text x="44.5" y="222.5" text-anchor="middle">†</text>
+<text x="40" y="242.5" textLength="9" lengthAdjust="spacingAndGlyphs">*</text>
 <text x="94 112 130 148 166 184 202 220 238 256 274 292" y="382.5" text-anchor="middle" fill="#8b95a7">此版本號由模組自行維護。</text>
 <text x="85" y="402.5" textLength="9" lengthAdjust="spacingAndGlyphs" fill="#8b95a7">[</text>
 <text x="112 130" y="402.5" text-anchor="middle" fill="#8b95a7">儲存</text>

@@ -66,7 +66,7 @@ In the interface, no: it asks you to stop the server first. With the commands, y
 
 ### Can I run several servers?
 
-Yes, each in a folder of its own, with its own ports in `server.properties`. One folder runs one server at a time. The interface keeps a list of your server folders on the [Workspaces](https://levimc.org/lip/interface/workspaces.html) page.
+Yes, each in a folder of its own, with its own ports in `server.properties`. One folder runs one server at a time. The interface keeps a list of your server folders in the [workspace picker](https://levimc.org/lip/interface/workspaces.html), opened from the workspace at the top of the screen.
 
 ### Can two people manage one server?
 
@@ -82,7 +82,7 @@ Run `lip self-update`, or use "Check for updates" on the Settings page. `lip sel
 
 ### How do I change the Minecraft version of my server?
 
-Run `lip setup --game <version>` again in the server folder, or use the Workspaces page of the interface. Mods move to versions that work with the new game. See [`lip setup`](https://levimc.org/lip/reference/commands/setup.html).
+Run `lip setup --game <version>` again in the server folder, or use **Change versions…** on the Server page of the interface. Mods move to versions that work with the new game. See [`lip setup`](https://levimc.org/lip/reference/commands/setup.html).
 
 ## Files
 
@@ -127,7 +127,7 @@ Stop the server and move or copy the whole folder, `.lip` included. Then run lip
 
 ### Where do packages come from?
 
-From public git repositories, mostly on GitHub. There is no central registry. A package is named by the address of its repository, such as `github.com/LiteLDev/LegacyScriptEngine`. The Get mods page of the interface lists the mods of [levimc.org](https://levimc.org). See [Name a package](https://levimc.org/lip/guides/managing_packages.html#name-a-package).
+From public git repositories, mostly on GitHub. There is no central registry. A package is named by the address of its repository, such as `github.com/LiteLDev/LegacyScriptEngine`. The Marketplace page of the interface lists the mods of [levimc.org](https://levimc.org). See [Name a package](https://levimc.org/lip/guides/managing_packages.html#name-a-package).
 
 ### How do I install a package from my disk?
 

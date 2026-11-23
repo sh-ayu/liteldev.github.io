@@ -26,7 +26,7 @@ LSE 为每种语言提供一个包，称为**变体**。本教程使用 JavaScri
 
 3. 运行 `lip list`。你应该看到 `github.com/LiteLDev/LegacyScriptEngine#quickjs` 及其版本，下面是它的依赖。
 
-你也可以在 `lip` 的「获取模组」页安装它，见[给服务器安装模组](../server/install-mods.md)。
+你也可以在 `lip` 的「市场」页安装它，见[给服务器安装模组](../server/install-mods.md)。
 
 ## 2. 创建插件文件夹
 

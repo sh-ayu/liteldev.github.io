@@ -19,7 +19,7 @@ Two settings in `server.properties`, in the folder of the server, decide which p
 
 So with the defaults, the rule is simple: **open port 19132, for both TCP and UDP.** The setting `transport` says which transport the server uses. `server-udp-ports` and the NetherNet patch of LeviLamina in steps 5 and 6 only matter when it is `nethernet`; with RakNet, the server uses `server-port` alone.
 
-To change `server.properties`, stop the server first, then edit the file with a text editor, or on the **Game config** page of `lip`.
+To change `server.properties`, stop the server first, then edit the file with a text editor, or on the **Game Config** page of `lip`.
 
 ## 1. Find the address of the server
 
@@ -65,7 +65,7 @@ On Linux with ufw: `sudo ufw allow 19132`.
 On the same network, the server may also show up under **Friends** as a LAN game.
 
 ::: tip The allowlist
-If `allow-list` is `true` in `server.properties`, only players on the allowlist can join. Add your friends with the server command `allowlist add <gamertag>`, or on the **Allowlist** tab of the **Game config** page of `lip`.
+If `allow-list` is `true` in `server.properties`, only players on the allowlist can join. Add your friends with the server command `allowlist add <gamertag>`, or on the **Allowlist** tab of the **Game Config** page of `lip`.
 :::
 
 ## 4. Join over the internet: a router with a public IP
@@ -134,6 +134,6 @@ When your connection has no public IP, a tunnel such as frp forwards a port of a
 ## Next steps
 
 - Give your players something to do: [Install mods on your server](install-mods.md).
-- Change the server name, the game mode, the allowlist and the permissions: [Game config](https://levimc.org/lip/interface/game_config.html).
+- Change the server name, the game mode, the allowlist and the permissions: [Game Config](https://levimc.org/lip/interface/game_config.html).
 - Keep the server running without a terminal: [A server from the command line](command-line.md#_4-keep-it-running-without-a-terminal).
 - Error codes of LeviLamina: [Troubleshooting](https://levimc.org/faq/server/levilamina/errors/).

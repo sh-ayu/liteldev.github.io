@@ -10,8 +10,8 @@ It takes about half an hour, most of it waiting for the release build.
 - `lip` and a server to test on: [Your first server](../server/first-server.md). This tutorial uses `D:\servers\survival`.
 - Git, signed in to GitHub so that you can push.
 
-::: warning lip 0.41 needed
-The `lip pkg …` commands of this tutorial come with lip 0.41 (lip 0.40 does not have them). Check with `lip -v`, and install the [latest release of lip](https://github.com/LiteLDev/lip/releases/latest) if needed.
+::: warning The latest lip needed
+The **Edit lip.toml** form of the **Develop Tools** page, which this tutorial uses, comes with the first release of lip after 0.41.1. Check with `lip -v`, and install the [latest release of lip](https://github.com/LiteLDev/lip/releases/latest) if needed.
 :::
 
 A **package** is anything `lip` can install. Its **package id** is the address of its repository without `https://`: `github.com/<you>/my-mod`. A **version** is a Git tag `v` + the version, such as `v0.1.0`, at which `lip.toml` says the same version. There is no upload step: publishing is pushing that tag.
@@ -45,18 +45,16 @@ Every string in `lip.toml` is a template. `{{version}}` becomes the `version` ab
 :::
 
 ::: details A repository without lip.toml, or with tooth.json
-For a repository that is not from the template, run `lip pkg init` in its root: it asks for the package id and writes a minimal `lip.toml` to fill in as above. A `tooth.json` from lip v0.x is converted with `lip pkg migrate`; see [Migrating packages](https://levimc.org/lip/authors/migrating_packages.html).
+For a repository that is not from the template, run `lip pkg init` in its root: it asks for the package id and writes a minimal `lip.toml` to fill in as above. Or start `lip` in its root and choose **Create lip.toml** on the **Develop Tools** page: the same form as in step 2, which writes the file when you save it. A `tooth.json` from lip v0.x is converted with `lip pkg migrate`; see [Migrating packages](https://levimc.org/lip/authors/migrating_packages.html).
 :::
 
 ## 2. Check that lip reads it
 
-In the repository folder, run:
-
-```shell
-lip pkg view .
-```
-
-You should see JSON: under `manifest`, your `id` and `version`, and the `urls` with the templates filled in, such as `https://github.com/<you>/my-mod/releases/download/v0.1.0/my-mod-server-windows-x64.zip`. Check that these names match your repository. If something is wrong in the file, `lip` says what instead.
+1. Start `lip` in the repository folder. The folder becomes the workspace of `lip`, which the top bar names.
+2. In the sidebar, open **Develop Tools**, and press `Enter` on **Edit lip.toml**.
+3. `lip` shows `lip.toml` in a form that checks every value as you type, and the whole file as `lip` reads it, with the templates filled in. It also looks up your dependencies, such as LeviLamina, online. You should see **✓ Every value is valid.** at the top. A value marked **✗** says what is wrong with it: fix it in the form and save with `Ctrl+S`, or fix it in the file. If the file is not TOML, or a key holds a value of the wrong type, `lip` says **lip.toml cannot be edited here. Fix it by hand first:** and what is wrong.
+4. Check that the names in each **URL** match your repository and the ZIP files that the release workflow uploads (step 1).
+5. Press `Esc` to close the form.
 
 ## 3. Write the changelog
 
@@ -92,34 +90,34 @@ The tag is `v` followed by a full [semantic version](https://semver.org/): `v0.1
 
 ## 5. Check that lip sees the version
 
-From any folder, run:
-
-```shell
-lip pkg view github.com/<you>/my-mod
-```
-
-You should see `"versions": ["0.1.0"]` at the end, and under `manifest` the `lip.toml` you tagged.
-
-## 6. Install it like your users will
-
 1. Stop your server. If the mod is still in `mods\my-mod` from the previous tutorial, delete that folder, so that what you test is only what `lip` installs.
-2. In the server folder, install your package:
+2. In the server folder, ask `lip` what it would install, without changing anything:
 
    ```shell
    cd D:\servers\survival
+   lip install github.com/<you>/my-mod --dry-run
+   ```
+
+   You should see lines that start with `Dry run:`, one of which would install your mod at version `0.1.0`. If `lip` finds no version, check that the tag and `version` match (step 4).
+
+## 6. Install it like your users will
+
+1. In the server folder, install your package:
+
+   ```shell
    lip install github.com/<you>/my-mod
    lip list
    ```
 
    `lip list` should show `github.com/<you>/my-mod@0.1.0`.
 
-3. Start the server. You should see `Hello from my first mod!` again, now from the files `lip` downloaded.
+2. Start the server. You should see `Hello from my first mod!` again, now from the files `lip` downloaded.
 
 Players install the client build of the same package with LeviLauncher, once the mod is listed (step 7): see [Play with mods on Windows](../play/play-with-mods.md).
 
 ## 7. Get listed on LeviMC Mods
 
-[LeviMC Mods](https://levimc.org/mods/) is the catalog that `lip`'s **Get mods** page and LeviLauncher show. It is built from a list of repositories, [`mods/repos.txt`](https://github.com/LiteLDev/liteldev.github.io/blob/main/mods/repos.txt) in the levimc.org repository.
+[LeviMC Mods](https://levimc.org/mods/) is the catalog that `lip`'s **Marketplace** page and LeviLauncher show. It is built from a list of repositories, [`mods/repos.txt`](https://github.com/LiteLDev/liteldev.github.io/blob/main/mods/repos.txt) in the levimc.org repository.
 
 You usually do not need to do anything: every two hours a bot searches GitHub for repositories with a `lip.toml` and a version tag that `lip` can read, and opens a pull request that adds them to the list. Once a maintainer merges it, the mod appears at the next hourly build.
 
@@ -148,7 +146,7 @@ You should then find your mod at `https://levimc.org/mods/github.com/<you>/my-mo
 ## Next steps
 
 - Every field of `lip.toml`: dependencies, variants, files to keep or delete, hooks: [lip.toml](https://levimc.org/lip/concepts/lip_toml.html).
-- The commands for package authors: [`lip pkg init`](https://levimc.org/lip/reference/commands/pkg_init.html), [`lip pkg pack`](https://levimc.org/lip/reference/commands/pkg_pack.html), [`lip pkg view`](https://levimc.org/lip/reference/commands/pkg_view.html), [`lip pkg migrate`](https://levimc.org/lip/reference/commands/pkg_migrate.html).
+- The commands for package authors: [`lip pkg init`](https://levimc.org/lip/reference/commands/pkg_init.html), [`lip pkg migrate`](https://levimc.org/lip/reference/commands/pkg_migrate.html).
 - Install a branch or a commit before you release it: [Managing packages](https://levimc.org/lip/guides/managing_packages.html).
-- The same tools in the interface of `lip`: [Tools](https://levimc.org/lip/interface/tools.html).
+- Create and edit `lip.toml`, and migrate a `tooth.json`, in the interface of `lip`: [Develop Tools](https://levimc.org/lip/interface/tools.html).
 - How servers install your package: [Install mods on your server](../server/install-mods.md).

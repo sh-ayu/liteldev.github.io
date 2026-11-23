@@ -62,6 +62,8 @@ lip 从 lip 仓库 `https://github.com/LiteLDev/lip.git` 的标签读取 [lip �
 
 如果这次更新替换了 lip 或启动了安装程序，执行它的[守护进程](daemon.md)会在空闲后退出，这样下一条命令就会启动新版本。它还在运行托管服务器时会继续运行；参见[更新之后](daemon.md#更新之后)。
 
+正在运行的界面仍然是旧版本。在界面的[设置](../../interface/settings.md)页用**安装更新**装好更新后，界面会提示你退出 lip 再重新运行（如果启动的是安装程序，就提示你退出 lip 让安装程序完成），并给出**退出 lip**和**以后再说**两个按钮。界面结束后，lip 会在标准错误写一行，例如 `lip 已更新到 1.1.0。请再次运行 lip 以启动新版本。`
+
 ### 网络
 
 设置了 [`github_proxy`](../configuration.md#github-proxy) 时，标签和更新文件都通过它获取，代理失败时再直接连接 GitHub。lip 不读取 `SHA256SUMS`，也不访问 GitHub API。代理有可能改变 lip 安装的内容，所以请使用你信任的代理。

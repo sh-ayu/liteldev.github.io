@@ -199,22 +199,26 @@ lip 可以更新自己。
 
    如果 lip 是用便携版压缩包安装的，它的文件会立即被替换：
 
-   ![“安装更新”对话框写着“lip 0.42.0 已安装。请重启 lip 以使用新版本。”](/screenshots/zh-Hans/settings-20-installed.svg)
+   ![“安装更新”对话框写着“lip 0.42.0 已安装。请退出 lip，然后再次运行 lip 以使用新版本。”，有“退出 lip”和“以后再说”两个按钮。](/screenshots/zh-Hans/settings-20-installed.svg)
 
    如果 lip 是用 Windows 安装程序安装的，lip 会启动新版本的安装程序。安装程序要修改程序文件，所以 Windows 会请求你的许可：
 
-   ![“安装更新”对话框写着“lip 0.42.0 的安装程序正在运行。请退出 lip 以完成安装。”](/screenshots/zh-Hans/settings-22-installer.svg)
+   ![“安装更新”对话框写着“lip 0.42.0 的安装程序正在运行。请退出 lip 以完成安装，然后再次运行 lip 以使用新版本。”，有“退出 lip”和“以后再说”两个按钮。](/screenshots/zh-Hans/settings-22-installer.svg)
+
+3. 选择**退出 lip** 立即退出；只有服务器正在运行时，lip 才会先问你。**以后再说**关闭对话框，lip 继续运行。
 
 ### 安装之后
 
-屏幕上的 lip 仍然是旧版本。这一行会提醒你：
+在你再次运行 lip 之前，屏幕上的 lip 仍然是旧版本。这一行会提醒你：
 
 ![“检查更新”一行显示“0.42.0 · 请重启 lip”。“安装更新”一行已经消失。](/screenshots/zh-Hans/settings-21-restart-lip.svg)
 
-- **请重启 lip**：退出 lip，再重新启动。这时运行的就是新版本。
-- **安装程序运行中**：退出 lip，让安装程序替换它；然后重新启动 lip。
+- **请重启 lip**：退出 lip，再次运行它。这时运行的就是新版本。
+- **安装程序运行中**：退出 lip，让安装程序替换它；然后再次运行 lip。
 
 在那之前，在**检查更新**上按 `Enter` 只会再次显示同一条消息，不会重新检查。
+
+界面结束时，lip 还会在终端里写下接下来要做什么，比如“lip 已更新到 0.42.0。请再次运行 lip 以启动新版本。”无论界面怎样结束都会写：你退出时，或者 Windows 安装程序为了替换 lip 而关闭它时。
 
 对应的命令是 `lip self-update --check` 和 `lip self-update`。更新的完整说明见 [`lip self-update`](../reference/commands/self_update.md)。
 

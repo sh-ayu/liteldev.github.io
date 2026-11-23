@@ -10,8 +10,8 @@
 - `lip` 和一个用于测试的服务器：见[开你的第一个服务器](../server/first-server.md)。本教程使用 `D:\servers\survival`。
 - 已登录 GitHub、可以推送的 Git。
 
-::: warning 需要 lip 0.41
-本教程的 `lip pkg …` 命令随 lip 0.41 提供（lip 0.40 没有这些命令）。用 `lip -v` 检查版本，需要时从 [lip 的最新发行版](https://github.com/LiteLDev/lip/releases/latest)安装。
+::: warning 需要最新的 lip
+本教程用到的「开发工具」页面上的**编辑 lip.toml** 表单，随 lip 0.41.1 之后的第一个发行版提供。用 `lip -v` 检查版本，需要时从 [lip 的最新发行版](https://github.com/LiteLDev/lip/releases/latest)安装。
 :::
 
 **包**是 `lip` 能安装的任何东西。它的**包 ID** 是仓库地址去掉 `https://`：`github.com/<you>/my-mod`。一个**版本**就是一个名为 `v` 加版本号的 Git 标签，例如 `v0.1.0`，并且该标签处的 `lip.toml` 写着同样的版本。没有上传这一步：发布就是推送这个标签。
@@ -45,18 +45,16 @@ logo = "https://avatars.githubusercontent.com/u/<your user id>"
 :::
 
 ::: details 没有 lip.toml 或只有 tooth.json 的仓库
-对于不是由模板创建的仓库，在其根目录运行 `lip pkg init`：它会询问包 ID，并写入一个最小的 `lip.toml`，再按上面的方式填写。lip v0.x 的 `tooth.json` 用 `lip pkg migrate` 转换；见[迁移包](https://levimc.org/zh-Hans/lip/authors/migrating_packages.html)。
+对于不是由模板创建的仓库，在其根目录运行 `lip pkg init`：它会询问包 ID，并写入一个最小的 `lip.toml`，再按上面的方式填写。也可以在其根目录启动 `lip`，在「开发工具」页面选**创建 lip.toml**：它和第 2 步是同一个表单，保存时写入文件。lip v0.x 的 `tooth.json` 用 `lip pkg migrate` 转换；见[迁移包](https://levimc.org/zh-Hans/lip/authors/migrating_packages.html)。
 :::
 
 ## 2. 确认 lip 能读取它
 
-在仓库文件夹中运行：
-
-```shell
-lip pkg view .
-```
-
-你应该看到一段 JSON：`manifest` 下是你的 `id` 和 `version`，以及已填好模板的 `urls`，例如 `https://github.com/<you>/my-mod/releases/download/v0.1.0/my-mod-server-windows-x64.zip`。检查这些名字与你的仓库一致。如果文件有错，`lip` 会告诉你哪里不对。
+1. 在仓库文件夹中启动 `lip`。这个文件夹成为 `lip` 的工作区，顶栏会显示它。
+2. 在侧边栏中打开「开发工具」，在**编辑 lip.toml** 上按 `Enter`。
+3. `lip` 用表单显示 `lip.toml`：输入时检查每一项，并按 `lip` 读取的方式、在填好模板后检查整个文件。它还会联网查找你的依赖，例如 LeviLamina。你应该在顶部看到 **✓ 所有内容均有效。** 标记为 **✗** 的项会说明哪里不对：在表单里修正并按 `Ctrl+S` 保存，或者直接修改文件。如果文件不是 TOML，或者某个键的值类型不对，`lip` 会显示**无法在这里编辑 lip.toml。请先手动修正：**以及问题所在。
+4. 检查每个**网址**中的名字与你的仓库、与发布工作流上传的 ZIP 文件（第 1 步）一致。
+5. 按 `Esc` 关闭表单。
 
 ## 3. 编写更新日志
 
@@ -92,34 +90,34 @@ git push
 
 ## 5. 确认 lip 能看到这个版本
 
-在任意文件夹中运行：
-
-```shell
-lip pkg view github.com/<you>/my-mod
-```
-
-你应该在末尾看到 `"versions": ["0.1.0"]`，`manifest` 下是你打标签的那个 `lip.toml`。
-
-## 6. 像用户一样安装它
-
 1. 停止服务器。如果上一个教程留下的 `mods\my-mod` 还在，请删除这个文件夹，确保你测试的只是 `lip` 安装的内容。
-2. 在服务器文件夹中安装你的包：
+2. 在服务器文件夹中问 `lip` 它会安装什么，不做任何改动：
 
    ```shell
    cd D:\servers\survival
+   lip install github.com/<you>/my-mod --dry-run
+   ```
+
+   你应该看到几行以 `Dry run:` 开头的文字，其中一行说它将安装你的模组的 `0.1.0` 版本。如果 `lip` 找不到任何版本，检查标签和 `version` 是否一致（第 4 步）。
+
+## 6. 像用户一样安装它
+
+1. 在服务器文件夹中安装你的包：
+
+   ```shell
    lip install github.com/<you>/my-mod
    lip list
    ```
 
    `lip list` 应该显示 `github.com/<you>/my-mod@0.1.0`。
 
-3. 启动服务器。你应该再次看到 `Hello from my first mod!`，这次来自 `lip` 下载的文件。
+2. 启动服务器。你应该再次看到 `Hello from my first mod!`，这次来自 `lip` 下载的文件。
 
 模组上架后（第 7 步），玩家可以用 LeviLauncher 安装同一个包的客户端构建：见[在 Windows 上玩模组](../play/play-with-mods.md)。
 
 ## 7. 上架 LeviMC 模组
 
-[LeviMC 模组](https://levimc.org/zh-Hans/mods/)是 `lip` 的「获取模组」页和 LeviLauncher 显示的目录。它由一份仓库列表构建，即 levimc.org 仓库中的 [`mods/repos.txt`](https://github.com/LiteLDev/liteldev.github.io/blob/main/mods/repos.txt)。
+[LeviMC 模组](https://levimc.org/zh-Hans/mods/)是 `lip` 的「市场」页和 LeviLauncher 显示的目录。它由一份仓库列表构建，即 levimc.org 仓库中的 [`mods/repos.txt`](https://github.com/LiteLDev/liteldev.github.io/blob/main/mods/repos.txt)。
 
 通常你什么都不用做：每两小时会有一个机器人在 GitHub 上搜索带有 `lip.toml` 和 `lip` 能读取的版本标签的仓库，并发起拉取请求把它们加入列表。维护者合并后，模组会在下一次每小时构建中出现。
 
@@ -148,7 +146,7 @@ lip pkg view github.com/<you>/my-mod
 ## 下一步
 
 - `lip.toml` 的所有字段：依赖、变体、要保留或删除的文件、钩子：[lip.toml](https://levimc.org/zh-Hans/lip/concepts/lip_toml.html)。
-- 包作者使用的命令：[`lip pkg init`](https://levimc.org/zh-Hans/lip/reference/commands/pkg_init.html)、[`lip pkg pack`](https://levimc.org/zh-Hans/lip/reference/commands/pkg_pack.html)、[`lip pkg view`](https://levimc.org/zh-Hans/lip/reference/commands/pkg_view.html)、[`lip pkg migrate`](https://levimc.org/zh-Hans/lip/reference/commands/pkg_migrate.html)。
+- 包作者使用的命令：[`lip pkg init`](https://levimc.org/zh-Hans/lip/reference/commands/pkg_init.html)、[`lip pkg migrate`](https://levimc.org/zh-Hans/lip/reference/commands/pkg_migrate.html)。
 - 在发布前安装某个分支或提交：[管理包](https://levimc.org/zh-Hans/lip/guides/managing_packages.html)。
-- `lip` 界面中的同类工具：[工具](https://levimc.org/zh-Hans/lip/interface/tools.html)。
+- 在 `lip` 界面中创建和编辑 `lip.toml`、迁移 `tooth.json`：[开发工具](https://levimc.org/zh-Hans/lip/interface/tools.html)。
 - 服务器如何安装你的包：[给服务器安装模组](../server/install-mods.md)。

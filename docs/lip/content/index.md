@@ -9,7 +9,7 @@ Set up a Minecraft Bedrock server, add mods, and run it, from one screen in your
 With `lip` you can:
 
 - **Set up a server.** `lip` downloads the game and LeviLamina in versions that work together, and puts them in a folder.
-- **Add and remove mods.** `lip` installs a mod together with everything it depends on, updates it, and removes it again. The mods of [LeviMC Mods](https://levimc.org/mods/) are on its Get mods page, and each mod's page there gives the `lip install` line for it. A mod that is not listed installs just the same, from its Git repository, a URL or a file.
+- **Add and remove mods.** `lip` installs a mod together with everything it depends on, updates it, and removes it again. The mods of [LeviMC Mods](https://levimc.org/mods/) are on its Marketplace page, and each mod's page there gives the `lip install` line for it. A mod that is not listed installs just the same, from its Git repository, a URL or a file.
 - **Run the server.** `lip` starts the server, shows what it writes, passes on the commands you type, and can restart it after a crash.
 - **Edit the configuration.** `lip` shows `server.properties`, the allowlist, the permissions and the configuration files of the mods, and lets you change them.
 
@@ -22,7 +22,7 @@ Both do the same work. Use whichever suits what you are doing.
 | | The interface | The commands |
 | --- | --- | --- |
 | How you start it | Type `lip` and press `Enter`. | Type `lip` and a command, such as `lip install`. |
-| What it is | A full-screen program in your terminal, with a sidebar of nine pages. You use the arrow keys and `Enter`. | One line, one action. `lip` does it and returns. |
+| What it is | A full-screen program in your terminal, with a sidebar of eight pages. You use the arrow keys and `Enter`. | One line, one action. `lip` does it and returns. |
 | Good for | Getting started, browsing mods, watching the server, editing configuration. | Scripts, automation, servers that you reach over SSH. |
 | Where to read on | [A tour of the interface](interface/tour.md) | The [command line reference](reference/cli.md) |
 

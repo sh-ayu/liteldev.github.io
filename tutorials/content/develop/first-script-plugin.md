@@ -26,7 +26,7 @@ LSE comes as one package per language, called a **variant**. This tutorial uses 
 
 3. Run `lip list`. You should see `github.com/LiteLDev/LegacyScriptEngine#quickjs` with its version, and its dependencies below.
 
-You can also install it from the **Get mods** page of `lip`, as shown in [Install mods on your server](../server/install-mods.md).
+You can also install it from the **Marketplace** page of `lip`, as shown in [Install mods on your server](../server/install-mods.md).
 
 ## 2. Create the plugin folder
 

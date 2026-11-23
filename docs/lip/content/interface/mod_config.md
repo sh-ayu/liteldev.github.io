@@ -1,8 +1,8 @@
-# Mod config
+# Mod Config
 
 After this page you can change the settings of your mods from the interface, without looking for their files or editing JSON by hand.
 
-The Mod config page lists the configuration files of the installed mods. A JSON file opens as a tree of names and values that you change one at a time. A file in another format is shown, to be edited in a text editor.
+The Mod Config page lists the configuration files of the installed mods. A JSON file opens as a tree of names and values that you change one at a time. A file in another format is shown, to be edited in a text editor.
 
 ## Which files the page lists
 
@@ -15,9 +15,9 @@ Most mods write their configuration file when the server first starts with them.
 
 ## The files
 
-Open the page: in the sidebar, move to **Mod config** and press `Enter`.
+Open the page: in the sidebar, move to **Mod Config** and press `Enter`.
 
-![The Mod config page: the list of files at the left with six rows, and the file of GMLIB open at the right with its three values.](/screenshots/en/mod-config-03-files.svg)
+![The Mod Config page: the list of files at the left with six rows, and the file of GMLIB open at the right with its three values.](/screenshots/en/mod-config-03-files.svg)
 
 1. A file: the name of the mod's folder, then the path of the file inside the folder of the mod. A mod with several files has several rows.
 2. A mod without a configuration file, dimmed.
@@ -31,9 +31,9 @@ A mod without a file has nothing to show:
 
 1. lip found no file of this mod where it looks. The mod may write one when the server next starts.
 
-When no installed mod has a folder of its own, or no mod is installed at all, the page says **No configurable mods.** `Enter` on **Get mods** opens the [Get mods](get_mods.md) page.
+When no installed mod has a folder of its own, or no mod is installed at all, the page says **No configurable mods.** `Enter` on **Marketplace** opens the [Marketplace](get_mods.md) page.
 
-![The Mod config page of a server without mods: the text "No configurable mods." and the button "Get mods".](/screenshots/en/mod-config-02-empty.svg)
+![The Mod Config page of a server without mods: the text "No configurable mods." and the button "Marketplace".](/screenshots/en/mod-config-02-empty.svg)
 
 ## Edit a JSON file
 
@@ -176,9 +176,9 @@ When the text is longer than the area, `Enter` goes into it; `↑`, `↓`, `PgUp
 
 ## While the server runs
 
-Unlike the [Game config](game_config.md) page, this page lets you change and save while the server runs. The last line of the page then says **Changes may need a server restart.**: many mods read their configuration only when the server starts.
+Unlike the [Game Config](game_config.md) page, this page lets you change and save while the server runs. The last line of the page then says **Changes may need a server restart.**: many mods read their configuration only when the server starts.
 
-![The Mod config page while the server runs. The last line of the page reads "Changes may need a server restart.", and the bottom line ends with "Saved. May need a restart."](/screenshots/en/mod-config-18-server-running.svg)
+![The Mod Config page while the server runs. The last line of the page reads "Changes may need a server restart.", and the bottom line ends with "Saved. May need a restart."](/screenshots/en/mod-config-18-server-running.svg)
 
 1. The note, shown for as long as the server runs.
 2. What saving says meanwhile.
@@ -191,7 +191,7 @@ When the terminal is too narrow to show the list and the file side by side, unde
 
 1. The list of files fills the page. Press `Enter` on a file.
 
-   ![The Mod config page in a terminal of 72 columns: only the list of files is shown, and the sidebar shows icons.](/screenshots/en/mod-config-19-narrow-files.svg)
+   ![The Mod Config page in a terminal of 72 columns: only the list of files is shown, and the sidebar shows icons.](/screenshots/en/mod-config-19-narrow-files.svg)
 
 2. The file fills the page. Its first line names the mod and the file. Press `Esc` at the top level to go back to the list.
 

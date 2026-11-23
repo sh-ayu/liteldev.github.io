@@ -130,6 +130,6 @@ lip install LeviLamina github.com/user/repo --accept-eula
 ## See also
 
 - [Managing packages](../../guides/managing_packages.md)
-- [Get mods](../../interface/get_mods.md): finding and installing mods in the interface.
+- [Marketplace](../../interface/get_mods.md): finding and installing mods in the interface.
 - [`lip setup`](setup.md), [`lip update`](update.md), [`lip uninstall`](uninstall.md), [`lip list`](list.md)
 - [lip.toml](../../concepts/lip_toml.md): what a package is.

@@ -22,20 +22,20 @@ A server in Docker installs mods through its `PACKAGES` variable instead: see [A
 
    Without the `@<version>` at the end, `lip` picks the newest version that fits your server by itself.
 
-You do not need the website to install: the **Get mods** page of `lip` shows the same catalog. Choose one of the two ways below.
+You do not need the website to install: the **Marketplace** page of `lip` shows the same catalog. Choose one of the two ways below.
 
 ## 2. Install a mod
 
 ### In the interface
 
-1. Start `lip` in the folder of the server (`cd D:\servers\survival`, then `lip`). On **Home**, select **Install mods** and press `Enter`. The **Get mods** page opens.
+1. Start `lip` in the folder of the server (`cd D:\servers\survival`, then `lip`). On **Home**, select **Install mods** and press `Enter`. The **Marketplace** page opens.
 2. Press `↑` until you are in **Search**, type `optim`, and press `Enter`. LeviOptimize is selected.
 3. Press `Enter`, then `Enter` again on **Install…**.
 4. `lip` lists only the versions that fit your game and your LeviLamina. Keep the newest and press `Enter`.
 5. `lip` shows its plan, such as `Dry run: would install LeviOptimize 0.18.0`. If the mod needs other mods, they are listed too. Press `Enter` on **Apply**.
 6. You should see **✓ Done.**, and back in the list LeviOptimize has a **✓**.
 
-![The Get mods page after the installation: the row of LeviOptimize starts with a tick.](https://levimc.org/lip/screenshots/en/first-server-19-mod-installed.svg)
+![The Marketplace page after the installation: the row of LeviOptimize starts with a tick.](https://levimc.org/lip/screenshots/en/first-server-19-mod-installed.svg)
 
 ### With a command
 
@@ -73,7 +73,7 @@ LegacyScriptEngine (LSE) runs plugins written in a script language. It comes in 
    ```
 
    ```text [Interface]
-   Get mods → search "LegacyScriptEngine" → Enter → Install…
+   Marketplace → search "LegacyScriptEngine" → Enter → Install…
    → choose the variant with ← and → → Enter → Apply
    ```
 
@@ -110,7 +110,7 @@ Stop the server first. Then:
 | Remove a mod | `lip uninstall LeviOptimize` | **Mods** page: `Enter` on the mod, **Uninstall** |
 | See what a command would do | add `--dry-run` | Every change shows its plan first |
 
-`lip` removes the dependencies that nothing needs any more by itself. `lip update` never changes the game or LeviLamina; to move the server to a new game version, see [Workspaces](https://levimc.org/lip/interface/workspaces.html) or [`lip setup`](https://levimc.org/lip/reference/commands/setup.html).
+`lip` removes the dependencies that nothing needs any more by itself. `lip update` never changes the game or LeviLamina; to move the server to a new game version, use **Change versions…** on the [Server](https://levimc.org/lip/interface/server.html) page, or [`lip setup`](https://levimc.org/lip/reference/commands/setup.html).
 
 ## What you have now
 
@@ -121,8 +121,8 @@ Stop the server first. Then:
 
 - Write a plugin for the engine you just installed: [Your first script plugin](../develop/first-script-plugin.md).
 - Let other players join: [Let friends join your server](let-friends-join.md).
-- Change the settings of a mod: [Mod config](https://levimc.org/lip/interface/mod_config.html).
-- Search, sort and filter the catalog in `lip`: [Get mods](https://levimc.org/lip/interface/get_mods.html). Manage what is installed: [Mods](https://levimc.org/lip/interface/mods.html).
+- Change the settings of a mod: [Mod Config](https://levimc.org/lip/interface/mod_config.html).
+- Search, sort and filter the catalog in `lip`: [Marketplace](https://levimc.org/lip/interface/get_mods.html). Manage what is installed: [Mods](https://levimc.org/lip/interface/mods.html).
 - Every way to name a package (versions, branches, ZIP files, folders): [Managing packages](https://levimc.org/lip/guides/managing_packages.html).
 - The script engines and their languages: [LegacyScriptEngine](https://levimc.org/LegacyScriptEngine/).
 - Mods for the game client rather than the server: [Play with mods on Windows](../play/play-with-mods.md).

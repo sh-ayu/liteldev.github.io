@@ -66,7 +66,7 @@ Windows、x64 的 Linux，以及 macOS。在 Linux 和 macOS 上，lip 通过它
 
 ### 能运行多个服务器吗？
 
-能，每个服务器一个单独的文件夹，并在各自的 `server.properties` 里设置不同的端口。一个文件夹同一时间只运行一个服务器。界面在[工作区](https://levimc.org/zh-Hans/lip/interface/workspaces.html)页面保存着你的服务器文件夹列表。
+能，每个服务器一个单独的文件夹，并在各自的 `server.properties` 里设置不同的端口。一个文件夹同一时间只运行一个服务器。界面在[工作区选择器](https://levimc.org/zh-Hans/lip/interface/workspaces.html)里保存着你的服务器文件夹列表，从屏幕顶部的工作区打开它。
 
 ### 两个人能管理同一个服务器吗？
 
@@ -82,7 +82,7 @@ lip 自己没有网络访问功能。要管理另一台机器上的服务器，�
 
 ### 怎么更改服务器的 Minecraft 版本？
 
-在服务器文件夹里再运行一次 `lip setup --game <version>`，或者使用界面的工作区页面。模组会换成能配合新游戏的版本。见 [`lip setup`](https://levimc.org/zh-Hans/lip/reference/commands/setup.html)。
+在服务器文件夹里再运行一次 `lip setup --game <version>`，或者使用界面服务器页面上的**更改版本…**。模组会换成能配合新游戏的版本。见 [`lip setup`](https://levimc.org/zh-Hans/lip/reference/commands/setup.html)。
 
 ## 文件
 
@@ -127,7 +127,7 @@ lip 对这个服务器文件夹的记录：安装了哪些包、工作区设置�
 
 ### 包从哪里来？
 
-来自公开的 git 仓库，多数在 GitHub 上。没有中央仓库。包用它的仓库地址来指定，例如 `github.com/LiteLDev/LegacyScriptEngine`。界面的获取模组页面列出的是 [levimc.org](https://levimc.org) 上的模组。见[指定一个包](https://levimc.org/zh-Hans/lip/guides/managing_packages.html#指定一个包)。
+来自公开的 git 仓库，多数在 GitHub 上。没有中央仓库。包用它的仓库地址来指定，例如 `github.com/LiteLDev/LegacyScriptEngine`。界面的**市场**页面列出的是 [levimc.org](https://levimc.org) 上的模组。见[指定一个包](https://levimc.org/zh-Hans/lip/guides/managing_packages.html#指定一个包)。
 
 ### 怎么安装磁盘上的包？
 

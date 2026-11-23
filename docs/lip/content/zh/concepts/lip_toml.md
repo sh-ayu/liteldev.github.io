@@ -99,7 +99,7 @@ lip 不使用 `info`。
 
 #### 推荐标签
 
-`info.tags` 帮助人们在模组列表（例如界面的「获取模组」页面和 [LeviMC 模组](https://levimc.org/zh-Hans/mods/)）中找到你的包；lip 自己忽略标签。列表会优先显示下面这些标签，配上翻译后的名称，并允许用户按它们筛选。请按这里的写法填写 ID，使用小写；还可以再加上你喜欢的其他标签：
+`info.tags` 帮助人们在模组列表（例如界面的「市场」页面和 [LeviMC 模组](https://levimc.org/zh-Hans/mods/)）中找到你的包；lip 自己忽略标签。列表会优先显示下面这些标签，配上翻译后的名称，并允许用户按它们筛选。请按这里的写法填写 ID，使用小写；还可以再加上你喜欢的其他标签：
 
 ```toml
 [info]
@@ -252,7 +252,7 @@ urls = ["https://github.com/example/MyMod/releases/download/v{{version}}/MyMod-{
 
 模板中可以使用任何 Scriban 表达式，例如 `{{version | string.replace "." "_"}}`。未定义的变量渲染为空。
 无法解析或渲染失败的模板（例如 `{{ if }}`）会使该归档不是包。要原样写出 `{{`，请写成 `{{ "{{" }}`。
-[`lip pkg view`](../reference/commands/pkg_view.md) 显示渲染后的包文件，[状态文件](state_file.md)中记录的也是渲染后的包文件。
+[状态文件](state_file.md)中记录的是渲染后的包文件。
 
 ## 模组
 
@@ -375,6 +375,6 @@ lip v0.37.0 在其[包清单](https://github.com/LiteLDev/lip/blob/v0.37.0/docs/
 ## 另请参阅
 
 - [用 lip 发布你的模组](https://levimc.org/zh-Hans/tutorials/develop/publish-a-package/)和[迁移包](../authors/migrating_packages.md)
-- [`lip pkg init`](../reference/commands/pkg_init.md)、[`lip pkg view`](../reference/commands/pkg_view.md)
+- [`lip pkg init`](../reference/commands/pkg_init.md)，以及[开发工具](../interface/tools.md)：界面中的一个表单，写出 `lip.toml`，并在输入时检查每一个值。
 - [状态文件](state_file.md)：每个已安装包的包文件记录在哪里。
 - [内部机制](internals.md)：lip 怎样解析来源和版本。

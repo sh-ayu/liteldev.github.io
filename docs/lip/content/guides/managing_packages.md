@@ -1,6 +1,6 @@
 # Managing packages
 
-After this page you can install, list, update and uninstall packages with `lip` commands, name a package in every way lip understands, and check what a command would do before it does it. In the interface, the same is done on the [Mods](../interface/mods.md) and [Get mods](../interface/get_mods.md) pages.
+After this page you can install, list, update and uninstall packages with `lip` commands, name a package in every way lip understands, and check what a command would do before it does it. In the interface, the same is done on the [Mods](../interface/mods.md) and [Marketplace](../interface/get_mods.md) pages.
 
 ## What a package is
 

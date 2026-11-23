@@ -199,22 +199,26 @@ When there is one, lip offers to install it:
 
    When lip was installed from a portable archive, its files are replaced at once:
 
-   ![The dialog "Install update" says "lip 0.42.0 is installed. Restart lip to use it."](/screenshots/en/settings-20-installed.svg)
+   ![The dialog "Install update" says "lip 0.42.0 is installed. Quit lip, then run lip again to use the new version.", with the buttons Quit lip and Later.](/screenshots/en/settings-20-installed.svg)
 
    When lip was installed with the Windows installer, lip starts the installer of the new version. Windows asks for your permission, since the installer changes a program:
 
-   ![The dialog "Install update" says "The installer of lip 0.42.0 is running. Quit lip so that it can finish."](/screenshots/en/settings-22-installer.svg)
+   ![The dialog "Install update" says "The installer of lip 0.42.0 is running. Quit lip so that it can finish, then run lip again to use the new version.", with the buttons Quit lip and Later.](/screenshots/en/settings-22-installer.svg)
+
+3. Choose **Quit lip** to quit now; lip asks first only when a server runs. **Later** closes the dialog, and lip stays open.
 
 ### After installing
 
-The lip on your screen is still the old one. The row reminds you:
+The lip on your screen is still the old one until you run lip again. The row reminds you:
 
 ![The row "Check for updates" shows "0.42.0 · Restart lip". The row "Install update" is gone.](/screenshots/en/settings-21-restart-lip.svg)
 
-- **Restart lip**: quit lip, and start it again. The new version is then the one that runs.
-- **Installer running**: quit lip, so that the installer can replace it; then start lip again.
+- **Restart lip**: quit lip, and run it again. The new version is then the one that runs.
+- **Installer running**: quit lip, so that the installer can replace it; then run lip again.
 
 Until then, `Enter` on **Check for updates** shows the same message again instead of checking.
+
+When the interface ends, lip also writes what to do in the terminal, such as "lip was updated to 0.42.0. Run lip again to start it." It does so however the interface ends: when you quit it, or when the Windows installer closes lip to replace it.
 
 The commands are `lip self-update --check` and `lip self-update`. [`lip self-update`](../reference/commands/self_update.md) describes updating in full.
 

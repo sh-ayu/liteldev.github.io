@@ -64,4 +64,4 @@ lip pkg init
 
 - [Publish your mod with lip](https://levimc.org/tutorials/develop/publish-a-package/)
 - [lip.toml](../../concepts/lip_toml.md)
-- [Tools](../../interface/tools.md): **Create lip.toml** in the interface.
+- [Develop Tools](../../interface/tools.md): **Create lip.toml** in the interface, a form that writes the whole `lip.toml`, checks it as you type, and edits it later.

@@ -52,8 +52,6 @@ lip <command> [<argument>...]
 | 命令 | 作用 |
 | --- | --- |
 | [`lip pkg init`](commands/pkg_init.md) | 为新包创建 `lip.toml`。 |
-| [`lip pkg pack`](commands/pkg_pack.md) | 把一个目录打包成 ZIP 归档。 |
-| [`lip pkg view`](commands/pkg_view.md) | 以 JSON 显示包的包文件和版本。 |
 | [`lip pkg migrate`](commands/pkg_migrate.md) | 把当前目录中的 `tooth.json` 迁移为 `lip.toml`。 |
 
 用于 lip 自身的命令：
@@ -114,7 +112,7 @@ lip <command> [<argument>...]
 
 ## 输出
 
-- **结果**是命令被要求给出的数据，写到标准输出。只有 `list`、`pkg view`、`config get`、`config list`、`daemon status` 和 `self-update --check` 有结果。
+- **结果**是命令被要求给出的数据，写到标准输出。只有 `list`、`config get`、`config list`、`daemon status` 和 `self-update --check` 有结果。
 - **消息**是其余的一切：进度、信息、警告、错误、最后的成功提示。消息写到标准错误。它的措辞可能随版本变化，不要解析它。
 - 帮助写到标准输出。
 
@@ -131,7 +129,7 @@ lip <command> [<argument>...]
 | [`lip config list --json`](commands/config.md#输出) | 一个对象，把每个键映射到它的值或 `null`。 |
 | [`lip daemon status --json`](commands/daemon.md#输出) | `{ "running": false }`，或 `{ "running": true, "version": "...", "pid": ... }`。 |
 
-[`lip pkg view`](commands/pkg_view.md) 始终输出 JSON，没有 `--json` 选项。不带 `--json` 时，结果的排版是给人看的，可能会变化。
+不带 `--json` 时，结果的排版是给人看的，可能会变化。
 
 ## 退出状态
 
@@ -146,7 +144,7 @@ lip <command> [<argument>...]
 
 ## 包参数
 
-`install`、`update` 和 `pkg view` 接受**包参数**。lip 按下面第一条适用的规则对每个包参数分类：
+`install` 和 `update` 接受**包参数**。lip 按下面第一条适用的规则对每个包参数分类：
 
 1. **URL。** 以 `https://` 开头的参数是一个 ZIP 归档的 URL。其他后跟 `://` 的协议（如 `http://`、`file://`）无效。
 2. **本地路径。** 取参数中最后一个 `#` 之前的部分；如果整个参数就是一个存在的文件或目录，则取整个参数。满足下列任一条件时，它是本地路径：

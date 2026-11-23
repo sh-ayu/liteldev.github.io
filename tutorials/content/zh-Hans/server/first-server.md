@@ -57,9 +57,9 @@ unzip lip-<version>-osx-arm64.zip -d ~/.local/bin             # macOS
 
    :::
 
-2. 你应该看到 `lip` 的「主页」：左边是侧边栏，概览说这个文件夹里还没有游戏，下面是三个**下一步**，其中**创建服务器**已被选中。
+2. 你应该看到 `lip` 的「主页」。顶栏显示 `lip` 所在的文件夹 `D:\servers`。左边是列出 `lip` 各个页面的侧边栏；右边是概览，说这个文件夹里还没有游戏，下面是四个**下一步**。第 1 步**选择工作区**已经打上了勾：`lip` 就在你启动它的文件夹里工作。
 
-   ![lip 在空文件夹 D:\servers 里的主页。侧边栏列出九个页面，概览显示尚未安装游戏，“创建服务器”已被选中。](https://levimc.org/lip/screenshots/zh-Hans/first-server-01-home.svg)
+   ![lip 在空文件夹 D:\servers 里的主页。侧边栏列出八个页面，概览显示尚未安装游戏，第 1 步“选择工作区”已打勾。](https://levimc.org/lip/screenshots/zh-Hans/first-server-01-home.svg)
 
    你只需要几个键：`↑` 和 `↓` 移动，`Enter` 打开或确认，`Esc` 返回。最下面一行始终列出此刻可用的按键。
 
@@ -69,26 +69,42 @@ LeviLamina 来自 GitHub。`lip` 连不上时会问你怎么办：有 GitHub 代
 
 ## 3. 创建服务器
 
-1. **创建服务器**已被选中，按 `Enter`。`lip` 问你服务器放在哪里。每个服务器都应该有自己的文件夹，所以选**其他文件夹…**（按 `↓`，再按 `Enter`）。
-2. 文件夹浏览器在 `D:\servers` 打开。按 `Tab` 移到按钮上，按 `→` 移到**新建文件夹…**，按 `Enter`。输入 `survival`，按 `Enter`。`lip` 会创建 `D:\servers\survival`，并把它作为服务器的文件夹。
-3. 选择**游戏版本**。最新的版本在最上面。选中标有 **LeviLamina ✓** 的最新版本（标有**无 LeviLamina** 的版本不能运行模组），按 `Enter`。
+1. 每个服务器都应该有自己的文件夹，所以先建一个。按 `↑` 选中**选择工作区**，按 `Enter`。「工作区」列表打开，里面有 `D:\servers`，前面的 **●** 表示它是 `lip` 现在所在的文件夹。
+2. 按 `Tab` 移到**添加文件夹…**，按 `Enter`。
 
-   ![“游戏版本”对话框列出八个版本，大多数标有“LeviLamina ✓”。第一个 1.26.60 已被选中。](https://levimc.org/lip/screenshots/zh-Hans/first-server-05-game-version.svg)
+   ![主页上方的“工作区”列表：“添加文件夹…”一行，下面是带圆点的 D:\servers。](https://levimc.org/lip/screenshots/zh-Hans/first-server-02-where.svg)
 
-   在 Linux 上，`lip` 接下来会问**构建**：选 **windows**，只有它能运行 LeviLamina。
+3. 文件夹浏览器在 `D:\servers` 打开。按 `Tab` 移到按钮上，按 `→` 移到**新建文件夹…**，按 `Enter`。输入 `survival`，按 `Enter`。`lip` 会创建 `D:\servers\survival` 并打开它。
 
-4. 选择**加载器**：保持选中最新的 LeviLamina，按 `Enter`。
-5. 动手之前，`lip` 先给出计划：以 `Dry run:` 开头的几行说明它将安装游戏（`bds`）和 LeviLamina。在**应用**上按 `Enter`。
+   ![“添加文件夹”浏览器停在 D:\servers，里面只有“..”。下面是“选择此文件夹”“新建文件夹…”和“取消”三个按钮。](https://levimc.org/lip/screenshots/zh-Hans/first-server-03-folder.svg)
+
+4. 按 `←` 移到**选择此文件夹**，按 `Enter`。`lip` 把这个文件夹加入列表，从此就在它里面工作：你回到了「主页」，顶栏显示 `D:\servers\survival`，**安装服务器**已被选中。
+
+   ![D:\servers\survival 里的主页：顶栏显示这个文件夹，概览显示尚未安装游戏，第 2 步“安装服务器”已被选中。](https://levimc.org/lip/screenshots/zh-Hans/first-server-04-home-folder.svg)
+
+5. 按 `Enter`。「服务器」页面打开，并询问**游戏版本**。最新的版本在最上面。选中标有 **LeviLamina ✓** 的最新版本（标有**无 LeviLamina** 的版本不能运行模组），按 `Enter`。
+
+   ![服务器页面上的“游戏版本”对话框列出八个版本，大多数标有“LeviLamina ✓”。第一个 1.26.60 已被选中。](https://levimc.org/lip/screenshots/zh-Hans/first-server-05-game-version.svg)
+
+   在 Linux 上，如果这个版本也有 Linux 服务器，`lip` 接下来会问**构建**：选 **windows**，能运行 LeviLamina 的是它。
+
+6. 选择**加载器**：保持选中最新的 LeviLamina，按 `Enter`。
+7. 动手之前，`lip` 先给出计划：以 `Dry run:` 开头的几行说明它将安装游戏（`bds`）和 LeviLamina。在**应用**上按 `Enter`。
 
    ![“安装服务器”对话框，有三行以“Dry run:”开头的文字，以及“应用”和“取消”两个按钮。](https://levimc.org/lip/screenshots/zh-Hans/first-server-07-plan.svg)
 
-6. 到图中的网址阅读《Minecraft 最终用户许可协议》和《Microsoft 隐私政策》。要接受它们，在**接受**上按 `Enter`。如果拒绝，就什么都不会安装。
-7. 等 `lip` 下载并安装。第一次使用时，它可能还会安装 Microsoft Visual C++ 可再发行程序包（Windows 会请你允许），在 Linux 和 macOS 上则是 Wine。
-8. 你应该看到 **✓ 完成。** 按 `Enter`。现在你在「工作区」页面，`D:\servers\survival` 在列表里，前面有一个 **●**：它就是 `lip` 现在所在的文件夹。
+8. 到图中的网址阅读《Minecraft 最终用户许可协议》和《Microsoft 隐私政策》。要接受它们，在**接受**上按 `Enter`。如果拒绝，就什么都不会安装。
+9. 等 `lip` 下载并安装。第一次使用时，它可能还会安装 Microsoft Visual C++ 可再发行程序包（Windows 会请你允许），在 Linux 和 macOS 上则是 Wine。
+10. 你应该看到 **✓ 完成。** 在**确定**上按 `Enter`。「服务器」页面现在显示 **○ 未运行**：服务器已经装好，**启动**按钮可以启动它。
+
+    ![安装之后的服务器页面：“○ 未运行”，“启动”按钮、“自动重启”复选框、“更改版本…”按钮，还没有输出。顶栏显示 D:\servers\survival。](https://levimc.org/lip/screenshots/zh-Hans/first-server-11-workspace.svg)
 
 ## 4. 启动服务器
 
-1. 回到「主页」：按 `Esc` 移到侧边栏，按 `↑` 直到**主页**高亮，再按 `Enter`。概览里已经有了游戏和 LeviLamina，**创建服务器**打上了勾。
+1. 回到「主页」：按 `Esc` 移到侧边栏，按 `↑` 移到**主页**，再按 `Enter`。概览里已经有了游戏和 LeviLamina，**安装服务器**打上了勾。
+
+   ![D:\servers\survival 里的主页：已安装游戏 1.26.60 和 LeviLamina 26.60.3；第 1、2 步已打勾，第 3 步“安装模组”已被选中。](https://levimc.org/lip/screenshots/zh-Hans/first-server-12-home-server.svg)
+
 2. 现在选中的是**安装模组**。这一步先跳过：按 `↓` 选中**启动服务器**，再按 `Enter`。
 3. `lip` 启动服务器，并显示「服务器」页面。等输出里出现 `Server started.` 这一行。带 `[LeviLamina]` 的几行说明加载器在工作。
 
@@ -106,7 +122,7 @@ LeviLamina 来自 GitHub。`lip` 连不上时会问你怎么办：有 GitHub 代
 2. 你应该看到第一行变成**已退出，退出码 0**：服务器正常结束了。**启动**按钮可以再次启动它。
 3. 要离开 `lip`，按 `Esc` 直到回到侧边栏，再按一次 `Esc`，然后选**退出**。
 
-下次在 `D:\servers\survival` 里启动 `lip` 即可（在任何文件夹里启动也行：你的服务器列在「工作区」页面上）。
+下次在 `D:\servers\survival` 里启动 `lip` 即可。在别的文件夹里启动时，`lip` 也记得你的服务器：在「主页」的**选择工作区**上按 `Enter`，再在列表里的 `D:\servers\survival` 上按 `Enter`，然后选**切换**。
 
 ## 你现在有了什么
 
@@ -124,7 +140,7 @@ LeviLamina 来自 GitHub。`lip` 连不上时会问你怎么办：有 GitHub 代
 - 用命令做同样的事，适合脚本和远程机器：[用命令行开服](command-line.md)。
 - 修改服务器名称、游戏模式或玩家人数：[游戏配置](https://levimc.org/zh-Hans/lip/interface/game_config.html)。
 - 让服务器崩溃后自动重启：[服务器](https://levimc.org/zh-Hans/lip/interface/server.html)。
-- 再开一个服务器，或更换游戏版本：[工作区](https://levimc.org/zh-Hans/lip/interface/workspaces.html)。
+- 再开一个服务器：[工作区](https://levimc.org/zh-Hans/lip/interface/workspaces.html)。更换游戏或 LeviLamina 版本：[服务器](https://levimc.org/zh-Hans/lip/interface/server.html)页面上的**更改版本…**。
 - 系统地了解界面的每个页面：[界面导览](https://levimc.org/zh-Hans/lip/interface/tour.html)。
 - `lip` 怎样在 Linux 和 macOS 上运行 Windows 服务器：[Linux 与 macOS](https://levimc.org/zh-Hans/lip/guides/linux_macos.html)。
 - 出了问题：[lip 故障排查](https://levimc.org/zh-Hans/lip/guides/troubleshooting.html)和 [LeviLamina 问题排除](https://levimc.org/zh-Hans/faq/server/levilamina/errors/)。

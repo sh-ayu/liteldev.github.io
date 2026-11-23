@@ -1,8 +1,8 @@
-# Game config
+# Game Config
 
 After this page you can change the settings of the game itself from the interface: the properties of the server, who may join it, and what each player is allowed to do.
 
-The Game config page edits three files in the folder of the server. You never open them in a text editor: the page shows each as a list, and writes it back when you save.
+The Game Config page edits three files in the folder of the server. You never open them in a text editor: the page shows each as a list, and writes it back when you save.
 
 | Section | File | Holds |
 | --- | --- | --- |
@@ -16,9 +16,9 @@ The server reads these files when it starts. A change that you save takes effect
 
 ## Find your way around
 
-Open the page: in the sidebar, move to **Game config** with `↓` and press `Enter`.
+Open the page: in the sidebar, move to **Game Config** with `↓` and press `Enter`.
 
-![The Game config page: the three sections at the left, the properties of the server at the right, the description of the selected property below them, and the Save and Discard buttons at the bottom.](/screenshots/en/game-config-01-properties.svg)
+![The Game Config page: the three sections at the left, the properties of the server at the right, the description of the selected property below them, and the Save and Discard buttons at the bottom.](/screenshots/en/game-config-01-properties.svg)
 
 1. The three sections. `↑` and `↓` choose one; `Enter` or `→` goes into its rows.
 2. The rows of the section. In **Properties**, a row is a property and its value.
@@ -220,7 +220,7 @@ A file that lip cannot read, such as an `allowlist.json` with a mistake in it, i
 
 While the server of the selected workspace runs, the page only shows the three files: you can look through them, but nothing can be changed or saved. This holds whoever started the server, the interface or a `lip run` in another terminal. Stop the server on the [Server](server.md) page to edit.
 
-![The Game config page while the server runs. The top bar says Running, and the note at the bottom right reads "Server runs: stop it to edit."](/screenshots/en/game-config-04-server-running.svg)
+![The Game Config page while the server runs. The top bar says Running, and the note at the bottom right reads "Server runs: stop it to edit."](/screenshots/en/game-config-04-server-running.svg)
 
 `Enter` on a row still opens its actions, so that you see what could be done. They are dimmed, and the menu says why: **Stop the server first.**
 
@@ -239,4 +239,4 @@ Leaving the page then cannot save either. lip offers to discard the changes or t
 
 When the server has stopped, lip reads the three files again, since the server may have written them. It does not do so while you have unsaved changes; saving them then asks before it overwrites [a file that changed on disk](#a-file-that-changed-on-disk).
 
-The configuration files of mods are different: they can be saved while the server runs. See [Mod config](mod_config.md).
+The configuration files of mods are different: they can be saved while the server runs. See [Mod Config](mod_config.md).

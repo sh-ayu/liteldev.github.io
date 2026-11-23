@@ -64,4 +64,4 @@ lip pkg init
 
 - [用 lip 发布你的模组](https://levimc.org/zh-Hans/tutorials/develop/publish-a-package/)
 - [lip.toml](../../concepts/lip_toml.md)
-- [工具](../../interface/tools.md)：界面中的**创建 lip.toml**。
+- [开发工具](../../interface/tools.md)：界面中的**创建 lip.toml**，一个表单：写出完整的 `lip.toml`，边输入边检查，之后也能用它编辑。

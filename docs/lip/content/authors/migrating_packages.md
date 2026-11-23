@@ -15,7 +15,7 @@ git add lip.toml tooth.json
 git commit -m "Migrate tooth.json to lip.toml"
 ```
 
-It writes `lip.toml` converted from `tooth.json`, then deletes `tooth.json`. In the interface, **Migrate tooth.json** on the [Tools](../interface/tools.md) page does the same for the selected workspace, and asks its questions in the interface. When `lip.toml` already exists, or `tooth.json` is missing or is not a `tooth.json` of format 1, 2 or 3 that lip can read, the command fails and changes nothing.
+It writes `lip.toml` converted from `tooth.json`, then deletes `tooth.json`. In the interface, **Migrate tooth.json** on the [Develop Tools](../interface/tools.md) page does the same for the selected workspace, and asks its questions in the interface. When `lip.toml` already exists, or `tooth.json` is missing or is not a `tooth.json` of format 1, 2 or 3 that lip can read, the command fails and changes nothing.
 
 ### Questions
 
@@ -37,6 +37,7 @@ Everything that is dropped, or converted with another meaning, is printed as a w
 
 -   Each label becomes a variant of the same name; the empty label becomes the variant `""`.
 -   For each platform a label applies to (the `platform` of its variants, with patterns and values that are not RIDs expanded to the RIDs you gave), the variants of the label that apply to that platform are merged as lip v0.37.0 merged them, and the result becomes one entry with that `platform`. Its `side` is `client` when the merged variants depend on `github.com/LiteLDev/LeviLamina#client`, and `server` when they depend on another variant of `github.com/LiteLDev/LeviLamina`; without a dependency on LeviLamina, the result becomes two entries, one for each side.
+-   Since 26.60.8, its first version with a `lip.toml`, LeviLamina has no variant `client`: its variant `""` has the client build too. A dependency on `github.com/LiteLDev/LeviLamina#client` (or `#client_<y>`) whose range allows a version of at least 26.60.8 becomes one on `github.com/LiteLDev/LeviLamina` (or `#<y>`), its range narrowed to the versions of at least 26.60.8; a range that allows none of them is kept, and so is the dependency when the entry also depends on `github.com/LiteLDev/LeviLamina` (or `#<y>`). Then a client entry of the label `client` (or `client_<y>`) whose dependency changed so moves to the variant `""` (or `<y>`), unless that variant has a client entry for the same platform already. Each change is noted with a warning.
 -   `dependencies` become `deps`, with their ranges. A range that is not a valid range now is asked for on the terminal until the answer is one; without a terminal the command fails and changes nothing.
 -   Each asset keeps its `type` and `urls`, and its `placements` become `place`, converted exactly as lip reads a `tooth.json` of an [earlier format](../concepts/lip_toml.md#earlier-formats): after `\` is replaced by `/` and empty and `.` segments are removed, a `dir` placement takes the directory form (`src` and `dest` ending with `/`, or `""`), a `file` placement whose `src` contains `*`, `?` or `[` the glob form (`dest` ending with `/`, or `""`), and any other `file` placement the file form. A placement that is not valid in `lip.toml` is left out, with a warning.
 -   `lip.toml` has no `tar`, `tgz` and `uncompressed` asset types. A platform whose merged variants have such an asset gets no entry, with a warning, just as lip installs no entry of it for that platform.
@@ -61,11 +62,7 @@ Tags are versions only when they are named exactly `v<SemVer>` (e.g. `v1.2.3`). 
 ## After migrating
 
 1. Read the warnings and fix `lip.toml` where needed.
-2. Check that lip reads the result:
-
-   ```sh
-   lip pkg view .
-   ```
+2. Check the result: run `lip` in the folder, and choose **Edit lip.toml** on the [Develop Tools](../interface/tools.md) page. The form marks every value that is not valid, and before it saves, it shows what would be installed with the package on a server.
 
 3. Install it into a test server, as [Publish your mod with lip](https://levimc.org/tutorials/develop/publish-a-package/) describes.
 4. Commit, and publish a new version with a tag, as [Publish your mod with lip](https://levimc.org/tutorials/develop/publish-a-package/) describes.
@@ -77,4 +74,4 @@ Versions that you published before keep their `tooth.json`, and lip keeps instal
 - [`lip pkg migrate`](../reference/commands/pkg_migrate.md)
 - [lip.toml](../concepts/lip_toml.md#earlier-formats): how lip reads a `tooth.json`.
 - [Publish your mod with lip](https://levimc.org/tutorials/develop/publish-a-package/)
-- [Tools](../interface/tools.md): the same action in the interface.
+- [Develop Tools](../interface/tools.md): the same action in the interface, and a form that checks `lip.toml`.

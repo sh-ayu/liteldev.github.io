@@ -66,7 +66,7 @@ Windows、x64 的 Linux，以及 macOS。在 Linux 和 macOS 上，lip 通過它
 
 ### 能執行多個伺服器嗎？
 
-能，每個伺服器一個單獨的資料夾，並在各自的 `server.properties` 裡設定不同的連接埠。一個資料夾同一時間只執行一個伺服器。介面在[工作區](https://levimc.org/zh-Hant/lip/interface/workspaces.html)頁面儲存著你的伺服器資料夾清單。
+能，每個伺服器一個單獨的資料夾，並在各自的 `server.properties` 裡設定不同的連接埠。一個資料夾同一時間只執行一個伺服器。介面在[工作區選擇器](https://levimc.org/zh-Hant/lip/interface/workspaces.html)裡儲存著你的伺服器資料夾清單，從螢幕頂端的工作區開啟它。
 
 ### 兩個人能管理同一個伺服器嗎？
 
@@ -82,7 +82,7 @@ lip 自己沒有網路訪問功能。要管理另一臺機器上的伺服器，�
 
 ### 怎麼變更伺服器的 Minecraft 版本？
 
-在伺服器資料夾裡再執行一次 `lip setup --game <version>`，或者使用介面的工作區頁面。模組會換成能配合新遊戲的版本。見 [`lip setup`](https://levimc.org/zh-Hant/lip/reference/commands/setup.html)。
+在伺服器資料夾裡再執行一次 `lip setup --game <version>`，或者使用介面伺服器頁面上的**變更版本…**。模組會換成能配合新遊戲的版本。見 [`lip setup`](https://levimc.org/zh-Hant/lip/reference/commands/setup.html)。
 
 ## 檔案
 

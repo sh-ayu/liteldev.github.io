@@ -15,7 +15,7 @@ git add lip.toml tooth.json
 git commit -m "Migrate tooth.json to lip.toml"
 ```
 
-它写入由 `tooth.json` 转换而来的 `lip.toml`，然后删除 `tooth.json`。在界面中，[工具](../interface/tools.md)页的**迁移 tooth.json** 对当前工作区做同样的事，并在界面中提问。`lip.toml` 已存在，或 `tooth.json` 不存在或不是 lip 能读取的格式 1、2 或 3 的 `tooth.json` 时，命令会失败，且不做任何修改。
+它写入由 `tooth.json` 转换而来的 `lip.toml`，然后删除 `tooth.json`。在界面中，[开发工具](../interface/tools.md)页的**迁移 tooth.json** 对当前工作区做同样的事，并在界面中提问。`lip.toml` 已存在，或 `tooth.json` 不存在或不是 lip 能读取的格式 1、2 或 3 的 `tooth.json` 时，命令会失败，且不做任何修改。
 
 ### 询问
 
@@ -37,6 +37,7 @@ git commit -m "Migrate tooth.json to lip.toml"
 
 - 每个标签变为同名变体；空标签变为变体 `""`。
 - 对标签适用的每个平台（其各变体的 `platform`，模式和不是 RID 的值展开为你给出的 RID），该标签下适用于该平台的变体按 lip v0.37.0 的方式合并，结果变为该 `platform` 的一个条目。合并后的变体依赖 `github.com/LiteLDev/LeviLamina#client` 时，其 `side` 为 `client`；依赖 `github.com/LiteLDev/LeviLamina` 的其他变体时，为 `server`；不依赖 LeviLamina 时，结果变为两个条目，每个运行端各一个。
+- LeviLamina 从 26.60.8（它第一个带 `lip.toml` 的版本）起没有 `client` 变体：客户端构建也在它的 `""` 变体里。对 `github.com/LiteLDev/LeviLamina#client`（或 `#client_<y>`）的依赖，如果范围允许至少 26.60.8 的版本，就变为对 `github.com/LiteLDev/LeviLamina`（或 `#<y>`）的依赖，范围收窄为其中至少 26.60.8 的版本；不允许任何这类版本的范围保持原样，条目同时依赖 `github.com/LiteLDev/LeviLamina`（或 `#<y>`）时，这个依赖也保持原样。然后，标签 `client`（或 `client_<y>`）中依赖因此改变的客户端条目移到 `""`（或 `<y>`）变体中，除非那个变体已有相同平台的客户端条目。每一处改动都会给出警告。
 - `dependencies` 连同其范围变为 `deps`。现在无效的范围会在终端上询问，直到回答是有效范围；没有终端时命令失败且不做任何更改。
 - 每个资源保留其 `type` 和 `urls`，其 `placements` 变为 `place`，转换方式与 lip 读取[早期格式](../concepts/lip_toml.md#早期格式)的 `tooth.json` 完全相同：`\` 替换为 `/`、空段和 `.` 段被移除后，`dir` 放置规则采用目录形式（`src` 和 `dest` 以 `/` 结尾，或为 `""`），`src` 含 `*`、`?` 或 `[` 的 `file` 放置规则采用 glob 形式（`dest` 以 `/` 结尾，或为 `""`），其他 `file` 放置规则采用文件形式。在 `lip.toml` 中无效的放置规则会被省略，并给出警告。
 - `lip.toml` 没有 `tar`、`tgz` 和 `uncompressed` 资源类型。合并后的变体含有这类资源的平台不会得到条目，并给出警告，这与 lip 在该平台下不安装其任何条目一致。
@@ -61,11 +62,7 @@ git commit -m "Migrate tooth.json to lip.toml"
 ## 迁移之后
 
 1. 阅读警告，并在需要的地方修改 `lip.toml`。
-2. 检查 lip 能否读取转换结果：
-
-   ```sh
-   lip pkg view .
-   ```
+2. 检查转换结果：在这个文件夹里运行 `lip`，在[开发工具](../interface/tools.md)页选择**编辑 lip.toml**。表单会标出每个不合法的值；保存之前，还会显示把这个包装到服务器上时会安装什么。
 
 3. 按[用 lip 发布你的模组](https://levimc.org/zh-Hans/tutorials/develop/publish-a-package/)所述，把它安装到测试用的服务器中。
 4. 提交，并按[用 lip 发布你的模组](https://levimc.org/zh-Hans/tutorials/develop/publish-a-package/)所述用标签发布新版本。
@@ -77,4 +74,4 @@ git commit -m "Migrate tooth.json to lip.toml"
 - [`lip pkg migrate`](../reference/commands/pkg_migrate.md)
 - [lip.toml](../concepts/lip_toml.md#早期格式)：lip 怎样读取 `tooth.json`。
 - [用 lip 发布你的模组](https://levimc.org/zh-Hans/tutorials/develop/publish-a-package/)
-- [工具](../interface/tools.md)：界面中同样的操作。
+- [开发工具](../interface/tools.md)：界面中同样的操作，以及一个检查 `lip.toml` 的表单。

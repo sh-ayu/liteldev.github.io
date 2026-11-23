@@ -12,7 +12,7 @@ lip
 
 标准输入和标准输出都是终端时，不带参数的 `lip` 会打开界面；否则输出帮助（见[命令行](cli.md)）。
 
-- 界面同一时间只操作一个工作区，即**当前工作区**：一开始是启动 `lip` 时所在的文件夹。
+- 界面同一时间只操作一个工作区，即**当前工作区**：一开始是启动 `lip` 时所在的文件夹。顶部一行显示当前工作区；在它上面按 `Enter` 会打开[工作区选择器](../interface/workspaces.md)，用来切换、添加或移除工作区。
 - 界面由 lip 的[守护进程](../concepts/how_lip_works.md)执行。可以同时打开多个界面。
 - 终端至少要有 60 列、16 行。更小的终端里，lip 会请你放大终端，这时唯一可用的按键是 `Ctrl+C`，它不经询问直接退出。
 - 终端不足 80 列时，焦点在页面上的时候，侧边栏只为每个页面显示一个符号。
@@ -23,7 +23,7 @@ lip
 
 | 按键 | 作用 |
 | --- | --- |
-| `↑` `↓` | 在列表或菜单里移动。在侧边栏里显示上一个或下一个页面。 |
+| `↑` `↓` | 在列表或菜单里移动。在侧边栏里显示上一个或下一个页面；在第一个页面上按 `↑`、在最后一个页面上按 `↓`，会移到顶部一行的工作区。 |
 | `←` `→` | 在侧边栏和页面之间、并排的窗格或按钮之间移动；更改有多个取值的选项。 |
 | `Enter` | 打开或执行选中的内容。在列表的某一行上，打开它的操作。 |
 | `Space` | 在可以多选的地方勾选一行；打开或关闭一个选项。 |
@@ -38,13 +38,12 @@ lip
 | 页面 | 作用 | 命令 |
 | --- | --- | --- |
 | [主页](../interface/home.md) | 显示当前工作区的状态和下一步该做什么。 | |
-| [服务器](../interface/server.md) | 启动和停止服务器，显示它的输出，把你输入的内容发给它。 | [`lip run --managed --detach`](commands/run.md)、[`lip config set restart … --workspace`](commands/config.md) |
-| [模组](../interface/mods.md) | 列出已安装的包；安装、更新和卸载它们。 | [`lip list`](commands/list.md)、[`lip install`](commands/install.md)、[`lip update`](commands/update.md)、[`lip uninstall`](commands/uninstall.md) |
-| [获取模组](../interface/get_mods.md) | 搜索 levimc.org 上的模组，并安装其中某个版本。 | [`lip install`](commands/install.md) |
+| [服务器](../interface/server.md) | [安装服务器](../interface/server.md#安装服务器)，[更改游戏或加载器的版本](../interface/server.md#更改游戏或加载器的版本)；启动和停止服务器，显示它的输出，把你输入的内容发给它。 | [`lip setup`](commands/setup.md)、[`lip run --managed --detach`](commands/run.md)、[`lip config set restart … --workspace`](commands/config.md) |
+| [模组](../interface/mods.md) | 列出已安装的模组和它们需要的包，不含游戏和加载器；安装、更新和卸载它们。 | [`lip list`](commands/list.md)、[`lip install`](commands/install.md)、[`lip update`](commands/update.md)、[`lip uninstall`](commands/uninstall.md) |
+| [市场](../interface/get_mods.md) | 搜索 levimc.org 上的模组，并安装其中某个版本。 | [`lip install`](commands/install.md) |
 | [游戏配置](../interface/game_config.md) | 编辑 `server.properties`、`allowlist.json` 和 `permissions.json`。 | 无 |
 | [模组配置](../interface/mod_config.md) | 编辑已安装模组的配置文件。 | 无 |
-| [工作区](../interface/workspaces.md) | 列出工作区；切换、添加和移除工作区；新建服务器；更改某个服务器的游戏或加载器。 | [`lip setup`](commands/setup.md) |
-| [工具](../interface/tools.md) | 创建 `lip.toml`、迁移 `tooth.json`、打包 ZIP、查看包信息。 | [`lip pkg init`](commands/pkg_init.md)、[`lip pkg migrate`](commands/pkg_migrate.md)、[`lip pkg pack`](commands/pkg_pack.md)、[`lip pkg view`](commands/pkg_view.md) |
+| [开发工具](../interface/tools.md) | 在一个会检查内容的表单里创建和编辑 `lip.toml`；迁移 `tooth.json`。 | [`lip pkg migrate`](commands/pkg_migrate.md)；表单能做 [`lip pkg init`](commands/pkg_init.md) 做的事，而且更多 |
 | [设置](../interface/settings.md) | 语言、GitHub 代理、自动重启、缓存、lip 的更新、守护进程、版本。 | [`lip config`](commands/config.md)、[`lip cache clean`](commands/cache_clean.md)、[`lip self-update`](commands/self_update.md)、[`lip daemon status`](commands/daemon.md)、`lip --version` |
 
 界面执行的命令遵守该命令自己的页面的定义，以当前工作区为工作目录，但有以下不同：
@@ -75,11 +74,11 @@ lip
 
 | 内容 | 服务器运行期间 |
 | --- | --- |
-| 安装、更新和卸载包（[模组](../interface/mods.md)、[获取模组](../interface/get_mods.md)） | 不可用。 |
-| 在它的文件夹里新建服务器、更改它的游戏或加载器（[工作区](../interface/workspaces.md)） | 不可用。 |
+| 安装、更新和卸载包（[模组](../interface/mods.md)、[市场](../interface/get_mods.md)） | 不可用。 |
+| 安装服务器（[服务器](../interface/server.md#安装服务器)）、更改它的游戏或加载器（[服务器](../interface/server.md#更改游戏或加载器的版本)） | 不可用。 |
 | `server.properties`、`allowlist.json`、`permissions.json`（[游戏配置](../interface/game_config.md)） | 只显示，不能修改或保存。未保存的更改会保留到服务器停止。 |
 | 模组的配置文件（[模组配置](../interface/mod_config.md)） | 照常修改和保存。页面会提示更改可能需要重启。 |
-| 其他一切：浏览模组、切换工作区、[工具](../interface/tools.md)、[设置](../interface/settings.md) | 照常。 |
+| 其他一切：浏览模组、切换工作区、[开发工具](../interface/tools.md)、[设置](../interface/settings.md) | 照常。 |
 
 不可用的内容仍然显示在屏幕上，是灰色的，并注明原因：**请先停止服务器。**
 
@@ -139,8 +138,9 @@ lip
 | 工作区里的 `.lip/config.toml` | 读写 `restart`（自动重启）。 |
 | 工作区里的 `server.properties`、`allowlist.json`、`permissions.json` | 读取；**保存**时写入。 |
 | `mods/` 下模组的配置文件 | 读取；**保存**时写入其中的 `.json` 文件。 |
+| 工作区里的 `lip.toml` | 在“开发工具”页读取；保存表单并确认后写入。 |
 | 工作区里的 `.lip/logs/` | 命令失败时写入失败报告。 |
-| `https://levimc.org/api/v4/mods/` | 读取模组目录。其内容不会写入磁盘，也不经过 `github_proxy`。 |
+| `https://levimc.org/api/v4/mods/` | 读取模组目录，供“市场”页和 `lip.toml` 表单的依赖使用。其内容不会写入磁盘，也不经过 `github_proxy`。 |
 
 界面执行的命令会读写它们各自页面所说的文件。lip 的所有文件和目录见[文件](files.md)。
 

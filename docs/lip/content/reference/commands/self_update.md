@@ -62,6 +62,8 @@ A failure in steps 1 to 4 changes no file of the installation.
 
 The [daemon](daemon.md) that carried out an update which replaced lip or started the installer exits once it is idle, so that the next command starts the new version. While it still runs a managed server, it keeps running; see [After an update](daemon.md#after-an-update).
 
+The interface that you run keeps running the old version. When **Install update** on its [Settings](../../interface/settings.md) page installed the update, the interface says to quit lip and run it again (or, when the installer was started, to quit so that the installer can finish), with the buttons **Quit lip** and **Later**. Once the interface has ended, lip writes a line such as `lip was updated to 1.1.0. Run lip again to start it.` to standard error.
+
 ### Network
 
 Both the tags and the update file go through [`github_proxy`](../configuration.md#github-proxy) when it is set, and to GitHub directly when the proxy fails. lip does not read `SHA256SUMS` or the GitHub API. A proxy could change what lip installs, so use one you trust.

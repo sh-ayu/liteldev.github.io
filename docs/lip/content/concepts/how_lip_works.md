@@ -137,7 +137,7 @@ See [Managed servers](../reference/commands/run.md#managed-servers).
 
 ## The interface and the commands
 
-The interface is not a second program with its own logic. Each thing you do in it is one of the commands, run in the selected workspace, with its output shown in a dialog instead of on the terminal. What a command does is the same either way.
+The interface is not a second program with its own logic. Each thing you do in it to the packages, the server or the settings of lip is one of the commands, run in the selected workspace, with its output shown in a dialog instead of on the terminal. What a command does is the same either way. Only the editors have no command behind them: those of the configuration files of the game and of the mods, and the form that creates and edits `lip.toml`.
 
 The interface adds caution in one place. **While the server of the selected workspace runs, the interface:**
 

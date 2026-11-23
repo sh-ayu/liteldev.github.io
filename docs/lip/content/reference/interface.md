@@ -12,7 +12,7 @@ lip
 
 `lip` without arguments opens the interface when its standard input and its standard output are both terminals; otherwise it writes its help (see [Command line](cli.md)).
 
-- The interface works on one workspace at a time, the **selected workspace**: at first the folder that `lip` was started in.
+- The interface works on one workspace at a time, the **selected workspace**: at first the folder that `lip` was started in. The top line shows it; `Enter` on it opens the [workspace picker](../interface/workspaces.md), to select, add or remove a workspace.
 - The [daemon](../concepts/how_lip_works.md) of lip carries the interface out. Several interfaces can be open at once.
 - The terminal must have at least 60 columns and 16 rows. In a smaller one lip asks you to enlarge it, and the only key that works is `Ctrl+C`, which quits without asking.
 - In a terminal narrower than 80 columns, the sidebar shows one symbol for each page while a page has the focus.
@@ -23,7 +23,7 @@ The same keys do the same on every page. The bottom line of the screen lists the
 
 | Key | Does |
 | --- | --- |
-| `↑` `↓` | Moves in a list or a menu. In the sidebar, shows the page before or after. |
+| `↑` `↓` | Moves in a list or a menu. In the sidebar, shows the page before or after; `↑` on the first page and `↓` on the last reach the workspace in the top line. |
 | `←` `→` | Moves between the sidebar and the page, and between panes or buttons side by side; changes an option that has several values. |
 | `Enter` | Opens or carries out what is selected. On a row of a list, opens its actions. |
 | `Space` | Checks a row where several can be chosen; switches an option on or off. |
@@ -38,13 +38,12 @@ The same keys do the same on every page. The bottom line of the screen lists the
 | Page | Does | Commands |
 | --- | --- | --- |
 | [Home](../interface/home.md) | Shows the state of the selected workspace and the next step to take. | |
-| [Server](../interface/server.md) | Starts and stops the server, shows what it writes, and sends it what you type. | [`lip run --managed --detach`](commands/run.md), [`lip config set restart … --workspace`](commands/config.md) |
-| [Mods](../interface/mods.md) | Lists the installed packages; installs, updates and uninstalls them. | [`lip list`](commands/list.md), [`lip install`](commands/install.md), [`lip update`](commands/update.md), [`lip uninstall`](commands/uninstall.md) |
-| [Get mods](../interface/get_mods.md) | Searches the mods of levimc.org, and installs a version of one. | [`lip install`](commands/install.md) |
-| [Game config](../interface/game_config.md) | Edits `server.properties`, `allowlist.json` and `permissions.json`. | None |
-| [Mod config](../interface/mod_config.md) | Edits the configuration files of the installed mods. | None |
-| [Workspaces](../interface/workspaces.md) | Lists the workspaces; selects, adds and removes them; sets up a new server; changes the game or the loader of one. | [`lip setup`](commands/setup.md) |
-| [Tools](../interface/tools.md) | Creates a `lip.toml`, migrates a `tooth.json`, packs a ZIP, views a package. | [`lip pkg init`](commands/pkg_init.md), [`lip pkg migrate`](commands/pkg_migrate.md), [`lip pkg pack`](commands/pkg_pack.md), [`lip pkg view`](commands/pkg_view.md) |
+| [Server](../interface/server.md) | [Sets up the server](../interface/server.md#set-up-the-server) and [changes its game or loader version](../interface/server.md#change-the-game-or-the-loader-version); starts and stops it, shows what it writes, and sends it what you type. | [`lip setup`](commands/setup.md), [`lip run --managed --detach`](commands/run.md), [`lip config set restart … --workspace`](commands/config.md) |
+| [Mods](../interface/mods.md) | Lists the installed mods and what they need, without the game and the loader; installs, updates and uninstalls them. | [`lip list`](commands/list.md), [`lip install`](commands/install.md), [`lip update`](commands/update.md), [`lip uninstall`](commands/uninstall.md) |
+| [Marketplace](../interface/get_mods.md) | Searches the mods of levimc.org, and installs a version of one. | [`lip install`](commands/install.md) |
+| [Game Config](../interface/game_config.md) | Edits `server.properties`, `allowlist.json` and `permissions.json`. | None |
+| [Mod Config](../interface/mod_config.md) | Edits the configuration files of the installed mods. | None |
+| [Develop Tools](../interface/tools.md) | Creates and edits a `lip.toml` in a form that checks it; migrates a `tooth.json`. | [`lip pkg migrate`](commands/pkg_migrate.md); the form does what [`lip pkg init`](commands/pkg_init.md) does, and more |
 | [Settings](../interface/settings.md) | Language, GitHub proxy, auto restart, cache, updates of lip, the daemon, the version. | [`lip config`](commands/config.md), [`lip cache clean`](commands/cache_clean.md), [`lip self-update`](commands/self_update.md), [`lip daemon status`](commands/daemon.md), `lip --version` |
 
 A command that the interface carries out behaves as its own page defines, with the selected workspace as its working directory, and with these differences:
@@ -75,11 +74,11 @@ The server of a workspace runs while lip runs it, whoever started it: an interfa
 
 | What | While its server runs |
 | --- | --- |
-| Installing, updating and uninstalling packages ([Mods](../interface/mods.md), [Get mods](../interface/get_mods.md)) | Off. |
-| Setting up a new server in its folder, changing its game or loader ([Workspaces](../interface/workspaces.md)) | Off. |
-| `server.properties`, `allowlist.json`, `permissions.json` ([Game config](../interface/game_config.md)) | Shown, not changed or saved. Unsaved changes are kept until the server has stopped. |
-| The configuration files of the mods ([Mod config](../interface/mod_config.md)) | Changed and saved as usual. The page notes that a change may need a restart. |
-| Everything else: browsing mods, switching workspaces, [Tools](../interface/tools.md), [Settings](../interface/settings.md) | As usual. |
+| Installing, updating and uninstalling packages ([Mods](../interface/mods.md), [Marketplace](../interface/get_mods.md)) | Off. |
+| Setting up the server ([Server](../interface/server.md#set-up-the-server)), changing its game or loader ([Server](../interface/server.md#change-the-game-or-the-loader-version)) | Off. |
+| `server.properties`, `allowlist.json`, `permissions.json` ([Game Config](../interface/game_config.md)) | Shown, not changed or saved. Unsaved changes are kept until the server has stopped. |
+| The configuration files of the mods ([Mod Config](../interface/mod_config.md)) | Changed and saved as usual. The page notes that a change may need a restart. |
+| Everything else: browsing mods, switching workspaces, [Develop Tools](../interface/tools.md), [Settings](../interface/settings.md) | As usual. |
 
 What is off stays on the screen, dimmed, with the reason **Stop the server first.**
 
@@ -91,9 +90,9 @@ Quitting the interface does not stop a server that the daemon runs. When lip car
 
 | File | Read | Written |
 | --- | --- | --- |
-| `server.properties` | When the Game config page is shown. | On **Save**: the values of the properties that changed, and no other character. Not created when it does not exist. |
+| `server.properties` | When the Game Config page is shown. | On **Save**: the values of the properties that changed, and no other character. Not created when it does not exist. |
 | `allowlist.json`, `permissions.json` | The same. A file that does not exist is read as an empty list. | On **Save**: the whole file, without comments. Created when it does not exist. |
-| A `.json` file of a mod | When the file is selected on the Mod config page. | On **Save**: the whole file, without comments, each name where it was. Not created when it no longer exists. |
+| A `.json` file of a mod | When the file is selected on the Mod Config page. | On **Save**: the whole file, without comments, each name where it was. Not created when it no longer exists. |
 | Any other file of a mod | The same. | Never. |
 
 - A file that lip cannot read is shown, and never written.
@@ -139,8 +138,9 @@ See [Settings](../interface/settings.md#github-proxy).
 | `.lip/config.toml` in a workspace | Reads and writes `restart` (Auto restart). |
 | `server.properties`, `allowlist.json`, `permissions.json` in a workspace | Reads them; writes them on **Save**. |
 | The configuration files of the mods, below `mods/` | Reads them; writes the `.json` ones on **Save**. |
+| `lip.toml` in a workspace | Reads it on the Develop Tools page; writes it when you save the form and confirm. |
 | `.lip/logs/` in a workspace | Writes a failure report when a command fails. |
-| `https://levimc.org/api/v4/mods/` | Reads the mod catalogue. Nothing of it is written to disk, and `github_proxy` is not used for it. |
+| `https://levimc.org/api/v4/mods/` | Reads the mod catalogue, for the Marketplace page and for the dependencies of the `lip.toml` form. Nothing of it is written to disk, and `github_proxy` is not used for it. |
 
 The commands that the interface carries out read and write what their own pages say. [Files](files.md) lists every file and directory of lip.
 

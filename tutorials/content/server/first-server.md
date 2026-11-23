@@ -57,9 +57,9 @@ If `~/.local/bin` is not on your `PATH`, add `export PATH="$HOME/.local/bin:$PAT
 
    :::
 
-2. You should see the **Home** page of `lip`: a sidebar at the left, an overview that says the folder holds no game yet, and three **Next steps**, of which **Create a server** is selected.
+2. You should see the **Home** page of `lip`. The top bar names the folder that `lip` works in, `D:\servers`. At the left is the sidebar with the pages of `lip`; at the right, an overview that says the folder holds no game yet, and four **Next steps**. Step 1, **Choose a workspace**, already has a tick: `lip` works in the folder that you started it in.
 
-   ![The Home page of lip in the empty folder D:\servers. The sidebar lists nine pages; the overview says that no game is installed; "Create a server" is selected.](https://levimc.org/lip/screenshots/en/first-server-01-home.svg)
+   ![The Home page of lip in the empty folder D:\servers. The sidebar lists eight pages; the overview says that no game is installed; step 1, "Choose a workspace", has a tick.](https://levimc.org/lip/screenshots/en/first-server-01-home.svg)
 
    You need only a few keys: `↑` and `↓` move, `Enter` opens or confirms, `Esc` goes back. The bottom line always lists the keys that work right now.
 
@@ -69,26 +69,42 @@ LeviLamina comes from GitHub. If `lip` cannot reach it, it asks what to do. Choo
 
 ## 3. Create the server
 
-1. With **Create a server** selected, press `Enter`. `lip` asks where the server goes. Each server needs a folder of its own, so choose **Another folder…** (`↓`, then `Enter`).
-2. The folder browser opens at `D:\servers`. Press `Tab` to reach the buttons, `→` to reach **New folder…**, and `Enter`. Type `survival` and press `Enter`. `lip` creates `D:\servers\survival` and takes it as the folder of the server.
-3. Choose the **Game version**. The newest version is at the top. Select the newest one marked **LeviLamina ✓** (versions marked **No LeviLamina** cannot run mods) and press `Enter`.
+1. Each server needs a folder of its own, so make one first. Press `↑` to select **Choose a workspace**, and `Enter`. The **Workspaces** list opens: it holds `D:\servers`, marked with a **●** as the folder that `lip` works in.
+2. Press `Tab` to move to **Add folder…**, and `Enter`.
 
-   ![The dialog "Game version" lists eight versions; most are marked "LeviLamina ✓". The first, 1.26.60, is selected.](https://levimc.org/lip/screenshots/en/first-server-05-game-version.svg)
+   ![The Workspaces list over the Home page: the row "Add folder…", then D:\servers with a dot.](https://levimc.org/lip/screenshots/en/first-server-02-where.svg)
 
-   On Linux, `lip` then asks for the **Build**: choose **windows**, the only one that runs LeviLamina.
+3. The folder browser opens at `D:\servers`. Press `Tab` to reach the buttons, `→` to reach **New folder…**, and `Enter`. Type `survival` and press `Enter`. `lip` creates `D:\servers\survival` and opens it.
 
-4. Choose the **Loader**: keep the newest LeviLamina and press `Enter`.
-5. `lip` shows its plan before it changes anything: lines starting with `Dry run:` say that it would install the game (`bds`) and LeviLamina. Press `Enter` on **Apply**.
+   ![The folder browser "Add folder" at D:\servers, which holds only "..". Below are the buttons "Select this folder", "New folder…" and "Cancel".](https://levimc.org/lip/screenshots/en/first-server-03-folder.svg)
+
+4. Press `←` to reach **Select this folder**, and `Enter`. `lip` adds the folder to the list and works in it from now on: you are back on **Home**, the top bar names `D:\servers\survival`, and **Set up the server** is selected.
+
+   ![The Home page in D:\servers\survival: the top bar names the folder, the overview says that no game is installed, and step 2, "Set up the server", is selected.](https://levimc.org/lip/screenshots/en/first-server-04-home-folder.svg)
+
+5. Press `Enter`. The **Server** page opens and asks for the **Game version**. The newest version is at the top. Select the newest one marked **LeviLamina ✓** (versions marked **No LeviLamina** cannot run mods) and press `Enter`.
+
+   ![The dialog "Game version" over the Server page lists eight versions; most are marked "LeviLamina ✓". The first, 1.26.60, is selected.](https://levimc.org/lip/screenshots/en/first-server-05-game-version.svg)
+
+   On Linux, `lip` then asks for the **Build** of a version that also has a Linux server: choose **windows**, the one that runs LeviLamina.
+
+6. Choose the **Loader**: keep the newest LeviLamina and press `Enter`.
+7. `lip` shows its plan before it changes anything: lines starting with `Dry run:` say that it would install the game (`bds`) and LeviLamina. Press `Enter` on **Apply**.
 
    ![The dialog "Set up server" with three "Dry run:" lines and the buttons "Apply" and "Cancel".](https://levimc.org/lip/screenshots/en/first-server-07-plan.svg)
 
-6. Read the Minecraft End User License Agreement and the Microsoft Privacy Policy at the addresses shown. To accept them, press `Enter` on **Accept**. If you decline, nothing is installed.
-7. Wait while `lip` downloads and installs. The first time, it may also install the Microsoft Visual C++ Redistributable (Windows asks you to allow it), or Wine on Linux and macOS.
-8. You should see **✓ Done.** Press `Enter`. You are now on the **Workspaces** page, and `D:\servers\survival` is in the list with a **●**: it is the folder that `lip` works in now.
+8. Read the Minecraft End User License Agreement and the Microsoft Privacy Policy at the addresses shown. To accept them, press `Enter` on **Accept**. If you decline, nothing is installed.
+9. Wait while `lip` downloads and installs. The first time, it may also install the Microsoft Visual C++ Redistributable (Windows asks you to allow it), or Wine on Linux and macOS.
+10. You should see **✓ Done.** Press `Enter` on **OK**. The **Server** page now says **○ Stopped**: the server is set up, and its **Start** button starts it.
+
+    ![The Server page after the setup: "○ Stopped", the button "Start", the box "Auto restart", the button "Change versions…", and no output yet. The top bar names D:\servers\survival.](https://levimc.org/lip/screenshots/en/first-server-11-workspace.svg)
 
 ## 4. Start the server
 
-1. Go back to **Home**: press `Esc` to move to the sidebar, `↑` until **Home** is highlighted, and `Enter`. The overview now names the game and LeviLamina, and **Create a server** has a tick.
+1. Go back to **Home**: press `Esc` to move to the sidebar, `↑` to **Home**, and `Enter`. The overview now names the game and LeviLamina, and **Set up the server** has a tick.
+
+   ![The Home page in D:\servers\survival: the game 1.26.60 and LeviLamina 26.60.3 are installed; steps 1 and 2 have a tick, and step 3, "Install mods", is selected.](https://levimc.org/lip/screenshots/en/first-server-12-home-server.svg)
+
 2. **Install mods** is selected. Skip it for now: press `↓` to select **Start the server**, then `Enter`.
 3. `lip` starts the server and shows the **Server** page. Wait for the line `Server started.` in the output. The lines marked `[LeviLamina]` show that the loader is running.
 
@@ -106,7 +122,7 @@ To play on it from Minecraft on the same PC, add a server with the address `127.
 2. You should see **Exited with code 0** in the first line: the server ended normally. The **Start** button starts it again.
 3. To leave `lip`, press `Esc` until you are in the sidebar, `Esc` once more, and confirm **Quit**.
 
-Next time, start `lip` in `D:\servers\survival` (or in any folder: your server is listed on the **Workspaces** page).
+Next time, start `lip` in `D:\servers\survival`. Started in another folder, `lip` still knows your server: on **Home**, press `Enter` on **Choose a workspace**, then `Enter` on `D:\servers\survival` in the list, and choose **Switch**.
 
 ## What you have now
 
@@ -122,9 +138,9 @@ While the server runs, `lip` does not install, update or remove anything in its 
 - Add mods to the server: [Install mods on your server](install-mods.md).
 - Let other players connect: [Let friends join your server](let-friends-join.md).
 - Do the same with commands, for scripts and remote machines: [A server from the command line](command-line.md).
-- Change the server name, game mode or number of players: [Game config](https://levimc.org/lip/interface/game_config.html).
+- Change the server name, game mode or number of players: [Game Config](https://levimc.org/lip/interface/game_config.html).
 - Restart the server by itself after a crash: [Server](https://levimc.org/lip/interface/server.html).
-- Add a second server, or change the game version: [Workspaces](https://levimc.org/lip/interface/workspaces.html).
+- Add a second server: [Workspaces](https://levimc.org/lip/interface/workspaces.html). Change the game or LeviLamina version: **Change versions…** on the [Server](https://levimc.org/lip/interface/server.html) page.
 - Learn every page of the interface: [A tour of the interface](https://levimc.org/lip/interface/tour.html).
 - How `lip` runs the Windows server on Linux and macOS: [Linux and macOS](https://levimc.org/lip/guides/linux_macos.html).
 - Something went wrong: [lip troubleshooting](https://levimc.org/lip/guides/troubleshooting.html) and [LeviLamina troubleshooting](https://levimc.org/faq/server/levilamina/errors/).

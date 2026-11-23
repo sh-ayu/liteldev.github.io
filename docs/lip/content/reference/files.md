@@ -2,7 +2,7 @@
 
 This page lists every file and directory that lip reads or writes, so that you know what you may delete, back up or edit, and what you lose when you do.
 
-lip writes to four places only: the workspace it operates on, its per-user directories, paths that you give as arguments, and its installation directory when it updates itself. It never writes to the system temporary directory. The programs it runs (the server, hook commands, installers and Wine) write where they like.
+lip writes to three places only: the workspace it operates on, its per-user directories, and its installation directory when it updates itself. It never writes to the system temporary directory. The programs it runs (the server, hook commands, installers and Wine) write where they like.
 
 ## The workspace
 
@@ -14,6 +14,7 @@ A **workspace** is the directory of one server. It is the current directory of a
 | `mods/` | The directory that LeviLamina loads mods from. Each mod is in `mods/<mod name>/`. | lip, and the mods themselves |
 | `bedrock_server_mod.exe`, `bedrock_server.exe`, `bedrock_server` | The server that [`lip run`](commands/run.md) starts. See [The server files](#the-server-files). | lip |
 | Everything else | The files of the game and of file packages, and what the server creates when it runs, such as `worlds/`. | lip and the server |
+| `lip.toml`, `tooth.json` | In the directory of a package that you develop: its [package file](../concepts/lip_toml.md), and that of lip v0.x. | [`lip pkg init`](commands/pkg_init.md), [`lip pkg migrate`](commands/pkg_migrate.md), which deletes `tooth.json`, and the [Develop Tools](../interface/tools.md) page |
 | `tooth_lock.json` | The state of a workspace of lip v0.x. See [State file](../concepts/state_file.md#workspaces-of-lip-v0-x). | lip v0.x |
 
 lip creates `mods/` before an operation changes the workspace. `mods` must be a real directory: when it is a link, the operation fails.
@@ -140,7 +141,7 @@ Deleting it while no lip process runs loses nothing but the workspace list. The 
 
 ### workspaces.json
 
-The list of workspaces that the interface shows on its [Workspaces](../interface/workspaces.md) page: a JSON array of absolute paths, in the order they were added.
+The list of workspaces that the interface shows in its [workspace picker](../interface/workspaces.md), which opens from the top line: a JSON array of absolute paths, in the order they were added.
 
 ```json
 ["D:\\servers\\survival", "D:\\servers\\creative"]
@@ -191,4 +192,4 @@ A [dry run](cli.md#dry-run) that fails may write one too; it is the only file a 
 - [How lip works](../concepts/how_lip_works.md): operations, the journal and the locks explained.
 - [State file](../concepts/state_file.md)
 - [Troubleshooting](../guides/troubleshooting.md)
-- [Workspaces](../interface/workspaces.md) in the interface.
+- [Workspaces](../interface/workspaces.md): the workspace picker of the interface.

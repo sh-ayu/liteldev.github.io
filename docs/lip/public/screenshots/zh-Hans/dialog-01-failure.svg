@@ -29,6 +29,10 @@
 <text x="238" y="122.5" textLength="9" lengthAdjust="spacingAndGlyphs" font-weight="700">]</text>
 <text x="265" y="122.5" textLength="27" lengthAdjust="spacingAndGlyphs">[ ]</text>
 <text x="310 328 346 364" y="122.5" text-anchor="middle">自动重启</text>
+<text x="391" y="122.5" textLength="9" lengthAdjust="spacingAndGlyphs">[</text>
+<text x="418 436 454 472" y="122.5" text-anchor="middle">更改版本</text>
+<text x="485.5" y="122.5" text-anchor="middle">…</text>
+<text x="499" y="122.5" textLength="9" lengthAdjust="spacingAndGlyphs">]</text>
 <text x="49 67" y="142.5" text-anchor="middle">模组</text>
 <text x="202 220" y="142.5" text-anchor="middle" font-weight="700">输出</text>
 <text x="76 94 112 130 148" y="162.5" text-anchor="middle" fill="#f07178" font-weight="700">启动服务器</text>

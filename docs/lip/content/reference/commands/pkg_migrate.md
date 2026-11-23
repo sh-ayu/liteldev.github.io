@@ -22,6 +22,7 @@ What is converted:
 
 - `tooth` becomes `id`. `version` and `info` are copied; an `info.avatar_url` that starts with `https://` becomes `info.logo`, and is dropped otherwise.
 - Each label becomes a variant. For each platform (RID) it applies to, its variants are merged as lip v0.37.0 merged them, into an entry for the client when the merged variants depend on `github.com/LiteLDev/LeviLamina#client`, an entry for the server when they depend on another variant of `github.com/LiteLDev/LeviLamina`, and an entry for each side when they do not depend on LeviLamina.
+- LeviLamina has had no variant `client` since 26.60.8, its first version with a `lip.toml`: its variant `""` has an entry for each side. So a dependency on `github.com/LiteLDev/LeviLamina#client` (or `#client_<y>`) whose range allows a version of at least 26.60.8 becomes one on `github.com/LiteLDev/LeviLamina` (or `#<y>`), with its range narrowed to the versions of at least 26.60.8, unless the entry already depends on that. A range that allows no such version is kept as it is. Then the client entries of the label `client` (or `client_<y>`) that now depend on LeviLamina move to the variant `""` (or `<y>`), unless that variant already has a client entry for the same platform. Each such change is written as a warning.
 - Each entry is converted as lip reads a `tooth.json` of an [earlier format](../../concepts/lip_toml.md#earlier-formats): `dependencies` become `deps`; assets keep their `type` and `urls`, and their `placements` become `place`; `preserve_files` becomes `preserve`; `remove_files` becomes `purge`; the scripts become `hooks`. Placements and patterns that are not valid in `lip.toml` are left out.
 - A platform whose merged variants have an asset of type `tar`, `tgz` or `uncompressed` gets no entry: `lip.toml` has no such asset types.
 - [Templates](../../concepts/lip_toml.md#templates) are kept. A value such as `https://example.com/v{{version}}/tool.zip`, or `$(version)` in formats 1 and 2, is written as the same template, with `{{tooth}}` (`$(path)` in formats 1 and 2) renamed to `{{id}}`. A template that would render to another value in `lip.toml` is written as its rendered value.
@@ -72,5 +73,5 @@ lip pkg migrate
 ## See also
 
 - [Migrating packages](../../authors/migrating_packages.md)
-- [Tools](../../interface/tools.md): **Migrate tooth.json** in the interface.
+- [Develop Tools](../../interface/tools.md): **Migrate tooth.json** in the interface.
 - [lip.toml](../../concepts/lip_toml.md#earlier-formats)

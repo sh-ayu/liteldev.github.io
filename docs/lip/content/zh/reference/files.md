@@ -2,7 +2,7 @@
 
 本页列出 lip 读写的每一个文件和目录，让你知道哪些可以删除、备份或编辑，以及这样做会失去什么。
 
-lip 只向四个地方写入：它操作的工作区、它的用户级目录、你在参数中给出的路径，以及更新自身时的安装目录。它从不向系统临时目录写入。它运行的程序（服务器、钩子命令、安装程序和 Wine）写到哪里不受此限。
+lip 只向三个地方写入：它操作的工作区、它的用户级目录，以及更新自身时的安装目录。它从不向系统临时目录写入。它运行的程序（服务器、钩子命令、安装程序和 Wine）写到哪里不受此限。
 
 ## 工作区
 
@@ -14,6 +14,7 @@ lip 只向四个地方写入：它操作的工作区、它的用户级目录、�
 | `mods/` | LeviLamina 加载模组的目录。每个模组位于 `mods/<模组名>/`。 | lip，以及模组自己 |
 | `bedrock_server_mod.exe`、`bedrock_server.exe`、`bedrock_server` | [`lip run`](commands/run.md) 启动的服务器。参见[服务器文件](#服务器文件)。 | lip |
 | 其余的一切 | 游戏和文件包的文件，以及服务器运行时创建的内容，例如 `worlds/`。 | lip 和服务器 |
+| `lip.toml`、`tooth.json` | 在你开发的包的目录里：包的[包文件](../concepts/lip_toml.md)，以及 lip v0.x 的包文件。 | [`lip pkg init`](commands/pkg_init.md)、[`lip pkg migrate`](commands/pkg_migrate.md)（它会删除 `tooth.json`），以及[开发工具](../interface/tools.md)页 |
 | `tooth_lock.json` | lip v0.x 工作区的状态。参见[状态文件](../concepts/state_file.md#lip-v0-x-的工作区)。 | lip v0.x |
 
 在操作更改工作区之前，lip 会创建 `mods/`。`mods` 必须是真正的目录：如果它是链接，操作失败。
@@ -140,7 +141,7 @@ lip 可能在这里保存其他条目。不要依赖它们。
 
 ### workspaces.json
 
-界面在[工作区](../interface/workspaces.md)页显示的工作区列表：一个由绝对路径组成的 JSON 数组，按添加顺序排列。
+界面的[工作区选择器](../interface/workspaces.md)（从顶部一行打开）显示的工作区列表：一个由绝对路径组成的 JSON 数组，按添加顺序排列。
 
 ```json
 ["D:\\servers\\survival", "D:\\servers\\creative"]
@@ -191,4 +192,4 @@ Full report: .lip\logs\20260115T093012Z-4812.log
 - [lip 的工作方式](../concepts/how_lip_works.md)：对操作、日志和锁的解释。
 - [状态文件](../concepts/state_file.md)
 - [故障排除](../guides/troubleshooting.md)
-- 界面中的[工作区](../interface/workspaces.md)页。
+- [工作区](../interface/workspaces.md)：界面中的工作区选择器。

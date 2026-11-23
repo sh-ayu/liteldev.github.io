@@ -120,7 +120,7 @@ lip 只认识它自己安装并记录在服务器文件夹 `.lip/`（状态文�
 
 ## 在 BDS 控制台里输入 `lip install ...`（如更新 LeviLamina）提示 Unknown command / 无效，lip 命令应该在哪里执行？LeviLamina 会自动更新吗？
 
-lip 是独立的命令行程序，不是 BDS 控制台命令。要在系统终端（cmd/PowerShell）里执行，并先切换到服务器根目录（`盘符:` 然后 `cd 路径`；也可以在资源管理器打开服务器目录，在地址栏输入 `cmd` 回车）。只输入 `lip` 不带参数会打开 lip 的终端界面，可在里面创建服务器、安装模组、启动服务器。LeviLamina 不会自动更新：更换 LeviLamina/游戏版本用 `lip setup --game <游戏版本> --loader levilamina@<版本>`（或在界面的工作区页面操作），更新其他模组用 `lip update`。面板服无法使用终端时只能手动替换文件或联系服务商。
+lip 是独立的命令行程序，不是 BDS 控制台命令。要在系统终端（cmd/PowerShell）里执行，并先切换到服务器根目录（`盘符:` 然后 `cd 路径`；也可以在资源管理器打开服务器目录，在地址栏输入 `cmd` 回车）。只输入 `lip` 不带参数会打开 lip 的终端界面，可在里面创建服务器、安装模组、启动服务器。LeviLamina 不会自动更新：更换 LeviLamina/游戏版本用 `lip setup --game <游戏版本> --loader levilamina@<版本>`（或在界面服务器页面上用**更改版本…**），更新其他模组用 `lip update`。面板服无法使用终端时只能手动替换文件或联系服务商。
 
 *适用版本：lip v0.40+（当前 v0.41.1）*
 
@@ -285,7 +285,7 @@ lip 以当前工作目录作为工作区，必须在服务端根目录（`bedroc
 
 ## 用 lip 安装 LeviLamina 时包名是什么？去哪里查 lip 包？
 
-LeviLamina 的包名是 `github.com/LiteLDev/LeviLamina`，LiteLDev 组织下的仓库可简写，如 `lip install LeviLamina`（等同完整写法；新建服务端更推荐 `lip setup --game <版本>`，会自动选配合适的 LeviLamina）。lip 没有中心化仓库，包就是公开 git 仓库的地址；想找 mod 可以运行 `lip` 打开交互界面的 Get mods 页面，或在 levimc.org 上浏览。
+LeviLamina 的包名是 `github.com/LiteLDev/LeviLamina`，LiteLDev 组织下的仓库可简写，如 `lip install LeviLamina`（等同完整写法；新建服务端更推荐 `lip setup --game <版本>`，会自动选配合适的 LeviLamina）。lip 没有中心化仓库，包就是公开 git 仓库的地址；想找 mod 可以运行 `lip` 打开交互界面的**市场**页面，或在 levimc.org 上浏览。
 
 *适用版本：lip 0.41.x 及以上*
 

@@ -128,18 +128,18 @@ curl.exe -s -o NUL -w "%{http_code}" "https://v4.gh-proxy.org/https://github.com
 
 ### LeviLamina 的插件/模组去哪里找、去哪里发布？（旧论坛、lippkg、bedrinth 都打不开了）
 
-LiteLDev 论坛早已关闭，`lippkg.com`、`bedrinth`、`pkg.levimc.org` 也都已弃用。现在的插件/模组目录是 LeviMC 模组：<https://levimc.org/zh-Hans/mods/>，每个模组页面都给出安装命令，可以用 lip（`lip install github.com/<作者>/<仓库>`，或在 lip 界面的「获取模组」页）安装，客户端模组也可在 LeviLauncher 里浏览安装。作者发布模组只需在 GitHub 上用 `lip.toml` 发版本标签，目录会自动或经 PR 收录；问题反馈请走各项目的 GitHub issue。
+LiteLDev 论坛早已关闭，`lippkg.com`、`bedrinth`、`pkg.levimc.org` 也都已弃用。现在的插件/模组目录是 LeviMC 模组：<https://levimc.org/zh-Hans/mods/>，每个模组页面都给出安装命令，可以用 lip（`lip install github.com/<作者>/<仓库>`，或在 lip 界面的「市场」页）安装，客户端模组也可在 LeviLauncher 里浏览安装。作者发布模组只需在 GitHub 上用 `lip.toml` 发版本标签，目录会自动或经 PR 收录；问题反馈请走各项目的 GitHub issue。
 
 *适用版本：当前所有版本（lip 0.40 及以上、LeviLauncher）*
 
 ### 自己在 GitHub 发布了 LeviLamina 模组，怎样才能被 lip 的模组目录（LeviMC 模组 / LeviLauncher）收录？为什么一直搜不到？
 
-现在的目录是 LeviMC 模组（<https://levimc.org/zh-Hans/mods/>），lip 的「获取模组」页和 LeviLauncher 都读它，原来的 lipr / bedrinth 已被替代。它由 `LiteLDev/liteldev.github.io` 仓库里的 `mods/repos.txt` 仓库列表构建：
+现在的目录是 LeviMC 模组（<https://levimc.org/zh-Hans/mods/>），lip 的「市场」页和 LeviLauncher 都读它，原来的 lipr / bedrinth 已被替代。它由 `LiteLDev/liteldev.github.io` 仓库里的 `mods/repos.txt` 仓库列表构建：
 
 1. 自动发现：每两小时有机器人用 GitHub 代码搜索查找根目录带 `lip.toml`（或旧的 `tooth.json`）、且有 lip 能读取的版本标签的仓库，然后发 PR 把它加入 `repos.txt`；维护者合并后，在下一次每小时构建中出现。fork 仓库不会被发现。因为依赖 GitHub 代码搜索（其配额也常被用尽而跳过某次运行），新仓库在 GitHub 建好代码索引之前可能搜不到，这时直接走第 2 步自己发 PR 最快。
 2. 想更快上架：自己发 PR 编辑 `mods/repos.txt`，加一行 `<作者>/<仓库>`。
 3. 收录条件：版本标签必须是 `v` 加完整语义化版本（如 `v1.0.0`，不能是 `1.0.0` 或 `v1.0`），且标签处 `lip.toml` 的 `version` 与之一致；最新版本依赖 LeviLamina（直接或间接）；把文件放到 `mods/`（或 `plugins/` 等）；仓库不是 GitHub 模板，名字不以 `-template`、`-example`、`-demo`、`-sample`、`-test` 结尾。
-4. 自查：`lip pkg view github.com/<作者>/<仓库>` 应在 `versions` 中列出你的版本；也可在测试服务器上 `lip install`（加 `--dry-run` 可不改文件）。
+4. 自查：在测试服务器上执行 `lip install github.com/<作者>/<仓库>@<版本> --dry-run`，应能找到你的版本，且不改动任何文件。
 
 不想被收录：关闭机器人发的 PR（关闭后不会再提议）或删除 `repos.txt` 中的那一行。另外，lip 本身不依赖目录，没被收录的仓库也能用 `lip install github.com/<作者>/<仓库>` 直接安装。
 
@@ -189,7 +189,7 @@ lipui 已归档，不再可用。它的功能已并入 lip 本身：在终端里
 
 ### lip 能不能像 pacman 那样只输入包名（如 `lip -S levilamina`）就从模组列表搜索安装？
 
-命令行不能按包名搜索安装。lip 包由来源（仓库地址）唯一标识，如 `github.com/LiteLDev/LegacyScriptEngine`，没有中央仓库，第三方包必须写完整仓库路径。例外：不含 `/` 的名字视为 `github.com/LiteLDev/` 下的仓库，所以 LiteLDev 官方包可以写简称，如 `lip install LeviLamina`、`lip install LeviOptimize`。想按名字搜索，可在终端输入 `lip` 打开界面，在“获取模组”页搜索 levimc.org 上收录的模组，或在 <https://levimc.org/mods/> 查找。
+命令行不能按包名搜索安装。lip 包由来源（仓库地址）唯一标识，如 `github.com/LiteLDev/LegacyScriptEngine`，没有中央仓库，第三方包必须写完整仓库路径。例外：不含 `/` 的名字视为 `github.com/LiteLDev/` 下的仓库，所以 LiteLDev 官方包可以写简称，如 `lip install LeviLamina`、`lip install LeviOptimize`。想按名字搜索，可在终端输入 `lip` 打开界面，在“市场”页搜索 levimc.org 上收录的模组，或在 <https://levimc.org/mods/> 查找。
 
 *适用版本：lip v0.41.0 及以上*
 
@@ -209,7 +209,7 @@ lipui 已归档，不再可用。它的功能已并入 lip 本身：在终端里
 
 能。当前 lip（v0.40.0 起的正式版，最新 v0.41.1；v0.37.0 及更早使用 `tooth.json`）的包描述文件已改为 `lip.toml`（`format = 4`），但仍会读取 lip v0.x 时代的 `tooth.json`（format 1、2、3）：format 1/2 先按 format 3 解读，再在本地转换成 `lip.toml` 的结构后安装，与普通包无异；旧工作区的 `tooth_lock.json`、`liprc.json` 也会在首次使用时自动迁移为 `.lip/state.json`、`config.toml`。
 
-包作者应在新版本中改用 `lip.toml`，可在仓库根目录执行 `lip pkg migrate` 把 `tooth.json` 转换为 `lip.toml`（会删除 `tooth.json`，需检查警告后提交），再用 `lip pkg view .` 检查。旧格式文档不必再去翻旧 tag，lip 文档的 `lip.toml`「Earlier formats」一节说明了 `tooth.json` 的读取规则。
+包作者应在新版本中改用 `lip.toml`，可在仓库根目录执行 `lip pkg migrate` 把 `tooth.json` 转换为 `lip.toml`（会删除 `tooth.json`，需检查警告后提交），再在界面的**开发工具**页用**编辑 lip.toml** 检查。旧格式文档不必再去翻旧 tag，lip 文档的 `lip.toml`「Earlier formats」一节说明了 `tooth.json` 的读取规则。
 
 注意：新版 lip 没有中心仓库也没有模块代理（不再走 goproxy/lipr），直接从 git 仓库获取包；GitHub 慢时用 `lip config set github_proxy <URL>` 设置代理。
 
@@ -255,13 +255,13 @@ lip 只把名字恰好为 `v` 加 SemVer 2.0.0 版本号的标签当作版本，
 
 修复方法：补发一个带 `v` 的标签/Release。lip 现在直接通过 git 协议查询仓库标签，不经过 Go 模块代理，也不缓存标签列表，新标签立刻生效，不需要再换 GOPROXY。
 
-在 `lip.toml` 中可以用 `{{version}}` 引用版本号（例如在资源 URL 里），`{{id}}` 引用包 ID。可用 `lip pkg view github.com/<作者>/<仓库>` 确认版本是否被识别。
+在 `lip.toml` 中可以用 `{{version}}` 引用版本号（例如在资源 URL 里），`{{id}}` 引用包 ID。可用 `lip install github.com/<作者>/<仓库>@<版本> --dry-run` 确认版本是否被识别。
 
 *适用版本：lip 0.40 及以上（lip.toml 格式 4）；旧 tooth.json 包的标签规则相同*
 
 ### lip 能安装本地的包吗？开发时能否不发布就在本地测试自己的包？
 
-可以。把根目录带 `lip.toml` 的 ZIP 文件或文件夹路径交给 `lip install` 即可，例如 `lip install ./my-mod.zip` 或 `lip install ../MyTool`（也支持 `https://` 上的 ZIP）。ZIP 只按内容识别，扩展名无所谓，旧的 `.tth` 改名做法已不需要；可用 `lip pkg pack <目录> -o my-mod.zip` 打包，用 `lip pkg view .` 检查 `lip.toml` 能否被读取。
+可以。把根目录带 `lip.toml` 的 ZIP 文件或文件夹路径交给 `lip install` 即可，例如 `lip install ./my-mod.zip` 或 `lip install ../MyTool`（也支持 `https://` 上的 ZIP）。ZIP 只按内容识别，扩展名无所谓，旧的 `.tth` 改名做法已不需要；打包时把文件夹压缩成 ZIP，使 `lip.toml` 位于压缩包根目录；可用 `lip install <文件夹> --dry-run` 检查 lip 能否读取。
 
 另外也可以在推送标签前用 `lip install github.com/user/repo@branch:main` 或 `@rev:<40位提交>` 测试。
 
@@ -276,7 +276,7 @@ lip 只把名字恰好为 `v` 加 SemVer 2.0.0 版本号的标签当作版本，
 3. `lip.toml` 中的 `id` 必须等于仓库路径（如 `github.com/user/repo`），`version` 必须等于 tag 版本，且所请求的 variant 要有适配当前环境（平台/side）的条目，否则该版本不会被当作候选。
 4. 仓库必须是公开的。
 
-可用 `lip pkg view <仓库或 .>` 检查 lip 能否读取。
+可用 `lip install <仓库>@<版本> --dry-run` 检查 lip 能否读取，或在界面的**开发工具**页用**编辑 lip.toml** 打开本地的 `lip.toml`。
 
 *适用版本：lip 0.40 及以上*
 
@@ -288,7 +288,7 @@ lip 文档现在放在 LeviMC 官网：<https://levimc.org/zh-Hans/lip/>（英�
 
 ### lip 的包索引网站（`lippkg.com` / `bedrinth.com` / `pkg.levimc.org`）打不开或证书过期，lip 是不是停了？还能用 lip 安装包吗？
 
-lip 没有停，只是包目录网站多次换址：`lippkg.com` → `bedrinth.com` → `pkg.levimc.org`，这些旧地址都已弃用，不要再用。现在的目录是 LeviMC 模组：<https://levimc.org/zh-Hans/mods/>（lip 界面里的「获取模组」页和 LeviLauncher 显示的也是这个目录）。另外，目录网站挂了并不影响 lip 安装：lip 没有中央仓库，直接从包的 git 仓库读取版本，用 `lip install github.com/<作者>/<仓库>` 照样能装。
+lip 没有停，只是包目录网站多次换址：`lippkg.com` → `bedrinth.com` → `pkg.levimc.org`，这些旧地址都已弃用，不要再用。现在的目录是 LeviMC 模组：<https://levimc.org/zh-Hans/mods/>（lip 界面里的「市场」页和 LeviLauncher 显示的也是这个目录）。另外，目录网站挂了并不影响 lip 安装：lip 没有中央仓库，直接从包的 git 仓库读取版本，用 `lip install github.com/<作者>/<仓库>` 照样能装。
 
 *适用版本：lip 0.40 及以上*
 

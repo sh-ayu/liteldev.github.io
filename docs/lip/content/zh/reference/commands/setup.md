@@ -153,7 +153,7 @@ lip setup --game 1.21.50 --dry-run
 ## 另请参阅
 
 - [用命令行开服](https://levimc.org/zh-Hans/tutorials/server/command-line/)
-- [工作区](../../interface/workspaces.md)：界面中的新建服务器向导和更换版本。
+- [服务器](../../interface/server.md)：在界面中[安装服务器](../../interface/server.md#安装服务器)和[更改游戏或加载器的版本](../../interface/server.md#更改游戏或加载器的版本)。
 - [更换游戏后保留什么](../files.md#更换游戏后保留什么)
 - [`lip install`](install.md#用-install-进行设置)：安装 LeviLamina 或服务器本身时，它会设置服务器。
 - [`lip run`](run.md)

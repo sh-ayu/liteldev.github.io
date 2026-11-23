@@ -120,7 +120,7 @@ lip only knows the packages it installed itself and recorded in the server folde
 
 ## Typing `lip install ...` (for example to update LeviLamina) in the BDS console says Unknown command / does nothing. Where should lip commands be run? Does LeviLamina update automatically?
 
-lip is a standalone command-line program, not a BDS console command. Run it in a system terminal (cmd/PowerShell) after switching to the server root directory (`drive letter:` then `cd path`; or open the server directory in File Explorer and type `cmd` in the address bar and press Enter). Typing just `lip` with no arguments opens lip's terminal interface, where you can create a server, install mods and start the server. LeviLamina does not update automatically: to change the LeviLamina/game version, use `lip setup --game <game version> --loader levilamina@<version>` (or use the workspace page of the interface), and update other mods with `lip update`. If a panel-hosted server gives you no terminal, you can only replace the files manually or contact the provider.
+lip is a standalone command-line program, not a BDS console command. Run it in a system terminal (cmd/PowerShell) after switching to the server root directory (`drive letter:` then `cd path`; or open the server directory in File Explorer and type `cmd` in the address bar and press Enter). Typing just `lip` with no arguments opens lip's terminal interface, where you can create a server, install mods and start the server. LeviLamina does not update automatically: to change the LeviLamina/game version, use `lip setup --game <game version> --loader levilamina@<version>` (or use **Change versions…** on the Server page of the interface), and update other mods with `lip update`. If a panel-hosted server gives you no terminal, you can only replace the files manually or contact the provider.
 
 *Applies to: lip v0.40+ (currently v0.41.1)*
 
@@ -285,7 +285,7 @@ To install LegacyScriptEngine, you only install the package itself (for example 
 
 ## What is the package name when installing LeviLamina with lip? Where can I look up lip packages?
 
-The package name of LeviLamina is `github.com/LiteLDev/LeviLamina`. Repositories under the LiteLDev organization can be shortened, such as `lip install LeviLamina` (equivalent to the full form; for a new server, `lip setup --game <version>` is recommended, which automatically selects a suitable LeviLamina). lip has no central repository: a package is the address of a public git repository. To find mods, run `lip` to open the Get mods page of the interactive interface, or browse levimc.org.
+The package name of LeviLamina is `github.com/LiteLDev/LeviLamina`. Repositories under the LiteLDev organization can be shortened, such as `lip install LeviLamina` (equivalent to the full form; for a new server, `lip setup --game <version>` is recommended, which automatically selects a suitable LeviLamina). lip has no central repository: a package is the address of a public git repository. To find mods, run `lip` to open the Marketplace page of the interactive interface, or browse levimc.org.
 
 *Applies to: lip 0.41.x and later*
 

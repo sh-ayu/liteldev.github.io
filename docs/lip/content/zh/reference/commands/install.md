@@ -130,6 +130,6 @@ lip install LeviLamina github.com/user/repo --accept-eula
 ## 另请参阅
 
 - [管理包](../../guides/managing_packages.md)
-- [获取模组](../../interface/get_mods.md)：在界面中查找和安装模组。
+- [市场](../../interface/get_mods.md)：在界面中查找和安装模组。
 - [`lip setup`](setup.md)、[`lip update`](update.md)、[`lip uninstall`](uninstall.md)、[`lip list`](list.md)
 - [lip.toml](../../concepts/lip_toml.md)：什么是包。

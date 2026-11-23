@@ -128,18 +128,18 @@ Additionally: a client entry (`side = "client"`) also depends on LeviLamina with
 
 ### Where do I find and publish plugins/mods for LeviLamina? (The old forum, lippkg and bedrinth no longer open)
 
-The LiteLDev forum has been closed for a long time, and `lippkg.com`, `bedrinth` and `pkg.levimc.org` are deprecated as well. The current plugin/mod directory is LeviMC Mods: <https://levimc.org/mods/>. Every mod page shows its install command, and you can install with lip (`lip install github.com/<author>/<repo>`, or on the "Get mods" page of the lip interface). Client mods can also be browsed and installed in LeviLauncher. To publish a mod, an author only needs to tag a version on GitHub with a `lip.toml`; the directory picks it up automatically or through a PR. Report problems through the GitHub issues of each project.
+The LiteLDev forum has been closed for a long time, and `lippkg.com`, `bedrinth` and `pkg.levimc.org` are deprecated as well. The current plugin/mod directory is LeviMC Mods: <https://levimc.org/mods/>. Every mod page shows its install command, and you can install with lip (`lip install github.com/<author>/<repo>`, or on the "Marketplace" page of the lip interface). Client mods can also be browsed and installed in LeviLauncher. To publish a mod, an author only needs to tag a version on GitHub with a `lip.toml`; the directory picks it up automatically or through a PR. Report problems through the GitHub issues of each project.
 
 *Applies to: all current versions (lip 0.40 and later, LeviLauncher)*
 
 ### I published a LeviLamina mod on GitHub. How do I get it listed in lip's mod directory (LeviMC Mods / LeviLauncher)? Why can't it be found?
 
-The current directory is LeviMC Mods (<https://levimc.org/mods/>). The "Get mods" page of lip and LeviLauncher both read it, and it replaces the former lipr / bedrinth. It is built from the repository list in `mods/repos.txt` in the `LiteLDev/liteldev.github.io` repository:
+The current directory is LeviMC Mods (<https://levimc.org/mods/>). The "Marketplace" page of lip and LeviLauncher both read it, and it replaces the former lipr / bedrinth. It is built from the repository list in `mods/repos.txt` in the `LiteLDev/liteldev.github.io` repository:
 
 1. Automatic discovery: every two hours a bot uses GitHub code search to find repositories that have a `lip.toml` (or the old `tooth.json`) in the root and a version tag lip can read, and then opens a PR adding the repository to `repos.txt`. After the maintainers merge it, the mod appears in the next hourly build. Forked repositories are not discovered. Because this relies on GitHub code search (whose quota is often exhausted, so some runs are skipped), a new repository may not be found until GitHub has built its code index. In that case, opening a PR yourself (step 2) is the fastest way.
 2. To get listed faster: open a PR that edits `mods/repos.txt` and adds a line `<author>/<repo>`.
 3. Requirements: the version tag must be `v` plus a full semantic version (such as `v1.0.0`, not `1.0.0` or `v1.0`), and the `version` in `lip.toml` at that tag must match it; the latest version must depend on LeviLamina (directly or indirectly); put the files in `mods/` (or `plugins/` and so on); the repository must not be a GitHub template, and its name must not end with `-template`, `-example`, `-demo`, `-sample` or `-test`.
-4. Self-check: `lip pkg view github.com/<author>/<repo>` should list your version under `versions`; you can also run `lip install` on a test server (add `--dry-run` to leave files untouched).
+4. Self-check: on a test server, `lip install github.com/<author>/<repo>@<version> --dry-run` should find your version without changing any file.
 
 If you do not want to be listed: close the PR the bot opened (it will not propose it again after that) or delete your line from `repos.txt`. Also, lip itself does not depend on the directory: a repository that is not listed can still be installed directly with `lip install github.com/<author>/<repo>`.
 
@@ -189,7 +189,7 @@ A hook command that exits with a non-zero exit code fails the whole operation (i
 
 ### Can lip search the mod list and install from just a package name, like pacman (for example `lip -S levilamina`)?
 
-The command line cannot search and install by package name. A lip package is uniquely identified by its source (the repository address), such as `github.com/LiteLDev/LegacyScriptEngine`, and there is no central repository, so third-party packages must be written with the full repository path. The exception: a name without `/` is treated as a repository under `github.com/LiteLDev/`, so official LiteLDev packages can be written in short form, such as `lip install LeviLamina` and `lip install LeviOptimize`. To search by name, type `lip` in a terminal to open the interface and search the mods listed on levimc.org on the "Get mods" page, or look them up at <https://levimc.org/mods/>.
+The command line cannot search and install by package name. A lip package is uniquely identified by its source (the repository address), such as `github.com/LiteLDev/LegacyScriptEngine`, and there is no central repository, so third-party packages must be written with the full repository path. The exception: a name without `/` is treated as a repository under `github.com/LiteLDev/`, so official LiteLDev packages can be written in short form, such as `lip install LeviLamina` and `lip install LeviOptimize`. To search by name, type `lip` in a terminal to open the interface and search the mods listed on levimc.org on the "Marketplace" page, or look them up at <https://levimc.org/mods/>.
 
 *Applies to: lip v0.41.0 and later*
 
@@ -209,7 +209,7 @@ This is `github.com/LiteLDev/levilamina-loc`, the language pack (localization) o
 
 Yes. The package description file of current lip (stable releases since v0.40.0, latest v0.41.1; v0.37.0 and earlier used `tooth.json`) is `lip.toml` (`format = 4`), but lip still reads `tooth.json` from the lip v0.x era (format 1, 2, 3): format 1/2 is interpreted as format 3 first, then converted locally to the `lip.toml` structure and installed, just like a regular package. In old workspaces, `tooth_lock.json` and `liprc.json` are migrated automatically on first use to `.lip/state.json` and `config.toml`.
 
-Package authors should switch to `lip.toml` in new versions. Run `lip pkg migrate` in the repository root to convert `tooth.json` to `lip.toml` (this deletes `tooth.json`; check the warnings before committing), then verify with `lip pkg view .`. You do not need to dig through old tags for the old format documentation: the "Earlier formats" section of the `lip.toml` page in the lip documentation describes how `tooth.json` is read.
+Package authors should switch to `lip.toml` in new versions. Run `lip pkg migrate` in the repository root to convert `tooth.json` to `lip.toml` (this deletes `tooth.json`; check the warnings before committing), then check it with **Edit lip.toml** on the **Develop Tools** page of the interface. You do not need to dig through old tags for the old format documentation: the "Earlier formats" section of the `lip.toml` page in the lip documentation describes how `tooth.json` is read.
 
 Note: new lip has no central repository and no module proxy (it no longer uses goproxy/lipr) and fetches packages directly from git repositories; if GitHub is slow, set a proxy with `lip config set github_proxy <URL>`.
 
@@ -255,13 +255,13 @@ lip only treats a tag as a version if its name is exactly `v` followed by a SemV
 
 To fix it, publish an additional tag/Release with the `v` prefix. lip now queries the repository tags directly over the git protocol, without going through a Go module proxy and without caching the tag list, so a new tag takes effect immediately and you no longer need to change GOPROXY.
 
-In `lip.toml` you can reference the version with `{{version}}` (for example in an asset URL) and the package ID with `{{id}}`. Use `lip pkg view github.com/<author>/<repo>` to confirm that the version is recognized.
+In `lip.toml` you can reference the version with `{{version}}` (for example in an asset URL) and the package ID with `{{id}}`. Run `lip install github.com/<author>/<repo>@<version> --dry-run` to confirm that the version is recognized.
 
 *Applies to: lip 0.40 and later (lip.toml format 4); the same tag rules apply to old tooth.json packages*
 
 ### Can lip install a local package? Can I test my own package locally during development without publishing it?
 
-Yes. Pass `lip install` the path of a ZIP file or a folder that has a `lip.toml` at its root, for example `lip install ./my-mod.zip` or `lip install ../MyTool` (a ZIP at an `https://` URL also works). A ZIP is recognized by its content only, so the extension does not matter and the old trick of renaming to `.tth` is no longer needed. You can pack with `lip pkg pack <directory> -o my-mod.zip` and check that `lip.toml` can be read with `lip pkg view .`.
+Yes. Pass `lip install` the path of a ZIP file or a folder that has a `lip.toml` at its root, for example `lip install ./my-mod.zip` or `lip install ../MyTool` (a ZIP at an `https://` URL also works). A ZIP is recognized by its content only, so the extension does not matter and the old trick of renaming to `.tth` is no longer needed. To make the ZIP, compress the folder so that `lip.toml` is at the root of the archive; `lip install <folder> --dry-run` checks that lip can read it.
 
 You can also test before pushing a tag with `lip install github.com/user/repo@branch:main` or `@rev:<40-char-commit>`.
 
@@ -276,7 +276,7 @@ Prefer managing everything with lip (including LeviLamina itself): files you put
 3. `id` in `lip.toml` must equal the repository path (such as `github.com/user/repo`), `version` must equal the tag's version, and the requested variant must have an entry matching the current environment (platform/side); otherwise that version is not considered a candidate.
 4. The repository must be public.
 
-Use `lip pkg view <repository or .>` to check whether lip can read it.
+Run `lip install <repository>@<version> --dry-run` to check whether lip can read it, or open the local `lip.toml` with **Edit lip.toml** on the **Develop Tools** page of the interface.
 
 *Applies to: lip 0.40 and later*
 
@@ -288,7 +288,7 @@ The lip documentation is now on the LeviMC website: <https://levimc.org/lip/> (a
 
 ### The lip package index sites (`lippkg.com` / `bedrinth.com` / `pkg.levimc.org`) don't open or have an expired certificate. Has lip been discontinued? Can I still install packages with lip?
 
-lip has not been discontinued; the package directory site has just changed address several times: `lippkg.com` → `bedrinth.com` → `pkg.levimc.org`. These old addresses are all deprecated, so don't use them any more. The current directory is LeviMC mods: <https://levimc.org/mods/> (the "Get mods" page in lip's interface and the one shown in LeviLauncher are the same directory). Also, a directory site being down doesn't affect installing with lip: lip has no central repository and reads versions directly from a package's git repository, so `lip install github.com/<author>/<repository>` still works.
+lip has not been discontinued; the package directory site has just changed address several times: `lippkg.com` → `bedrinth.com` → `pkg.levimc.org`. These old addresses are all deprecated, so don't use them any more. The current directory is LeviMC mods: <https://levimc.org/mods/> (the "Marketplace" page in lip's interface and the one shown in LeviLauncher are the same directory). Also, a directory site being down doesn't affect installing with lip: lip has no central repository and reads versions directly from a package's git repository, so `lip install github.com/<author>/<repository>` still works.
 
 *Applies to: lip 0.40 and later*
 

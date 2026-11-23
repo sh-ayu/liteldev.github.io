@@ -12,9 +12,9 @@ Open a terminal in the folder of your server, or in an empty folder where you wa
 lip
 ```
 
-lip takes over the whole terminal window and shows its Home page. The folder you started it in is the **workspace**: the folder that every page works on.
+lip takes over the whole terminal window and shows its Home page. The folder you started it in is the **workspace**: the folder that every page works on. You can choose another one later in the [workspace picker](./workspaces.md).
 
-![The Home page of lip in an empty folder. The first step, "Create a server", is highlighted, and the bottom line lists the keys that work.](/screenshots/en/home-01-empty.svg)
+![The Home page of lip in an empty folder. The step "Set up the server" is highlighted, and the bottom line lists the keys that work.](/screenshots/en/home-01-empty.svg)
 
 You use the keyboard only. The mouse does nothing.
 
@@ -26,15 +26,15 @@ You use the keyboard only. The mouse does nothing.
 
 ![The Home page of a server that runs, with numbers on its five parts: the top line, the server state, the sidebar, the page and the bottom line.](/screenshots/en/tour-01-layout.svg)
 
-1. **The top line** shows the version of lip and the workspace.
+1. **The top line** shows the version of lip and the workspace. The workspace can take the focus: `Enter` on it opens the [workspace picker](./workspaces.md), where you choose another one.
 2. At its right end, the top line says whether the server of this workspace runs. While the server is stopped, nothing is shown there.
-3. **The sidebar** lists the nine pages: [Home](./home.md), [Server](./server.md), [Mods](./mods.md), [Get mods](./get_mods.md), [Game config](./game_config.md), [Mod config](./mod_config.md), [Workspaces](./workspaces.md), [Tools](./tools.md) and [Settings](./settings.md). A green `●` after Server means that the server runs.
+3. **The sidebar** lists the eight pages: [Home](./home.md), [Server](./server.md), [Mods](./mods.md), [Marketplace](./get_mods.md), [Game Config](./game_config.md), [Mod Config](./mod_config.md), [Develop Tools](./tools.md) and [Settings](./settings.md). A green `●` after Server means that the server runs.
 4. **The page** is the large box. Its name is written into its frame.
 5. **The bottom line** lists the keys that work right now, each with a word that says what it does. It changes whenever you move. When in doubt, read it.
 
 ## Where the focus is
 
-At any moment, either the sidebar or the page takes your keys. That part has the **focus**. lip starts with the focus in the Home page.
+At any moment, either the sidebar, the page, or the workspace in the top line takes your keys. That part has the **focus**. lip starts with the focus in the Home page.
 
 Press `Esc` to move the focus from the page to the sidebar. There, `↑` and `↓` go through the pages, and each page shows at once as you pass it.
 
@@ -43,7 +43,9 @@ Press `Esc` to move the focus from the page to the sidebar. There, `↑` and `�
 1. The entry of the page shown is bright while the sidebar has the focus.
 2. In the sidebar, `Esc` asks whether to quit lip.
 
-Press `Enter` to move the focus into the page.
+Above the first page, Home, is the workspace in the top line: `↑` on Home highlights it, and so does `↓` on the last page, Settings. `Enter` there opens the [workspace picker](./workspaces.md), and `Esc` goes back to the sidebar.
+
+Press `Enter` on a page to move the focus into it.
 
 ![The focus is in the Mods page. Its frame is bright, a row of the list is highlighted, and the bottom line says "Esc Back".](/screenshots/en/tour-03-page.svg)
 
@@ -60,6 +62,7 @@ Press `Enter` to move the focus into the page.
 | A dialog or a menu | What was below it. |
 | An inner part of a page, such as the input line of the server | The part of the page that it was entered from. |
 | A page | The sidebar. |
+| The workspace in the top line | The sidebar. |
 | The sidebar | The question whether to quit lip. |
 
 So pressing `Esc` several times always brings you to the sidebar, and once more to the question about quitting. Nothing is lost on the way: a page with changes that are not saved asks first.
@@ -70,7 +73,7 @@ The same keys do the same thing on every page.
 
 | Key | Does |
 | --- | --- |
-| `↑` `↓` | Move in a list or a menu. In the sidebar, show the page above or below. |
+| `↑` `↓` | Move in a list or a menu. In the sidebar, show the page above or below; above the first page and below the last is the workspace in the top line. |
 | `←` `→` | Move between the sidebar and the page, and between parts or buttons that are side by side. Change the value of an option that is drawn `‹ like this ›`. |
 | `Enter` | Opens or carries out what is highlighted. On a row of a list, opens the menu of what you can do with it. |
 | `Space` | Checks a row where several can be checked. Switches an option on or off. |
@@ -84,7 +87,7 @@ There are no letter shortcuts. Letters are typed only where a text field has the
 
 A list or a text that is longer than its box shows `▲` and `▼` at its right edge, and the bottom line then names the keys that scroll it:
 
-![The details of a mod on the Get mods page have the focus. Marks at the right edge show that there is more above and below, and the bottom line lists the keys that scroll.](/screenshots/en/get-mods-07-details-scroll.svg)
+![The details of a mod on the Marketplace page have the focus. Marks at the right edge show that there is more above and below, and the bottom line lists the keys that scroll.](/screenshots/en/get-mods-07-details-scroll.svg)
 
 1. The part that has the focus has a bright title.
 2. `▲` and `▼` mean that there are more lines above and below.
@@ -125,8 +128,6 @@ When lip cannot use what you typed, the dialog stays open and says what it expec
 ![A text field that holds "tag:". Below it a line says "Give a version, branch:<name>, tag:<name> or rev:<commit>."](/screenshots/en/mods-23-update-to-invalid.svg)
 
 **A message.** It has one button, Close.
-
-![A message: "The catalogue has no entry for this mod.", with a Close button.](/screenshots/en/mods-33-not-in-catalogue.svg)
 
 **A long text**, such as the README of a mod, opens in a window that fills the screen. Scroll with the arrow keys; `Esc` or `Enter` closes it.
 
@@ -234,25 +235,15 @@ Above the top folder of a drive is the list of the drives. Open one to go on; no
 
 On Linux and macOS there are no drives: the top is `/`.
 
-### Its four forms
+### Its two forms
 
 The browser looks a little different depending on what lip asks for.
 
-**A folder that exists**, for example when you add a folder on the [Workspaces](./workspaces.md) page. This is the picture at the top of this section. **Select this folder** chooses the folder shown. **New folder…** asks for a name, makes that folder inside the one shown, and opens it.
-
-**A folder that may be new**, for a new server. It looks the same, but **New folder…** makes nothing yet: lip creates the folder when it sets the server up.
-
-![The folder browser of a new server, with the buttons Select this folder, New folder… and Cancel.](/screenshots/en/new-server-02-folder.svg)
-
-![The dialog "New folder" with a name typed into its field.](/screenshots/en/new-server-03-folder-name.svg)
+**A folder**, when you add a folder in the [workspace picker](./workspaces.md#add-a-folder). This is the picture at the top of this section. **Select this folder** chooses the folder shown. **New folder…** asks for a name, makes that folder inside the one shown, and opens it.
 
 **A file or a folder**, when you install a mod from your disk on the [Mods](./mods.md) page. The list also shows the files that can be chosen, and a line above the buttons names their kind. `Enter` on a file chooses it; **Select this folder** chooses the folder shown.
 
 ![The browser with a folder and two .zip files. A line says "Files: .zip", and the buttons are Select this folder and Cancel.](/screenshots/en/mods-15-browse.svg)
-
-**A file to write**, on the [Tools](./tools.md) page. A field below the list holds the name of the file. Go to the folder you want, change the name if you like, and choose **Save**.
-
-![The browser with a field "File name" that holds "package.zip", and the buttons Save, New folder… and Cancel.](/screenshots/en/tools-04-pack-output.svg)
 
 ## While the server runs
 
@@ -264,7 +255,7 @@ While the server of the workspace runs, lip changes neither its mods nor the fil
 | Setting up the server, changing the game or the loader | Off. |
 | `server.properties`, `allowlist.json`, `permissions.json` on the [Game config](./game_config.md) page | Can be read, not saved. |
 | The configuration files of the mods on the [Mod config](./mod_config.md) page | Can be changed and saved. |
-| Everything else: browsing mods, Tools, Settings | Works as usual. |
+| Everything else: the Marketplace, Develop Tools, Settings, the workspace picker | Works as usual. |
 
 What is off stays on the screen in gray, with the reason "Stop the server first.":
 
@@ -284,7 +275,7 @@ This holds whoever started the server: this interface, another terminal, or the 
 
 A short message sometimes appears at the right of the bottom line. It tells you that something was done, or why nothing happened. It goes away by itself after six seconds, and you do not have to answer it.
 
-![The Home page. At the right of the bottom line is the message "Create a server first."](/screenshots/en/home-06-need-server.svg)
+![The Home page. At the right of the bottom line is the message "Set up the server first."](/screenshots/en/home-06-need-server.svg)
 
 A message is green when something worked, yellow for a warning, red for a failure, and blue for plain information.
 
@@ -327,5 +318,5 @@ The interface is in English, Simplified Chinese or Traditional Chinese. At first
 ## Where to go next
 
 - [Your first server](https://levimc.org/tutorials/server/first-server/) goes from an empty folder to a running server with mods, step by step.
-- [Home](./home.md), [Server](./server.md), [Mods](./mods.md) and [Get mods](./get_mods.md) describe the pages you use most.
+- [Home](./home.md), [Server](./server.md), [Mods](./mods.md) and [Marketplace](./get_mods.md) describe the pages you use most, and [Workspaces](./workspaces.md) the workspace picker.
 - [The interface in brief](../reference/interface.md) is a short reference of every page and key.

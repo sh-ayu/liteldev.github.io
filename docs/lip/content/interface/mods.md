@@ -2,7 +2,7 @@
 
 The Mods page lists what is installed in your server. After this page you can read the list, install a mod from a file, a folder or an address, update mods, and uninstall them, and you know exactly what each kind of update does.
 
-To find and install the mods of levimc.org, use the [Get mods](./get_mods.md) page instead. If the keys or the parts of the screen are new to you, read [A tour of the interface](./tour.md) first.
+To find and install the mods of levimc.org, use the [Marketplace](./get_mods.md) page instead. If the keys or the parts of the screen are new to you, read [A tour of the interface](./tour.md) first.
 
 ## The list
 
@@ -10,7 +10,7 @@ To find and install the mods of levimc.org, use the [Get mods](./get_mods.md) pa
 
 1. **The action rows** act on the whole workspace.
 2. **Your mods**: the mods that you installed. Each has a box, `[ ]`, in front of it.
-3. Rows without a box, in two groups: first the **dependencies**, in gray, then **the game and its loader**.
+3. Rows without a box are the **dependencies**, in gray: mods that your mods need.
 
 Each row shows a mod and its version. The name is the address of the mod's repository, such as `github.com/LiteLDev/LeviOptimize`. A part after `#` is the variant of the mod that is installed, for example `#lua`.
 
@@ -18,9 +18,10 @@ Each row shows a mod and its version. The name is the address of the mod's repos
 | --- | --- | --- |
 | Your mods | A mod that you asked for. | Check it, update it, uninstall it. |
 | Dependencies | A mod that was installed because another mod needs it. | Update it. It cannot be uninstalled by itself: it goes when no mod needs it any more. |
-| The game and its loader | `github.com/LiteLDev/bds` is the Minecraft server, `github.com/LiteLDev/LeviLamina` the loader. | Nothing here. Their versions are changed on the [Workspaces](./workspaces.md) page. |
 
-The header of the list, `Installed (7)`, counts every row, the game and the loader included.
+The game (`github.com/LiteLDev/bds`), its loader (`github.com/LiteLDev/LeviLamina`) and what only they need are not listed: lip manages them with the server. Their versions are changed with **Change versions…** on the [Server](./server.md) page.
+
+The header of the list, `Installed (5)`, counts every row: your mods and their dependencies.
 
 `↑` on the first mod goes to the action rows, and `↓` on the last action row goes back to the list. `Tab` also goes from the action rows to the list.
 
@@ -38,7 +39,7 @@ For a mod that did not come from a numbered version of its repository, a third r
 
 | Source row | The mod was installed from |
 | --- | --- |
-| None | A version of its repository. This is what Get mods installs. |
+| None | A version of its repository. This is what the Marketplace installs. |
 | `branch:main`, `tag:…` or `rev:…` | A branch, a tag or a commit of its repository. |
 | An address that starts with `https://` | A `.zip` file on the web. |
 | A path, such as `D:\downloads\SpawnTweaks` | A `.zip` file or a folder on your disk. |
@@ -51,16 +52,16 @@ The source decides what **Update** does: see [What an update does](#what-an-upda
 
 ### A folder without a server, or without mods
 
-In a folder without a server, the list is empty, and the first action row leads to creating one. Mods need a server.
+In a folder without a server, the list is empty, and the first action row, **Set up server…**, leads to setting one up on the [Server](./server.md) page. Mods need a server.
 
-![The Mods page of an empty folder. The action rows are New server…, Install from source… and Get mods, and the list says "No mods yet."](/screenshots/en/mods-05-no-server.svg)
+![The Mods page of an empty folder. The action rows are Set up server…, Install from source… and Marketplace, and the list says "No mods yet."](/screenshots/en/mods-05-no-server.svg)
 
-1. **New server…** is there only while the folder has no server.
+1. **Set up server…** is there only while the folder has no server.
 2. The details area says one sentence about the highlighted row.
 
-In a server without mods, the list holds only the game and its loader, and **Get mods** takes the place of Update all:
+In a server without mods, the list is empty too, and **Marketplace** takes the place of Update all:
 
-![The Mods page of a server without mods. "Get mods" is highlighted, and the list holds the game and LeviLamina.](/screenshots/en/mods-06-no-mods.svg)
+![The Mods page of a server without mods. "Marketplace" is highlighted, and the list says "No mods yet."](/screenshots/en/mods-06-no-mods.svg)
 
 ## The menu of a mod
 
@@ -79,27 +80,21 @@ A dependency has no Uninstall:
 
 ![The menu of a dependency: Details, Update, Update to version…. The details area says "Installed because another mod needs it."](/screenshots/en/mods-31-dependency-menu.svg)
 
-The game and the loader have only Details and **Go to Workspaces**:
-
-![The menu of the game: Details and Go to Workspaces.](/screenshots/en/mods-32-game-menu.svg)
-
 ## Details
 
-**Details** shows the mod as the Get mods page shows it: its description, author, downloads, stars, license and what it depends on.
+**Details** shows the mod as the Marketplace page shows it: its description, author, downloads, stars, license and what it depends on.
 
 ![The details of a mod in a dialog, with the buttons README, Open in browser and Close.](/screenshots/en/mods-03-details.svg)
 
 **README** opens the text that the author wrote about the mod. **Open in browser** opens the page of the mod on levimc.org.
 
-The details come from the catalogue of levimc.org. When the catalogue does not list the mod, as for the game itself or for a mod that you installed from your own disk, lip says so:
-
-![A message: "The catalogue has no entry for this mod."](/screenshots/en/mods-33-not-in-catalogue.svg)
+The details come from the catalogue of levimc.org. When the catalogue does not list the mod, as for a mod that you installed from your own disk, lip says "The catalogue has no entry for this mod."
 
 When the catalogue cannot be read, lip says "Cannot read the catalogue." Try again when your connection is back.
 
 ## Installing from a source
 
-**Install from source…** installs a mod that you name yourself, instead of one that you pick on the Get mods page. Use it for a `.zip` file or a folder that someone gave you, or for a mod that levimc.org does not list.
+**Install from source…** installs a mod that you name yourself, instead of one that you pick on the Marketplace page. Use it for a `.zip` file or a folder that someone gave you, or for a mod that levimc.org does not list.
 
 1. Press `↑` until the action row **Install from source…** is highlighted, then `Enter`. lip asks how you want to name the mod.
 
@@ -209,7 +204,7 @@ What Update, and Update all, do with a mod depends on where it was installed fro
 
 | The mod was installed from | Update |
 | --- | --- |
-| A version of its repository, for example by Get mods | Moves it to the newest version that fits your server. It does not stay at the version you once picked. |
+| A version of its repository, for example by the Marketplace | Moves it to the newest version that fits your server. It does not stay at the version you once picked. |
 | A branch, such as `branch:main` | Stays on that branch and takes its newest state. |
 | A tag or a commit | Stays there. A commit never changes; a tag does only if its author moved it. |
 | A `.zip` file on the web | Downloads the file again and installs what it holds now. |
@@ -225,7 +220,7 @@ To keep a mod at one version, do not update it. There is no way to pin a mod so 
 
 ### When there is nothing newer
 
-When a mod is already at its newest version, there is nothing to apply: the plan says "Nothing would change." and has only a **Close** button. That holds however often you choose Update, also for a mod that Get mods installed at the version you picked.
+When a mod is already at its newest version, there is nothing to apply: the plan says "Nothing would change." and has only a **Close** button. That holds however often you choose Update, also for a mod that the Marketplace installed at the version you picked.
 
 ![The plan of an update that changes nothing: "Nothing would change.", with a Close button.](/screenshots/en/mods-30-up-to-date.svg)
 
@@ -260,7 +255,7 @@ To update or uninstall several mods in one go, check them first.
 
 1. Highlight a mod and press `Space`. Its box becomes `[x]`. Do the same for the others.
 
-   ![Two mods are checked. The header of the list says "Installed (7) · 2 checked".](/screenshots/en/mods-07-checked.svg)
+   ![Two mods are checked. The header of the list says "Installed (5) · 2 checked".](/screenshots/en/mods-07-checked.svg)
 
    1. `Space` checks and unchecks the highlighted mod.
    2. The header says how many are checked.
@@ -273,7 +268,7 @@ To update or uninstall several mods in one go, check them first.
    2. **Update … mods** and **Uninstall … mods** act on every checked mod, in one plan.
    3. **Uncheck all** clears the checks.
 
-Only your mods can be checked. Dependencies, the game and the loader have no box. The checks are cleared after an update or an uninstall.
+Only your mods can be checked. Dependencies have no box. The checks are cleared after an update or an uninstall.
 
 ## While the server runs
 

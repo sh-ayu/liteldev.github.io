@@ -1,6 +1,6 @@
 # Home
 
-The Home page is where lip starts. After this page you can read what it says about your folder, use its three steps to get a server running, and answer the question that lip asks when it cannot reach GitHub.
+The Home page is where lip starts. After this page you can read what it says about your folder, use its steps to get a server running, and answer the question that lip asks when it cannot reach GitHub.
 
 If the keys or the parts of the screen are new to you, read [A tour of the interface](./tour.md) first.
 
@@ -25,62 +25,67 @@ The upper part of the page says what the workspace, the folder that lip works on
 
 For a moment after the page opens, the rows show `…` while lip reads the folder.
 
-## The three steps
+## Next steps
 
-Below the overview are the three steps from an empty folder to a running server. lip highlights the first step that is not done, so in most cases you only press `Enter`.
+Below the overview, under **Next steps**, are the four steps from a folder to a running server. lip highlights the first step that is not done, so in most cases you only press `Enter`.
 
 Move between the steps with `↑` and `↓`. Press `Enter` to open the highlighted one.
 
 | Step | It is done when | `Enter` |
 | --- | --- | --- |
-| 1 Create a server | The folder has the game. | Starts the new server wizard on the [Workspaces](./workspaces.md) page. |
-| 2 Install mods | You installed at least one mod. | Opens the [Get mods](./get_mods.md) page. |
-| 3 Start the server | The server runs. | Opens the [Server](./server.md) page and starts the server. |
+| 1 Choose a workspace | Always: a workspace is always selected. | Opens the [workspace picker](./workspaces.md), to pick or add another folder. |
+| 2 Set up the server | The folder has the game. | Opens the [Server](./server.md) page and starts [setting up the server](./server.md#set-up-the-server). |
+| 3 Install mods | You installed at least one mod. | Opens the [Marketplace](./get_mods.md) page. |
+| 4 Start the server | The server runs. | Opens the [Server](./server.md) page and starts the server. |
 
-### Nothing done yet
+### Nothing set up yet
 
-In a folder without a server, no step is ticked and the first one is highlighted.
+In a folder without a server, only step 1 is ticked, and step 2 is highlighted.
 
-![The Home page of an empty folder. No step is ticked, and "Create a server" is highlighted.](/screenshots/en/home-01-empty.svg)
+![The Home page of an empty folder. Only "Choose a workspace" is ticked, and "Set up the server" is highlighted. The sentence below says "Pick a game version and a loader for this workspace."](/screenshots/en/home-01-empty.svg)
 
-Press `Enter` to create the server. [Your first server](https://levimc.org/tutorials/server/first-server/) walks through what follows.
+1. The page that is shown. The sidebar at its left lists every page.
+2. The next step: `Enter` starts it.
+3. The keys that work now.
 
-### The server is created
+Press `Enter` to set up the server in this folder. [Your first server](https://levimc.org/tutorials/server/first-server/) walks through what follows. If the server should go into another folder, choose that folder first with step 1.
 
-Once the folder has the game, step 1 is ticked and step 2 is highlighted. This is the picture at the top of this page. Press `Enter` to browse the mods of levimc.org.
+### The server is set up
 
-Step 2 is optional. A server without mods runs too: press `↓` and `Enter` to start it right away.
+Once the folder has the game, steps 1 and 2 are ticked and step 3 is highlighted. This is the picture at the top of this page. Press `Enter` to browse the mods of levimc.org.
+
+Step 3 is optional. A server without mods runs too: press `↓` and `Enter` to start it right away.
 
 ### Mods are installed
 
-With at least one mod installed, steps 1 and 2 are ticked and step 3 is highlighted.
+With at least one mod installed, steps 1 to 3 are ticked and step 4 is highlighted.
 
-![The Home page of a server with four mods. Steps 1 and 2 are ticked, and "Start the server" is highlighted.](/screenshots/en/home-04-mods-installed.svg)
+![The Home page of a server with four mods. Steps 1 to 3 are ticked, and "Start the server" is highlighted.](/screenshots/en/home-04-mods-installed.svg)
 
 Press `Enter`. lip opens the Server page and starts the server.
 
 ### The server runs
 
-While the server runs, all three steps are ticked. The top line and the overview both say "Running", and the Server entry of the sidebar has a `●`.
+While the server runs, all four steps are ticked. The top line and the overview both say "Running".
 
-![The Home page while the server runs. All three steps are ticked, and the sentence says "Running. Enter opens its console."](/screenshots/en/home-02-all-done.svg)
+![The Home page while the server runs. All four steps are ticked, and the top line says "Running".](/screenshots/en/home-02-all-done.svg)
 
-`Enter` on step 3 now opens the Server page without starting anything.
+`Enter` on step 4 now opens the Server page without starting anything; the sentence below the steps says **Running. Enter opens its console.**
 
 ### A finished step can be opened again
 
-A tick does not lock a step. `Enter` on step 2 always opens Get mods, where you can install more. `Enter` on a ticked step 1 starts the new server wizard again, to set up another server.
+A tick does not lock a step. `Enter` on step 1 always opens the workspace picker, and `Enter` on step 3 always opens the Marketplace, where you can install more. `Enter` on a ticked step 2 starts the setup again, to change the game or the loader version of the server.
 
-![Step 1 is ticked and highlighted. The sentence below says "Done. Enter sets up another server."](/screenshots/en/home-05-step-done.svg)
+![Step 2 is ticked and highlighted. The sentence below says "Done. Enter changes the game or loader version."](/screenshots/en/home-05-step-done.svg)
 
 ### Starting without a server
 
-In a folder without a server there is nothing to start. If you press `Enter` on step 3 there, lip says "Create a server first." at the right of the bottom line and moves the highlight back to step 1.
+In a folder without a server there is nothing to start. If you press `Enter` on step 4 there, lip says "Set up the server first." at the right of the bottom line and moves the highlight back to step 2.
 
-![The Home page of an empty folder after Enter on step 3. The bottom line says "Create a server first.", and step 1 is highlighted again.](/screenshots/en/home-06-need-server.svg)
+![The Home page of an empty folder after Enter on step 4. The bottom line says "Set up the server first.", and step 2 is highlighted again.](/screenshots/en/home-06-need-server.svg)
 
 1. The message. It goes away after a few seconds.
-2. The highlight is back on the first step.
+2. The highlight is back on the step that sets up the server.
 
 ## When GitHub cannot be reached
 
@@ -133,5 +138,5 @@ Choose this when you do not want to decide now. `Esc` does the same.
 lip changes nothing. It checks again the next time the interface starts, and asks again if the check fails again.
 
 ::: warning
-Until GitHub can be reached, creating a server with LeviLamina and installing most mods fail. The failure dialog then says that lip could not reach the server. See [Troubleshooting](../guides/troubleshooting.md).
+Until GitHub can be reached, setting up a server with LeviLamina and installing most mods fail. The failure dialog then says that lip could not reach the server. See [Troubleshooting](../guides/troubleshooting.md).
 :::

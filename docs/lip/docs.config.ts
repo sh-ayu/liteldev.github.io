@@ -56,11 +56,11 @@ const LABELS: Record<Locale, Labels> = {
     home: 'Home',
     server: 'Server',
     mods: 'Mods',
-    getMods: 'Get mods',
-    gameConfig: 'Game config',
-    modConfig: 'Mod config',
+    getMods: 'Marketplace',
+    gameConfig: 'Game Config',
+    modConfig: 'Mod Config',
     workspaces: 'Workspaces',
-    tools: 'Tools',
+    tools: 'Develop Tools',
     settings: 'Settings',
     usingCommands: 'Using the commands',
     managingPackages: 'Managing packages',
@@ -88,11 +88,11 @@ const LABELS: Record<Locale, Labels> = {
     home: '主页',
     server: '服务器',
     mods: '模组',
-    getMods: '获取模组',
+    getMods: '市场',
     gameConfig: '游戏配置',
     modConfig: '模组配置',
     workspaces: '工作区',
-    tools: '工具',
+    tools: '开发工具',
     settings: '设置',
     usingCommands: '使用命令',
     managingPackages: '管理包',
@@ -122,11 +122,11 @@ const LABELS: Record<Locale, Labels> = {
     home: '首頁',
     server: '伺服器',
     mods: '模組',
-    getMods: '取得模組',
+    getMods: '市集',
     gameConfig: '遊戲設定',
     modConfig: '模組設定',
     workspaces: '工作區',
-    tools: '工具',
+    tools: '開發工具',
     settings: '設定',
     usingCommands: '使用命令',
     managingPackages: '管理套件',
@@ -148,7 +148,7 @@ const LABELS: Record<Locale, Labels> = {
   },
 };
 
-const COMMANDS = ['cache_clean', 'config', 'daemon', 'install', 'list', 'pkg_init', 'pkg_migrate', 'pkg_pack', 'pkg_view', 'run', 'self_update', 'setup', 'uninstall', 'update'];
+const COMMANDS = ['cache_clean', 'config', 'daemon', 'install', 'list', 'pkg_init', 'pkg_migrate', 'run', 'self_update', 'setup', 'uninstall', 'update'];
 
 /**
  * The tabs of one locale, each with the tree of its sidebar. `p` is the folder of its pages, '/', '/zh/' or '/zh-Hant/':
@@ -255,10 +255,14 @@ const MOVED: Record<string, Target> = {
   'concepts/tooth_json': 'concepts/lip_toml.html',
   'concepts/lip_yaml': 'concepts/lip_toml.html',
   'cli/commands/init': 'reference/commands/pkg_init.html',
-  'cli/commands/pack': 'reference/commands/pkg_pack.html',
-  'cli/commands/view': 'reference/commands/pkg_view.html',
-  'cli/commands/versions': 'reference/commands/pkg_view.html',
+  'cli/commands/pack': tutorial('develop/publish-a-package/'),
+  'cli/commands/view': 'reference/cli.html',
+  'cli/commands/versions': 'reference/cli.html',
   'cli/commands/migrate': 'reference/commands/pkg_migrate.html',
+  // lip pkg pack and lip pkg view were removed (LiteLDev/lip#468): a release workflow makes the archives, and the
+  // Develop Tools page checks lip.toml.
+  'reference/commands/pkg_pack': tutorial('develop/publish-a-package/'),
+  'reference/commands/pkg_view': 'reference/cli.html',
 };
 // A page that is still where it was needs no redirect, and the kit refuses one: the old URL of a page redirects
 // from the build in which its file is gone. The Traditional Chinese pages are those of zh/ (scripts/zh-hant.mjs).

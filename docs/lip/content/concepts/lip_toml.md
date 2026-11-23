@@ -109,7 +109,7 @@ lip does not use `info`.
 
 #### Recommended tags
 
-`info.tags` helps people find your package in listings of mods, such as the Get mods page of the interface and [LeviMC Mods](https://levimc.org/mods/); lip itself ignores tags. The listings show the tags below first, with a translated name, and let users filter by them. Write the ids as they are here, in lower case, and add any other tags you like:
+`info.tags` helps people find your package in listings of mods, such as the Marketplace page of the interface and [LeviMC Mods](https://levimc.org/mods/); lip itself ignores tags. The listings show the tags below first, with a translated name, and let users filter by them. Write the ids as they are here, in lower case, and add any other tags you like:
 
 ```toml
 [info]
@@ -279,8 +279,7 @@ urls = ["https://github.com/example/MyMod/releases/download/v{{version}}/MyMod-{
 A template may use any Scriban expression, e.g. `{{version | string.replace "." "_"}}`. An undefined
 variable renders as nothing. A template that does not parse or fails to render, such as
 `{{ if }}`, makes the archive not a package. To write `{{` literally, write `{{ "{{" }}`.
-[`lip pkg view`](../reference/commands/pkg_view.md) shows the package file with its templates rendered, and the
-[state file](state_file.md) records it so.
+The [state file](state_file.md) records the package file with its templates rendered.
 
 ## Mods
 
@@ -417,6 +416,6 @@ page:
 ## See also
 
 - [Publish your mod with lip](https://levimc.org/tutorials/develop/publish-a-package/) and [Migrating packages](../authors/migrating_packages.md)
-- [`lip pkg init`](../reference/commands/pkg_init.md), [`lip pkg view`](../reference/commands/pkg_view.md)
+- [`lip pkg init`](../reference/commands/pkg_init.md), and [Develop Tools](../interface/tools.md): a form in the interface that writes `lip.toml` and checks every value as you type.
 - [State file](state_file.md): where the package file of each installed package is recorded.
 - [Internals](internals.md): how lip resolves sources and versions.

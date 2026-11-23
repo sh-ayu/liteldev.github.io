@@ -29,6 +29,10 @@
 <text x="238" y="122.5" textLength="9" lengthAdjust="spacingAndGlyphs" font-weight="700">]</text>
 <text x="265" y="122.5" textLength="27" lengthAdjust="spacingAndGlyphs">[ ]</text>
 <text x="310 328 346 364 382 400" y="122.5" text-anchor="middle">自動重新啟動</text>
+<text x="427" y="122.5" textLength="9" lengthAdjust="spacingAndGlyphs">[</text>
+<text x="454 472 490 508" y="122.5" text-anchor="middle">變更版本</text>
+<text x="521.5" y="122.5" text-anchor="middle">…</text>
+<text x="535" y="122.5" textLength="9" lengthAdjust="spacingAndGlyphs">]</text>
 <text x="49 67" y="142.5" text-anchor="middle">模組</text>
 <text x="202 220" y="142.5" text-anchor="middle" font-weight="700">輸出</text>
 <text x="76 94 112 130 148" y="162.5" text-anchor="middle" fill="#f07178" font-weight="700">啟動伺服器</text>

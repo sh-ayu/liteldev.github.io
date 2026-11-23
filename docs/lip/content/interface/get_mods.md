@@ -1,12 +1,12 @@
-# Get mods
+# Marketplace
 
-The Get mods page is the mod list of [levimc.org](https://levimc.org/mods/) inside lip. After this page you can find a mod by searching, sorting and filtering, read about it, and install the version that fits your server.
+The Marketplace page is the mod list of [levimc.org](https://levimc.org/mods/) inside lip. After this page you can find a mod by searching, sorting and filtering, read about it, and install the version that fits your server.
 
 If the keys or the parts of the screen are new to you, read [A tour of the interface](./tour.md) first.
 
 ## The page
 
-![The Get mods page. Numbers mark the search, sort and filter rows, the list of mods, and the details of the highlighted mod.](/screenshots/en/get-mods-01-list.svg)
+![The Marketplace page. Numbers mark the search, sort and filter rows, the list of mods, and the details of the highlighted mod.](/screenshots/en/get-mods-01-list.svg)
 
 1. **Search**, **Sort** and **Filters** decide which mods are listed, and in which order.
 2. **The list** of mods. The page opens with the focus here.
@@ -58,7 +58,7 @@ When the details are longer than their box, a `▼` at the right edge says so. P
 
 In a terminal of about 106 columns or more, the details are at the right of the list and show more rows at once:
 
-![The Get mods page in a wide terminal. The details are at the right of the list.](/screenshots/en/get-mods-08-wide.svg)
+![The Marketplace page in a wide terminal. The details are at the right of the list.](/screenshots/en/get-mods-08-wide.svg)
 
 ## Searching
 
@@ -228,7 +228,7 @@ When no version of the chosen variant fits, a line says what rules them out:
 1. The LeviLamina, or the game, that no version fits.
 2. **Custom…** is still there.
 
-You then have three ways on: try another variant, look for another mod, or change the game and LeviLamina of the server on the [Workspaces](./workspaces.md) page.
+You then have three ways on: try another variant, look for another mod, or change the game and LeviLamina of the server with **Change versions…** on the [Server](./server.md) page.
 
 ### Custom…
 
@@ -242,11 +242,11 @@ lip does not check beforehand whether what you name fits your server. If it does
 
 ## In a folder without a server
 
-You can look through the mods anywhere. Installing needs a server, because a version must fit a game. In a folder without one, **Install…** offers to create the server first:
+You can look through the mods anywhere. Installing needs a server, because a version must fit a game. In a folder without one, **Install…** offers to set up the server first:
 
-![A dialog says "This folder has no server yet. Create one first.", with the buttons New server… and Cancel.](/screenshots/en/get-mods-20-no-server.svg)
+![A dialog says "This folder has no server yet. Set one up first.", with the buttons Set up server… and Cancel.](/screenshots/en/get-mods-20-no-server.svg)
 
-**New server…** starts the new server wizard of the [Workspaces](./workspaces.md) page.
+**Set up server…** goes to the [Server](./server.md) page and starts setting up the server there.
 
 ## While the server runs
 
@@ -260,7 +260,7 @@ Stop the server on the [Server](./server.md) page first.
 
 When lip cannot read the list from levimc.org, the page says so instead of showing mods.
 
-![The Get mods page says "Cannot read the catalogue.", then why, and has a Retry button.](/screenshots/en/get-mods-24-unreachable.svg)
+![The Marketplace page says "Cannot read the catalogue.", then why, and has a Retry button.](/screenshots/en/get-mods-24-unreachable.svg)
 
 1. The list could not be read.
 2. Why, as lip says it.
