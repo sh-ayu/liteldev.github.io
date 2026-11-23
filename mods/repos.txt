@@ -146,6 +146,7 @@ PuceLi/PlayerIPregion
 qing85566/ChiyanMap
 quizhizhe/Tooth-LLCheckBag
 seetch/FastReconnect
+sh-ayu/HotbarKeyLabels
 ShangguanXi/Advancements-ll-release
 ShangguanXi/FarmersDelight-ll-release
 ShrBox/BackupHelper
