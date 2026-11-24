@@ -302,8 +302,10 @@ await check('hero role tabs ("I want to…"): play by default, click, arrow keys
   assert((await tabs.nth(0).getAttribute('aria-selected')) === 'true', 'Play is not selected by default');
   assert((await panel.innerText()).includes('Download for Windows'), 'no Windows download on a desktop');
   await tabs.nth(1).click();
-  assert((await panel.innerText()).includes('Set up a server'), 'server panel not shown');
-  assert((await page.locator('.kit-hero-aside').innerText()).includes('lip install github.com/LiteLDev/LeviLamina'), 'no lip command beside it');
+  const lipButton = panel.locator('.mc-btn').first();
+  assert((await lipButton.innerText()).includes('Download lip'), 'server panel not shown');
+  assert((await lipButton.getAttribute('href')) === 'https://github.com/LiteLDev/lip/releases/latest', 'the lip button does not open the latest release');
+  assert((await page.locator('.kit-hero-aside').innerText()).includes('Windows · Linux · macOS'), 'no lip introduction beside it');
   assert(new URL(page.url()).hash === '#host', `hash is ${new URL(page.url()).hash}`);
   await tabs.nth(1).press('ArrowRight');
   assert((await tabs.nth(2).getAttribute('aria-selected')) === 'true', 'ArrowRight did not move to Develop');

@@ -26,7 +26,6 @@ const repos = cached(() => getMultipleRepos(PROJECT_CONFIGS.map((p) => ({ owner:
 const discord = cached(() => getDiscordInfo(DISCORD_SERVER_ID));
 const release = cached(() => getLatestRelease('LiteLDev', 'LeviLamina'));
 const leviLamina = cached(() => getRepoInfo('LiteLDev', 'LeviLamina'));
-const lipRelease = cached(() => getLatestRelease('LiteLDev', 'lip'));
 
 let hydrationDone = false;
 
@@ -72,12 +71,6 @@ export function useRepoData(): { repoData: Map<string, RepoInfo> | undefined; lo
 
 export function useDiscordInfo(): DiscordInfo | undefined {
   return useCached(discord);
-}
-
-/** The latest lip release's version ("0.42.0"), null until known. */
-export function useLipVersion(): string | null {
-  const rel = useCached(lipRelease);
-  return rel ? rel.tagName.replace(/^v/, '') : null;
 }
 
 export function useLeviLaminaStats(): { version: string | null; stats: { stars: number; forks: number } | null } {

@@ -290,21 +290,25 @@
     padding-inline: 0.75rem;
     white-space: nowrap;
   }
-  /* above the terminal: lip's installer on Windows, what the script does on macOS and Linux (the same height) */
-  .lm-term-download {
+  /* macOS and Linux: lip's install script, one line with its copy button (Windows: the download button instead) */
+  .lm-install {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
-    gap: 0.5rem 0.75rem;
-    min-height: 2.25rem;
-    margin: var(--px) var(--px) 0;
-    font-size: 0.8125rem;
-    line-height: 1.5;
-    color: var(--color-muted);
+    min-width: 0;
+    max-width: min(36rem, calc(100% - 2 * var(--px)));
+    margin: 1.5rem var(--px) 0;
   }
-  .lm-term-download code {
-    font-size: 0.75rem;
-    overflow-wrap: anywhere;
+  .lm-install pre {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    padding: 0.625rem 0.875rem;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .lm-install .kit-code-copy {
+    flex: none;
+    margin-right: 0.25rem;
   }
   .lm-role-meta {
     margin: 1rem 0 0;
@@ -403,15 +407,6 @@
     display: block;
     font-weight: 650;
     color: var(--color-ink);
-  }
-  .lm-terminal .kit-code-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .lm-term-comment {
-    color: var(--color-faint);
-    font-style: italic;
   }
   .lm-term-prompt {
     color: var(--color-primary-strong);

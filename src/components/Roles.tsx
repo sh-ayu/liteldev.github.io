@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { HotbarTabs, LINKS, PixelButton, PixelIcon, PlatformPicker, PROJECTS, localizeNetworkUrl, usePlatformChoice, type PixelIconName } from '../../kit/components';
-import { detectPlatform, platformName, type DevicePlatform, type PlatformTarget } from '../../kit/docs/shared/platform';
-import { useLeviLaminaStats, useLipVersion } from '../hooks/useExternalData';
+import { detectPlatform, type DevicePlatform } from '../../kit/docs/shared/platform';
+import { useLeviLaminaStats } from '../hooks/useExternalData';
 import { useI18n, type Locale } from '../i18n';
 import CodeCard from './CodeCard';
 
@@ -106,21 +106,19 @@ function PlayPanel() {
   );
 }
 
-// How to get lip: one button per way of installing it, the visitor's selected. Windows has its installer (the file of
-// the visitor's architecture: lip-<version>-<target>.msi); macOS and Linux share the install script, so they share a
-// button. The prerendered page shows Windows.
+// How to get lip, below the description like the players' downloads: Windows has its installer, on the page of the
+// latest release (which lists the file of each architecture); macOS and Linux share the install script, one line to
+// copy. The prerendered page shows Windows.
 const LIP_WAYS = ['windows', 'macos linux'] as const;
-type LipWay = (typeof LIP_WAYS)[number];
-const useLipWay = () => usePlatformChoice(LIP_WAYS, 'windows');
-const LIP_WINDOWS = ['win-x64', 'win-arm64'] as const satisfies readonly PlatformTarget[];
-type LipWindows = (typeof LIP_WINDOWS)[number];
-const useLipWindows = () => usePlatformChoice(LIP_WINDOWS, 'win-x64');
+const LIP_RELEASE = 'https://github.com/LiteLDev/lip/releases/latest';
+const INSTALL_SCRIPT = 'curl -fsSL https://levimc.org/lip/install.sh | sh';
 
 function HostPanel() {
-  const { t, locale, href, info } = useI18n();
+  const { t, locale, info } = useI18n();
   const r = t.roles;
   const { version } = useLeviLaminaStats();
-  const [way, setWay] = useLipWay();
+  const [way, setWay] = usePlatformChoice(LIP_WAYS, 'windows');
+  const windows = (way ?? 'windows') === 'windows';
   return (
     <>
       <p className="lm-role-desc">{r.hostDesc}</p>
@@ -130,14 +128,16 @@ function HostPanel() {
         </p>
         <PlatformPicker options={LIP_WAYS} value={way ?? 'windows'} onChange={setWay} label={r.platformLabel} lang={info.lang} />
       </div>
-      <div className="kit-hero-actions">
-        <PixelButton href={tutorial(locale, 'server/first-server/')} variant="primary" size="lg" iconRight="arrowRight">
-          {r.setupGuide}
-        </PixelButton>{' '}
-        <PixelButton href={href(LINKS.mods)} size="lg" external={false}>
-          {r.findMods}
-        </PixelButton>
-      </div>
+      {windows ? (
+        <div className="kit-hero-actions">
+          <PixelButton href={LIP_RELEASE} variant="primary" size="lg">
+            {r.downloadLip}
+          </PixelButton>
+        </div>
+      ) : (
+        <InstallLine />
+      )}
+      <p className="lm-role-meta">{windows ? r.msiNext : r.scriptNote}</p>
       <p className="lm-role-meta">
         <a href="https://github.com/LiteLDev/LeviLamina/releases/latest" target="_blank" rel="noopener" className="lm-release">
           <span className="lm-release-dot" aria-hidden="true" />
@@ -147,8 +147,37 @@ function HostPanel() {
           </span>
         </a>
       </p>
-      <RoleLinks links={[{ href: docs('lip', locale), label: r.getLip }]} />
+      <RoleLinks links={[{ href: docs('lip', locale), label: r.lipDocs }]} />
     </>
+  );
+}
+
+/** The install script's command line, with a button that copies it. */
+function InstallLine() {
+  const { t } = useI18n();
+  const r = t.roles;
+  const [copied, setCopied] = useState(false);
+  const copy = () => {
+    void navigator.clipboard?.writeText(INSTALL_SCRIPT).then(() => {
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
+    });
+  };
+  return (
+    <div className="kit-code lm-install" data-lang="shell">
+      <pre className="shiki kit-shiki" tabIndex={0}>
+        <code>
+          <span className="line">
+            <span className="lm-term-prompt">$ </span>
+            {INSTALL_SCRIPT}
+          </span>
+        </code>
+      </pre>
+      <button type="button" className="kit-code-copy" aria-label={r.copyInstall} onClick={copy} {...(copied ? { 'data-copied': r.copied } : {})}>
+        <PixelIcon name="copy" className="kit-icon-copy" />
+        <PixelIcon name="check" className="kit-icon-done" />
+      </button>
+    </div>
   );
 }
 
@@ -222,119 +251,49 @@ export function RoleTabs({ role, onChange }: { role: Role; onChange: (role: Role
   );
 }
 
-/** What the selected role gets beside the copy: LeviLauncher at a glance, a server set up in a terminal, code. */
+/** What the selected role gets beside the copy: LeviLauncher at a glance, lip at a glance, code. */
 export function RoleShowcase({ role }: { role: Role }) {
   const { t } = useI18n();
-  if (role === 'host') return <TerminalCard />;
+  if (role === 'host') return <LipCard />;
   if (role === 'develop') return <CodeCard label={t.hero.languages} />;
   return <LauncherCard />;
 }
 
 const LAUNCHER_ICONS: PixelIconName[] = ['history', 'chest', 'map', 'heart'];
+const LIP_ICONS: PixelIconName[] = ['grass', 'chest', 'torch', 'monitor'];
 
 function LauncherCard() {
   const { t } = useI18n();
-  const launcher = PROJECTS.find((p) => p.id === 'LeviLauncher')!;
+  return <ProductCard project="LeviLauncher" platforms="Windows · Android" features={t.roles.launcherFeatures} icons={LAUNCHER_ICONS} />;
+}
+
+function LipCard() {
+  const { t } = useI18n();
+  return <ProductCard project="lip" platforms="Windows · Linux · macOS" features={t.roles.lipFeatures} icons={LIP_ICONS} />;
+}
+
+function ProductCard({ project, platforms, features, icons }: { project: 'LeviLauncher' | 'lip'; platforms: string; features: readonly { title: string; desc: string }[]; icons: PixelIconName[] }) {
+  const p = PROJECTS.find((x) => x.id === project)!;
   return (
     <div className="lm-showcase">
       <div className="px-card lm-showcase-window lm-launcher">
         <div className="lm-launcher-head">
-          <img className="lm-project-logo" src={launcher.logo} alt="" width={56} height={56} decoding="async" />
+          <img className="lm-project-logo" src={p.logo} alt="" width={56} height={56} decoding="async" />
           <div>
-            <p className="lm-launcher-name">LeviLauncher</p>
-            <p className="lm-launcher-platforms">Windows · Android</p>
+            <p className="lm-launcher-name">{p.name}</p>
+            <p className="lm-launcher-platforms">{platforms}</p>
           </div>
         </div>
         <ul className="lm-launcher-features">
-          {t.roles.launcherFeatures.map((f, i) => (
+          {features.map((f, i) => (
             <li key={f.title}>
-              <PixelIcon name={LAUNCHER_ICONS[i]!} size={24} />
+              <PixelIcon name={icons[i]!} size={24} />
               <span>
                 <strong>{f.title}</strong> {f.desc}
               </span>
             </li>
           ))}
         </ul>
-      </div>
-    </div>
-  );
-}
-
-// What a server owner types: lip's interface does the rest (its Home page: create a server, install mods, start it),
-// so the terminal only gets lip and opens it in a folder for the servers.
-const INSTALL_SCRIPT = 'curl -fsSL https://levimc.org/lip/install.sh | sh';
-const WINDOWS_COMMANDS = ['mkdir servers; cd servers', 'lip'];
-const UNIX_COMMANDS = [INSTALL_SCRIPT, 'mkdir servers && cd servers', 'lip'];
-
-/** The installer of the latest lip for a Windows target: the file itself once the version is known, else the release. */
-const msiUrl = (target: LipWindows, version: string | null) =>
-  version
-    ? `https://github.com/LiteLDev/lip/releases/download/v${version}/lip-${version}-${target}.msi`
-    : 'https://github.com/LiteLDev/lip/releases/latest';
-
-function TerminalCard() {
-  const { t, info } = useI18n();
-  const r = t.roles;
-  const [copied, setCopied] = useState(false);
-  const [way] = useLipWay();
-  const [arch] = useLipWindows();
-  const [unix] = usePlatformChoice(['macos', 'linux'] as const, 'macos');
-  const msi: LipWindows = arch ?? 'win-x64';
-  const otherMsi: LipWindows = msi === 'win-x64' ? 'win-arm64' : 'win-x64';
-  const lipVersion = useLipVersion();
-  const windows = (way ?? 'windows') === 'windows';
-  const commands = windows ? WINDOWS_COMMANDS : UNIX_COMMANDS;
-  const comments = windows ? [r.terminalFolder, r.terminalOpen] : [r.terminalGetLip, r.terminalFolderNew, r.terminalOpen];
-  const shell = windows ? 'PowerShell' : unix === 'linux' ? 'bash' : 'zsh';
-  const prompt = windows ? '> ' : '$ ';
-  const copy = () => {
-    // macOS and Linux: only the install line, since the rest needs the new terminal it asks for (and the script
-    // reads its PATH question from the terminal, where pasted lines would answer it)
-    void navigator.clipboard?.writeText(windows ? commands.join('\n') : INSTALL_SCRIPT).then(() => {
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1600);
-    });
-  };
-  return (
-    <div className="lm-showcase">
-      <div className="px-card lm-showcase-window" data-platform={windows ? msi : 'macos linux'}>
-        {windows ? (
-          <div className="lm-term-download">
-            <PixelButton href={msiUrl(msi, lipVersion)} variant="primary" size="sm" external={false}>
-              {r.msiDownload(platformName(msi, info.lang))}
-            </PixelButton>
-            <span>
-              <code>lip-{lipVersion ?? '<version>'}-{msi}.msi</code> {r.msiNext}{' '}
-              <a href={msiUrl(otherMsi, lipVersion)}>{r.msiOther(platformName(otherMsi, info.lang))}</a>
-            </span>
-          </div>
-        ) : (
-          <p className="lm-term-download">{r.scriptNote}</p>
-        )}
-        <div className="kit-code lm-code-block lm-terminal" data-lang={windows ? 'powershell' : 'shell'}>
-          <div className="kit-code-head">
-            <span className="kit-code-title">{shell}</span>
-            <button type="button" className="kit-code-copy" aria-label={windows ? r.copy : r.copyInstall} onClick={copy} {...(copied ? { 'data-copied': r.copied } : {})}>
-              <PixelIcon name="copy" className="kit-icon-copy" />
-              <PixelIcon name="check" className="kit-icon-done" />
-            </button>
-          </div>
-          <pre className="shiki kit-shiki" tabIndex={0}>
-            <code>
-              {commands.map((cmd, i) => (
-                <span key={cmd}>
-                  {i ? '\n\n' : null}
-                  <span className="line lm-term-comment">{comments[i]}</span>
-                  {'\n'}
-                  <span className="line">
-                    <span className="lm-term-prompt">{prompt}</span>
-                    {cmd}
-                  </span>
-                </span>
-              ))}
-            </code>
-          </pre>
-        </div>
       </div>
     </div>
   );
