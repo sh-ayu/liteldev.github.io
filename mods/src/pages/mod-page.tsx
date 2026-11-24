@@ -1,12 +1,34 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
 import { ModDetail, type ModPageData } from "../components/mod-detail";
+import { foldEntries, foldMod, foldRequestedVariant, foldSelection, foldTargets, legacyVariantFold } from "../lib/legacy-variants";
 import { fetchManifest, fetchReadmes, parseTab, resolveSelection, type ModSelection } from "../lib/mods";
 import type { ModDetails } from "../page-data";
 import { useHydrated } from "../page-store";
 
 function selectionKey({ variant, version }: ModSelection): string {
   return `${variant}@${version}`;
+}
+
+/**
+ * The page data as the page shows it: a `tooth.json` version's legacy
+ * `client` / `client_<y>` variant folded into `""` / `<y>`, as LeviLauncher
+ * reads it (see `lib/legacy-variants.ts`).
+ */
+function foldPageData(data: ModPageData) {
+  const fold = legacyVariantFold(data.lipToml, data.targets);
+  const { prerendered } = data;
+  const view: ModPageData = {
+    ...data,
+    mod: foldMod(data.mod, fold),
+    targets: foldTargets(data.targets, fold),
+    prerendered: {
+      ...prerendered,
+      ...foldSelection(prerendered, fold),
+      variants: prerendered.variants && foldEntries(prerendered.variants, prerendered.version, fold),
+    },
+  };
+  return { view, fold };
 }
 
 /**
@@ -18,12 +40,15 @@ function selectionKey({ variant, version }: ModSelection): string {
  * (The app renders one of these per mod, so its state never outlives the
  * mod.)
  */
-export function ModPage({ data }: { data: ModPageData }) {
+export function ModPage({ data: raw }: { data: ModPageData }) {
+  const { view: data, fold } = useMemo(() => foldPageData(raw), [raw]);
   const { id: modId, mod, repository, prerendered, readmeFiles } = data;
   const [searchParams] = useSearchParams();
   const hydrated = useHydrated();
+  const requestedVersion = searchParams.get("version");
   const selection =
-    (hydrated && resolveSelection(mod, searchParams.get("variant"), searchParams.get("version"))) || prerendered;
+    (hydrated && resolveSelection(mod, foldRequestedVariant(searchParams.get("variant"), requestedVersion, mod, fold), requestedVersion)) ||
+    prerendered;
   const tab = hydrated ? parseTab(searchParams.get("tab")) : "description";
   const key = selectionKey(selection);
   const isPrerendered = key === selectionKey(prerendered);
@@ -40,14 +65,14 @@ export function ModPage({ data }: { data: ModPageData }) {
       setFetched({
         key: selectionKey({ variant, version }),
         info: manifest?.info ?? null,
-        variants: manifest?.variants ?? null,
+        variants: manifest ? foldEntries(manifest.variants, version, fold) : null,
         readmes,
       });
     });
     return () => {
       cancelled = true;
     };
-  }, [modId, repository, readmeFiles, isPrerendered, selection.variant, selection.version]);
+  }, [modId, repository, readmeFiles, isPrerendered, selection.variant, selection.version, fold]);
 
   let details: Partial<ModDetails> = {};
   if (isPrerendered) details = prerendered;
