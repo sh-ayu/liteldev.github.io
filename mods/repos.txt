@@ -5,6 +5,7 @@ amatouhake/Lamium
 carefly/RLXMoney
 carefly/RLXTeleport
 ch1-k-mc/BetterF3-Bedrock
+ch1-k-mc/InventoryUtils-Bedrock
 ch1-k-mc/PickUpNotifier-Bedrock
 cngege/AutoFishing
 cngege/DispenserDestroyBlock
