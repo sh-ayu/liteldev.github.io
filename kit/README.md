@@ -985,6 +985,17 @@ External link verdicts: `ok`, `ok-redirect` (`/releases/latest` and allow-listed
 
 ## Changelog
 
+### 2.29.0
+
+**One tab for systems that get the same content.** A platform tab or picker button can name several systems, such as
+"macOS / Linux" for an install command that is the same on both.
+* A tab whose label names several systems carries them space-separated in `data-platform` (`"macos linux"`), and is
+  selected for visitors on any of them or any of their targets (`matchPlatform`). Picking it keeps the visitor's own
+  system of the group (`choiceOfOption`), so the other tab sets on the page still tell macOS and Linux apart.
+* Components: `PlatformPicker` and `usePlatformChoice` take such options (`PlatformOption`: `'macos linux'`), labelled
+  "macOS / Linux" by default (`optionName`); `chooseOption` picks one.
+* **Migration**: none.
+
 ### 2.28.0
 
 **Platforms with their processor.** Content that differs per download, such as how to install lip, can now name an

@@ -6,7 +6,10 @@ import {
   detectPlatformChoice,
   detectPlatformChoiceAsync,
   matchPlatform,
+  choiceOfOption,
   platformChoiceOfLabel,
+  platformOptionOfLabel,
+  platformsOfOption,
   platformName,
   platformOfLabel,
   preferredPlatform,
@@ -290,4 +293,42 @@ test('the page choice: choosePlatform refines, remembers and tells subscribers; 
     assert.deepEqual(seen, ['win-arm64', 'linux-x64']);
     resetPlatformPick();
   });
+});
+
+test('platformOptionOfLabel: a label of several systems names them all', () => {
+  assert.equal(platformOptionOfLabel('macOS / Linux'), 'macos linux');
+  assert.equal(platformOptionOfLabel('Linux and macOS'), 'linux macos');
+  assert.equal(platformOptionOfLabel('Windows arm64'), 'win-arm64');
+  assert.equal(platformOptionOfLabel('C++'), undefined);
+  assert.deepEqual(platformsOfOption('macos linux'), ['macos', 'linux']);
+  assert.deepEqual(platformsOfOption('win-x64'), ['win-x64']);
+  assert.deepEqual(platformsOfOption('nope'), []);
+});
+
+test('matchPlatform: an option of several systems matches each of them and their targets', () => {
+  const opts = ['windows', 'macos linux'];
+  assert.equal(matchPlatform(opts, 'windows'), 0);
+  assert.equal(matchPlatform(opts, 'win-arm64'), 0);
+  assert.equal(matchPlatform(opts, 'macos'), 1);
+  assert.equal(matchPlatform(opts, 'osx-x64'), 1);
+  assert.equal(matchPlatform(opts, 'linux-x64'), 1);
+  assert.equal(matchPlatform(opts, 'android'), -1);
+});
+
+test('choiceOfOption: picking several systems keeps the visitor\'s own one of them', () => {
+  assert.equal(choiceOfOption('macos linux', 'linux-x64'), 'linux');
+  assert.equal(choiceOfOption('macos linux', 'osx-arm64'), 'macos');
+  assert.equal(choiceOfOption('macos linux', 'windows'), 'macos');
+  assert.equal(choiceOfOption('macos linux', undefined), 'macos');
+  assert.equal(choiceOfOption('win-arm64', 'linux'), 'win-arm64');
+  assert.equal(choiceOfOption('bogus', 'linux'), undefined);
+});
+
+test('render: a tab of several systems carries them all in data-platform', async () => {
+  const src = ['::: tabs', '', '== Windows', '', 'msi', '', '== macOS / Linux', '', 'curl', ':::'].join('\n');
+  const r = await renderMarkdown(src, { ...OPTS, containers: { vitepress: true } });
+  const tabs = [...r.html.matchAll(/<button[^>]*role="tab"[^>]*>/g)].map((m) => m[0]);
+  assert.equal(tabs.length, 2);
+  assert.match(tabs[0], /data-platform="windows"/);
+  assert.match(tabs[1], /data-platform="macos linux"/);
 });

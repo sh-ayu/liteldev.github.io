@@ -64,37 +64,14 @@ There is no release for Linux on ARM64, where a LeviLamina server does not run. 
 
 Pick your system. The page has picked the one you are browsing from.
 
+
 ::: tabs
 
-== Windows x64
+== Windows
 
-Download `lip-<version>-win-x64.msi` from the [latest release](https://github.com/LiteLDev/lip/releases/latest) and run it. It installs `lip` in `C:\Program Files\lip` and adds that folder to the `PATH`. Then open a new terminal and check that `lip -v` prints a version.
+Download `lip-<version>-win-x64.msi`, or `lip-<version>-win-arm64.msi` on a PC with an ARM processor, from the [latest release](https://github.com/LiteLDev/lip/releases/latest) and run it. It installs `lip` in `C:\Program Files\lip` and adds that folder to the `PATH`. Then open a new terminal and check that `lip -v` prints a version.
 
-== Windows arm64
-
-Download `lip-<version>-win-arm64.msi` from the [latest release](https://github.com/LiteLDev/lip/releases/latest) and run it. It installs `lip` in `C:\Program Files\lip` and adds that folder to the `PATH`. Then open a new terminal and check that `lip -v` prints a version.
-
-== macOS (Apple silicon)
-
-In Terminal, run:
-
-```shell
-curl -fsSL https://levimc.org/lip/install.sh | sh
-```
-
-The script installs `lip` in `~/.local/bin`, without an administrator password, and offers to add that folder to the `PATH`. Then open a new terminal and check that `lip -v` prints a version. `lip` asks to install Rosetta 2 when it first needs it: see [Linux and macOS](guides/linux_macos.md#macos-on-apple-silicon).
-
-== macOS (Intel)
-
-In Terminal, run:
-
-```shell
-curl -fsSL https://levimc.org/lip/install.sh | sh
-```
-
-The script installs `lip` in `~/.local/bin`, without an administrator password, and offers to add that folder to the `PATH`. Then open a new terminal and check that `lip -v` prints a version.
-
-== Linux x64
+== macOS / Linux
 
 In a terminal, run:
 
@@ -102,7 +79,7 @@ In a terminal, run:
 curl -fsSL https://levimc.org/lip/install.sh | sh
 ```
 
-The script installs `lip` in `~/.local/bin`, without root, and offers to add that folder to the `PATH`. Then open a new terminal and check that `lip -v` prints a version.
+The script installs the `lip` for your system in `~/.local/bin`, without an administrator password or root, and offers to add that folder to the `PATH`. Then open a new terminal and check that `lip -v` prints a version. On a Mac with Apple silicon, `lip` asks to install Rosetta 2 when it first needs it: see [Linux and macOS](guides/linux_macos.md#macos-on-apple-silicon).
 
 :::
 

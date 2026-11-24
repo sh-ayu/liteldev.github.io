@@ -92,27 +92,16 @@ x64/amd64 与 arm64 指 CPU 架构而不是品牌：普通 Intel 和 AMD 电脑�
 
 lip 的仓库现为 <https://github.com/LiteLDev/lip>（原 `futrime/lip`），文档在 <https://levimc.org/zh-Hans/lip/>。lip 支持 Windows（x64 和 arm64）、macOS（Apple 芯片和 Intel）以及 x64 的 Linux。选择你的系统：
 
+
 ::: tabs
 
-== Windows x64
+== Windows
 
-从 <https://github.com/LiteLDev/lip/releases/latest> 下载 `lip-<版本>-win-x64.msi` 运行安装，会自动加入 PATH；也可下载 `lip-<版本>-win-x64.zip` 解压后自行把目录加入 PATH。
+从 <https://github.com/LiteLDev/lip/releases/latest> 下载 `lip-<版本>-win-x64.msi`（ARM 设备用 `lip-<版本>-win-arm64.msi`）运行安装，会自动加入 PATH；也可下载同名的 `.zip` 解压后自行把目录加入 PATH。
 
-== Windows arm64
+== macOS / Linux
 
-从 <https://github.com/LiteLDev/lip/releases/latest> 下载 `lip-<版本>-win-arm64.msi` 运行安装，会自动加入 PATH；也可下载 `lip-<版本>-win-arm64.zip` 解压后自行把目录加入 PATH。
-
-== macOS（Apple 芯片）
-
-在“终端”中运行 `curl -fsSL https://levimc.org/lip/install.sh | sh`。脚本把 lip 安装到 `~/.local/bin`，不需要管理员密码，会校验 SHA-256，并询问是否把该目录加入 PATH。lip 第一次需要 Rosetta 2 时会询问是否安装它。
-
-== macOS（Intel）
-
-在“终端”中运行 `curl -fsSL https://levimc.org/lip/install.sh | sh`。脚本把 lip 安装到 `~/.local/bin`，不需要管理员密码，会校验 SHA-256，并询问是否把该目录加入 PATH。
-
-== Linux x64
-
-在终端中运行 `curl -fsSL https://levimc.org/lip/install.sh | sh`。脚本把 lip 安装到 `~/.local/bin`，不需要 root，会校验 SHA-256，并询问是否把该目录加入 PATH。没有 arm64 Linux 版的 lip。
+在终端中运行 `curl -fsSL https://levimc.org/lip/install.sh | sh`。脚本会选好适合你的系统的 lip，安装到 `~/.local/bin`，不需要管理员密码或 root，会校验 SHA-256，并询问是否把该目录加入 PATH。在 Apple 芯片的 Mac 上，lip 第一次需要 Rosetta 2 时会询问是否安装它。没有 arm64 Linux 版的 lip。
 
 :::
 

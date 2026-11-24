@@ -5,6 +5,7 @@ import { useEffect, type RefObject } from 'react';
 import { useNavigate } from 'react-router';
 import { internalTarget, isPlainLeftClick } from './components/KitLink';
 import {
+  choiceOfOption,
   choosePlatform,
   currentPlatformChoice,
   devicePlatformChoice,
@@ -78,7 +79,8 @@ function selectPlatform(root: HTMLElement, platform: PlatformChoice, skip?: Elem
 /** A tab the visitor picked: select it, and when it names a platform remember that and sync the other sets. */
 function chooseTab(root: HTMLElement, tab: HTMLElement, focus = false) {
   selectTab(tab, focus);
-  const p = tab.dataset.platform;
+  // a tab of several systems ("macos linux") remembers the visitor's own one of them
+  const p = tab.dataset.platform && choiceOfOption(tab.dataset.platform, currentPlatformChoice());
   if (tab.closest('[data-kit-tabs]') && isPlatformChoice(p)) {
     // shared/platform.ts remembers it ("Windows" while Windows arm64 is chosen keeps arm64 for the sets that tell
     // the two apart) and tells every subscriber: the onPlatformChoice of useContentEnhancements selects the others

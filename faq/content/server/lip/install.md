@@ -92,27 +92,16 @@ x64/amd64 and arm64 refer to the CPU architecture, not the brand: ordinary Intel
 
 The lip repository is now <https://github.com/LiteLDev/lip> (formerly `futrime/lip`), and the documentation is at <https://levimc.org/lip/>. lip is released for Windows (x64 and arm64), macOS (Apple silicon and Intel) and Linux on x64. Pick your system:
 
+
 ::: tabs
 
-== Windows x64
+== Windows
 
-Download `lip-<version>-win-x64.msi` from <https://github.com/LiteLDev/lip/releases/latest> and run it; it adds lip to PATH. You can also download `lip-<version>-win-x64.zip`, extract it and add the directory to PATH yourself.
+Download `lip-<version>-win-x64.msi` (`lip-<version>-win-arm64.msi` on ARM) from <https://github.com/LiteLDev/lip/releases/latest> and run it; it adds lip to PATH. You can also download the `.zip` of the same name, extract it and add the directory to PATH yourself.
 
-== Windows arm64
+== macOS / Linux
 
-Download `lip-<version>-win-arm64.msi` from <https://github.com/LiteLDev/lip/releases/latest> and run it; it adds lip to PATH. You can also download `lip-<version>-win-arm64.zip`, extract it and add the directory to PATH yourself.
-
-== macOS (Apple silicon)
-
-Run `curl -fsSL https://levimc.org/lip/install.sh | sh` in Terminal. The script installs lip in `~/.local/bin` without an administrator password, checks its SHA-256, and offers to add the directory to PATH. lip asks to install Rosetta 2 the first time it needs it.
-
-== macOS (Intel)
-
-Run `curl -fsSL https://levimc.org/lip/install.sh | sh` in Terminal. The script installs lip in `~/.local/bin` without an administrator password, checks its SHA-256, and offers to add the directory to PATH.
-
-== Linux x64
-
-Run `curl -fsSL https://levimc.org/lip/install.sh | sh` in a terminal. The script installs lip in `~/.local/bin` without root, checks its SHA-256, and offers to add the directory to PATH. There is no lip for Linux on arm64.
+Run `curl -fsSL https://levimc.org/lip/install.sh | sh` in a terminal. The script picks the lip for your system, installs it in `~/.local/bin` without an administrator password or root, checks its SHA-256, and offers to add the directory to PATH. On a Mac with Apple silicon, lip asks to install Rosetta 2 the first time it needs it. There is no lip for Linux on arm64.
 
 :::
 

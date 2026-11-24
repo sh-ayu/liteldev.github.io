@@ -281,12 +281,14 @@
     font-weight: 600;
     color: var(--color-muted);
   }
+  /* Windows, macOS / Linux: one row (the inline-flex hotbar would otherwise wrap at its own shrink-to-fit width) */
   .lm-platforms .kit-platform-picker {
     margin-left: 0;
+    flex-wrap: nowrap;
   }
-  /* the five platforms in one row beside the hero art */
   .lm-platforms .kit-platform-picker > button {
-    padding-inline: 0.5rem;
+    padding-inline: 0.75rem;
+    white-space: nowrap;
   }
   /* above the terminal: lip's installer on Windows, what the script does on macOS and Linux (the same height) */
   .lm-term-download {

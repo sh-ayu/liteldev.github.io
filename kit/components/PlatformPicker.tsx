@@ -1,13 +1,34 @@
 import { useEffect, useState } from 'react';
 import {
+  choiceOfOption,
   choosePlatform,
   currentPlatformChoice,
   devicePlatformChoice,
   matchPlatform,
   onPlatformChoice,
   platformName,
+  platformsOfOption,
   type PlatformChoice,
 } from '../docs/shared/platform';
+
+/**
+ * What a picker can offer: a platform, a target, or several systems that get the same content, space-separated
+ * (`'macos linux'`: one "macOS / Linux" button, selected on either).
+ */
+export type PlatformOption = PlatformChoice | `${PlatformChoice} ${PlatformChoice}` | `${PlatformChoice} ${PlatformChoice} ${PlatformChoice}`;
+
+/** Pick `option`: for an option of several systems, the visitor's own one of them stays chosen (choiceOfOption). */
+export function chooseOption(option: PlatformOption): void {
+  const p = choiceOfOption(option, currentPlatformChoice());
+  if (p) choosePlatform(p);
+}
+
+/** The default label of an option: its platforms' names, "macOS / Linux" for several. */
+export function optionName(option: PlatformOption, lang = 'en'): string {
+  return platformsOfOption(option)
+    .map((p) => platformName(p, lang))
+    .join(' / ');
+}
 
 // The platform picker of an app: buttons for the platforms (or operating system + architecture targets) that some
 // content differs for, the visitor's choice selected — the same choice as the docs' platform tabs (?platform=, then
@@ -21,7 +42,7 @@ export { choosePlatform };
  * author's default), then their platform (with the architecture the browser reports, where it does), and whatever
  * they pick afterwards. `fallback` when none of the options fits.
  */
-export function usePlatformChoice<T extends PlatformChoice>(options: readonly T[], fallback?: T): [T | undefined, (p: T) => void] {
+export function usePlatformChoice<T extends PlatformOption>(options: readonly T[], fallback?: T): [T | undefined, (p: T) => void] {
   const [choice, setChoice] = useState<PlatformChoice | null>(); // undefined: not hydrated yet; null: unknown device
   useEffect(() => {
     let alive = true;
@@ -37,11 +58,11 @@ export function usePlatformChoice<T extends PlatformChoice>(options: readonly T[
   }, []);
   const n = choice ? matchPlatform(options, choice) : -1;
   const selected = choice === undefined ? undefined : n >= 0 ? options[n] : fallback;
-  return [selected, choosePlatform];
+  return [selected, chooseOption];
 }
 
-export interface PlatformPickerProps<T extends PlatformChoice> {
-  /** The platforms or targets to offer, in order. */
+export interface PlatformPickerProps<T extends PlatformOption> {
+  /** The platforms, targets or groups of systems (PlatformOption) to offer, in order. */
   options: readonly T[];
   /** The selected one (usePlatformChoice); none selected while undefined. */
   value: T | undefined;
@@ -50,18 +71,18 @@ export interface PlatformPickerProps<T extends PlatformChoice> {
   label: string;
   /** Language of the button labels (platformName): `en`, `zh-Hans`, `zh-Hant`. */
   lang?: string;
-  /** Button labels instead of platformName(option, lang). */
+  /** Button labels instead of optionName(option, lang). */
   names?: Partial<Record<T, string>>;
   className?: string;
 }
 
 /** A hotbar of toggle buttons, one per platform (aria-pressed on the selected one). */
-export function PlatformPicker<T extends PlatformChoice>({ options, value, onChange, label, lang = 'en', names, className }: PlatformPickerProps<T>) {
+export function PlatformPicker<T extends PlatformOption>({ options, value, onChange, label, lang = 'en', names, className }: PlatformPickerProps<T>) {
   return (
     <div className={className ? `hotbar kit-platform-picker ${className}` : 'hotbar kit-platform-picker'} role="group" aria-label={label}>
       {options.map((p) => (
         <button key={p} type="button" aria-pressed={p === value} data-platform={p} onClick={() => onChange(p)}>
-          {names?.[p] ?? platformName(p, lang)}
+          {names?.[p] ?? optionName(p, lang)}
         </button>
       ))}
     </div>

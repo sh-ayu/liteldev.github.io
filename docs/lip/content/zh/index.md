@@ -64,37 +64,14 @@ ARM64 的 Linux 没有发行版，因为 LeviLamina 服务器无法在那里运�
 
 选择你的系统。页面已经选好了你正在用的那个。
 
+
 ::: tabs
 
-== Windows x64
+== Windows
 
-从[最新发行版](https://github.com/LiteLDev/lip/releases/latest)下载 `lip-<version>-win-x64.msi` 并运行。它把 `lip` 安装到 `C:\Program Files\lip`，并把这个文件夹加入 `PATH`。然后打开一个新终端，确认 `lip -v` 能输出版本号。
+从[最新发行版](https://github.com/LiteLDev/lip/releases/latest)下载 `lip-<version>-win-x64.msi`（ARM 处理器的电脑下载 `lip-<version>-win-arm64.msi`）并运行。它把 `lip` 安装到 `C:\Program Files\lip`，并把这个文件夹加入 `PATH`。然后打开一个新终端，确认 `lip -v` 能输出版本号。
 
-== Windows arm64
-
-从[最新发行版](https://github.com/LiteLDev/lip/releases/latest)下载 `lip-<version>-win-arm64.msi` 并运行。它把 `lip` 安装到 `C:\Program Files\lip`，并把这个文件夹加入 `PATH`。然后打开一个新终端，确认 `lip -v` 能输出版本号。
-
-== macOS（Apple 芯片）
-
-在“终端”中运行：
-
-```shell
-curl -fsSL https://levimc.org/lip/install.sh | sh
-```
-
-脚本把 `lip` 安装到 `~/.local/bin`，不需要管理员密码，并询问是否把这个文件夹加入 `PATH`。然后打开一个新终端，确认 `lip -v` 能输出版本号。`lip` 第一次需要 Rosetta 2 时会询问是否安装它：见 [Linux 与 macOS](guides/linux_macos.md#apple-芯片的-macos)。
-
-== macOS（Intel）
-
-在“终端”中运行：
-
-```shell
-curl -fsSL https://levimc.org/lip/install.sh | sh
-```
-
-脚本把 `lip` 安装到 `~/.local/bin`，不需要管理员密码，并询问是否把这个文件夹加入 `PATH`。然后打开一个新终端，确认 `lip -v` 能输出版本号。
-
-== Linux x64
+== macOS / Linux
 
 在终端中运行：
 
@@ -102,7 +79,7 @@ curl -fsSL https://levimc.org/lip/install.sh | sh
 curl -fsSL https://levimc.org/lip/install.sh | sh
 ```
 
-脚本把 `lip` 安装到 `~/.local/bin`，不需要 root，并询问是否把这个文件夹加入 `PATH`。然后打开一个新终端，确认 `lip -v` 能输出版本号。
+脚本把适合你的系统的 `lip` 安装到 `~/.local/bin`，不需要管理员密码或 root，并询问是否把这个文件夹加入 `PATH`。然后打开一个新终端，确认 `lip -v` 能输出版本号。在 Apple 芯片的 Mac 上，`lip` 第一次需要 Rosetta 2 时会询问是否安装它：见 [Linux 与 macOS](guides/linux_macos.md#apple-芯片的-macos)。
 
 :::
 

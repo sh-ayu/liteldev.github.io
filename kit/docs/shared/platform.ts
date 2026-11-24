@@ -131,18 +131,48 @@ export function platformChoiceOfLabel(label: string): PlatformChoice | undefined
 }
 
 /**
- * The option (tab) to show for `choice` among `options` (each a platform or a target; others never match): the same
- * one, else the tab of its operating system, else — when the choice names only an operating system — the first
+ * What a tab label or button names, as the `data-platform` of a tab: one platform or target
+ * (platformChoiceOfLabel), or — when it names several systems ("macOS / Linux", for content that is the same on
+ * both) — those systems, space-separated ("macos linux"). Undefined when it names none.
+ */
+export function platformOptionOfLabel(label: string): string | undefined {
+  const one = platformChoiceOfLabel(label);
+  if (one) return one;
+  const all = label.match(new RegExp(LABEL_RE.source, 'gi'));
+  if (!all) return undefined;
+  const found = [...new Set(all.map((m) => (m.toLowerCase() === 'ipados' ? 'ios' : (m.toLowerCase() as DevicePlatform))))];
+  return found.length > 1 ? found.join(' ') : undefined;
+}
+
+/** The platforms and targets an option names: `windows` → [windows], `macos linux` → [macos, linux]. */
+export function platformsOfOption(option: string | undefined): PlatformChoice[] {
+  return (option ?? '').split(/\s+/).filter(isPlatformChoice);
+}
+
+/**
+ * The choice to remember when the visitor picks `option`, a platform, a target or several systems: for several, the
+ * current choice when the option names its system (picking "macOS / Linux" on Linux keeps Linux), else the first.
+ */
+export function choiceOfOption(option: string, current: PlatformChoice | undefined): PlatformChoice | undefined {
+  const all = platformsOfOption(option);
+  if (all.length <= 1) return all[0];
+  return (current && all.find((p) => p === current || p === osOf(current))) ?? all[0];
+}
+
+/**
+ * The option (tab) to show for `choice` among `options` (each a platform, a target or several systems, space-separated
+ * as platformOptionOfLabel gives them; others never match): the same one, else the tab of its operating system, else — when the choice names only an operating system — the first
  * target of it. -1 when none fits.
  */
 export function matchPlatform(options: readonly (string | undefined)[], choice: PlatformChoice): number {
-  const exact = options.indexOf(choice);
+  const named = options.map(platformsOfOption); // an option may name several systems: "macos linux"
+  const exact = named.findIndex((o) => o.includes(choice));
   if (exact >= 0) return exact;
   const os = osOf(choice);
-  const sameOs = options.indexOf(os);
+  const sameOs = named.findIndex((o) => o.includes(os));
   if (sameOs >= 0) return sameOs;
   if (isPlatformTarget(choice)) return -1;
-  return options.findIndex((o) => isPlatformTarget(o) && osOf(o) === os);
+  return named.findIndex((o) => o.some((t) => isPlatformTarget(t) && osOf(t) === os));
 }
 
 /**

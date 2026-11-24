@@ -106,18 +106,21 @@ function PlayPanel() {
   );
 }
 
-// lip's platforms (its release files are lip-<version>-<target>.…): the picker in the server owners' panel chooses
-// what the terminal beside it shows. The prerendered page shows Windows x64.
-const LIP_TARGETS = ['win-x64', 'win-arm64', 'osx-arm64', 'osx-x64', 'linux-x64'] as const satisfies readonly PlatformTarget[];
-type LipTarget = (typeof LIP_TARGETS)[number];
-const LIP_DEFAULT: LipTarget = 'win-x64';
-const useLipTarget = () => usePlatformChoice(LIP_TARGETS, LIP_DEFAULT);
+// How to get lip: one button per way of installing it, the visitor's selected. Windows has its installer (the file of
+// the visitor's architecture: lip-<version>-<target>.msi); macOS and Linux share the install script, so they share a
+// button. The prerendered page shows Windows.
+const LIP_WAYS = ['windows', 'macos linux'] as const;
+type LipWay = (typeof LIP_WAYS)[number];
+const useLipWay = () => usePlatformChoice(LIP_WAYS, 'windows');
+const LIP_WINDOWS = ['win-x64', 'win-arm64'] as const satisfies readonly PlatformTarget[];
+type LipWindows = (typeof LIP_WINDOWS)[number];
+const useLipWindows = () => usePlatformChoice(LIP_WINDOWS, 'win-x64');
 
 function HostPanel() {
   const { t, locale, href, info } = useI18n();
   const r = t.roles;
   const { version } = useLeviLaminaStats();
-  const [target, setTarget] = useLipTarget();
+  const [way, setWay] = useLipWay();
   return (
     <>
       <p className="lm-role-desc">{r.hostDesc}</p>
@@ -125,7 +128,7 @@ function HostPanel() {
         <p className="lm-platforms-label" aria-hidden="true">
           {r.platformLabel}
         </p>
-        <PlatformPicker options={LIP_TARGETS} value={target ?? LIP_DEFAULT} onChange={setTarget} label={r.platformLabel} lang={info.lang} />
+        <PlatformPicker options={LIP_WAYS} value={way ?? 'windows'} onChange={setWay} label={r.platformLabel} lang={info.lang} />
       </div>
       <div className="kit-hero-actions">
         <PixelButton href={tutorial(locale, 'server/first-server/')} variant="primary" size="lg" iconRight="arrowRight">
@@ -257,13 +260,14 @@ function LauncherCard() {
   );
 }
 
-// What a server owner types: on Windows after running lip's installer, on macOS and Linux after the install script.
+// What a server owner types: lip's interface does the rest (its Home page: create a server, install mods, start it),
+// so the terminal only gets lip and opens it in a folder for the servers.
 const INSTALL_SCRIPT = 'curl -fsSL https://levimc.org/lip/install.sh | sh';
-const WINDOWS_COMMANDS = ['lip install LeviLamina', 'lip install LeviAntiCheat', 'lip run'];
-const UNIX_COMMANDS = [INSTALL_SCRIPT, 'lip install LeviLamina', 'lip run'];
+const WINDOWS_COMMANDS = ['mkdir servers; cd servers', 'lip'];
+const UNIX_COMMANDS = [INSTALL_SCRIPT, 'mkdir servers && cd servers', 'lip'];
 
 /** The installer of the latest lip for a Windows target: the file itself once the version is known, else the release. */
-const msiUrl = (target: LipTarget, version: string | null) =>
+const msiUrl = (target: LipWindows, version: string | null) =>
   version
     ? `https://github.com/LiteLDev/lip/releases/download/v${version}/lip-${version}-${target}.msi`
     : 'https://github.com/LiteLDev/lip/releases/latest';
@@ -272,13 +276,16 @@ function TerminalCard() {
   const { t, info } = useI18n();
   const r = t.roles;
   const [copied, setCopied] = useState(false);
-  const [chosen] = useLipTarget();
-  const target = chosen ?? LIP_DEFAULT;
+  const [way] = useLipWay();
+  const [arch] = useLipWindows();
+  const [unix] = usePlatformChoice(['macos', 'linux'] as const, 'macos');
+  const msi: LipWindows = arch ?? 'win-x64';
+  const otherMsi: LipWindows = msi === 'win-x64' ? 'win-arm64' : 'win-x64';
   const lipVersion = useLipVersion();
-  const windows = target.startsWith('win-');
+  const windows = (way ?? 'windows') === 'windows';
   const commands = windows ? WINDOWS_COMMANDS : UNIX_COMMANDS;
-  const comments = windows ? [r.terminalInstall, r.terminalMods, r.terminalRun] : [r.terminalGetLip, r.terminalInstallHere, r.terminalRun];
-  const shell = windows ? 'PowerShell' : target.startsWith('osx-') ? 'zsh' : 'bash';
+  const comments = windows ? [r.terminalFolder, r.terminalOpen] : [r.terminalGetLip, r.terminalFolderNew, r.terminalOpen];
+  const shell = windows ? 'PowerShell' : unix === 'linux' ? 'bash' : 'zsh';
   const prompt = windows ? '> ' : '$ ';
   const copy = () => {
     // macOS and Linux: only the install line, since the rest needs the new terminal it asks for (and the script
@@ -290,14 +297,15 @@ function TerminalCard() {
   };
   return (
     <div className="lm-showcase">
-      <div className="px-card lm-showcase-window" data-platform={target}>
+      <div className="px-card lm-showcase-window" data-platform={windows ? msi : 'macos linux'}>
         {windows ? (
           <div className="lm-term-download">
-            <PixelButton href={msiUrl(target, lipVersion)} variant="primary" size="sm" external={false}>
-              {r.msiDownload(platformName(target, info.lang))}
+            <PixelButton href={msiUrl(msi, lipVersion)} variant="primary" size="sm" external={false}>
+              {r.msiDownload(platformName(msi, info.lang))}
             </PixelButton>
             <span>
-              <code>lip-{lipVersion ?? '<version>'}-{target}.msi</code> {r.msiNext}
+              <code>lip-{lipVersion ?? '<version>'}-{msi}.msi</code> {r.msiNext}{' '}
+              <a href={msiUrl(otherMsi, lipVersion)}>{r.msiOther(platformName(otherMsi, info.lang))}</a>
             </span>
           </div>
         ) : (

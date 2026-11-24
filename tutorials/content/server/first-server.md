@@ -21,11 +21,12 @@ You do not need to install anything else first: no .NET, no Git, no Visual C++ r
 
 Pick your system. The page has picked the one you are browsing from.
 
+
 :::: tabs
 
-== Windows x64
+== Windows
 
-1. Open the [latest release of lip](https://github.com/LiteLDev/lip/releases/latest) and download `lip-<version>-win-x64.msi`.
+1. Open the [latest release of lip](https://github.com/LiteLDev/lip/releases/latest) and download `lip-<version>-win-x64.msi`, or `lip-<version>-win-arm64.msi` on a PC with an ARM processor.
 2. Run the file. The installer asks for the folder to install `lip` in, `C:\Program Files\lip` unless you change it, and installs once you click **Install** and allow Windows to make changes. It adds that folder to the `PATH`.
 3. Open a **new** terminal window. A terminal that was open before does not know the new `PATH` yet.
 4. Ask `lip` for its version:
@@ -36,28 +37,15 @@ Pick your system. The page has picked the one you are browsing from.
 
    You should see a version number, such as `0.42.0`. If the terminal says it does not know `lip`, close it and open a new one.
 
-== Windows arm64
+== macOS / Linux
 
-1. Open the [latest release of lip](https://github.com/LiteLDev/lip/releases/latest) and download `lip-<version>-win-arm64.msi`.
-2. Run the file. The installer asks for the folder to install `lip` in, `C:\Program Files\lip` unless you change it, and installs once you click **Install** and allow Windows to make changes. It adds that folder to the `PATH`.
-3. Open a **new** terminal window. A terminal that was open before does not know the new `PATH` yet.
-4. Ask `lip` for its version:
-
-   ```shell
-   lip -v
-   ```
-
-   You should see a version number, such as `0.42.0`. If the terminal says it does not know `lip`, close it and open a new one.
-
-== macOS (Apple silicon)
-
-1. Open **Terminal** (in **Applications** › **Utilities**) and run:
+1. Open a terminal (on a Mac: **Terminal**, in **Applications** › **Utilities**) and run:
 
    ```shell
    curl -fsSL https://levimc.org/lip/install.sh | sh
    ```
 
-   The script downloads `lip` for your Mac from the latest release, checks it against the release's SHA-256 checksums, and puts it in `~/.local/bin`. It needs no administrator password. When `~/.local/bin` is not on your `PATH` yet, it asks whether to add it.
+   The script downloads the `lip` for your system from the latest release, checks it against the release's SHA-256 checksums, and puts it in `~/.local/bin`. It needs no administrator password or root. When `~/.local/bin` is not on your `PATH` yet, it asks whether to add it.
 2. Open a **new** terminal window. A terminal that was open before does not know the new `PATH` yet.
 3. Ask `lip` for its version:
 
@@ -70,74 +58,16 @@ Pick your system. The page has picked the one you are browsing from.
 A Mac with Apple silicon runs the Wine of `lip` through Rosetta 2. If Rosetta 2 is not installed, `lip` asks whether to install it the first time it sets up or starts a server. Installing it accepts Apple's license for Rosetta 2. If the installation fails, `lip` names the command that installs Rosetta 2 by hand: `softwareupdate --install-rosetta --agree-to-license`.
 
 ::: details Without the script: the archive
-Download `lip-<version>-osx-arm64.zip` from the [latest release](https://github.com/LiteLDev/lip/releases/latest) and extract it into a folder on your `PATH`:
+Download the archive for your system from the [latest release](https://github.com/LiteLDev/lip/releases/latest): `lip-<version>-osx-arm64.zip` (Mac with Apple silicon), `lip-<version>-osx-x64.zip` (Mac with Intel) or `lip-<version>-linux-x64.tar.xz` (Linux). Extract it into a folder on your `PATH`:
 
 ```shell
 mkdir -p ~/.local/bin
-unzip lip-<version>-osx-arm64.zip -d ~/.local/bin
-xattr -d com.apple.quarantine ~/.local/bin/lip
+unzip lip-<version>-osx-arm64.zip -d ~/.local/bin        # macOS (or osx-x64)
+xattr -d com.apple.quarantine ~/.local/bin/lip           # macOS
+tar -xJf lip-<version>-linux-x64.tar.xz -C ~/.local/bin  # Linux
 ```
 
-The last line removes the quarantine mark that macOS puts on files downloaded in a browser; without it, macOS refuses to run `lip`. If `~/.local/bin` is not on your `PATH`, add `export PATH="$HOME/.local/bin:$PATH"` to `~/.zshrc` and open a new terminal. Then check `lip -v` as above.
-:::
-
-== macOS (Intel)
-
-1. Open **Terminal** (in **Applications** › **Utilities**) and run:
-
-   ```shell
-   curl -fsSL https://levimc.org/lip/install.sh | sh
-   ```
-
-   The script downloads `lip` for your Mac from the latest release, checks it against the release's SHA-256 checksums, and puts it in `~/.local/bin`. It needs no administrator password. When `~/.local/bin` is not on your `PATH` yet, it asks whether to add it.
-2. Open a **new** terminal window. A terminal that was open before does not know the new `PATH` yet.
-3. Ask `lip` for its version:
-
-   ```shell
-   lip -v
-   ```
-
-   You should see a version number, such as `0.42.0`. If the terminal says it does not know `lip`, close it and open a new one.
-
-::: details Without the script: the archive
-Download `lip-<version>-osx-x64.zip` from the [latest release](https://github.com/LiteLDev/lip/releases/latest) and extract it into a folder on your `PATH`:
-
-```shell
-mkdir -p ~/.local/bin
-unzip lip-<version>-osx-x64.zip -d ~/.local/bin
-xattr -d com.apple.quarantine ~/.local/bin/lip
-```
-
-The last line removes the quarantine mark that macOS puts on files downloaded in a browser; without it, macOS refuses to run `lip`. If `~/.local/bin` is not on your `PATH`, add `export PATH="$HOME/.local/bin:$PATH"` to `~/.zshrc` and open a new terminal. Then check `lip -v` as above.
-:::
-
-== Linux x64
-
-1. Open a terminal and run:
-
-   ```shell
-   curl -fsSL https://levimc.org/lip/install.sh | sh
-   ```
-
-   The script downloads `lip` from the latest release, checks it against the release's SHA-256 checksums, and puts it in `~/.local/bin`. It needs no root. When `~/.local/bin` is not on your `PATH` yet, it asks whether to add it.
-2. Open a **new** terminal window. A terminal that was open before does not know the new `PATH` yet.
-3. Ask `lip` for its version:
-
-   ```shell
-   lip -v
-   ```
-
-   You should see a version number, such as `0.42.0`. If the terminal says it does not know `lip`, close it and open a new one.
-
-::: details Without the script: the archive
-Download `lip-<version>-linux-x64.tar.xz` from the [latest release](https://github.com/LiteLDev/lip/releases/latest) and extract it into a folder on your `PATH`:
-
-```shell
-mkdir -p ~/.local/bin
-tar -xJf lip-<version>-linux-x64.tar.xz -C ~/.local/bin
-```
-
-If `~/.local/bin` is not on your `PATH`, add `export PATH="$HOME/.local/bin:$PATH"` to `~/.profile` and open a new terminal. Then check `lip -v` as above.
+On macOS, the `xattr` line removes the quarantine mark that macOS puts on files downloaded in a browser; without it, macOS refuses to run `lip`. If `~/.local/bin` is not on your `PATH`, add `export PATH="$HOME/.local/bin:$PATH"` to `~/.zshrc` (macOS) or `~/.profile` (Linux) and open a new terminal. Then check `lip -v` as above.
 :::
 
 ::::
