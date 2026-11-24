@@ -15,7 +15,7 @@ LeviLamina 没有原生 Linux 版，只能加载进 x64 的 Windows 版 BDS，�
 其他平台：
 
 - x64 macOS：可以通过 lip 的 Wine 运行。
-- Apple 芯片的 macOS：要用 lip 的 Wine 加 Rosetta 2。
+- Apple 芯片的 macOS：要用 lip 的 Wine 加 Rosetta 2；缺少 Rosetta 2 时 lip 会询问是否安装（`--accept-rosetta-license` 跳过询问）。
 - arm64 Windows：由系统模拟 x64，可以运行。
 - arm64 Linux：官方不支持。box64、FEX、Hangover 等方案都不能可靠地运行 LeviLamina 服务器，建议换 x64 机器。
 - Android、iOS：不支持。

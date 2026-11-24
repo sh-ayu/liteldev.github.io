@@ -15,7 +15,7 @@ On Linux, run the Windows build of BDS + LeviLamina with Wine:
 Other platforms:
 
 - x64 macOS: runs through lip's Wine.
-- Apple silicon macOS: use lip's Wine plus Rosetta 2.
+- Apple silicon macOS: use lip's Wine plus Rosetta 2; lip asks to install Rosetta 2 when it is missing (`--accept-rosetta-license` skips the question).
 - arm64 Windows: the system emulates x64, so it works.
 - arm64 Linux: not officially supported. Solutions such as box64, FEX and Hangover cannot run a LeviLamina server reliably; use an x64 machine instead.
 - Android, iOS: not supported.

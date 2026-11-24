@@ -5,7 +5,7 @@ Update installed packages.
 ## Synopsis
 
 ```
-lip update [<PACKAGES>...] [-n | --dry-run] [-h | --help]
+lip update [<PACKAGES>...] [--accept-rosetta-license] [-n | --dry-run] [-h | --help]
 ```
 
 ## Description
@@ -49,6 +49,7 @@ What it refuses, before anything changes:
 
 | Option | Description |
 | --- | --- |
+| `--accept-rosetta-license` | Accept the license of Rosetta 2, so that lip installs it without asking when a Mac with Apple silicon lacks it. See [macOS on Apple silicon](../../guides/linux_macos.md#macos-on-apple-silicon). |
 | `-n`, `--dry-run` | A [dry run](../cli.md#dry-run). The messages name the packages that would be installed, uninstalled or marked explicitly installed. Nothing is changed. |
 | `-h`, `--help` | Write the help and exit. |
 

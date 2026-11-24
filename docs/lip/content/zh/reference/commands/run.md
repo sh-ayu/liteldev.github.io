@@ -5,7 +5,7 @@
 ## 概要
 
 ```
-lip run [--managed [--detach]] [-h | --help]
+lip run [--managed [--detach]] [--accept-rosetta-license] [-h | --help]
 ```
 
 ## 说明
@@ -87,6 +87,7 @@ lip run [--managed [--detach]] [-h | --help]
 - 无论启动它的客户端发生什么，它都继续运行。
 - 它的输入来自连接到它的客户端和界面。它的输出会发给所有这些客户端和界面。
 - 只有连接着的客户端或界面才能要求它停止。
+- 它不提问：在缺少 Rosetta 2 的 Apple 芯片 Mac 上，只有启动它的 `lip run --managed` 带了 `--accept-rosetta-license` 时它才安装 Rosetta 2，否则失败。在界面中启动的服务器改由界面询问。见 [Apple 芯片的 macOS](../../guides/linux_macos.md#apple-芯片的-macos)。
 
 守护进程为每个工作区最多运行一个托管服务器。在界面的[服务器](../../interface/server.md)页启动的服务器也是托管服务器，你可以从终端连接到它。
 
@@ -115,6 +116,7 @@ lip run [--managed [--detach]] [-h | --help]
 | --- | --- |
 | `--managed` | 把服务器作为托管服务器运行，或连接到正在运行的那个。 |
 | `--detach` | 与 `--managed` 一起使用：不连接。不带 `--managed` 时是用法错误。 |
+| `--accept-rosetta-license` | 接受 Rosetta 2 的许可协议：Apple 芯片的 Mac 缺少 Rosetta 2 时，lip 不经询问就安装它。见 [Apple 芯片的 macOS](../../guides/linux_macos.md#apple-芯片的-macos)。 |
 | `-h`、`--help` | 输出帮助并退出。 |
 
 ## 输出

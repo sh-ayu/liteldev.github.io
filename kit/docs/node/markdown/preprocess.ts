@@ -32,7 +32,39 @@ const TAB_RE = /^===(!?\+?|\+?!?) +"(.*?)" *$/;
 // VitePress container
 const VP_OPEN = /^(:{3,})\s*([\w-]+)\s*(.*?)\s*$/;
 const VP_CLOSE = /^(:{3,})\s*$/;
-const VP_TYPES = new Set(['tip', 'info', 'warning', 'danger', 'details', 'note', 'important', 'caution', 'code-group']);
+const VP_TYPES = new Set(['tip', 'info', 'warning', 'danger', 'details', 'note', 'important', 'caution', 'code-group', 'tabs']);
+// a tab of a `::: tabs` container (the vitepress-plugin-tabs syntax): `== Label`, `==+ Label` starts selected
+const VP_TAB_RE = /^==(\+?) +(.*?) *$/;
+
+/**
+ * The tabs of a `::: tabs` container body: each `== Label` line at its top level (not in a fence or a nested
+ * container) starts one. Lines before the first are dropped.
+ */
+function splitVpTabs(body: string[]): { label: string; selected: boolean; lines: string[] }[] {
+  const tabs: { label: string; selected: boolean; lines: string[] }[] = [];
+  let inFence: string | null = null;
+  let nest = 0;
+  for (const l of body) {
+    const t = l.trim();
+    if (inFence) {
+      if (new RegExp(`^${inFence[0] === '`' ? '`' : '~'}{${inFence.length},}\\s*$`).test(t)) inFence = null;
+    } else {
+      const f = /^(`{3,}|~{3,})/.exec(t);
+      if (f) inFence = f[1]!;
+      else if (VP_TYPES.has(VP_OPEN.exec(t)?.[2]?.toLowerCase() ?? '')) nest++; // as the container scan counts them
+      else if (VP_CLOSE.test(t) && nest > 0) nest--;
+      else if (nest === 0 && indentOf(l) === 0) {
+        const m = VP_TAB_RE.exec(t);
+        if (m) {
+          tabs.push({ label: m[2]!, selected: m[1] === '+', lines: [] });
+          continue;
+        }
+      }
+    }
+    tabs[tabs.length - 1]?.lines.push(l);
+  }
+  return tabs;
+}
 
 // Python-Markdown block-level elements (markdown/util.py BLOCK_LEVEL_ELEMENTS)
 const BLOCK_TAGS = new Set(
@@ -352,8 +384,18 @@ function processBlock(lines: string[], o: Required<PreprocessOptions>): string[]
           open = true;
           rest = rest.slice(0, om.index);
         }
-        const inner = processBlock(dedent(body, ind), o);
-        if (type === 'code-group') {
+        const inner = type === 'tabs' ? [] : processBlock(dedent(body, ind), o);
+        if (type === 'tabs') {
+          // the same wrappers as MkDocs' `===` tabs: render.ts makes one tab set of them
+          const tabsInner: string[] = [];
+          for (const tab of splitVpTabs(dedent(body, ind))) {
+            tabsInner.push(`<div data-kit-container="tab" data-label="${escAttr(tab.label)}"${tab.selected ? ' data-selected="1"' : ''}>`, '');
+            tabsInner.push(...processBlock(tab.lines, o));
+            if (tabsInner[tabsInner.length - 1] !== '') tabsInner.push('');
+            tabsInner.push('</div>', '');
+          }
+          emitWrapped(ind, '<div data-kit-container="tabs">', tabsInner);
+        } else if (type === 'code-group') {
           emitWrapped(ind, '<div data-kit-container="code-group">', inner);
         } else {
           emitWrapped(

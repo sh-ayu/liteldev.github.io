@@ -1,6 +1,6 @@
 # Linux and macOS
 
-After this page you know which servers lip runs on your system, what lip downloads to run them and where it puts it, and which limits to expect. The commands are the same on every system: see [A server from the command line](https://levimc.org/tutorials/server/command-line/).
+After this page you know which servers lip runs on your system, how to install lip there, what lip downloads to run them and where it puts it, and which limits to expect. The commands are the same on every system: see [A server from the command line](https://levimc.org/tutorials/server/command-line/).
 
 ## What works where
 
@@ -18,6 +18,38 @@ Minecraft publishes two servers: one for Windows and one for Linux. LeviLamina, 
 lip is released for the first five. There is no lip for Linux on arm64: see [Limits and rough edges](#limits-and-rough-edges).
 
 Whatever system lip runs on, it installs the same packages, those made for Windows on x64. A server folder set up on one system can be moved to another.
+
+## Install lip
+
+On macOS and on Linux on x64, install lip with the install script, in a terminal:
+
+```sh
+curl -fsSL https://levimc.org/lip/install.sh | sh
+```
+
+The script:
+
+1. picks the build of lip for your system: `osx-arm64` on a Mac with Apple silicon, `osx-x64` on a Mac with Intel, `linux-x64` on Linux on x64. On any other system it stops;
+2. downloads that build of the latest release from GitHub, and checks it against the release's `SHA256SUMS`. A file that differs is not installed;
+3. puts `lip` in `~/.local/bin`, replacing a lip that is there;
+4. when that folder is not on your `PATH`, asks whether to add it to the profile of your shell, unless the profile adds it already.
+
+It needs no root and no administrator password, and does not touch anything outside the folder and the profile. Open a new terminal afterwards, and check that `lip -v` prints a version. Update lip later with `lip self-update`.
+
+These variables change what the script does. Set them for `sh`, after the `|`:
+
+```sh
+curl -fsSL https://levimc.org/lip/install.sh | LIP_VERSION=0.42.0 sh
+```
+
+| Variable | What the script does with it |
+| --- | --- |
+| `LIP_VERSION` | Installs this version, such as `0.42.0`, instead of the latest. |
+| `LIP_INSTALL_DIR` | Installs lip in this folder, an absolute path, instead of `~/.local/bin`. |
+| `LIP_GITHUB_PROXY` | Downloads from GitHub through this GitHub proxy, as the setting [`github_proxy`](configuration.md#github-proxy) of lip does: the address of the proxy, then `/`, then the address on GitHub. |
+| `LIP_NO_MODIFY_PATH` | When `1`, never changes the profile of your shell, and prints the line to add to it instead. |
+
+To install by hand instead, download the archive for your system from the [latest release](https://github.com/LiteLDev/lip/releases/latest) (`lip-<version>-osx-arm64.zip`, `lip-<version>-osx-x64.zip` or `lip-<version>-linux-x64.tar.xz`) and extract the file `lip` into a folder on your `PATH`. On macOS, remove the quarantine mark that the browser put on it, or macOS refuses to run it: `xattr -d com.apple.quarantine <folder>/lip`. The script needs no such step, since `curl` puts no such mark. [Your first server](https://levimc.org/tutorials/server/first-server/#_1-install-lip) goes through both ways step by step.
 
 ## The Windows server through Wine
 
@@ -69,13 +101,18 @@ lip run
 
 ### macOS on Apple silicon
 
-The Wine of lip is a program for x64, which a Mac with Apple silicon runs through Rosetta 2. Installing Rosetta 2 needs an administrator, so lip does not do it. When it is missing, lip fails and tells you to run:
+The Wine of lip is a program for x64, which a Mac with Apple silicon runs through Rosetta 2. When Rosetta 2 is missing, lip installs it as it prepares the system, before Wine first runs. Installing Rosetta 2 accepts Apple's software license agreement for it, so lip asks first:
 
-```sh
-softwareupdate --install-rosetta --agree-to-license
-```
+- In a terminal, lip says that it installs Rosetta 2 and that this accepts the license, and asks whether to go on. The interface asks the same in a dialog.
+- With `--accept-rosetta-license`, lip does not ask: you accept the license by giving the option. `lip setup`, `lip install`, `lip update`, `lip uninstall` and `lip run` take it, for scripts and for terminals where no one answers:
 
-Then run the lip command again.
+  ```sh
+  lip setup --game 1.26.50 --accept-eula --accept-rosetta-license
+  ```
+
+- Where lip cannot ask, because its input or its error output is not a terminal, and the option is not given, the command fails. So does a [managed server](../reference/commands/run.md#managed-servers) that `lip run --managed` started without the option, since it asks no question; a server started in the interface asks there.
+
+lip installs Rosetta 2 with `softwareupdate --install-rosetta --agree-to-license`, as the user that runs lip. When that fails, or you answer no, the command fails and names that command, so that you can run it yourself. Recent versions of macOS install Rosetta 2 without an administrator; some need one. Then run the lip command again.
 
 ## The Linux server
 

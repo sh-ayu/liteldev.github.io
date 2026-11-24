@@ -84,13 +84,39 @@ We recommend downloading `lip-<version>-win-x64.msi` (`win-arm64` for ARM device
 
 ## The lip Release page has many files (x64/arm64, msi/zip and so on). Which one should I download for an Intel/AMD Windows PC, Windows Server or a panel-hosted server?
 
-x64/amd64 and arm64 refer to the CPU architecture, not the brand: ordinary Intel and AMD PCs and Windows Server 2022 and so on are all x64; arm64 is only for ARM devices, and downloading the wrong one gives a message that it does not match the system. The files on the current lip release page (<https://github.com/LiteLDev/lip/releases/latest>) are: `lip-<version>-win-x64.msi` / `win-x64.zip` (Windows x64), `win-arm64.msi` / `win-arm64.zip` (Windows ARM), `linux-x64.tar.xz` (x64 Linux), and `osx-x64.zip` / `osx-arm64.zip` (macOS). On Windows, download and install `win-x64.msi` in most cases (it adds itself to PATH); for panel-hosted servers or environments that cannot run an msi, download `win-x64.zip` and extract it. All builds are self-contained single files and need no extra .NET. lip itself is cross-platform: on Linux/macOS it runs the Windows server with LeviLamina through a Wine that it downloads itself; there is no arm64 Linux build.
+x64/amd64 and arm64 refer to the CPU architecture, not the brand: ordinary Intel and AMD PCs and Windows Server 2022 and so on are all x64; arm64 is only for ARM devices, and downloading the wrong one gives a message that it does not match the system. The files on the current lip release page (<https://github.com/LiteLDev/lip/releases/latest>) are: `lip-<version>-win-x64.msi` / `win-x64.zip` (Windows x64), `win-arm64.msi` / `win-arm64.zip` (Windows ARM), `linux-x64.tar.xz` (x64 Linux), and `osx-x64.zip` / `osx-arm64.zip` (macOS). On Windows, download and install `win-x64.msi` in most cases (it adds itself to PATH); for panel-hosted servers or environments that cannot run an msi, download `win-x64.zip` and extract it. On macOS and Linux you need not choose: `curl -fsSL https://levimc.org/lip/install.sh | sh` picks the right archive for your system. All builds are self-contained single files and need no extra .NET. lip itself is cross-platform: on Linux/macOS it runs the Windows server with LeviLamina through a Wine that it downloads itself; there is no arm64 Linux build.
 
 *Applies to: current lip (v0.41.x)*
 
 ## Where do I download the lip package manager and how do I install it? Is there a winget option? Can it update itself? Is there a Linux version?
 
-The lip repository is now <https://github.com/LiteLDev/lip> (formerly `futrime/lip`), and the documentation is at <https://levimc.org/lip/>. On Windows, download `lip-<version>-win-x64.msi` (`win-arm64.msi` for ARM) from <https://github.com/LiteLDev/lip/releases/latest> and run it; it is added to PATH automatically. You can also download the zip, extract it and add the directory to PATH yourself. On Linux (x64) and macOS, download the matching archive, extract the `lip` file and put it in a directory on your PATH. lip is a single executable and needs no separate .NET, git or Wine. The official documentation no longer offers a winget install (the old `futrime.lip` winget package is no longer available); update lip with `lip self-update` (`lip self-update --check` only checks). After installing, open a terminal in the server folder and type `lip` to use the interface, or use commands such as `lip install LeviLamina`.
+The lip repository is now <https://github.com/LiteLDev/lip> (formerly `futrime/lip`), and the documentation is at <https://levimc.org/lip/>. lip is released for Windows (x64 and arm64), macOS (Apple silicon and Intel) and Linux on x64. Pick your system:
+
+::: tabs
+
+== Windows x64
+
+Download `lip-<version>-win-x64.msi` from <https://github.com/LiteLDev/lip/releases/latest> and run it; it adds lip to PATH. You can also download `lip-<version>-win-x64.zip`, extract it and add the directory to PATH yourself.
+
+== Windows arm64
+
+Download `lip-<version>-win-arm64.msi` from <https://github.com/LiteLDev/lip/releases/latest> and run it; it adds lip to PATH. You can also download `lip-<version>-win-arm64.zip`, extract it and add the directory to PATH yourself.
+
+== macOS (Apple silicon)
+
+Run `curl -fsSL https://levimc.org/lip/install.sh | sh` in Terminal. The script installs lip in `~/.local/bin` without an administrator password, checks its SHA-256, and offers to add the directory to PATH. lip asks to install Rosetta 2 the first time it needs it.
+
+== macOS (Intel)
+
+Run `curl -fsSL https://levimc.org/lip/install.sh | sh` in Terminal. The script installs lip in `~/.local/bin` without an administrator password, checks its SHA-256, and offers to add the directory to PATH.
+
+== Linux x64
+
+Run `curl -fsSL https://levimc.org/lip/install.sh | sh` in a terminal. The script installs lip in `~/.local/bin` without root, checks its SHA-256, and offers to add the directory to PATH. There is no lip for Linux on arm64.
+
+:::
+
+Step by step, with the archive for installing by hand on macOS and Linux: [Your first server](https://levimc.org/tutorials/server/first-server/#_1-install-lip). lip is a single executable and needs no separate .NET, git or Wine. The official documentation no longer offers a winget install (the old `futrime.lip` winget package is no longer available); update lip with `lip self-update` (`lip self-update --check` only checks). After installing, open a terminal in the server folder and type `lip` to use the interface, or use commands such as `lip install LeviLamina`.
 
 *Applies to: current lip (v0.41.x)*
 
@@ -160,7 +186,7 @@ There is no functional difference. The msi is a regular installation: it adds li
 
 ## GitHub is not reachable. How do I download and install lip?
 
-The lip installers are on GitHub Releases: <https://github.com/LiteLDev/lip/releases/latest> (the old address `futrime/lip` redirects automatically). On Windows, download `lip-<version>-win-x64.msi` (or `-win-arm64.msi`; a portable `.zip` is also available), for example <https://github.com/LiteLDev/lip/releases/download/v0.41.1/lip-0.41.1-win-x64.msi>. On Linux/macOS, download the matching `.tar.xz`/`.zip`.
+The lip installers are on GitHub Releases: <https://github.com/LiteLDev/lip/releases/latest> (the old address `futrime/lip` redirects automatically). On Windows, download `lip-<version>-win-x64.msi` (or `-win-arm64.msi`; a portable `.zip` is also available), for example <https://github.com/LiteLDev/lip/releases/download/v0.41.1/lip-0.41.1-win-x64.msi>. On Linux/macOS, the install script downloads from GitHub too; give it your GitHub proxy in `LIP_GITHUB_PROXY`, which means the same as lip's `github_proxy`: `curl -fsSL https://levimc.org/lip/install.sh | LIP_GITHUB_PROXY=<proxy URI> sh`. You can also download the matching `.tar.xz`/`.zip` yourself.
 
 If you cannot reach GitHub, download through a third-party GitHub acceleration mirror (add the mirror's prefix before the link, or replace `github.com` with the mirror's domain). After installing, run `lip config set github_proxy <proxy URI>` so that lip downloads from GitHub through the proxy from then on.
 

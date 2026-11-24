@@ -60,6 +60,54 @@ The tutorials of LeviMC take you from nothing to one thing done, step by step:
 
 There is no release for Linux on ARM64, where a LeviLamina server does not run. See [Linux and macOS](guides/linux_macos.md) for what `lip` installs there and for the limits.
 
+## Install lip
+
+Pick your system. The page has picked the one you are browsing from.
+
+::: tabs
+
+== Windows x64
+
+Download `lip-<version>-win-x64.msi` from the [latest release](https://github.com/LiteLDev/lip/releases/latest) and run it. It installs `lip` in `C:\Program Files\lip` and adds that folder to the `PATH`. Then open a new terminal and check that `lip -v` prints a version.
+
+== Windows arm64
+
+Download `lip-<version>-win-arm64.msi` from the [latest release](https://github.com/LiteLDev/lip/releases/latest) and run it. It installs `lip` in `C:\Program Files\lip` and adds that folder to the `PATH`. Then open a new terminal and check that `lip -v` prints a version.
+
+== macOS (Apple silicon)
+
+In Terminal, run:
+
+```shell
+curl -fsSL https://levimc.org/lip/install.sh | sh
+```
+
+The script installs `lip` in `~/.local/bin`, without an administrator password, and offers to add that folder to the `PATH`. Then open a new terminal and check that `lip -v` prints a version. `lip` asks to install Rosetta 2 when it first needs it: see [Linux and macOS](guides/linux_macos.md#macos-on-apple-silicon).
+
+== macOS (Intel)
+
+In Terminal, run:
+
+```shell
+curl -fsSL https://levimc.org/lip/install.sh | sh
+```
+
+The script installs `lip` in `~/.local/bin`, without an administrator password, and offers to add that folder to the `PATH`. Then open a new terminal and check that `lip -v` prints a version.
+
+== Linux x64
+
+In a terminal, run:
+
+```shell
+curl -fsSL https://levimc.org/lip/install.sh | sh
+```
+
+The script installs `lip` in `~/.local/bin`, without root, and offers to add that folder to the `PATH`. Then open a new terminal and check that `lip -v` prints a version.
+
+:::
+
+[Your first server](https://levimc.org/tutorials/server/first-server/#_1-install-lip) goes through it step by step, with the archive for those who install by hand. [Linux and macOS](guides/linux_macos.md#install-lip) says what the script does and how to change it.
+
 ## The rest of this site
 
 - **Guide**: [using the interface](interface/tour.md), page by page; [managing packages](guides/managing_packages.md), [configuration](guides/configuration.md) and [Linux and macOS](guides/linux_macos.md) with the commands; [migrating packages](authors/migrating_packages.md) of lip v0.x; [troubleshooting](guides/troubleshooting.md). Short answers to common questions are in the [LeviMC FAQ](https://levimc.org/faq/server/lip/basics/).

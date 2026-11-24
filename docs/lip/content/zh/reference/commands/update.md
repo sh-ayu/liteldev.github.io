@@ -5,7 +5,7 @@
 ## 概要
 
 ```
-lip update [<PACKAGES>...] [-n | --dry-run] [-h | --help]
+lip update [<PACKAGES>...] [--accept-rosetta-license] [-n | --dry-run] [-h | --help]
 ```
 
 ## 说明
@@ -49,6 +49,7 @@ lip update [<PACKAGES>...] [-n | --dry-run] [-h | --help]
 
 | 选项 | 说明 |
 | --- | --- |
+| `--accept-rosetta-license` | 接受 Rosetta 2 的许可协议：Apple 芯片的 Mac 缺少 Rosetta 2 时，lip 不经询问就安装它。见 [Apple 芯片的 macOS](../../guides/linux_macos.md#apple-芯片的-macos)。 |
 | `-n`、`--dry-run` | [试运行](../cli.md#试运行)。消息会列出将被安装、卸载或标记为显式安装的包。不做任何更改。 |
 | `-h`、`--help` | 输出帮助并退出。 |
 

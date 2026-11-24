@@ -139,7 +139,7 @@ Windows 服务器需要它，而 Windows 询问时你选了“否”。重新运
 
 **`Rosetta 2 is not installed`**
 
-在 Apple 芯片的 Mac 上运行 `softwareupdate --install-rosetta --agree-to-license`，然后重新运行 lip。
+Apple 芯片的 Mac 需要 Rosetta 2 才能运行 lip 的 Wine，而 lip 没有安装它：你回答了“否”，或者终端前没有人、lip 无法询问，或者安装失败了。在终端里重新运行命令并回答“是”，或者给命令加上 `--accept-rosetta-license`，或者自己用 `softwareupdate --install-rosetta --agree-to-license` 安装 Rosetta 2。见 [Apple 芯片的 macOS](linux_macos.md#apple-芯片的-macos)。
 
 **`lip run --managed needs the daemon of lip`**
 

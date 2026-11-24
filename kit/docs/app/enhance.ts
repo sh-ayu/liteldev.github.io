@@ -4,7 +4,17 @@
 import { useEffect, type RefObject } from 'react';
 import { useNavigate } from 'react-router';
 import { internalTarget, isPlainLeftClick } from './components/KitLink';
-import { isPlatform, preferredPlatform, storePlatform } from '../shared/platform';
+import {
+  choosePlatform,
+  currentPlatformChoice,
+  devicePlatformChoice,
+  isPlatformChoice,
+  matchPlatform,
+  onPlatformChoice,
+  platformPicked,
+  resetPlatformPick,
+  type PlatformChoice,
+} from '../shared/platform';
 
 async function copyText(text: string): Promise<boolean> {
   try {
@@ -45,19 +55,47 @@ function selectTab(tab: HTMLElement, focus = false) {
 
 const PLATFORM_TAB = '[data-kit-tabs] > [role="tablist"] > [role="tab"][data-platform]';
 
-/** Select the tab of `platform` in every platform tab set under `root` (a set without one keeps its tab). */
-function selectPlatform(root: HTMLElement, platform: string) {
-  for (const tab of root.querySelectorAll<HTMLElement>(PLATFORM_TAB)) if (tab.dataset.platform === platform) selectTab(tab);
+/** The tab set the visitor just clicked in: it keeps the tab they clicked when the others follow. */
+let clickedSet: Element | null = null;
+
+/**
+ * Select the tab of `platform` in every platform tab set under `root` (shared/platform.ts matchPlatform: the same
+ * platform or target, else its operating system's tab; a set without one keeps its tab), except in `skip`.
+ */
+function selectPlatform(root: HTMLElement, platform: PlatformChoice, skip?: Element | null) {
+  const sets = new Set<Element>();
+  for (const tab of root.querySelectorAll<HTMLElement>(PLATFORM_TAB)) {
+    const set = tab.closest('[data-kit-tabs]');
+    if (set && set !== skip) sets.add(set);
+  }
+  for (const set of sets) {
+    const tabs = [...set.querySelectorAll<HTMLElement>(':scope > [role="tablist"] > [role="tab"]')];
+    const n = matchPlatform(tabs.map((t) => t.dataset.platform), platform);
+    if (n >= 0) selectTab(tabs[n]!);
+  }
 }
 
 /** A tab the visitor picked: select it, and when it names a platform remember that and sync the other sets. */
 function chooseTab(root: HTMLElement, tab: HTMLElement, focus = false) {
   selectTab(tab, focus);
   const p = tab.dataset.platform;
-  if (tab.closest('[data-kit-tabs]') && isPlatform(p)) {
-    storePlatform(p);
-    selectPlatform(root, p);
+  if (tab.closest('[data-kit-tabs]') && isPlatformChoice(p)) {
+    // shared/platform.ts remembers it ("Windows" while Windows arm64 is chosen keeps arm64 for the sets that tell
+    // the two apart) and tells every subscriber: the onPlatformChoice of useContentEnhancements selects the others
+    clickedSet = tab.closest('[data-kit-tabs]');
+    try {
+      choosePlatform(p);
+    } finally {
+      clickedSet = null;
+    }
   }
+}
+
+/** Whether the URL's #hash names a tab, or something inside a tab panel, under `root`. */
+function hashInTab(root: HTMLElement): boolean {
+  const id = decodeURIComponent(window.location.hash.slice(1));
+  const el = id ? document.getElementById(id) : null;
+  return !!el && root.contains(el) && (el.getAttribute('role') === 'tab' || !!el.closest('[role="tabpanel"]'));
 }
 
 /** Attach interactions to the content element. Re-run when the page changes. */
@@ -113,8 +151,20 @@ export function useContentEnhancements(ref: RefObject<HTMLElement | null>, key: 
     root.addEventListener('keydown', onKey);
     // Tabs named after a platform (render.ts: data-platform) show ?platform=, the visitor's earlier choice or their
     // device; a #hash naming a tab still wins (revealHash runs next).
-    const platform = preferredPlatform();
+    resetPlatformPick();
+    let alive = true;
+    const platform = currentPlatformChoice();
     if (platform) selectPlatform(root, platform);
+    const offPlatform = onPlatformChoice((p) => selectPlatform(root, p, clickedSet));
+    // the browser may tell the processor only asynchronously (Client Hints): refine, unless the visitor picked a tab
+    // meanwhile or the URL's #hash names a tab (or something in one)
+    if (root.querySelector(PLATFORM_TAB)) {
+      void devicePlatformChoice().then(() => {
+        if (!alive || platformPicked() || hashInTab(root)) return;
+        const better = currentPlatformChoice();
+        if (better && better !== platform) selectPlatform(root, better);
+      });
+    }
     // Open the details/tab that contains the URL hash target.
     const revealHash = () => {
       const id = decodeURIComponent(window.location.hash.slice(1));
@@ -147,6 +197,8 @@ export function useContentEnhancements(ref: RefObject<HTMLElement | null>, key: 
     // Watch the table too: web fonts loading later change its width without resizing the wrapper.
     for (const w of tableWraps) for (const el of [w, w.firstElementChild]) if (el) resizeObserver?.observe(el);
     return () => {
+      alive = false;
+      offPlatform();
       root.removeEventListener('click', onClick);
       root.removeEventListener('keydown', onKey);
       window.removeEventListener('hashchange', revealHash);

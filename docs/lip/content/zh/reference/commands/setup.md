@@ -5,7 +5,7 @@
 ## 概要
 
 ```
-lip setup --game <VERSION> [--build <BUILD>] [--loader <LOADER> | --no-loader] [--accept-eula] [-n | --dry-run] [-h | --help]
+lip setup --game <VERSION> [--build <BUILD>] [--loader <LOADER> | --no-loader] [--accept-eula] [--accept-rosetta-license] [-n | --dry-run] [-h | --help]
 ```
 
 ## 说明
@@ -104,6 +104,7 @@ lip 先询问被排除的包，再询问许可协议。两个问题都在 lip �
 | `--loader <LOADER>` | `levilamina` 或 `levilamina@<version>`。其他值都是用法错误。 |
 | `--no-loader` | 设置游戏而不带加载器。同时给出 `--loader` 和 `--no-loader` 是用法错误。 |
 | `--accept-eula` | 接受许可协议，不再询问。 |
+| `--accept-rosetta-license` | 接受 Rosetta 2 的许可协议：Apple 芯片的 Mac 缺少 Rosetta 2 时，lip 不经询问就安装它。见 [Apple 芯片的 macOS](../../guides/linux_macos.md#apple-芯片的-macos)。 |
 | `-n`、`--dry-run` | [试运行](../cli.md#试运行)。不提问。消息会列出将被安装、卸载或标记为显式安装的包、被排除的包，以及 lip 是否会请你接受许可协议。 |
 | `-h`、`--help` | 输出帮助并退出。 |
 

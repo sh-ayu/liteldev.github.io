@@ -6,15 +6,26 @@
 
 ## 你需要准备
 
-- 一台装有 Windows 10、Windows 11 或 Windows Server 2019 及更高版本的电脑。x64 的 Linux 和 macOS 也可以：`lip` 会在那里通过 Wine 运行 Windows 服务器，Wine 由它自己安装。
-- 一个终端：Windows 上用 Windows 终端或 PowerShell。宽度最好不少于 80 个字符。
+- 一台装有以下系统之一的电脑：
+  - Windows 10、Windows 11 或 Windows Server 2019 及更高版本，x64 或 arm64。
+  - macOS，Apple 芯片或 Intel。
+  - x64 的 Linux。
+
+  在 macOS 和 Linux 上，`lip` 通过 Wine 运行 Windows 服务器，Wine 由它自己安装。
+- 一个终端：Windows 上用 Windows 终端或 PowerShell，macOS 上用“终端”，Linux 上用桌面自带的终端。宽度最好不少于 80 个字符。
 - 网络连接。`lip` 从 minecraft.net 下载游戏，从 GitHub 下载 LeviLamina。
 
-不需要事先安装别的东西：不用装 .NET、Git，也不用装 Visual C++ 运行库。服务器需要的组件由 `lip` 安装。
+不需要事先安装别的东西：不用装 .NET、Git、Visual C++ 运行库，也不用装 Wine。服务器需要的组件由 `lip` 安装。
 
 ## 1. 安装 lip
 
-1. 打开 [lip 的最新发行版](https://github.com/LiteLDev/lip/releases/latest)，下载 `lip-<version>-win-x64.msi`。电脑用的是 ARM 处理器的话，下载 `lip-<version>-win-arm64.msi`。
+选择你的系统。页面已经选好了你正在用的那个。
+
+:::: tabs
+
+== Windows x64
+
+1. 打开 [lip 的最新发行版](https://github.com/LiteLDev/lip/releases/latest)，下载 `lip-<version>-win-x64.msi`。
 2. 运行这个文件。安装程序会询问把 `lip` 装到哪个文件夹（默认是 `C:\Program Files\lip`），点击 **Install** 并允许 Windows 进行更改后开始安装，并把这个文件夹加入 `PATH`。
 3. 打开一个**新的**终端窗口。安装前就开着的终端还不知道新的 `PATH`。
 4. 查看 `lip` 的版本：
@@ -23,19 +34,113 @@
    lip -v
    ```
 
-   你应该看到一个版本号，例如 `0.41.0`。如果终端说不认识 `lip`，关掉它，重新打开一个。
+   你应该看到一个版本号，例如 `0.42.0`。如果终端说不认识 `lip`，关掉它，重新打开一个。
 
-::: details 在 Linux 或 macOS 上：便携压缩包
-从[最新发行版](https://github.com/LiteLDev/lip/releases/latest)下载你的系统对应的压缩包（`lip-<version>-linux-x64.tar.xz`、`lip-<version>-osx-arm64.zip` 或 `lip-<version>-osx-x64.zip`），解压到 `PATH` 里的某个文件夹：
+== Windows arm64
+
+1. 打开 [lip 的最新发行版](https://github.com/LiteLDev/lip/releases/latest)，下载 `lip-<version>-win-arm64.msi`。
+2. 运行这个文件。安装程序会询问把 `lip` 装到哪个文件夹（默认是 `C:\Program Files\lip`），点击 **Install** 并允许 Windows 进行更改后开始安装，并把这个文件夹加入 `PATH`。
+3. 打开一个**新的**终端窗口。安装前就开着的终端还不知道新的 `PATH`。
+4. 查看 `lip` 的版本：
+
+   ```shell
+   lip -v
+   ```
+
+   你应该看到一个版本号，例如 `0.42.0`。如果终端说不认识 `lip`，关掉它，重新打开一个。
+
+== macOS（Apple 芯片）
+
+1. 打开“终端”（在“应用程序” › “实用工具”里），运行：
+
+   ```shell
+   curl -fsSL https://levimc.org/lip/install.sh | sh
+   ```
+
+   这个脚本从最新发行版下载适合你的 Mac 的 `lip`，用发行版的 SHA-256 校验和检查它，然后放进 `~/.local/bin`。不需要管理员密码。如果 `~/.local/bin` 还不在 `PATH` 里，它会询问是否加进去。
+2. 打开一个**新的**终端窗口。安装前就开着的终端还不知道新的 `PATH`。
+3. 查看 `lip` 的版本：
+
+   ```shell
+   lip -v
+   ```
+
+   你应该看到一个版本号，例如 `0.42.0`。如果终端说不认识 `lip`，关掉它，重新打开一个。
+
+Apple 芯片的 Mac 通过 Rosetta 2 运行 `lip` 的 Wine。如果还没有安装 Rosetta 2，`lip` 会在第一次安装或启动服务器时询问是否安装它。安装即表示接受 Apple 的 Rosetta 2 许可协议。如果安装失败，`lip` 会给出手动安装 Rosetta 2 的命令：`softwareupdate --install-rosetta --agree-to-license`。
+
+::: details 不用脚本：压缩包
+从[最新发行版](https://github.com/LiteLDev/lip/releases/latest)下载 `lip-<version>-osx-arm64.zip`，解压到 `PATH` 里的某个文件夹：
 
 ```shell
 mkdir -p ~/.local/bin
-tar -xJf lip-<version>-linux-x64.tar.xz -C ~/.local/bin       # Linux
-unzip lip-<version>-osx-arm64.zip -d ~/.local/bin             # macOS
+unzip lip-<version>-osx-arm64.zip -d ~/.local/bin
+xattr -d com.apple.quarantine ~/.local/bin/lip
 ```
 
-如果 `~/.local/bin` 不在 `PATH` 里，把 `export PATH="$HOME/.local/bin:$PATH"` 这一行加进 `~/.profile`（Linux）或 `~/.zshrc`（macOS），然后打开一个新终端。如果 macOS 拒绝运行这个文件，用 `xattr -d com.apple.quarantine ~/.local/bin/lip` 去掉它的隔离标记。之后同样用 `lip -v` 检查。
+最后一行去掉 macOS 给浏览器下载的文件加上的隔离标记；不去掉的话，macOS 会拒绝运行 `lip`。如果 `~/.local/bin` 不在 `PATH` 里，把 `export PATH="$HOME/.local/bin:$PATH"` 这一行加进 `~/.zshrc`，然后打开一个新终端。之后同样用 `lip -v` 检查。
 :::
+
+== macOS（Intel）
+
+1. 打开“终端”（在“应用程序” › “实用工具”里），运行：
+
+   ```shell
+   curl -fsSL https://levimc.org/lip/install.sh | sh
+   ```
+
+   这个脚本从最新发行版下载适合你的 Mac 的 `lip`，用发行版的 SHA-256 校验和检查它，然后放进 `~/.local/bin`。不需要管理员密码。如果 `~/.local/bin` 还不在 `PATH` 里，它会询问是否加进去。
+2. 打开一个**新的**终端窗口。安装前就开着的终端还不知道新的 `PATH`。
+3. 查看 `lip` 的版本：
+
+   ```shell
+   lip -v
+   ```
+
+   你应该看到一个版本号，例如 `0.42.0`。如果终端说不认识 `lip`，关掉它，重新打开一个。
+
+::: details 不用脚本：压缩包
+从[最新发行版](https://github.com/LiteLDev/lip/releases/latest)下载 `lip-<version>-osx-x64.zip`，解压到 `PATH` 里的某个文件夹：
+
+```shell
+mkdir -p ~/.local/bin
+unzip lip-<version>-osx-x64.zip -d ~/.local/bin
+xattr -d com.apple.quarantine ~/.local/bin/lip
+```
+
+最后一行去掉 macOS 给浏览器下载的文件加上的隔离标记；不去掉的话，macOS 会拒绝运行 `lip`。如果 `~/.local/bin` 不在 `PATH` 里，把 `export PATH="$HOME/.local/bin:$PATH"` 这一行加进 `~/.zshrc`，然后打开一个新终端。之后同样用 `lip -v` 检查。
+:::
+
+== Linux x64
+
+1. 打开终端，运行：
+
+   ```shell
+   curl -fsSL https://levimc.org/lip/install.sh | sh
+   ```
+
+   这个脚本从最新发行版下载 `lip`，用发行版的 SHA-256 校验和检查它，然后放进 `~/.local/bin`。不需要 root。如果 `~/.local/bin` 还不在 `PATH` 里，它会询问是否加进去。
+2. 打开一个**新的**终端窗口。安装前就开着的终端还不知道新的 `PATH`。
+3. 查看 `lip` 的版本：
+
+   ```shell
+   lip -v
+   ```
+
+   你应该看到一个版本号，例如 `0.42.0`。如果终端说不认识 `lip`，关掉它，重新打开一个。
+
+::: details 不用脚本：压缩包
+从[最新发行版](https://github.com/LiteLDev/lip/releases/latest)下载 `lip-<version>-linux-x64.tar.xz`，解压到 `PATH` 里的某个文件夹：
+
+```shell
+mkdir -p ~/.local/bin
+tar -xJf lip-<version>-linux-x64.tar.xz -C ~/.local/bin
+```
+
+如果 `~/.local/bin` 不在 `PATH` 里，把 `export PATH="$HOME/.local/bin:$PATH"` 这一行加进 `~/.profile`，然后打开一个新终端。之后同样用 `lip -v` 检查。
+:::
+
+::::
 
 ## 2. 启动 lip
 

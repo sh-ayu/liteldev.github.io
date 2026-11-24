@@ -5,7 +5,7 @@ Choose the game and the loader of the workspace.
 ## Synopsis
 
 ```
-lip setup --game <VERSION> [--build <BUILD>] [--loader <LOADER> | --no-loader] [--accept-eula] [-n | --dry-run] [-h | --help]
+lip setup --game <VERSION> [--build <BUILD>] [--loader <LOADER> | --no-loader] [--accept-eula] [--accept-rosetta-license] [-n | --dry-run] [-h | --help]
 ```
 
 ## Description
@@ -104,6 +104,7 @@ lip asks about left-out packages first, then about the license. Both questions c
 | `--loader <LOADER>` | `levilamina` or `levilamina@<version>`. Any other value is a usage error. |
 | `--no-loader` | Set up the game without a loader. Giving both `--loader` and `--no-loader` is a usage error. |
 | `--accept-eula` | Accept the license without being asked. |
+| `--accept-rosetta-license` | Accept the license of Rosetta 2, so that lip installs it without asking when a Mac with Apple silicon lacks it. See [macOS on Apple silicon](../../guides/linux_macos.md#macos-on-apple-silicon). |
 | `-n`, `--dry-run` | A [dry run](../cli.md#dry-run). It asks no question. The messages name the packages that would be installed, uninstalled or marked explicitly installed, the left-out packages, and whether lip would ask you to accept the license. |
 | `-h`, `--help` | Write the help and exit. |
 

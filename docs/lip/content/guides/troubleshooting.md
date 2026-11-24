@@ -139,7 +139,7 @@ The Windows server needs it, and you answered No when Windows asked. Run the com
 
 **`Rosetta 2 is not installed`**
 
-On a Mac with Apple silicon, run `softwareupdate --install-rosetta --agree-to-license`, then run lip again.
+A Mac with Apple silicon needs Rosetta 2 to run the Wine of lip, and lip did not install it: you answered no, lip could not ask because no one was at the terminal, or the installation failed. Run the command again in a terminal and answer yes, or add `--accept-rosetta-license` to it, or install Rosetta 2 yourself with `softwareupdate --install-rosetta --agree-to-license`. See [macOS on Apple silicon](linux_macos.md#macos-on-apple-silicon).
 
 **`lip run --managed needs the daemon of lip`**
 

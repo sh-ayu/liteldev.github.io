@@ -84,13 +84,39 @@ lip config set github_proxy https://v4.gh-proxy.org/https://github.com/
 
 ## lip 的 Release 页面有很多文件（x64/arm64、msi/zip 等），Intel/AMD 的 Windows 电脑或 Windows Server、面板服应该下载哪个？
 
-x64/amd64 与 arm64 指 CPU 架构而不是品牌：普通 Intel 和 AMD 电脑、Windows Server 2022 等都是 x64；arm64 只给 ARM 设备用，下错会提示与系统不匹配。当前 lip 发布页（<https://github.com/LiteLDev/lip/releases/latest>）的文件为：`lip-<版本>-win-x64.msi` / `win-x64.zip`（Windows x64）、`win-arm64.msi` / `win-arm64.zip`（Windows ARM）、`linux-x64.tar.xz`（x64 Linux）、`osx-x64.zip` / `osx-arm64.zip`（macOS）。Windows 一般下载 `win-x64.msi` 安装即可（自动加入 PATH）；面板服或无法运行 msi 的环境下载 `win-x64.zip` 解压使用。所有版本都是自包含的单文件，无需额外装 .NET。lip 本身跨平台，在 Linux/macOS 上会通过自己下载的 Wine 运行带 LeviLamina 的 Windows 服务器；没有 arm64 Linux 版。
+x64/amd64 与 arm64 指 CPU 架构而不是品牌：普通 Intel 和 AMD 电脑、Windows Server 2022 等都是 x64；arm64 只给 ARM 设备用，下错会提示与系统不匹配。当前 lip 发布页（<https://github.com/LiteLDev/lip/releases/latest>）的文件为：`lip-<版本>-win-x64.msi` / `win-x64.zip`（Windows x64）、`win-arm64.msi` / `win-arm64.zip`（Windows ARM）、`linux-x64.tar.xz`（x64 Linux）、`osx-x64.zip` / `osx-arm64.zip`（macOS）。Windows 一般下载 `win-x64.msi` 安装即可（自动加入 PATH）；面板服或无法运行 msi 的环境下载 `win-x64.zip` 解压使用。macOS 和 Linux 不用自己选：`curl -fsSL https://levimc.org/lip/install.sh | sh` 会为你的系统选好压缩包。所有版本都是自包含的单文件，无需额外装 .NET。lip 本身跨平台，在 Linux/macOS 上会通过自己下载的 Wine 运行带 LeviLamina 的 Windows 服务器；没有 arm64 Linux 版。
 
 *适用版本：当前 lip（v0.41.x）*
 
 ## lip 包管理器在哪里下载、怎么安装？有没有 winget 安装方式？能否自更新？有没有 Linux 版？
 
-lip 的仓库现为 <https://github.com/LiteLDev/lip>（原 `futrime/lip`），文档在 <https://levimc.org/zh-Hans/lip/>。Windows 从 <https://github.com/LiteLDev/lip/releases/latest> 下载 `lip-<版本>-win-x64.msi`（ARM 用 `win-arm64.msi`）运行安装，会自动加入 PATH；也可下载 zip 解压后自行把目录加入 PATH。Linux（x64）和 macOS 下载对应压缩包，解压出 `lip` 文件放到 PATH 中的目录。lip 是单个可执行文件，无需另装 .NET、git 或 Wine。官方文档已不再提供 winget 安装方式（旧的 `futrime.lip` winget 包已不可用）；更新 lip 用 `lip self-update`（`lip self-update --check` 只检查）。安装后在服务器文件夹打开终端输入 `lip` 即可使用界面，或用 `lip install LeviLamina` 等命令。
+lip 的仓库现为 <https://github.com/LiteLDev/lip>（原 `futrime/lip`），文档在 <https://levimc.org/zh-Hans/lip/>。lip 支持 Windows（x64 和 arm64）、macOS（Apple 芯片和 Intel）以及 x64 的 Linux。选择你的系统：
+
+::: tabs
+
+== Windows x64
+
+从 <https://github.com/LiteLDev/lip/releases/latest> 下载 `lip-<版本>-win-x64.msi` 运行安装，会自动加入 PATH；也可下载 `lip-<版本>-win-x64.zip` 解压后自行把目录加入 PATH。
+
+== Windows arm64
+
+从 <https://github.com/LiteLDev/lip/releases/latest> 下载 `lip-<版本>-win-arm64.msi` 运行安装，会自动加入 PATH；也可下载 `lip-<版本>-win-arm64.zip` 解压后自行把目录加入 PATH。
+
+== macOS（Apple 芯片）
+
+在“终端”中运行 `curl -fsSL https://levimc.org/lip/install.sh | sh`。脚本把 lip 安装到 `~/.local/bin`，不需要管理员密码，会校验 SHA-256，并询问是否把该目录加入 PATH。lip 第一次需要 Rosetta 2 时会询问是否安装它。
+
+== macOS（Intel）
+
+在“终端”中运行 `curl -fsSL https://levimc.org/lip/install.sh | sh`。脚本把 lip 安装到 `~/.local/bin`，不需要管理员密码，会校验 SHA-256，并询问是否把该目录加入 PATH。
+
+== Linux x64
+
+在终端中运行 `curl -fsSL https://levimc.org/lip/install.sh | sh`。脚本把 lip 安装到 `~/.local/bin`，不需要 root，会校验 SHA-256，并询问是否把该目录加入 PATH。没有 arm64 Linux 版的 lip。
+
+:::
+
+分步说明（含 macOS 和 Linux 上手动安装用的压缩包）见[开你的第一个服务器](https://levimc.org/zh-Hans/tutorials/server/first-server/#_1-安装-lip)。lip 是单个可执行文件，无需另装 .NET、git 或 Wine。官方文档已不再提供 winget 安装方式（旧的 `futrime.lip` winget 包已不可用）；更新 lip 用 `lip self-update`（`lip self-update --check` 只检查）。安装后在服务器文件夹打开终端输入 `lip` 即可使用界面，或用 `lip install LeviLamina` 等命令。
 
 *适用版本：当前 lip（v0.41.x）*
 
@@ -160,7 +186,7 @@ GMLIB 已更换仓库，旧地址 `github.com/GroupMountain/GMLIB` 已不存在�
 
 ## GitHub 访问不了，如何下载安装 lip？
 
-lip 的安装包在 GitHub Releases：<https://github.com/LiteLDev/lip/releases/latest>（旧地址 `futrime/lip` 会自动跳转）。Windows 下载 `lip-<版本>-win-x64.msi`（或 `-win-arm64.msi`，也有 `.zip` 便携版），例如 <https://github.com/LiteLDev/lip/releases/download/v0.41.1/lip-0.41.1-win-x64.msi>；Linux/macOS 下载对应的 `.tar.xz`/`.zip`。
+lip 的安装包在 GitHub Releases：<https://github.com/LiteLDev/lip/releases/latest>（旧地址 `futrime/lip` 会自动跳转）。Windows 下载 `lip-<版本>-win-x64.msi`（或 `-win-arm64.msi`，也有 `.zip` 便携版），例如 <https://github.com/LiteLDev/lip/releases/download/v0.41.1/lip-0.41.1-win-x64.msi>；Linux/macOS 上的安装脚本同样从 GitHub 下载；用 `LIP_GITHUB_PROXY` 把 GitHub 代理告诉它，含义与 lip 的 `github_proxy` 相同：`curl -fsSL https://levimc.org/lip/install.sh | LIP_GITHUB_PROXY=<代理URI> sh`。也可以自己下载对应的 `.tar.xz`/`.zip`。
 
 如果无法访问 GitHub，可以通过第三方 GitHub 加速镜像下载（在链接前加镜像前缀，或把 `github.com` 换成镜像域名）。安装后可以执行 `lip config set github_proxy <代理URI>`，让 lip 之后对 GitHub 的下载都走代理。
 

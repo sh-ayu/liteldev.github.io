@@ -271,6 +271,39 @@
   .lm-role-panel .kit-hero-actions {
     margin-top: 1.5rem;
   }
+  /* "Install lip on": the platform picker of the server owners' panel (kit PlatformPicker) */
+  .lm-platforms {
+    margin-top: 1.25rem;
+  }
+  .lm-platforms-label {
+    margin: 0 0 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-muted);
+  }
+  .lm-platforms .kit-platform-picker {
+    margin-left: 0;
+  }
+  /* the five platforms in one row beside the hero art */
+  .lm-platforms .kit-platform-picker > button {
+    padding-inline: 0.5rem;
+  }
+  /* above the terminal: lip's installer on Windows, what the script does on macOS and Linux (the same height) */
+  .lm-term-download {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    min-height: 2.25rem;
+    margin: var(--px) var(--px) 0;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--color-muted);
+  }
+  .lm-term-download code {
+    font-size: 0.75rem;
+    overflow-wrap: anywhere;
+  }
   .lm-role-meta {
     margin: 1rem 0 0;
     font-size: 0.875rem;

@@ -5,7 +5,7 @@ Run the server of the workspace.
 ## Synopsis
 
 ```
-lip run [--managed [--detach]] [-h | --help]
+lip run [--managed [--detach]] [--accept-rosetta-license] [-h | --help]
 ```
 
 ## Description
@@ -87,6 +87,7 @@ A **managed server** is a server that the [daemon](daemon.md) runs for no partic
 - It keeps running whatever happens to the client that started it.
 - Its input is what the clients attached to it, and the interface, send it. Its output goes to all of them.
 - Only an attached client or the interface can ask it to stop.
+- It asks no question: on a Mac with Apple silicon that lacks Rosetta 2, it installs Rosetta 2 only when the `lip run --managed` that started it was given `--accept-rosetta-license`, and fails otherwise. A server started in the interface asks there instead. See [macOS on Apple silicon](../../guides/linux_macos.md#macos-on-apple-silicon).
 
 The daemon runs at most one managed server per workspace. A server started on the [Server](../../interface/server.md) page of the interface is a managed server too, and you can attach to it from a terminal.
 
@@ -115,6 +116,7 @@ To leave a managed server running, close the terminal or the terminal tab. Run `
 | --- | --- |
 | `--managed` | Run the server as a managed server, or attach to the one that runs. |
 | `--detach` | With `--managed`: do not attach. Without `--managed`, it is a usage error. |
+| `--accept-rosetta-license` | Accept the license of Rosetta 2, so that lip installs it without asking when a Mac with Apple silicon lacks it. See [macOS on Apple silicon](../../guides/linux_macos.md#macos-on-apple-silicon). |
 | `-h`, `--help` | Write the help and exit. |
 
 ## Output

@@ -1,6 +1,6 @@
 # Linux 与 macOS
 
-读完本页，你就知道 lip 在你的系统上能运行哪些服务器、为了运行它们会下载什么并放在哪里，以及会遇到哪些限制。命令在每种系统上都一样：见[用命令行开服](https://levimc.org/zh-Hans/tutorials/server/command-line/)。
+读完本页，你就知道 lip 在你的系统上能运行哪些服务器、怎样在那里安装 lip、为了运行它们会下载什么并放在哪里，以及会遇到哪些限制。命令在每种系统上都一样：见[用命令行开服](https://levimc.org/zh-Hans/tutorials/server/command-line/)。
 
 ## 什么系统能运行什么
 
@@ -18,6 +18,38 @@ Minecraft 发布了两种服务器：Windows 版和 Linux 版。模组需要的�
 lip 为前五种系统发布。没有 arm64 Linux 版的 lip：见[限制和已知问题](#限制和已知问题)。
 
 无论 lip 运行在什么系统上，它安装的都是同一批包，也就是为 x64 的 Windows 制作的那些。在一种系统上安装好的服务器文件夹，可以搬到另一种系统上。
+
+## 安装 lip
+
+在 macOS 和 x64 的 Linux 上，用安装脚本安装 lip，在终端中运行：
+
+```sh
+curl -fsSL https://levimc.org/lip/install.sh | sh
+```
+
+这个脚本会：
+
+1. 选出适合你的系统的 lip 版本：Apple 芯片的 Mac 用 `osx-arm64`，Intel 的 Mac 用 `osx-x64`，x64 的 Linux 用 `linux-x64`。在其他系统上它会停止；
+2. 从 GitHub 下载最新发行版中的这个版本，并用发行版的 `SHA256SUMS` 检查它。校验不一致的文件不会被安装；
+3. 把 `lip` 放进 `~/.local/bin`，替换那里已有的 lip；
+4. 如果这个文件夹不在 `PATH` 里，询问是否把它加进你的 shell 的配置文件；配置文件已经加过的，就不再加。
+
+它不需要 root，也不需要管理员密码，除了这个文件夹和配置文件，不会改动任何东西。装好后打开一个新终端，确认 `lip -v` 能输出版本号。以后用 `lip self-update` 更新 lip。
+
+下面这些变量可以改变脚本的行为。把它们设置给 `|` 后面的 `sh`：
+
+```sh
+curl -fsSL https://levimc.org/lip/install.sh | LIP_VERSION=0.42.0 sh
+```
+
+| 变量 | 脚本怎样使用它 |
+| --- | --- |
+| `LIP_VERSION` | 安装这个版本（例如 `0.42.0`），而不是最新版。 |
+| `LIP_INSTALL_DIR` | 把 lip 安装到这个文件夹（绝对路径），而不是 `~/.local/bin`。 |
+| `LIP_GITHUB_PROXY` | 通过这个 GitHub 代理从 GitHub 下载，与 lip 的设置 [`github_proxy`](configuration.md#github-proxy) 相同：代理的地址，然后是 `/`，然后是 GitHub 上的地址。 |
+| `LIP_NO_MODIFY_PATH` | 为 `1` 时，从不修改 shell 的配置文件，而是输出需要加进去的那一行。 |
+
+如果想手动安装，从[最新发行版](https://github.com/LiteLDev/lip/releases/latest)下载你的系统对应的压缩包（`lip-<version>-osx-arm64.zip`、`lip-<version>-osx-x64.zip` 或 `lip-<version>-linux-x64.tar.xz`），把其中的 `lip` 文件解压到 `PATH` 里的某个文件夹。在 macOS 上，还要去掉浏览器给它加上的隔离标记，否则 macOS 会拒绝运行它：`xattr -d com.apple.quarantine <文件夹>/lip`。用脚本安装不需要这一步，因为 `curl` 不会加这个标记。[开你的第一个服务器](https://levimc.org/zh-Hans/tutorials/server/first-server/#_1-安装-lip)一步步讲解了这两种方式。
 
 ## 通过 Wine 运行 Windows 服务器
 
@@ -69,13 +101,18 @@ lip run
 
 ### Apple 芯片的 macOS
 
-lip 的 Wine 是 x64 程序，Apple 芯片的 Mac 通过 Rosetta 2 运行它。安装 Rosetta 2 需要管理员权限，所以 lip 不会替你安装。缺少它时，lip 会失败并提示你运行：
+lip 的 Wine 是 x64 程序，Apple 芯片的 Mac 通过 Rosetta 2 运行它。缺少 Rosetta 2 时，lip 会在准备系统时、Wine 第一次运行之前安装它。安装 Rosetta 2 即表示接受 Apple 为它制定的软件许可协议，所以 lip 会先询问：
 
-```sh
-softwareupdate --install-rosetta --agree-to-license
-```
+- 在终端里，lip 会说明它要安装 Rosetta 2、这表示接受该许可协议，并询问是否继续。界面会在对话框里问同样的问题。
+- 加上 `--accept-rosetta-license` 时，lip 不会询问：给出这个选项就表示你接受了许可协议。`lip setup`、`lip install`、`lip update`、`lip uninstall` 和 `lip run` 都接受它，用于脚本和无人应答的终端：
 
-然后重新运行 lip 命令。
+  ```sh
+  lip setup --game 1.26.50 --accept-eula --accept-rosetta-license
+  ```
+
+- 如果 lip 无法询问（它的输入或错误输出不是终端），又没有给出这个选项，命令就会失败。没有这个选项、由 `lip run --managed` 启动的[托管服务器](../reference/commands/run.md#托管服务器)也是如此，因为它不提问；在界面中启动的服务器由界面询问。
+
+lip 以运行 lip 的用户身份执行 `softwareupdate --install-rosetta --agree-to-license` 来安装 Rosetta 2。安装失败或你回答“否”时，命令会失败并给出这条命令，方便你自己运行。较新的 macOS 安装 Rosetta 2 不需要管理员权限；某些版本需要。之后重新运行 lip 命令。
 
 ## Linux 服务器
 

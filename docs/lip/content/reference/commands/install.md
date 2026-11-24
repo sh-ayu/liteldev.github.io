@@ -5,7 +5,7 @@ Install packages into the workspace.
 ## Synopsis
 
 ```
-lip install <PACKAGES>... [--accept-eula] [-n | --dry-run] [-h | --help]
+lip install <PACKAGES>... [--accept-eula] [--accept-rosetta-license] [-n | --dry-run] [-h | --help]
 ```
 
 ## Description
@@ -77,6 +77,7 @@ Two arguments that name the server, or two that name the loader, fail the comman
 | Option | Description |
 | --- | --- |
 | `--accept-eula` | Accept the [license of the game](setup.md#the-license) without being asked, when `lip install` is carried out as a setup. Otherwise it has no effect. |
+| `--accept-rosetta-license` | Accept the license of Rosetta 2, so that lip installs it without asking when a Mac with Apple silicon lacks it. See [macOS on Apple silicon](../../guides/linux_macos.md#macos-on-apple-silicon). |
 | `-n`, `--dry-run` | A [dry run](../cli.md#dry-run). The messages name the packages that would be installed, uninstalled or marked explicitly installed. Nothing is changed. |
 | `-h`, `--help` | Write the help and exit. |
 

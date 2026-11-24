@@ -5,7 +5,7 @@
 ## 概要
 
 ```
-lip install <PACKAGES>... [--accept-eula] [-n | --dry-run] [-h | --help]
+lip install <PACKAGES>... [--accept-eula] [--accept-rosetta-license] [-n | --dry-run] [-h | --help]
 ```
 
 ## 说明
@@ -77,6 +77,7 @@ lip install <PACKAGES>... [--accept-eula] [-n | --dry-run] [-h | --help]
 | 选项 | 说明 |
 | --- | --- |
 | `--accept-eula` | `lip install` 作为设置执行时，接受[游戏的许可协议](setup.md#许可协议)，不再询问。其他情况下没有作用。 |
+| `--accept-rosetta-license` | 接受 Rosetta 2 的许可协议：Apple 芯片的 Mac 缺少 Rosetta 2 时，lip 不经询问就安装它。见 [Apple 芯片的 macOS](../../guides/linux_macos.md#apple-芯片的-macos)。 |
 | `-n`、`--dry-run` | [试运行](../cli.md#试运行)。消息会列出将被安装、卸载或标记为显式安装的包。不做任何更改。 |
 | `-h`、`--help` | 输出帮助并退出。 |
 

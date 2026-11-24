@@ -13,6 +13,7 @@ export { Card, type CardProps } from './Card';
 export { Badge, type BadgeProps, type BadgeTone } from './Badge';
 export { Tooltip, type TooltipProps } from './Tooltip';
 export { HotbarTabs, Pagination, type HotbarTab, type HotbarTabsProps, type PaginationProps } from './Hotbar';
+export { PlatformPicker, usePlatformChoice, choosePlatform, type PlatformPickerProps } from './PlatformPicker';
 export { PixelIcon, BrandIcon, type PixelIconProps, type PixelIconName, type BrandIconName } from './PixelIcon';
 export { PIXEL_ICONS } from './pixel-icons';
 export {

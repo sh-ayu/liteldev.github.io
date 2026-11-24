@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
-import { HotbarTabs, LINKS, PixelButton, PixelIcon, PROJECTS, localizeNetworkUrl, type PixelIconName } from '../../kit/components';
-import { detectPlatform, type DevicePlatform } from '../../kit/docs/shared/platform';
-import { useLeviLaminaStats } from '../hooks/useExternalData';
+import { HotbarTabs, LINKS, PixelButton, PixelIcon, PlatformPicker, PROJECTS, localizeNetworkUrl, usePlatformChoice, type PixelIconName } from '../../kit/components';
+import { detectPlatform, platformName, type DevicePlatform, type PlatformTarget } from '../../kit/docs/shared/platform';
+import { useLeviLaminaStats, useLipVersion } from '../hooks/useExternalData';
 import { useI18n, type Locale } from '../i18n';
 import CodeCard from './CodeCard';
 
@@ -106,13 +106,27 @@ function PlayPanel() {
   );
 }
 
+// lip's platforms (its release files are lip-<version>-<target>.…): the picker in the server owners' panel chooses
+// what the terminal beside it shows. The prerendered page shows Windows x64.
+const LIP_TARGETS = ['win-x64', 'win-arm64', 'osx-arm64', 'osx-x64', 'linux-x64'] as const satisfies readonly PlatformTarget[];
+type LipTarget = (typeof LIP_TARGETS)[number];
+const LIP_DEFAULT: LipTarget = 'win-x64';
+const useLipTarget = () => usePlatformChoice(LIP_TARGETS, LIP_DEFAULT);
+
 function HostPanel() {
-  const { t, locale, href } = useI18n();
+  const { t, locale, href, info } = useI18n();
   const r = t.roles;
   const { version } = useLeviLaminaStats();
+  const [target, setTarget] = useLipTarget();
   return (
     <>
       <p className="lm-role-desc">{r.hostDesc}</p>
+      <div className="lm-platforms">
+        <p className="lm-platforms-label" aria-hidden="true">
+          {r.platformLabel}
+        </p>
+        <PlatformPicker options={LIP_TARGETS} value={target ?? LIP_DEFAULT} onChange={setTarget} label={r.platformLabel} lang={info.lang} />
+      </div>
       <div className="kit-hero-actions">
         <PixelButton href={tutorial(locale, 'server/first-server/')} variant="primary" size="lg" iconRight="arrowRight">
           {r.setupGuide}
@@ -243,39 +257,69 @@ function LauncherCard() {
   );
 }
 
-const SERVER_COMMANDS = ['lip install LeviLamina', 'lip install LeviAntiCheat', 'lip run'];
+// What a server owner types: on Windows after running lip's installer, on macOS and Linux after the install script.
+const INSTALL_SCRIPT = 'curl -fsSL https://levimc.org/lip/install.sh | sh';
+const WINDOWS_COMMANDS = ['lip install LeviLamina', 'lip install LeviAntiCheat', 'lip run'];
+const UNIX_COMMANDS = [INSTALL_SCRIPT, 'lip install LeviLamina', 'lip run'];
+
+/** The installer of the latest lip for a Windows target: the file itself once the version is known, else the release. */
+const msiUrl = (target: LipTarget, version: string | null) =>
+  version
+    ? `https://github.com/LiteLDev/lip/releases/download/v${version}/lip-${version}-${target}.msi`
+    : 'https://github.com/LiteLDev/lip/releases/latest';
 
 function TerminalCard() {
-  const { t } = useI18n();
+  const { t, info } = useI18n();
   const r = t.roles;
   const [copied, setCopied] = useState(false);
-  const comments = [r.terminalInstall, r.terminalMods, r.terminalRun];
+  const [chosen] = useLipTarget();
+  const target = chosen ?? LIP_DEFAULT;
+  const lipVersion = useLipVersion();
+  const windows = target.startsWith('win-');
+  const commands = windows ? WINDOWS_COMMANDS : UNIX_COMMANDS;
+  const comments = windows ? [r.terminalInstall, r.terminalMods, r.terminalRun] : [r.terminalGetLip, r.terminalInstallHere, r.terminalRun];
+  const shell = windows ? 'PowerShell' : target.startsWith('osx-') ? 'zsh' : 'bash';
+  const prompt = windows ? '> ' : '$ ';
   const copy = () => {
-    void navigator.clipboard?.writeText(SERVER_COMMANDS.join('\n')).then(() => {
+    // macOS and Linux: only the install line, since the rest needs the new terminal it asks for (and the script
+    // reads its PATH question from the terminal, where pasted lines would answer it)
+    void navigator.clipboard?.writeText(windows ? commands.join('\n') : INSTALL_SCRIPT).then(() => {
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1600);
     });
   };
   return (
     <div className="lm-showcase">
-      <div className="px-card lm-showcase-window">
-        <div className="kit-code lm-code-block lm-terminal" data-lang="powershell">
+      <div className="px-card lm-showcase-window" data-platform={target}>
+        {windows ? (
+          <div className="lm-term-download">
+            <PixelButton href={msiUrl(target, lipVersion)} variant="primary" size="sm" external={false}>
+              {r.msiDownload(platformName(target, info.lang))}
+            </PixelButton>
+            <span>
+              <code>lip-{lipVersion ?? '<version>'}-{target}.msi</code> {r.msiNext}
+            </span>
+          </div>
+        ) : (
+          <p className="lm-term-download">{r.scriptNote}</p>
+        )}
+        <div className="kit-code lm-code-block lm-terminal" data-lang={windows ? 'powershell' : 'shell'}>
           <div className="kit-code-head">
-            <span className="kit-code-title">PowerShell</span>
-            <button type="button" className="kit-code-copy" aria-label={r.copy} onClick={copy} {...(copied ? { 'data-copied': r.copied } : {})}>
+            <span className="kit-code-title">{shell}</span>
+            <button type="button" className="kit-code-copy" aria-label={windows ? r.copy : r.copyInstall} onClick={copy} {...(copied ? { 'data-copied': r.copied } : {})}>
               <PixelIcon name="copy" className="kit-icon-copy" />
               <PixelIcon name="check" className="kit-icon-done" />
             </button>
           </div>
           <pre className="shiki kit-shiki" tabIndex={0}>
             <code>
-              {SERVER_COMMANDS.map((cmd, i) => (
+              {commands.map((cmd, i) => (
                 <span key={cmd}>
                   {i ? '\n\n' : null}
                   <span className="line lm-term-comment">{comments[i]}</span>
                   {'\n'}
                   <span className="line">
-                    <span className="lm-term-prompt">&gt; </span>
+                    <span className="lm-term-prompt">{prompt}</span>
                     {cmd}
                   </span>
                 </span>

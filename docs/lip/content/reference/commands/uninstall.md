@@ -5,7 +5,7 @@ Uninstall packages from the workspace.
 ## Synopsis
 
 ```
-lip uninstall <PACKAGES>... [-n | --dry-run] [-h | --help]
+lip uninstall <PACKAGES>... [--accept-rosetta-license] [-n | --dry-run] [-h | --help]
 ```
 
 ## Description
@@ -36,6 +36,7 @@ The game and the loader are uninstalled like any other package. A workspace whos
 
 | Option | Description |
 | --- | --- |
+| `--accept-rosetta-license` | Accept the license of Rosetta 2, so that lip installs it without asking when a Mac with Apple silicon lacks it. See [macOS on Apple silicon](../../guides/linux_macos.md#macos-on-apple-silicon). |
 | `-n`, `--dry-run` | A [dry run](../cli.md#dry-run). The messages name the packages that would be uninstalled or marked no longer explicitly installed. Nothing is changed. |
 | `-h`, `--help` | Write the help and exit. |
 

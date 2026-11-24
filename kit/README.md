@@ -415,11 +415,27 @@ platforms' turn alt (the prerendered page keeps the frontmatter's order).
 For a product with versions for several platforms, one guide organised by task (not one guide per platform), as
 Docusaurus (`groupId` tabs), Microsoft Learn (zone pivots) and most multi-platform docs do:
 
-* **Where the platforms differ: tabs named after them** (`=== "Windows"` / `=== "Android"`, any language — the label
-  must name exactly one of Windows, Android, iOS, macOS, Linux). All such tabs form one site-wide group: picking a
-  platform switches every set on the page and is remembered (`localStorage` `levimc_platform`, shared by the docs
-  sites on the origin). The selected platform is `?platform=<name>` in the URL (shareable links), else the visitor's
-  last pick, else their device; a set without that platform keeps its tab, and a `#hash` naming a tab wins.
+* **Where the platforms differ: tabs named after them** (`=== "Windows"` / `=== "Android"`, or `::: tabs` with
+  `== Windows` lines; any language — the label must name exactly one of Windows, Android, iOS, macOS, Linux). All such
+  tabs form one site-wide group: picking a platform switches every set on the page and is remembered (`localStorage`
+  `levimc_platform`, shared by the docs sites on the origin). The selected platform is `?platform=<name>` in the URL
+  (shareable links), else the visitor's last pick, else their device; a set without that platform keeps its tab, and
+  a `#hash` naming a tab wins.
+* **Where the processor matters too (downloads): tabs named after a target**, an operating system and an
+  architecture named like a .NET runtime identifier: `win-x64`, `win-arm64`, `osx-arm64`, `osx-x64`, `linux-x64`. A
+  label names one when it names the system and one architecture: `Windows x64`, `Windows arm64`,
+  `macOS (Apple silicon)` / `macOS（Apple 芯片）`, `macOS (Intel)`, `Linux x64` (`x64`, `amd64`, `x86_64`, `Intel` are
+  x64; `arm64`, `aarch64`, `Apple silicon` are arm64). `?platform=osx-arm64` selects one, and the visitor's pick is
+  remembered as the target. A tab named after a system alone matches every architecture of it, and a visitor who
+  chose only a system (an earlier `levimc_platform` value) gets the first tab of that system. The device: Client
+  Hints (`navigator.userAgentData.getHighEntropyValues(['architecture', 'bitness'])`, Chromium) where the browser
+  gives them, else a Mac is taken for Apple silicon and anything else for x64 (`detectPlatformChoice`).
+  `shared/platform.ts`: `PLATFORM_TARGETS`, `platformChoiceOfLabel`, `matchPlatform`, `platformName(target, lang)`
+  (`macOS (Apple silicon)`, `macOS（Apple 芯片）`, `macOS（Apple 晶片）`), `preferredPlatformChoice[Async]`.
+* **The same choice in an app:** `PlatformPicker` (a hotbar of toggle buttons, one per platform or target, labelled
+  by `platformName` in the page's language) and `usePlatformChoice(options, fallback)` from `components/`: every
+  picker and hook on the page follows the latest pick, which is remembered like a tab's (levimc.org's home page
+  picks how to install lip with it).
 * **A section for one platform:** a badge in its heading, `## Accounts <Badge platform="android" />` (not part of
   the heading id or the TOC). VitePress badges work too: `<Badge type="info|tip|warning|danger" text="…" />`.
 * **A page for one platform:** frontmatter `platforms: [windows]` shows the platform badges under the title.
@@ -498,7 +514,9 @@ kit transforms → Shiki → HTML). No markdown is parsed in the browser.
   question(help, faq) warning(caution, attention) failure(fail, missing) danger(error) bug example
   quote(cite); unknown types use the note style.
 * **VitePress**: containers `::: tip|info|warning|danger|details [Title]` (`{open}` for details),
-  `::: code-group`, GitHub alerts `> [!NOTE|TIP|IMPORTANT|WARNING|CAUTION]`, `<span v-pre>` (kept; `{{ }}`
+  `::: code-group`, `::: tabs` with a `== Label` line starting each tab (`==+ Label` starts selected; the
+  vitepress-plugin-tabs syntax; platform labels join the platform group, see
+  [Content per platform](#content-per-platform)), GitHub alerts `> [!NOTE|TIP|IMPORTANT|WARNING|CAUTION]`, `<span v-pre>` (kept; `{{ }}`
   is never interpolated), fence meta `{1,3-5}` / `[file.js]` / `:line-numbers`.
 * **`compat: 'python-markdown'`** (MkDocs sites) reproduces Python-Markdown's block rules so the text and
   structure match the live MkDocs output: 4-space list nesting (2–3-space items are siblings), a list
@@ -651,6 +669,7 @@ All components are SSR-safe and render identical markup on server and client.
 | `Badge` | `tone` grass/diamond/gold/redstone/enchant/stone/pond, `pixel` (micro-label: small spaced capitals, Latin only) |
 | `Tooltip` | Minecraft item tooltip on hover/focus (`aria-describedby`) |
 | `HotbarTabs`, `Pagination` | hotbar-style tabs (WAI-ARIA keyboard) and numbered pagination (crawlable hrefs) |
+| `PlatformPicker`, `usePlatformChoice`, `choosePlatform` | the visitor's platform or target (`win-x64`, `osx-arm64` …) as a hotbar of toggle buttons (`aria-pressed`, `data-platform`); the hook gives the option to show (undefined until hydrated), shared by every picker on the page and with the docs' platform tabs (see [Content per platform](#content-per-platform)) |
 | `PixelIcon`, `BrandIcon` | 16×16 crisp sprites (`PIXEL_ICONS`); vector brand marks for social links |
 | `prefs.ts` | `readPref`/`writePref`, `readThemeChoice`, `readLanguagePreference`, `preferredLanguages`, `matchLocale`, `pickLocale`, `createPrefsInitScript`, `prefCookieDomain`, `serializePrefCookie`, `PREFS_CORE_JS` |
 | `locale.ts` | `usePreferredLocale(locales, fallback)` → `[locale, setLocale]` for apps whose language is state (syncs before paint, then `revealPendingChrome()`) |
@@ -965,6 +984,24 @@ External link verdicts: `ok`, `ok-redirect` (`/releases/latest` and allow-listed
   `LEVIMC_KIT_SOURCE=<checkout>/kit` and run `scripts/chrome-parity.mjs` against the previews.
 
 ## Changelog
+
+### 2.28.0
+
+**Platforms with their processor.** Content that differs per download, such as how to install lip, can now name an
+operating system and an architecture: `win-x64`, `win-arm64`, `osx-arm64`, `osx-x64`, `linux-x64`.
+* Platform tabs whose label names one ("Windows arm64", "macOS (Apple silicon)", "Linux x64") carry the target in
+  `data-platform`; `?platform=` and `levimc_platform` accept targets as well as systems. A system tab still matches
+  every architecture of its system, and a stored system (`macos`) selects the first tab of that system, so existing
+  pages and stored choices keep working. Picking a system tab while a target of that system is chosen keeps the target.
+* The device's architecture comes from User-Agent Client Hints where the browser gives them, after hydration; else a
+  Mac is taken for Apple silicon and every other system for x64.
+* Markdown: `::: tabs` with `== Label` lines (the vitepress-plugin-tabs syntax), for tabs whose panels hold more than
+  code on VitePress-style sites.
+* Components: `PlatformPicker`, `usePlatformChoice`, `choosePlatform`. One choice per page (`shared/platform.ts`:
+  `currentPlatformChoice`, `choosePlatform`, `onPlatformChoice`, `devicePlatformChoice`): a pick in a picker or a tab
+  shows in every other, and the browser is asked for the architecture once.
+* **Migration**: none. `preferredPlatform()` still returns a system; `preferredPlatformChoice()` returns the target. A
+  site still on kit 2.27 ignores a stored target (it shows the visitor's device) until it rebuilds with 2.28.
 
 ### 2.27.0
 
