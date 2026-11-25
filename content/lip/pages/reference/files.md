@@ -126,9 +126,9 @@ Deleting the cache loses nothing: lip downloads again what it needs. A lip comma
 
 ### Data directory
 
-The data directory holds the Wine that lip installs on Linux and macOS, shared by every workspace, and what lip downloads to install the system dependencies.
+The data directory holds the Wine that lip installs on Linux and macOS, the Visual C++ runtime that lip installs for you on Windows, in `vc-runtime\`, both shared by every workspace, and what lip downloads to install the [system dependencies](../concepts/internals.md#system-dependencies).
 
-Deleting it while no lip process runs loses nothing: lip installs the system dependencies again when it needs them. On Linux and macOS that means downloading Wine again.
+Deleting it while no lip process runs loses nothing: lip installs the system dependencies again when it needs them. On Linux and macOS that means downloading Wine again; on Windows, downloading the Visual C++ runtime again, unless it is installed for the system.
 
 ### State directory
 
@@ -170,7 +170,7 @@ The installation directory is the one that holds the `lip` executable.
 
 | Entry | Is |
 | --- | --- |
-| `install.json` | `{"kind": "msi"}`. The Windows installer writes it; it tells [`lip self-update`](commands/self_update.md) to update with the installer. Without it, lip counts as portable. lip never writes it. |
+| `install.json` | `{"kind": "msi", "scope": "user"}` when lip is installed for one user, or `{"kind": "msi", "scope": "machine"}` when it is installed for every user; earlier installers wrote `{"kind": "msi"}`, which counts as `machine`. The Windows installer writes it; it tells [`lip self-update`](commands/self_update.md) to update with the installer. Without it, lip counts as portable. lip never writes it. |
 | `<file>.old` | A file that a portable update replaced and could not delete yet. lip deletes `<executable>.old` the next time it starts. |
 
 ## Failure reports

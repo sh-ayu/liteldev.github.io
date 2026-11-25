@@ -133,9 +133,9 @@ The folder is set up, but the program of the server is gone. It may have been de
 
 Run it on Linux on x64, or set up the Windows server: `lip setup --game <version> --build windows`. See [Linux and macOS](linux_macos.md).
 
-**`The Microsoft Visual C++ Redistributable was not installed: Windows did not allow its installer to run as an administrator.`**
+**`lip could not install the Microsoft Visual C++ runtime into …`**
 
-The Windows server needs it, and you answered No when Windows asked. Run the command again and allow it, or install it yourself from <https://aka.ms/vc14/vc_redist.x64.exe>.
+The Windows server needs it. lip installs it for you, without an administrator, by extracting its files into a folder of its [data directory](../reference/files.md#data-directory), and that failed: the rest of the message says why, for example that the disk is full or that security software did not let lip write there. lip never uses files that it did not extract completely. Fix the cause and run the command again, or install the runtime for every user yourself from <https://aka.ms/vc14/vc_redist.x64.exe>, which needs an administrator.
 
 **`Rosetta 2 is not installed`**
 

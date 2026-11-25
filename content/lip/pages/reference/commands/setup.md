@@ -34,7 +34,7 @@ In order:
    - Dependencies that no explicitly installed package needs any more are uninstalled.
 4. It asks about [left-out packages](#left-out-packages), if there are any.
 5. It asks you to accept [the license](#the-license), if it installs a game.
-6. For the build `windows`, it installs what the Windows server needs of the system when that is missing: Wine on Linux and macOS, and the Microsoft Visual C++ Redistributable. See [Linux and macOS](../../guides/linux_macos.md).
+6. For the build `windows`, it installs what the Windows server needs of the system when that is missing: Wine on Linux and macOS, and the Microsoft Visual C++ runtime, which lip installs for you on Windows, without an administrator. See [System dependencies](../../concepts/internals.md#system-dependencies) and [Linux and macOS](../../guides/linux_macos.md).
 7. It installs the packages, as one [workspace operation](../cli.md#workspace-operations).
 
 When the workspace already has the game and the loader asked for, of the same builds and versions, `lip setup` installs and uninstalls nothing for them.

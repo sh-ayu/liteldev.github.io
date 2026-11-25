@@ -33,12 +33,15 @@ The server is a file at the workspace root, chosen by the game and the loader th
 
 For the Linux server, lip sets the environment variable `LD_LIBRARY_PATH` to `.` when it is unset or empty, so that the server finds the libraries beside it.
 
+On Windows, when the Visual C++ runtime is installed only for the user, in the [data directory](../files.md#data-directory), and not for the system, lip puts its directory first in `PATH` for the Windows server, so that the server finds it.
+
 Through Wine, lip runs the `wine` that it installed in its [data directory](../files.md#data-directory), never another one, with the absolute path of the server file as its only argument, and sets:
 
 | Variable | Value |
 | --- | --- |
 | `WINEPREFIX` | When it is unset or empty: the absolute path of `.lip/wine` in the workspace. Wine creates the prefix when it is missing. |
 | `WINEDEBUG` | When it is unset: `-all`, which silences the debug output of Wine. |
+| `WINEDLLOVERRIDES` | When it is unset: `mscoree,mshtml=;winemac.drv,winex11.drv=d`, which turns off Wine Mono, Wine Gecko and the graphics drivers of Wine for macOS and X11, so that no program waits for a window or the window server, as for a user not logged in to the desktop, such as one through SSH. |
 
 See [Linux and macOS](../../guides/linux_macos.md).
 
@@ -51,7 +54,7 @@ Without `--managed`, `lip run` does, in order:
 3. When an operation was interrupted, it completes or undoes it. When that fails, the command fails.
 4. It releases the workspace lock.
 5. It fails when the workspace has no game (the message names `lip setup`), when the server is `bedrock_server` and lip does not run on Linux on x64, or when the server file does not exist.
-6. For the Windows servers, it installs what the server needs of the system when that is missing: Wine on Linux and macOS, and the Microsoft Visual C++ Redistributable. When that fails, the command fails.
+6. For the Windows servers, it installs what the server needs of the system when that is missing: Wine on Linux and macOS, and the Microsoft Visual C++ runtime, which lip installs for you on Windows, without an administrator. When that fails, the command fails.
 7. It runs the server and waits until it exits.
 8. When the server is [restarted](#restarting), it goes back to step 2.
 9. It releases the server lock.

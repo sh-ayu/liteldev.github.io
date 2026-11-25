@@ -33,12 +33,15 @@ lip run [--managed [--detach]] [--accept-rosetta-license] [-h | --help]
 
 对 Linux 版服务器，如果环境变量 `LD_LIBRARY_PATH` 未设置或为空，lip 把它设为 `.`，让服务器能找到它旁边的库。
 
+在 Windows 上，如果 Visual C++ 运行库只为用户安装在[数据目录](../files.md#数据目录)里、没有为系统安装，lip 对 Windows 版服务器把它的目录放在 `PATH` 的最前面，让服务器能找到它。
+
 通过 Wine 运行时，lip 使用它安装在[数据目录](../files.md#数据目录)中的 `wine`，绝不使用其他的；唯一的参数是服务器文件的绝对路径，并设置：
 
 | 变量 | 值 |
 | --- | --- |
 | `WINEPREFIX` | 未设置或为空时：工作区中 `.lip/wine` 的绝对路径。前缀不存在时由 Wine 创建。 |
 | `WINEDEBUG` | 未设置时：`-all`，关闭 Wine 的调试输出。 |
+| `WINEDLLOVERRIDES` | 未设置时：`mscoree,mshtml=;winemac.drv,winex11.drv=d`，关闭 Wine Mono、Wine Gecko 以及 Wine 用于 macOS 和 X11 的图形驱动，使任何程序都不等待窗口或窗口服务器，未登录桌面的用户（例如通过 SSH）也能运行。 |
 
 参见 [Linux 和 macOS](../../guides/linux_macos.md)。
 
@@ -51,7 +54,7 @@ lip run [--managed [--detach]] [--accept-rosetta-license] [-h | --help]
 3. 如果有操作被中断，把它完成或撤销。做不到时，命令失败。
 4. 释放工作区锁。
 5. 工作区没有游戏时失败（消息会提到 `lip setup`）；服务器是 `bedrock_server` 而 lip 没有运行在 x64 的 Linux 上时失败；服务器文件不存在时失败。
-6. 对 Windows 版服务器，安装服务器需要而系统缺少的组件：Linux 和 macOS 上的 Wine，以及 Microsoft Visual C++ 可再发行组件包。安装失败时，命令失败。
+6. 对 Windows 版服务器，安装服务器需要而系统缺少的组件：Linux 和 macOS 上的 Wine，以及 Microsoft Visual C++ 运行库，在 Windows 上 lip 为你安装它，不需要管理员。安装失败时，命令失败。
 7. 运行服务器，并等待它退出。
 8. 服务器被[重启](#重启)时，回到第 2 步。
 9. 释放服务器锁。

@@ -69,7 +69,7 @@ Pick your system. The page has picked the one you are browsing from.
 
 == Windows
 
-Download `lip-<version>-win-x64.msi`, or `lip-<version>-win-arm64.msi` on a PC with an ARM processor, from the [latest release](https://github.com/LiteLDev/lip/releases/latest) and run it. It installs `lip` in `C:\Program Files\lip` and adds that folder to the `PATH`. Then open a new terminal and check that `lip -v` prints a version.
+Download `lip-<version>-win-x64.msi`, or `lip-<version>-win-arm64.msi` on a PC with an ARM processor, from the [latest release](https://github.com/LiteLDev/lip/releases/latest) and run it. It installs `lip` for you in `%LOCALAPPDATA%\Programs\lip` and adds that folder to your `PATH`, without an administrator. Where `lip` is already installed for every user, as earlier versions installed it in `C:\Program Files\lip`, it updates that installation instead, which needs an administrator. Then open a new terminal and check that `lip -v` prints a version.
 
 == macOS / Linux
 

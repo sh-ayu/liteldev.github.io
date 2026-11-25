@@ -137,6 +137,7 @@ lip reads these variables from the terminal you run it in.
 | --- | --- |
 | `WINEPREFIX` | The Wine prefix. When unset or empty, lip uses `.lip/wine` in the workspace. |
 | `WINEDEBUG` | Passed to Wine. When unset, lip sets it to `-all`, which hides the debug messages of Wine. Set it, for example to `err+all`, to see them. |
+| `WINEDLLOVERRIDES` | Passed to Wine. When unset, lip sets it to `mscoree,mshtml=;winemac.drv,winex11.drv=d`, which turns off Wine Mono, Wine Gecko and the graphics drivers of Wine, so that the server runs without a desktop, such as over SSH. |
 | `LD_LIBRARY_PATH` | For the Linux server. When unset or empty, lip sets it to `.`. |
 | `XDG_CONFIG_HOME` | Where the user settings are: `$XDG_CONFIG_HOME/lip`. Default `~/.config`. |
 | `XDG_CACHE_HOME` | Where downloads are cached: `$XDG_CACHE_HOME/lip`. Default `~/.cache`. |

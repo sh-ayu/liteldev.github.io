@@ -133,9 +133,9 @@ lip 的大多数包都从 GitHub 下载。提示会告诉你遇到的是哪一�
 
 到 x64 的 Linux 上运行它，或者改装 Windows 服务器：`lip setup --game <version> --build windows`。见 [Linux 与 macOS](linux_macos.md)。
 
-**`The Microsoft Visual C++ Redistributable was not installed: Windows did not allow its installer to run as an administrator.`**
+**`lip could not install the Microsoft Visual C++ runtime into …`**
 
-Windows 服务器需要它，而 Windows 询问时你选了“否”。重新运行命令并允许它，或者自己从 <https://aka.ms/vc14/vc_redist.x64.exe> 安装。
+Windows 服务器需要它。lip 为你安装它，不需要管理员：把它的文件解压到[数据目录](../reference/files.md#数据目录)里的一个文件夹，而这一步失败了。消息的其余部分说明了原因，例如磁盘已满，或者安全软件不让 lip 往那里写入。没有完整解压的文件，lip 绝不使用。排除原因后重新运行命令，或者自己从 <https://aka.ms/vc14/vc_redist.x64.exe> 为所有用户安装运行库，这需要管理员。
 
 **`Rosetta 2 is not installed`**
 

@@ -173,13 +173,13 @@ lip 安装的一切都是**包**：一组文件，加上一份说明，也就是
 | --- | --- | --- | --- |
 | 配置 | 你的设置 `config.toml` | `%APPDATA%\lip` | `$XDG_CONFIG_HOME/lip`，默认 `~/.config/lip` |
 | 缓存 | 从网上下载的文件，留着以免重复下载 | `%LOCALAPPDATA%\lip\Cache` | `$XDG_CACHE_HOME/lip`，默认 `~/.cache/lip` |
-| 数据 | lip 为运行服务器而安装的东西：Linux 和 macOS 上是它的 Wine | `%LOCALAPPDATA%\lip\Data` | `$XDG_DATA_HOME/lip`，默认 `~/.local/share/lip` |
+| 数据 | lip 为运行服务器而安装的东西：Linux 和 macOS 上是它的 Wine，Windows 上是 Visual C++ 运行库 | `%LOCALAPPDATA%\lip\Data` | `$XDG_DATA_HOME/lip`，默认 `~/.local/share/lip` |
 | 状态 | 界面的工作区列表 `workspaces.json` | `%LOCALAPPDATA%\lip\State` | `$XDG_STATE_HOME/lip`，默认 `~/.local/state/lip` |
 
 哪些可以放心删除：
 
 - **缓存**，任何时候都可以：`lip cache clean`。需要的东西 lip 会重新下载。
-- **数据目录**，在没有 lip 运行时。lip 需要时会重新安装 Wine。
+- **数据目录**，在没有 lip 运行时。lip 需要时会重新安装 Wine 或 Visual C++ 运行库。
 - **状态目录**，在没有 lip 运行时。丢失的只是界面里的文件夹列表，不是文件夹本身。
 - **配置目录**里只有你的设置。
 

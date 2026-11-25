@@ -173,13 +173,13 @@ Outside the workspaces, lip keeps four directories for each user.
 | --- | --- | --- | --- |
 | Config | Your settings, `config.toml` | `%APPDATA%\lip` | `$XDG_CONFIG_HOME/lip`, by default `~/.config/lip` |
 | Cache | Files downloaded from the web, kept so that they are not downloaded twice | `%LOCALAPPDATA%\lip\Cache` | `$XDG_CACHE_HOME/lip`, by default `~/.cache/lip` |
-| Data | What lip installs to run servers: its Wine, on Linux and macOS | `%LOCALAPPDATA%\lip\Data` | `$XDG_DATA_HOME/lip`, by default `~/.local/share/lip` |
+| Data | What lip installs to run servers: its Wine on Linux and macOS, and the Visual C++ runtime on Windows | `%LOCALAPPDATA%\lip\Data` | `$XDG_DATA_HOME/lip`, by default `~/.local/share/lip` |
 | State | The list of workspaces of the interface, `workspaces.json` | `%LOCALAPPDATA%\lip\State` | `$XDG_STATE_HOME/lip`, by default `~/.local/state/lip` |
 
 What you can safely delete:
 
 - **The cache**, at any time: `lip cache clean`. lip downloads again what it needs.
-- **The data directory**, while no lip runs. lip installs Wine again when it needs it.
+- **The data directory**, while no lip runs. lip installs Wine, or the Visual C++ runtime, again when it needs it.
 - **The state directory**, while no lip runs. You lose only the list of folders in the interface, not the folders.
 - **The config directory** holds only your settings.
 

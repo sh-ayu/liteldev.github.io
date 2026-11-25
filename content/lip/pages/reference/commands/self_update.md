@@ -24,10 +24,12 @@ When there is no release, or the latest one is not newer than the running lip, l
 
 | Kind | Is | How lip knows |
 | --- | --- | --- |
-| `msi` | lip was installed by the Windows installer, `lip-<version>-<platform>.msi`. | The file `install.json` beside the `lip` executable holds `{"kind": "msi"}`. The installer writes it. |
+| `msi` | lip was installed by the Windows installer, `lip-<version>-<platform>.msi`. | The file `install.json` beside the `lip` executable holds a JSON object whose `kind` is `"msi"`. The installer writes it. |
 | `portable` | lip was unpacked from an archive, or installed any other way. | There is no `install.json`. |
 
-When `install.json` exists and is anything other than a JSON object whose `kind` is `"msi"`, `lip self-update` fails.
+For the kind `msi`, the **installation scope** says whom the installer installed lip for: `user`, the user that ran it, or `machine`, every user. It is the member `scope` of `install.json`: `{"kind": "msi", "scope": "user"}` or `{"kind": "msi", "scope": "machine"}`. Without that member, as earlier installers wrote `{"kind": "msi"}`, the scope is `machine`.
+
+When `install.json` exists and is anything other than a JSON object whose `kind` is `"msi"` and that has either no `scope` or the `scope` `"user"` or `"machine"`, `lip self-update` fails.
 
 `<platform>` is the system lip runs on: `win-`, `linux-` or `osx-`, followed by `x64` or `arm64`. On any other system `lip self-update` fails before it changes anything.
 
@@ -35,7 +37,7 @@ When `install.json` exists and is anything other than a JSON object whose `kind`
 
 Without `--check`, when a newer release `V` exists, lip does, in order:
 
-1. It reads the installation kind.
+1. It reads the installation kind and scope.
 2. It picks the file of the release to install. The kind `msi` on a system other than Windows fails.
 
    | Kind | File |
@@ -50,7 +52,7 @@ Without `--check`, when a newer release `V` exists, lip does, in order:
 
 A failure in steps 1 to 4 changes no file of the installation.
 
-**`msi`.** lip starts `msiexec /i <file> /qn /norestart` as administrator; Windows asks you to allow it. When you decline, or `msiexec` does not start, the command fails. Otherwise lip writes that the installer runs and exits with code 0 at once, without waiting. The installer replaces lip in the background, silently and without restarting Windows. Close the other running `lip` processes so that it can.
+**`msi`.** lip starts `msiexec /i <file> /qn /norestart`. When the installation scope is `machine`, lip starts it as administrator; Windows asks you to allow it. When the scope is `user`, lip starts it as the user that runs lip, and Windows does not ask. When you decline, or `msiexec` does not start, the command fails. Otherwise lip writes that the installer runs and exits with code 0 at once, without waiting. The installer replaces lip in the background, silently and without restarting Windows. Close the other running `lip` processes so that it can.
 
 **`portable`.** lip extracts the archive into `self-update`, then replaces the files of lip in its directory one by one: each existing file is renamed to `<file>.old`, and the new file is written in its place. When any step fails, lip puts every renamed file back and fails. When all files are written, lip deletes the `.old` files it can and the `self-update` directory.
 

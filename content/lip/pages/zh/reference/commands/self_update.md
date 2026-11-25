@@ -24,10 +24,12 @@ lip 从 lip 仓库 `https://github.com/LiteLDev/lip.git` 的标签读取 [lip �
 
 | 类型 | 含义 | lip 如何得知 |
 | --- | --- | --- |
-| `msi` | lip 是由 Windows 安装程序 `lip-<version>-<platform>.msi` 安装的。 | `lip` 可执行文件旁边的 `install.json` 文件内容为 `{"kind": "msi"}`。它由安装程序写入。 |
+| `msi` | lip 是由 Windows 安装程序 `lip-<version>-<platform>.msi` 安装的。 | `lip` 可执行文件旁边的 `install.json` 文件内容是一个 `kind` 为 `"msi"` 的 JSON 对象。它由安装程序写入。 |
 | `portable` | lip 是从归档中解压出来的，或以其他任何方式安装的。 | 没有 `install.json`。 |
 
-如果 `install.json` 存在，却不是 `kind` 为 `"msi"` 的 JSON 对象，`lip self-update` 失败。
+对类型 `msi`，**安装范围**说明安装程序为谁安装了 lip：`user` 是运行安装程序的用户，`machine` 是所有用户。它是 `install.json` 的成员 `scope`：`{"kind": "msi", "scope": "user"}` 或 `{"kind": "msi", "scope": "machine"}`。没有这个成员时（早先的安装程序写的是 `{"kind": "msi"}`），安装范围是 `machine`。
+
+如果 `install.json` 存在，却不是 `kind` 为 `"msi"`、并且没有 `scope` 或 `scope` 为 `"user"` 或 `"machine"` 的 JSON 对象，`lip self-update` 失败。
 
 `<platform>` 是 lip 运行所在的系统：`win-`、`linux-` 或 `osx-`，后接 `x64` 或 `arm64`。在其他系统上，`lip self-update` 在做出任何更改之前失败。
 
@@ -35,7 +37,7 @@ lip 从 lip 仓库 `https://github.com/LiteLDev/lip.git` 的标签读取 [lip �
 
 不带 `--check` 且存在更新的发布 `V` 时，lip 依次：
 
-1. 读取安装类型。
+1. 读取安装类型和安装范围。
 2. 选定发布中要安装的文件。在 Windows 以外的系统上，类型 `msi` 会失败。
 
    | 类型 | 文件 |
@@ -50,7 +52,7 @@ lip 从 lip 仓库 `https://github.com/LiteLDev/lip.git` 的标签读取 [lip �
 
 第 1 到 4 步中的失败不会更改安装目录中的任何文件。
 
-**`msi`。** lip 以管理员身份启动 `msiexec /i <file> /qn /norestart`；Windows 会请你允许。你拒绝，或者 `msiexec` 没能启动时，命令失败。否则 lip 写明安装程序正在运行，并立即以退出码 0 退出，不等待它结束。安装程序在后台静默地替换 lip，不会重启 Windows。请关闭其他正在运行的 `lip` 进程，让它能够完成。
+**`msi`。** lip 启动 `msiexec /i <file> /qn /norestart`。安装范围为 `machine` 时，lip 以管理员身份启动它；Windows 会请你允许。安装范围为 `user` 时，lip 以运行 lip 的用户身份启动它，Windows 不会询问。你拒绝，或者 `msiexec` 没能启动时，命令失败。否则 lip 写明安装程序正在运行，并立即以退出码 0 退出，不等待它结束。安装程序在后台静默地替换 lip，不会重启 Windows。请关闭其他正在运行的 `lip` 进程，让它能够完成。
 
 **`portable`。** lip 把归档解压到 `self-update` 中，然后逐个替换 lip 所在目录中的文件：每个已有的文件先改名为 `<file>.old`，再在原位置写入新文件。任何一步失败时，lip 把所有改过名的文件恢复原样，然后失败。所有文件都写好之后，lip 删除能删除的 `.old` 文件和 `self-update` 目录。
 

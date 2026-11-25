@@ -119,18 +119,18 @@ The formats are fixed in [journal(5)](https://github.com/LiteLDev/lip/blob/main/
 The programs of a workspace, that is, the hook commands of packages and the Windows server, need two things of the system. lip installs both itself.
 
 - **Wine**, on Linux and macOS. Each version of lip names one build of Wine for Linux on x64, from [Kron4ek/Wine-Builds](https://github.com/Kron4ek/Wine-Builds), and one for macOS, from [Gcenx/macOS_Wine_builds](https://github.com/Gcenx/macOS_Wine_builds), which Rosetta 2 runs on arm64. lip downloads it once and extracts it into `wine/` in the data directory, where every workspace shares it. lip never runs another `wine`.
-- **The Microsoft Visual C++ Redistributable** for x64. It counts as installed when the registry has the value `Installed` = 1 under `HKLM\SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x64`. Otherwise lip downloads `vc_redist.x64.exe` and runs it with `/install /quiet /norestart`: on Windows as an administrator, which may show a User Account Control prompt; elsewhere through Wine, in the Wine prefix of the workspace, whose registry it reads with `wine reg query`.
+- **The Microsoft Visual C++ runtime** for x64, the Visual C++ Redistributable. It counts as installed for the system when the registry has the value `Installed` = 1 under `HKLM\SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x64`. On Windows, it also counts as installed for the user when its files, the DLLs of the runtime that Microsoft lets an application carry with it (`msvcp140*.dll`, `vcruntime140*.dll`, `concrt140.dll` and `vccorlib140.dll`), have been extracted completely into `vc-runtime\14.44.35211` in the data directory. When it is installed neither way, lip on Windows downloads `Microsoft.VC.14.44.17.14.CRT.Redist.X64.base.vsix` from Microsoft and extracts those DLLs into that directory, as the user that runs lip: without an administrator, and without a User Account Control prompt. When the runtime is installed for the user and not for the system, lip puts that directory first in the `PATH` of the server and of the hook commands. Elsewhere, lip downloads `vc_redist.x64.exe` and runs it with `/install /quiet /norestart` through Wine, in the Wine prefix of the workspace, whose registry it reads with `wine reg query`.
 
 How lip keeps this safe:
 
 - **Pinned downloads.** The URL and the SHA-256 of each file are written into lip. A download whose SHA-256 differs is deleted, and nothing is extracted or run.
-- **Never half installed.** Wine is extracted into a `.tmp` directory and renamed into place. A build that was cut off is never run.
+- **Never half installed.** Wine, and on Windows the Visual C++ runtime, is extracted into a `.tmp` directory and renamed into place. A build that was cut off is never run, and runtime files that were cut off are never used.
 - **One at a time.** lip processes that install at the same moment wait for each other through the file `lock` in the data directory.
 - **Before the workspace changes.** lip prepares the system before an operation that runs hook commands starts to change the workspace, during a `lip setup` of the Windows build, and before `lip run` starts a Windows server. A failure there leaves the workspace as it was.
 
-The Linux server needs neither. When everything is installed, preparing costs one registry lookup.
+The Linux server needs neither. When everything is installed, preparing costs one registry lookup, and on Windows a look at the directory of the runtime.
 
-Through Wine, lip runs a hook command as `wine cmd /s /c <command>` and the server as `wine` with the absolute path of the server file, with `WINEPREFIX` set to `.lip/wine` in the workspace and `WINEDEBUG` to `-all`, unless you set them. See [Linux and macOS](../guides/linux_macos.md).
+Through Wine, lip runs a hook command as `wine cmd /s /c <command>` and the server as `wine` with the absolute path of the server file, with `WINEPREFIX` set to `.lip/wine` in the workspace and `WINEDEBUG` to `-all` and `WINEDLLOVERRIDES` to `mscoree,mshtml=;winemac.drv,winex11.drv=d`, unless you set them. See [Linux and macOS](../guides/linux_macos.md).
 
 ## The daemon
 

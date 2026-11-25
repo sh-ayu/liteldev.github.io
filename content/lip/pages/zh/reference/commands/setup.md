@@ -34,7 +34,7 @@ lip setup --game <VERSION> [--build <BUILD>] [--loader <LOADER> | --no-loader] [
    - 不再被任何显式安装的包需要的依赖会被卸载。
 4. 如果有[被排除的包](#被排除的包)，询问如何处理。
 5. 如果要安装游戏，请你接受[许可协议](#许可协议)。
-6. 构建为 `windows` 时，安装 Windows 版服务器需要而系统缺少的组件：Linux 和 macOS 上的 Wine，以及 Microsoft Visual C++ 可再发行组件包。参见 [Linux 和 macOS](../../guides/linux_macos.md)。
+6. 构建为 `windows` 时，安装 Windows 版服务器需要而系统缺少的组件：Linux 和 macOS 上的 Wine，以及 Microsoft Visual C++ 运行库，在 Windows 上 lip 为你安装它，不需要管理员。参见[系统依赖](../../concepts/internals.md#系统依赖)和 [Linux 和 macOS](../../guides/linux_macos.md)。
 7. 作为一次[工作区操作](../cli.md#工作区操作)安装这些包。
 
 如果工作区已经有所要求的游戏和加载器，构建和版本都相同，`lip setup` 不会为它们安装或卸载任何东西。

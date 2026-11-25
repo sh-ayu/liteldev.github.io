@@ -126,9 +126,9 @@ lip 可能在这里保存其他条目。不要依赖它们。
 
 ### 数据目录
 
-数据目录保存 lip 在 Linux 和 macOS 上安装的 Wine（所有工作区共用），以及 lip 为安装系统依赖而下载的内容。
+数据目录保存 lip 在 Linux 和 macOS 上安装的 Wine、lip 在 Windows 上为你安装的 Visual C++ 运行库（在 `vc-runtime\` 里），两者都由所有工作区共用，以及 lip 为安装[系统依赖](../concepts/internals.md#系统依赖)而下载的内容。
 
-在没有 lip 进程运行时删除它，不会失去任何东西：lip 在需要时会重新安装系统依赖。在 Linux 和 macOS 上，这意味着重新下载 Wine。
+在没有 lip 进程运行时删除它，不会失去任何东西：lip 在需要时会重新安装系统依赖。在 Linux 和 macOS 上，这意味着重新下载 Wine；在 Windows 上，除非系统已经安装了 Visual C++ 运行库，这意味着重新下载它。
 
 ### 状态目录
 
@@ -170,7 +170,7 @@ lip 可能在这里保存其他条目。不要依赖它们。
 
 | 条目 | 是什么 |
 | --- | --- |
-| `install.json` | `{"kind": "msi"}`。由 Windows 安装程序写入；它告诉 [`lip self-update`](commands/self_update.md) 用安装程序来更新。没有它时，lip 视为便携版。lip 从不写它。 |
+| `install.json` | lip 为一个用户安装时是 `{"kind": "msi", "scope": "user"}`，为所有用户安装时是 `{"kind": "msi", "scope": "machine"}`；早先的安装程序写的是 `{"kind": "msi"}`，视为 `machine`。由 Windows 安装程序写入；它告诉 [`lip self-update`](commands/self_update.md) 用安装程序来更新。没有它时，lip 视为便携版。lip 从不写它。 |
 | `<file>.old` | 便携版更新替换掉、但暂时无法删除的文件。lip 下次启动时删除 `<executable>.old`。 |
 
 ## 失败报告

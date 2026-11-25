@@ -137,6 +137,7 @@ lip 从你运行它的终端里读取这些变量。
 | --- | --- |
 | `WINEPREFIX` | Wine 前缀。未设置或为空时，lip 使用工作区里的 `.lip/wine`。 |
 | `WINEDEBUG` | 传给 Wine。未设置时，lip 把它设为 `-all`，隐藏 Wine 的调试信息。想看这些信息，可以设成例如 `err+all`。 |
+| `WINEDLLOVERRIDES` | 传给 Wine。未设置时，lip 把它设为 `mscoree,mshtml=;winemac.drv,winex11.drv=d`，关闭 Wine Mono、Wine Gecko 和 Wine 的图形驱动，使服务器无需桌面也能运行，例如通过 SSH。 |
 | `LD_LIBRARY_PATH` | 用于 Linux 服务器。未设置或为空时，lip 把它设为 `.`。 |
 | `XDG_CONFIG_HOME` | 用户设置所在位置：`$XDG_CONFIG_HOME/lip`。默认 `~/.config`。 |
 | `XDG_CACHE_HOME` | 下载缓存所在位置：`$XDG_CACHE_HOME/lip`。默认 `~/.cache`。 |

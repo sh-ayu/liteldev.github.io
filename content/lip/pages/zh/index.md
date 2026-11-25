@@ -69,7 +69,7 @@ ARM64 的 Linux 没有发行版，因为 LeviLamina 服务器无法在那里运�
 
 == Windows
 
-从[最新发行版](https://github.com/LiteLDev/lip/releases/latest)下载 `lip-<version>-win-x64.msi`（ARM 处理器的电脑下载 `lip-<version>-win-arm64.msi`）并运行。它把 `lip` 安装到 `C:\Program Files\lip`，并把这个文件夹加入 `PATH`。然后打开一个新终端，确认 `lip -v` 能输出版本号。
+从[最新发行版](https://github.com/LiteLDev/lip/releases/latest)下载 `lip-<version>-win-x64.msi`（ARM 处理器的电脑下载 `lip-<version>-win-arm64.msi`）并运行。它为你把 `lip` 安装到 `%LOCALAPPDATA%\Programs\lip`，并把这个文件夹加入你的 `PATH`，不需要管理员。如果 `lip` 已经为所有用户安装（早先的版本把它安装在 `C:\Program Files\lip`），它改为更新那份安装，这需要管理员。然后打开一个新终端，确认 `lip -v` 能输出版本号。
 
 == macOS / Linux
 

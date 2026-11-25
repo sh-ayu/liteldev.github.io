@@ -255,7 +255,9 @@ Commands run in the workspace root, with the environment variables of lip, as
 Windows platform, so that `cmd` runs the command as written, and as `sh -c <command>` otherwise,
 with `sh` found through `PATH`; on a system other than Windows, a Windows platform runs them
 through Wine (see [Linux and macOS](../guides/linux_macos.md)), where a command
-containing `"` does not reach `cmd` as written. A command that exits with a non-zero code fails the operation. If an operation fails, lip undoes its file
+containing `"` does not reach `cmd` as written. On Windows, when the Visual C++ runtime is installed
+only for the user, lip puts its directory first in `PATH` for them (see
+[System dependencies](internals.md#system-dependencies)). A command that exits with a non-zero code fails the operation. If an operation fails, lip undoes its file
 changes, but not what hook commands already did, so hook commands should be safe to run again.
 
 ## Templates
