@@ -12,7 +12,7 @@ lip
 
 `lip` without arguments opens the interface when its standard input and its standard output are both terminals; otherwise it writes its help (see [Command line](cli.md)).
 
-- The interface works on one workspace at a time, the **selected workspace**: at first the folder that `lip` was started in. The top line shows it; `Enter` on it opens the [workspace picker](../interface/workspaces.md), to select, add or remove a workspace.
+- The interface works on one workspace at a time, the **selected workspace**: at first the folder that `lip` was started in. Opened from an [install link](links.md) (`lip --uri`), it adds no folder and selects the last workspace of the list instead, then asks whether to install the link's package. The top line shows it; `Enter` on it opens the [workspace picker](../interface/workspaces.md), to select, add or remove a workspace.
 - The [daemon](../concepts/how_lip_works.md) of lip carries the interface out. Several interfaces can be open at once.
 - The terminal must have at least 60 columns and 16 rows. In a smaller one lip asks you to enlarge it, and the only key that works is `Ctrl+C`, which quits without asking.
 - In a terminal narrower than 80 columns, the sidebar shows one symbol for each page while a page has the focus.
@@ -149,4 +149,5 @@ The commands that the interface carries out read and write what their own pages 
 - [A tour of the interface](../interface/tour.md)
 - [Your first server](https://levimc.org/tutorials/server/first-server/)
 - [Command line](cli.md)
+- [Install links](links.md)
 - [Configuration](configuration.md)

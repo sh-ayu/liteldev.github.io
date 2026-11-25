@@ -23,6 +23,20 @@ built with Vite `base: '/mods/'`: every page and file is under `/mods/`.
   [Galleries](#galleries)), Versions (`?tab=versions`), Dependencies
   (`?tab=dependencies`). The sidebar shows the sides and platforms of the selection, the author (the repository
   owner, with "More by …" setting `?author=`), the license's family and SPDX id, and the tags.
+- **Installing**: a mod page has one selection, the variant and version in its URL (`?variant=&version=`; the bare
+  page is the default variant's latest version). It is picked in one place, the sidebar's Install panel (variant
+  and version, which change the URL), and everything acts on it directly: the header's buttons, the panel's
+  buttons, the `lip install` command (a version with a server entry) and Download from GitHub. The buttons are
+  deep links, by the sides the version runs on: a server version gets "Install with lip", a client version
+  "Install with LeviLauncher", one for both gets both. The header's version badge brings the panel's picker into
+  view. In the Versions tab each row has the same actions for its own version (install with its app, copy its
+  `lip install` command, its release) and "Select", which makes it the page's selection without leaving the tab;
+  the selected row is highlighted and each variant's latest release marked. The version's link is its permalink.
+- **Deep links**, agreed with lip and LeviLauncher (`lib/mods.ts` `deepLink`):
+  `lip://install/<id>[?version=<semver>][&variant=<variant>]` and the same with `levilauncher://`. The id keeps its
+  case, the version has no `v`, and the default variant is left out. A page cannot tell whether the app is
+  installed, so a followed link shows only a hint under the button: "Nothing happened?" with a link to get
+  LeviLauncher or install lip.
 - **JSON**: every page has its data under `/api/v4/mods/` (linked from the page as `rel="alternate"`), see
   [JSON](#json); the JSON from before version 4 stays next to the pages for older launchers.
 - **lipr**: `/mods/lipr/index.json` and `/mods/lipr/levilauncher.json` are lipr's two indexes, in lipr's format, with
@@ -96,15 +110,17 @@ default order (a query string does not reach the host, so filtering is left to t
 { url, id, canonical?, name, description, owner, logo, repository, issues?, releases, stars, downloads?, updated,
   published?,
   created?, license?, side, platform, gameVersions, tags,
-  latest: { variant, version, install },
+  latest: { variant, version, install, deeplinks: { lip, levilauncher } },
   readmes: [ { file, lang, text } ], gallery: [ … ],
   versions: [ { version, prerelease, released?, releaseUrl, manifestUrl, format?, info: { name, description, tags, logo? },
-                variants: { "<name>": [ { side, platform, deps } ] } } ],
+                variants: { "<name>": [ { side, platform, deps } ] }, deeplinks: { "<name>": { lip, levilauncher } } } ],
   dependencies: { "<lower-case id>": { id, name, owner, url? } }, requiredBy: [ { id, name, owner, url? } ] }
 ```
 
 - `canonical`: the page of the repository's current id, when this is an old one.
-- `latest`: what the page shows by default: the default variant (see [Data](#data)), its latest version and the `lip install` command for it.
+- `latest`: what the page shows by default: the default variant (see [Data](#data)), its latest version, the `lip install` command for it
+  and its `deeplinks` (`lip://install/…` and `levilauncher://install/…`, see Deep links above). Each version's
+  `deeplinks` has the two for each of its `variants`, under the same names.
 - `versions`: newest first. `manifestUrl` is the version's `lip.toml`, or its `tooth.json` when it has none;
   `format` is `4` when it is a `lip.toml` (lip v0.40's format 4), left out otherwise (the same as `manifestUrl`
   ending in `/lip.toml`, which launchers read); a variant's entries are lip v0.40's: one per side and platform it installs on, with the entry's `deps`
@@ -331,7 +347,7 @@ src/mods/
   data/               featured tags (with their groups), license families, sides, sprite names
   pages/              home, mod and 404 pages
   components/         listing (search, toolbar, filters, rows), mod page (header, tabs, versions,
-                      dependencies, sidebar, install dialog), README renderer
+                      dependencies, sidebar, install buttons and panel), README renderer
   lib/                catalogue query (parse/serialize/run), search, package files (lip.toml, tooth.json), URLs, markdown helpers
   server/             build-time data: registry, catalogue, GitHub, JSON, icons, galleries, hero paintings
   public/             icon.png

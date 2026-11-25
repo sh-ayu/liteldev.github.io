@@ -8,6 +8,7 @@
 lip
 lip (-h | --help)
 lip (-v | --version)
+lip --uri <link>
 lip (cache | config | daemon | pkg) (-h | --help)
 lip <command> [<argument>...]
 ```
@@ -19,11 +20,12 @@ lip <command> [<argument>...]
 | `lip` | 标准输入和标准输出都是终端时，运行[界面](interface.md)；否则把 `lip` 的帮助写到标准输出。 |
 | `lip -h`、`lip --help` | 把 `lip` 的帮助写到标准输出，后面跟什么都一样。 |
 | `lip -v`、`lip --version` | 把自己的版本（一个 [SemVer](https://semver.org/spec/v2.0.0.html) 版本）和一个换行写到标准输出，后面跟什么都一样。 |
+| `lip --uri <link>` | 打开一个 `lip://` [安装链接](links.md)：界面询问是否安装其中的包。只有作为恰好两个参数中的第一个时才是选项。 |
 | `lip cache -h`、`lip config -h`、`lip daemon -h`、`lip pkg -h` | 把该命令组的帮助写到标准输出。`--help` 相同。 |
 | `lip --daemon` | 作为[守护进程](commands/daemon.md)运行直到退出，不输出任何内容。lip 自己会这样启动它，你不需要手动运行。 |
 | `lip <command> ...` | 执行该命令。 |
 
-输出帮助或版本时退出码为 0。第一个参数以 `-` 开头而又不是上面这些时，属于[用法错误](#用法错误)。
+输出帮助或版本时退出码为 0；`lip --uri` 的退出方式与[界面](interface.md#退出状态)相同，链接无效或没有终端时以非零代码退出。第一个参数以 `-` 开头而又不是上面这些时，属于[用法错误](#用法错误)。
 
 ## 命令
 

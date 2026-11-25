@@ -2,26 +2,15 @@ import type { ReactNode } from "react";
 import { featuredTagsOf, plainTagsOf } from "../data/featured-tags";
 import { LICENSE_FAMILY_BY_ID, licenseFamily, licenseOf } from "../data/licenses";
 import { SIDE_BY_ID } from "../data/sides";
-import { formatNumber, useI18n } from "../i18n";
+import { useI18n } from "../i18n";
 import { DEFAULT_STATE, serializeQuery, type QueryState } from "../lib/catalog-query";
-import {
-  buildModUrl,
-  getAllVersions,
-  getManifestUrl,
-  getSortedVariants,
-  getVersionsForVariant,
-  ownerAvatar,
-  ownerUrl,
-  type ModSelection,
-} from "../lib/mods";
+import { getManifestUrl, ownerAvatar, ownerUrl, type ModSelection, type ModTab } from "../lib/mods";
 import type { CatalogEntry, RawModEntry, ReleaseInfo, VersionTarget } from "../types";
 import { CopyButton } from "./copy-button";
+import { InstallPanel } from "./install-actions";
 import { LocalDate } from "./local-date";
 import { RouterLink } from "./router-link";
 import { MaskIcon, Sprite } from "./sprite";
-
-/** Versions listed in the sidebar; the Versions tab has them all. */
-const RECENT = 6;
 
 /** The listing filtered by one thing. */
 const listing = (patch: Partial<QueryState>) => serializeQuery({ ...DEFAULT_STATE, ...patch });
@@ -52,6 +41,9 @@ interface ProjectSidebarProps {
   mod: RawModEntry;
   repository: string;
   selection: ModSelection;
+  tab: ModTab;
+  /** Makes another variant or version the page's selection. */
+  onSelect: (selection: ModSelection) => void;
   /** What each version runs on, per variant. */
   targets: Record<string, Record<string, VersionTarget>>;
   /** The versions read from a `lip.toml`. */
@@ -60,21 +52,29 @@ interface ProjectSidebarProps {
   hasIssues: boolean;
 }
 
-/** Compatibility, links, creators, details and tags, like Modrinth's right column. */
-export function ProjectSidebar({ modId, entry, mod, repository, selection, targets, lipToml, releases, hasIssues }: ProjectSidebarProps) {
+/** Install (the page's selection), compatibility, links, creators, details and tags, like Modrinth's right column. */
+export function ProjectSidebar({ modId, entry, mod, repository, selection, tab, onSelect, targets, lipToml, releases, hasIssues }: ProjectSidebarProps) {
   const { t, locale } = useI18n();
   // the selection's sides and platforms (the mod's latest, when the build did not read that version)
   const target = targets[selection.variant]?.[selection.version] ?? { side: entry.side, platform: entry.platform };
   const firstRelease = Object.values(releases).reduce<string | undefined>((min, r) => (!min || r.date < min ? r.date : min), undefined);
-  const labels = getSortedVariants(mod);
-  /** The latest versions of the selected variant. */
-  const recent = getVersionsForVariant(mod, selection.variant).slice(-RECENT).reverse();
   const license = licenseOf(entry);
   const family = LICENSE_FAMILY_BY_ID.get(licenseFamily(license))!;
   const featured = featuredTagsOf(entry.tags);
   const plain = plainTagsOf(entry.tags);
   return (
     <>
+      <InstallPanel
+        modId={modId}
+        mod={mod}
+        repository={repository}
+        selection={selection}
+        tab={tab}
+        releases={releases}
+        targets={targets}
+        onSelect={onSelect}
+      />
+
       <Panel id="mods-side-compat" title={t.compatibility}>
         <dl className="mods-facts">
           {target.side.length ? (
@@ -142,47 +142,7 @@ export function ProjectSidebar({ modId, entry, mod, repository, selection, targe
         </RouterLink>
       </Panel>
 
-      {/* the panels keep the ids of the old page's (#mods-variants-title, #mods-versions-title, #mods-meta-title) */}
-      <Panel id="mods-variants-title" title={t.variants}>
-        <ul className="mods-chips">
-          {labels.map((v) => {
-            const versions = getVersionsForVariant(mod, v);
-            const version = versions.includes(selection.version) ? selection.version : versions.at(-1);
-            if (!version) return null;
-            return (
-              <li key={v}>
-                <RouterLink
-                  href={buildModUrl(modId, mod, { variant: v, version })}
-                  className="mods-chip mods-chip-link mods-chip-mono"
-                  aria-current={v === selection.variant ? "true" : undefined}
-                >
-                  {v === "" ? t.defaultVariant : v}
-                </RouterLink>
-              </li>
-            );
-          })}
-        </ul>
-      </Panel>
-
-      <Panel id="mods-versions-title" title={t.versions}>
-        <ul className="mods-chips">
-          {recent.map((version) => (
-            <li key={version}>
-              <RouterLink
-                href={buildModUrl(modId, mod, { variant: selection.variant, version })}
-                className="mods-chip mods-chip-link mods-chip-mono"
-                aria-current={version === selection.version ? "true" : undefined}
-              >
-                {version}
-              </RouterLink>
-            </li>
-          ))}
-        </ul>
-        <RouterLink href={buildModUrl(modId, mod, selection, "versions")} className="mods-side-link mods-side-all">
-          {t.allVersions(formatNumber(getAllVersions(mod).length, locale))}
-        </RouterLink>
-      </Panel>
-
+      {/* the panel keeps the id of the old page's (#mods-meta-title); #mods-variants-title and #mods-versions-title are in the install panel */}
       <Panel id="mods-meta-title" title={t.details}>
         <dl className="mods-meta">
           {license ? (

@@ -1205,7 +1205,7 @@
     border-top: 1px solid var(--color-line);
   }
 
-  /* ================================================================== dialogs: filter drawer and install */
+  /* ================================================================== dialogs: filter drawer and gallery */
   .mods-filter-drawer,
   .mods-dialog {
     padding: 0;
@@ -1306,32 +1306,78 @@
     line-height: 1.25;
     overflow-wrap: anywhere;
   }
-  .mods-dialog-field {
+
+  /* ================================================================== install: the deep links and the install panel */
+  .mods-install-actions {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .mods-install-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .mods-install-actions-header .mods-install-links {
+    justify-content: flex-end;
+  }
+  .mods-install-actions-panel .mods-install-links > .mods-install-btn {
+    flex: 1 1 100%;
+  }
+  /* empty until a deep link was followed (a live region, so it stays in the page) */
+  .mods-deeplink-hint {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--color-muted);
+  }
+  .mods-deeplink-hint:not(:empty) {
+    margin-top: 0.375rem;
+  }
+  .mods-deeplink-hint a {
+    color: var(--color-link);
+    font-weight: 600;
+  }
+  .mods-deeplink-hint a:hover {
+    text-decoration: underline;
+  }
+  .mods-install-actions-header .mods-deeplink-hint {
+    text-align: right;
+  }
+  .mods-install-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .mods-install-panel > .mods-panel-title {
+    margin-bottom: 0;
+  }
+  .mods-install-field {
     display: flex;
     flex-direction: column;
     gap: 0.375rem;
+    min-width: 0;
   }
-  .mods-dialog-label {
+  .mods-install-label {
     font-size: 0.8125rem;
     font-weight: 600;
     color: var(--color-muted);
   }
-  .mods-dialog-field > .hotbar {
+  .mods-install-field > .hotbar {
     align-self: flex-start;
+    max-width: 100%;
+    overflow-x: auto;
   }
-  .mods-dialog-select {
+  .mods-install-select {
     font-family: var(--font-mono);
     font-size: 0.875rem;
     color: var(--color-ink);
     cursor: pointer;
   }
-  .mods-dialog-hint {
-    margin: 0.25rem 0 0;
-    font-size: 0.875rem;
-    color: var(--color-muted);
-  }
-  .mods-dialog-download {
+  .mods-install-download {
     align-self: flex-start;
+  }
+  .mods-install-panel .mods-side-all {
+    margin-top: 0;
   }
 
   /* ================================================================== install command */
@@ -1564,7 +1610,7 @@
   }
   .mods-project-buttons {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.5rem;
   }
   .mods-github-btn.mc-btn {
@@ -1578,6 +1624,17 @@
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
+    /* a button: it opens the install panel's picker */
+    border: 0;
+    cursor: pointer;
+  }
+  .mods-project-version:hover {
+    background: color-mix(in srgb, var(--badge) 28%, transparent);
+  }
+  .mods-project-version > svg {
+    flex: none;
+    width: 12px;
+    height: 12px;
   }
   @media (max-width: 760px) {
     .mods-project-head {
@@ -1643,8 +1700,12 @@
       grid-column: 1 / -1;
     }
     .mods-project-buttons,
+    .mods-install-actions-header,
     .mods-install-btn {
       flex: 1 1 auto;
+    }
+    .mods-install-actions-header .mods-deeplink-hint {
+      text-align: left;
     }
   }
 
@@ -1984,9 +2045,34 @@
     white-space: nowrap;
     text-align: right;
   }
+  .mods-vt-actions > * {
+    vertical-align: middle;
+  }
   .mods-vt-actions .mc-icon-btn {
     width: 2rem;
     height: 2rem;
+  }
+  .mods-vt-latest {
+    margin-left: 0.375rem;
+    font-size: 0.6875rem;
+  }
+  .mods-vt-install.mc-btn {
+    margin-right: 0.25rem;
+  }
+  /* "Select" and "Selected" take the same room, so the buttons line up row by row */
+  .mods-vt-select.mc-btn,
+  .mods-vt-selected {
+    min-width: 6rem;
+    margin-left: 0.25rem;
+  }
+  .mods-vt-selected {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-primary);
   }
   @media (max-width: 767px) {
     /* phones: each version is a stacked row */
@@ -2003,10 +2089,8 @@
     }
     .mods-versions-table tr {
       display: grid;
-      grid-template-columns: 1rem minmax(0, 1fr) auto;
-      grid-template-areas:
-        "dot version actions"
-        ". meta meta";
+      grid-template-columns: 1rem minmax(0, 1fr);
+      grid-template-areas: "dot version";
       align-items: center;
       column-gap: 0.5rem;
       padding: 0.5rem 0.25rem;
@@ -2031,9 +2115,12 @@
       white-space: normal;
       overflow-wrap: anywhere;
     }
+    /* the actions get a row of their own, under the facts */
     .mods-vt-actions {
-      grid-area: actions;
+      grid-column: 2 / -1;
       width: auto;
+      margin-top: 0.25rem;
+      text-align: left;
     }
     .mods-vt-sides,
     .mods-vt-platforms,

@@ -42,6 +42,7 @@ interface Labels {
   cli: string;
   interfaceReference: string;
   files: string;
+  links: string;
   commands: string;
 }
 
@@ -78,6 +79,7 @@ const LABELS: Record<Locale, Labels> = {
     cli: 'Command line',
     interfaceReference: 'Interface',
     files: 'Files',
+    links: 'Install links',
     commands: 'Commands',
   },
   zh: {
@@ -110,6 +112,7 @@ const LABELS: Record<Locale, Labels> = {
     cli: '命令行',
     interfaceReference: '界面',
     files: '文件',
+    links: '安装链接',
     commands: '命令',
   },
   // Written by hand, with the words of the interface in Traditional Chinese: the conversion of the kit works on
@@ -144,6 +147,7 @@ const LABELS: Record<Locale, Labels> = {
     cli: '命令列',
     interfaceReference: '介面',
     files: '檔案',
+    links: '安裝連結',
     commands: '命令',
   },
 };
@@ -209,6 +213,7 @@ const nav = (p: string, t: Labels): NavEntry[] => [
       { text: t.interfaceReference, link: `${p}reference/interface` },
       { text: t.configuration, link: `${p}reference/configuration` },
       { text: t.files, link: `${p}reference/files` },
+      { text: t.links, link: `${p}reference/links` },
       // A page is named after its command with "_" for " " or "-" (self_update: lip self-update).
       { text: t.commands, items: COMMANDS.map((c) => ({ text: c === 'self_update' ? 'self-update' : c.replace('_', ' '), link: `${p}reference/commands/${c}` })) },
     ],

@@ -6,7 +6,7 @@ After this page you can keep several servers side by side: switch between them, 
 
 A **workspace** is a folder that holds one server: the game, LeviLamina, the mods, the worlds, and lip's own records in `.lip/`. Every page of the interface works on one workspace at a time, the **selected workspace**. The top line names it.
 
-lip keeps a list of the workspaces that you used. When you start `lip`, the folder you started it in is added to the list, if it is not there yet, and selected. The list is kept between runs.
+lip keeps a list of the workspaces that you used. When you start `lip`, the folder you started it in is added to the list, if it is not there yet, and selected. The list is kept between runs. An [install link](../reference/links.md) is different: it adds no folder, and selects the last workspace of the list.
 
 Choosing a workspace installs nothing in it. The [Server](server.md) page sets up the server of the selected workspace, and changes its game or loader version later.
 

@@ -13,6 +13,7 @@ import { compareVersions } from "../lib/game-versions";
 import { versionFormat } from "../lib/manifest";
 import {
   CATALOG_JSON,
+  deepLinks,
   getAllVersions,
   getManifestUrl,
   getReleaseUrl,
@@ -128,6 +129,7 @@ export async function modJson(id: string): Promise<ModJson | null> {
       if (!doc) return [];
       const release = releases[version];
       const file = origins?.get(version)?.file;
+      const variants = variantsJson(doc);
       return [
         {
           version,
@@ -137,7 +139,8 @@ export async function modJson(id: string): Promise<ModJson | null> {
           manifestUrl: getManifestUrl(repository, version, file),
           ...versionFormat(file),
           info: doc.info,
-          variants: variantsJson(doc),
+          variants,
+          deeplinks: Object.fromEntries(Object.keys(variants).map((variant) => [variant, deepLinks(id, variant, version)])),
         },
       ];
     });
@@ -167,6 +170,7 @@ export async function modJson(id: string): Promise<ModJson | null> {
       variant: prerendered.variant,
       version: prerendered.version,
       install: installCommand(id, prerendered.variant, prerendered.version),
+      deeplinks: deepLinks(id, prerendered.variant, prerendered.version),
     },
     readmes: prerendered.readmes,
     gallery: page.showcase,

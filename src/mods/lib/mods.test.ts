@@ -4,10 +4,13 @@ import type { RawModEntry } from "../types.ts";
 import {
   buildModUrl,
   commandParts,
+  deepLink,
+  deepLinks,
   getDefaultSelection,
   getReleaseUrl,
   getRepoBaseUrls,
   getRepositoryUrl,
+  installAppsFor,
   installCommand,
   isPrerelease,
   ownerAvatar,
@@ -94,6 +97,25 @@ test("release links: the exact tag when known, else the releases page", () => {
   const repo = "https://github.com/LiteLDev/LeviLamina";
   assert.equal(getReleaseUrl(repo, { tag: "v1.1.0" }), `${repo}/releases/tag/v1.1.0`);
   assert.equal(getReleaseUrl(repo, undefined), `${repo}/releases`);
+});
+
+test("deep links: lip:// and levilauncher://install/<module-path>[?version=][&variant=]", () => {
+  // the module path keeps its case; no leading v; the default variant is left out
+  assert.equal(deepLink("lip", "github.com/IceBlcokMC/PLand", "", "0.18.0"), "lip://install/github.com/IceBlcokMC/PLand?version=0.18.0");
+  assert.equal(deepLink("levilauncher", TOOTH, "client", "v1.0.0-rc.1"), `levilauncher://install/${TOOTH}?version=1.0.0-rc.1&variant=client`);
+  assert.equal(deepLink("lip", TOOTH, "", ""), `lip://install/${TOOTH}`);
+  assert.deepEqual(deepLinks(TOOTH, "lua", "1.1.0"), {
+    lip: `lip://install/${TOOTH}?version=1.1.0&variant=lua`,
+    levilauncher: `levilauncher://install/${TOOTH}?version=1.1.0&variant=lua`,
+  });
+});
+
+test("install apps by side: lip for servers, LeviLauncher for clients", () => {
+  assert.deepEqual(installAppsFor(["server"]), ["lip"]);
+  assert.deepEqual(installAppsFor(["client"]), ["levilauncher"]);
+  assert.deepEqual(installAppsFor(["server", "client"]), ["lip", "levilauncher"]);
+  assert.deepEqual(installAppsFor(undefined), ["lip", "levilauncher"]);
+  assert.deepEqual(installAppsFor([]), ["lip", "levilauncher"]);
 });
 
 test("install commands and pre-releases", () => {

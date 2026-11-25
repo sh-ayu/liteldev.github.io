@@ -61,7 +61,7 @@ LeviLauncher 內置了相容 [lip](https://github.com/LiteLDev/lip) 的套件管
 
 ### LeviMC 模組頁面
 
-**LeviMC 模組** 頁面列出 [levimc.org/mods](https://levimc.org/zh-Hant/mods/) 中提供 Windows x64 用戶端建置的模組（即有 `side = "client"` 且 `platform = "win-x64"` 的條目）。可以按名稱、ID、作者、標籤或簡介搜尋；按相關性、星標、最近更新或最新發佈排序；並按遊戲版本、LeviLamina 版本、標籤（前置庫 / API、經濟等推薦標籤排在最前，也可以排除某個標籤）、授權條款（寬鬆等類別或 SPDX ID）、依賴和作者（模組頁面上的 **…的更多專案**）篩選。安裝模組時會選擇其 `client` 變體，沒有時選擇預設變體，再沒有時選擇第一個有用戶端建置的其他變體；在模組頁面中也可以改選其他這樣的變體。
+**LeviMC 模組** 頁面列出 [levimc.org/mods](https://levimc.org/zh-Hant/mods/) 中提供 Windows x64 用戶端建置的模組（即有 `side = "client"` 且 `platform = "win-x64"` 的條目）。可以按名稱、ID、作者、標籤或簡介搜尋；按相關性、星標、最近更新或最新發佈排序；並按遊戲版本、LeviLamina 版本、標籤（前置庫 / API、經濟等推薦標籤排在最前，也可以排除某個標籤）、授權條款（寬鬆等類別或 SPDX ID）、依賴和作者（模組頁面上的 **…的更多專案**）篩選。安裝模組時會選擇其 `client` 變體，沒有時選擇預設變體，再沒有時選擇第一個有用戶端建置的其他變體；在模組頁面中也可以改選其他這樣的變體。levimc.org 上模組頁面的 **用 LeviLauncher 安裝** 按鈕是一個 `levilauncher://install/<mod id>?version=<version>` 連結，它要求 LeviLauncher 安裝該模組的這個版本。
 
 ## 原生模組 <Badge platform="android" />
 

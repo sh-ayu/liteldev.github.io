@@ -8,6 +8,7 @@ This page tells you how to invoke `lip`: which commands there are, how arguments
 lip
 lip (-h | --help)
 lip (-v | --version)
+lip --uri <link>
 lip (cache | config | daemon | pkg) (-h | --help)
 lip <command> [<argument>...]
 ```
@@ -19,11 +20,12 @@ In a synopsis, `word` is written as it is, `<name>` is replaced by a value, `[x]
 | `lip` | Runs the [interface](interface.md) when standard input and standard output are both terminals. Otherwise writes the help for `lip` to standard output. |
 | `lip -h`, `lip --help` | Writes the help for `lip` to standard output, whatever follows. |
 | `lip -v`, `lip --version` | Writes its version, a [SemVer](https://semver.org/spec/v2.0.0.html) version, and a line break to standard output, whatever follows. |
+| `lip --uri <link>` | Opens a `lip://` [install link](links.md): the interface asks whether to install its package. Only as the first of exactly two arguments. |
 | `lip cache -h`, `lip config -h`, `lip daemon -h`, `lip pkg -h` | Writes the help for the command group to standard output. `--help` does the same. |
 | `lip --daemon` | Runs as the [daemon](commands/daemon.md) until it exits, and writes nothing. lip starts it this way itself; you never need to. |
 | `lip <command> ...` | Carries out the command. |
 
-Writing the help or the version exits with code 0. Any other first argument that starts with `-` is a [usage error](#usage-errors).
+Writing the help or the version exits with code 0; `lip --uri` exits as the [interface](interface.md#exit-status) does, and with a non-zero code when the link is invalid or there is no terminal. Any other first argument that starts with `-` is a [usage error](#usage-errors).
 
 ## Commands
 

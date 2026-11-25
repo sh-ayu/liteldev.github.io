@@ -127,7 +127,7 @@ export interface CatalogEntry {
   created?: string;
 }
 
-/** What one version of a variant runs on, and the LeviLamina it needs (the versions table, the install dialog). */
+/** What one version of a variant runs on, and the LeviLamina it needs (the versions table, the install buttons and panel). */
 export interface VersionTarget {
   /** Server first. */
   side: Side[];
@@ -253,6 +253,15 @@ export interface EntryJson {
   deps: Record<string, string>;
 }
 
+/**
+ * Deep links that ask lip or LeviLauncher to install a selection
+ * (`lib/mods.ts` deepLink): `lip://install/<id>[?version=<semver>][&variant=<variant>]`.
+ */
+export interface DeepLinksJson {
+  lip: string;
+  levilauncher: string;
+}
+
 /** A version of a mod, newest first in {@link ModJson.versions}. */
 export interface VersionJson {
   version: string;
@@ -273,6 +282,8 @@ export interface VersionJson {
   info: LipInfo;
   /** Variant name → its entries. */
   variants: Record<string, EntryJson[]>;
+  /** Variant name (the keys of `variants`) → the deep links that install this version of it. */
+  deeplinks: Record<string, DeepLinksJson>;
 }
 
 /** `/api/v4/mods/<id>/index.json`: the mod page, every version included. */
@@ -304,7 +315,7 @@ export interface ModJson {
   gameVersions: string[];
   tags: string[];
   /** What the page shows when its URL asks for nothing in particular. */
-  latest: { variant: string; version: string; install: string };
+  latest: { variant: string; version: string; install: string; deeplinks: DeepLinksJson };
   /** The latest version's README in each of its languages. */
   readmes: { file: string; lang: string | null; text: string }[];
   gallery: ShowcaseItem[];

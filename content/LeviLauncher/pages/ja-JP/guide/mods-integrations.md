@@ -61,7 +61,7 @@ lip v0.40 以降、`lip.toml` と `.lip/state.json` の各エントリは、実�
 
 ### LeviMC Mods ページ
 
-**LeviMC Mods** ページには、[levimc.org/mods](https://levimc.org/mods/) の Mod のうち、Windows x64 のクライアント向けビルド（`side = "client"` かつ `platform = "win-x64"` のエントリ）があるものが表示されます。名前、ID、作者、タグ、説明で検索し、関連度、スター、更新順、新着順で並べ替え、ゲームバージョン、LeviLamina バージョン、タグ（ライブラリ / API や経済などの推奨タグが先頭に並び、タグを除外することもできます）、ライセンス（寛容型などの分類または SPDX ID）、依存関係、作者（Mod ページの **… の他の Mod**）で絞り込めます。Mod をインストールすると、`client` バリアント、なければ既定のバリアント、それもなければクライアント向けビルドのある最初の他のバリアントが選ばれます。Mod ページでは、これらのバリアントから別のものを選ぶこともできます。
+**LeviMC Mods** ページには、[levimc.org/mods](https://levimc.org/mods/) の Mod のうち、Windows x64 のクライアント向けビルド（`side = "client"` かつ `platform = "win-x64"` のエントリ）があるものが表示されます。名前、ID、作者、タグ、説明で検索し、関連度、スター、更新順、新着順で並べ替え、ゲームバージョン、LeviLamina バージョン、タグ（ライブラリ / API や経済などの推奨タグが先頭に並び、タグを除外することもできます）、ライセンス（寛容型などの分類または SPDX ID）、依存関係、作者（Mod ページの **… の他の Mod**）で絞り込めます。Mod をインストールすると、`client` バリアント、なければ既定のバリアント、それもなければクライアント向けビルドのある最初の他のバリアントが選ばれます。Mod ページでは、これらのバリアントから別のものを選ぶこともできます。levimc.org の Mod ページにある **Install with LeviLauncher** ボタンは `levilauncher://install/<mod id>?version=<version>` リンクで、その Mod のそのバージョンのインストールを LeviLauncher に依頼します。
 
 ## ネイティブ Mod <Badge platform="android" />
 

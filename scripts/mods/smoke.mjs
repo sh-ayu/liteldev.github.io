@@ -8,7 +8,7 @@
 // their counts, exclusions, sort, page size, pagination, empty state, view mode, keyboard, the phone
 // drawer), the density targets (results above the fold), the listing URLs (and the old keys that
 // still work or are dropped), mod pages
-// (README, tabs, install dialog, variant/version switching, back to the listing), the 404 page, the shared theme/language preferences, phone
+// (README, tabs, install buttons and panel, variant/version switching, back to the listing), the 404 page, the shared theme/language preferences, phone
 // layouts without sideways scroll, layout shift, and that every mod page hydrates without
 // errors. Only the site itself is loaded: third-party requests (README images, avatars, fonts) are
 // blocked. Exit code 1 on any failure.
@@ -479,27 +479,55 @@ await check("mod page: header, README, sidebar; no errors", async () => {
   return await mod.locator(".mods-project-version").innerText();
 });
 
-await check("install dialog: the command for the selection, copied to the clipboard", async () => {
+await check("install: the header's deep link and the panel's command are the selection's; a followed link shows where to get the app", async () => {
   const latest = (await mod.locator(".mods-project-version").innerText()).trim();
-  await mod.click(".mods-install-btn");
-  await mod.waitForSelector(".mods-dialog[open] .mods-install-command");
-  const command = (await mod.locator(".mods-dialog .mods-install-command").innerText()).replace(/\s+/g, " ").trim();
+  const lip = mod.locator('.mods-project-actions a.mods-install-btn[data-app="lip"]');
+  const href = await lip.getAttribute("href");
+  assert(href === `lip://install/github.com/LiteLDev/LeviLamina?version=${latest}`, `deep link ${href}`);
+  const command = (await mod.locator(".mods-install-panel .mods-install-command").innerText()).replace(/\s+/g, " ").trim();
   assert(command === `lip install github.com/LiteLDev/LeviLamina@${latest}`, `command "${command}"`);
-  await mod.click(".mods-dialog .mods-copy");
-  await mod.waitForSelector(".mods-dialog .mods-copy[data-copied]");
+  await mod.click(".mods-install-panel .mods-copy");
+  await mod.waitForSelector(".mods-install-panel .mods-copy[data-copied]");
   const clip = await mod.evaluate(() => navigator.clipboard.readText());
   assert(clip === command, `clipboard: ${clip}`);
-  await mod.keyboard.press("Escape");
-  await mod.waitForSelector(".mods-dialog[open]", { state: "detached", timeout: 3000 }).catch(() => {});
-  assert(!(await mod.locator(".mods-dialog[open]").count()), "dialog still open");
-  return command;
+  // no protocol handler in the test browser: the link is not followed, the page still reacts to the click
+  await mod.evaluate(() => document.addEventListener("click", (e) => e.preventDefault(), { capture: true, once: true }));
+  await lip.click();
+  const hint = mod.locator(".mods-project-actions .mods-deeplink-hint a");
+  await hint.waitFor();
+  assert(/\/lip\/#install-lip$/.test((await hint.getAttribute("href")) ?? ""), `hint ${await hint.getAttribute("href")}`);
+  assert(!(await mod.locator("dialog[open]").count()), "a dialog opened");
+  return href;
 });
 
-await check("tabs: versions table marks the current version; dependencies list LeviLamina's", async () => {
+await check("install panel: picking a version makes it the page's selection (URL, header, deep links)", async () => {
+  const select = mod.locator(".mods-install-panel select");
+  const values = await select.locator("option").evaluateAll((options) => options.map((o) => o.value));
+  const older = values[2];
+  assert(older, "fewer than 3 versions");
+  await select.selectOption(older);
+  await mod.waitForURL((u) => new URL(u).searchParams.get("version") === older);
+  await mod.waitForFunction((v) => document.querySelector(".mods-project-version")?.textContent?.includes(v), older);
+  const href = await mod.locator('.mods-project-actions a.mods-install-btn[data-app="lip"]').getAttribute("href");
+  assert(href?.endsWith(`?version=${older}`), `deep link ${href}`);
+  await mod.goBack();
+  await mod.waitForURL((u) => !new URL(u).searchParams.get("version"));
+  return older;
+});
+
+await check("tabs: versions table marks the current version, Select changes it in place; dependencies list LeviLamina's", async () => {
   await mod.locator(".mods-tabs a", { hasText: "Versions" }).click();
   await mod.waitForURL((u) => new URL(u).searchParams.get("tab") === "versions");
   await mod.waitForSelector(".mods-versions-table");
   assert((await mod.locator('.mods-versions-table tr[aria-current="true"]').count()) === 1, "no current version row");
+  const row = mod.locator(".mods-versions-table tbody tr:not([aria-current])").nth(1);
+  const picked = (await row.locator(".mods-vt-version a").innerText()).trim();
+  assert((await row.locator(".mods-vt-install").count()) > 0, "no install link in the row");
+  await row.locator(".mods-vt-select").click();
+  await mod.waitForURL((u) => new URL(u).searchParams.get("version") === picked && new URL(u).searchParams.get("tab") === "versions");
+  await mod.waitForFunction((v) => document.querySelector('.mods-versions-table tr[aria-current="true"] .mods-vt-version a')?.textContent === v, picked);
+  await mod.goBack();
+  await mod.waitForURL((u) => !new URL(u).searchParams.get("version"));
   await mod.locator(".mods-tabs a", { hasText: "Dependencies" }).click();
   await mod.waitForURL((u) => new URL(u).searchParams.get("tab") === "dependencies");
   await mod.waitForSelector(".mods-deps-tab .mods-dep");
@@ -698,7 +726,7 @@ await check("language: 简体中文 links to /zh-Hans/mods/ (same page and query
   await page.click("a.mods-card-link");
   await page.waitForURL((u) => u.href.startsWith(`${localeRoot("zh-Hans")}github.com/`));
   await page.waitForSelector(".mods-install-btn");
-  assert((await page.locator(".mods-install-btn").innerText()).includes("安装"), "mod page not translated");
+  assert((await page.locator(".mods-install-btn").first().innerText()).includes("安装"), "mod page not translated");
   // the listing's root redirects to the stored language; deep links never redirect
   await page.goto(root, { waitUntil: "networkidle" });
   assert(page.url() === localeRoot("zh-Hans"), `/mods/ → ${page.url()}`);

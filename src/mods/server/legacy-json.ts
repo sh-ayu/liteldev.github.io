@@ -86,7 +86,8 @@ export interface LegacyModJson {
   env: string[];
   gameVersions: string[];
   tags: string[];
-  latest: ModJson["latest"];
+  /** Version 4's `latest` without the keys added since (`deeplinks`): this JSON is frozen. */
+  latest: Pick<ModJson["latest"], "variant" | "version" | "install">;
   readmes: ModJson["readmes"];
   gallery: ModJson["gallery"];
   variants: { label: string; versions: string[] }[];
@@ -208,7 +209,7 @@ export function legacyModJson(mod: ModJson, pkg: LegacyPackage | undefined): Leg
     env: legacyEnv(mod.side, versions[0]),
     gameVersions: mod.gameVersions,
     tags: mod.tags,
-    latest: mod.latest,
+    latest: { variant: mod.latest.variant, version: mod.latest.version, install: mod.latest.install },
     readmes: mod.readmes,
     gallery: mod.gallery,
     variants: labels

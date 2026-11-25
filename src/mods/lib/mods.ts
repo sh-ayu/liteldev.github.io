@@ -318,6 +318,40 @@ export function installCommand(tooth: string, variant: string, version: string):
   return variant === "" ? `lip install ${tooth}@${version}` : `lip install ${tooth}#${variant}@${version}`;
 }
 
+/** The apps a mod page's install buttons open: lip (servers) and LeviLauncher (clients). */
+export type InstallApp = "lip" | "levilauncher";
+
+/**
+ * A deep link that asks lip or LeviLauncher to install a selection, as agreed
+ * with both: `lip://install/<module-path>[?version=<semver>][&variant=<variant>]`
+ * (the same with `levilauncher://`). The module path keeps its case, the
+ * version has no leading `v`, and the default variant (`""`) is left out.
+ */
+export function deepLink(app: InstallApp, tooth: string, variant: string, version: string): string {
+  const query = new URLSearchParams();
+  const semver = version.replace(/^v/, "");
+  if (semver) query.set("version", semver);
+  if (variant) query.set("variant", variant);
+  const path = tooth.split("/").map(encodeURIComponent).join("/");
+  const qs = query.toString();
+  return `${app}://install/${path}${qs ? `?${qs}` : ""}`;
+}
+
+/** Both deep links of a selection (the JSON's `deeplinks`). */
+export function deepLinks(tooth: string, variant: string, version: string): Record<InstallApp, string> {
+  return { lip: deepLink("lip", tooth, variant, version), levilauncher: deepLink("levilauncher", tooth, variant, version) };
+}
+
+/**
+ * The apps that install a version, by the sides its entries run on: lip
+ * installs into server folders, LeviLauncher into clients. A version the build
+ * did not read (`undefined`, or no sides) shows both, server first.
+ */
+export function installAppsFor(side: readonly string[] | undefined): InstallApp[] {
+  if (!side?.length) return ["lip", "levilauncher"];
+  return [...(side.includes("server") ? (["lip"] as const) : []), ...(side.includes("client") ? (["levilauncher"] as const) : [])];
+}
+
 /**
  * A command in parts that never break inside: `lip install `, the tooth's
  * path segments (`github.com/`, `LiteLDev/`, `LeviLamina`), then `#variant`

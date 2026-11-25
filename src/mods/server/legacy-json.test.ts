@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { deepLinks } from "../lib/mods.ts";
 import type { CatalogEntryJson, ModJson } from "../types.ts";
 import { legacyCatalogEntry, legacyModJson, type LegacyPackage } from "./legacy-json.ts";
 
@@ -20,7 +21,7 @@ const mod: ModJson = {
   platform: ["win-x64"],
   gameVersions: ["1.26.60"],
   tags: ["economy"],
-  latest: { variant: "", version: "1.0.0", install: `lip install ${ID}@1.0.0` },
+  latest: { variant: "", version: "1.0.0", install: `lip install ${ID}@1.0.0`, deeplinks: deepLinks(ID, "", "1.0.0") },
   readmes: [],
   gallery: [],
   versions: [
@@ -32,6 +33,7 @@ const mod: ModJson = {
       manifestUrl: `https://${ID}/blob/v1.0.0/lip.toml`,
       info: { name: "LegacyMoney", description: "Economy", tags: ["economy"], logo: "https://example.com/logo.png" },
       variants: { "": [{ side: "client", platform: "win-x64", deps: { "github.com/LiteLDev/LeviLamina": "26.60.*" } }] },
+      deeplinks: { "": deepLinks(ID, "", "1.0.0") },
     },
     {
       version: "0.9.2",
@@ -44,6 +46,7 @@ const mod: ModJson = {
         "": [{ side: "server", platform: "win-x64", deps: { "github.com/LiteLDev/LeviLamina": "26.60.*" } }],
         client: [{ side: "client", platform: "win-x64", deps: { "github.com/LiteLDev/LeviLamina#client": "26.60.*" } }],
       },
+      deeplinks: { "": deepLinks(ID, "", "0.9.2"), client: deepLinks(ID, "client", "0.9.2") },
     },
   ],
   dependencies: { "github.com/liteldev/levilamina": { id: "github.com/LiteLDev/LeviLamina", name: "LeviLamina", owner: "LiteLDev", url: "u" } },
@@ -60,6 +63,7 @@ const pkg: LegacyPackage = {
 test("legacyModJson keeps the keys and shape from before version 4", () => {
   const json = legacyModJson(mod, pkg);
   assert.equal(json.tooth, ID);
+  assert.deepEqual(json.latest, { variant: "", version: "1.0.0", install: `lip install ${ID}@1.0.0` }, "frozen: no deeplinks");
   assert.equal(json.icon, "https://example.com/logo.png");
   assert.deepEqual(json.env, ["server", "client"]);
   assert.deepEqual(json.variants, [

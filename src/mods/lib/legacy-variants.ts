@@ -1,5 +1,5 @@
-// Legacy client variants, folded for the mod page's pickers (variant chips,
-// the Versions tab, the install dialog), the way LeviLauncher reads them
+// Legacy client variants, folded for the mod page's pickers (the install panel's variant switch,
+// the Versions tab), the way LeviLauncher reads them
 // (internal/lipcore/engine/compat_legacy_variants.go, rule R1).
 //
 // A release read from a `tooth.json` (format 3 and older) keeps its server

@@ -4,9 +4,11 @@ import { SIDE_BY_ID } from "../data/sides";
 import { useI18n } from "../i18n";
 import {
   buildModUrl,
+  deepLink,
   getReleaseUrl,
   getSortedVariants,
   getVersionsForVariant,
+  installAppsFor,
   installCommand,
   isPrerelease,
   type ModSelection,
@@ -14,6 +16,7 @@ import {
 import type { RawModEntry, ReleaseInfo, VersionTarget } from "../types";
 import { CopyButton } from "./copy-button";
 import { HotbarRadio } from "./hotbar-radio";
+import { APP_NAMES, latestVersionOf } from "./install-actions";
 import { RelativeDate } from "./local-date";
 import { RouterLink } from "./router-link";
 import { Sprite } from "./sprite";
@@ -28,22 +31,29 @@ interface VersionsTableProps {
   releases: Record<string, ReleaseInfo>;
   /** What each version runs on, per variant. */
   targets: Record<string, Record<string, VersionTarget>>;
+  /** Makes another variant or version the page's selection. */
+  onSelect: (selection: ModSelection) => void;
 }
 
 /**
- * Every version of a variant, newest first: channel, version (opens its
- * README), the sides and platforms its entries run on, the LeviLamina range
- * they need, when it was published, and its install command (when it has a
- * server entry: lip installs into server folders) and release.
+ * Every version of the selected variant, newest first: channel, version (its
+ * permalink, with the variant's latest marked), the sides and platforms its
+ * entries run on, the LeviLamina range they need, when it was published, and
+ * what to do with it right there: make it the page's selection, install it
+ * with the app for its sides (the deep links), copy its `lip install` command
+ * (a version with a server entry) or open its release. The selected version's
+ * row is highlighted; the variant switch changes the page's selection too.
  */
-export function VersionsTable({ modId, mod, repository, selection, releases, targets }: VersionsTableProps) {
+export function VersionsTable({ modId, mod, repository, selection, releases, targets, onSelect }: VersionsTableProps) {
   const { t, locale } = useI18n();
   const variants = getSortedVariants(mod);
-  const [variant, setVariant] = useState(selection.variant);
+  const variant = selection.variant;
   const all = getVersionsForVariant(mod, variant).slice().reverse();
+  const latest = latestVersionOf(mod, variant);
   const onlyPre = all.length > 0 && all.every(isPrerelease);
   const [showPre, setShowPre] = useState(true);
-  const [page, setPage] = useState(1);
+  // opens at the page that has the selected version
+  const [page, setPage] = useState(() => Math.floor(Math.max(0, all.indexOf(selection.version)) / PER_PAGE) + 1);
   const versions = showPre || onlyPre ? all : all.filter((v) => !isPrerelease(v));
   const pageCount = Math.max(1, Math.ceil(versions.length / PER_PAGE));
   const current = Math.min(page, pageCount);
@@ -62,7 +72,8 @@ export function VersionsTable({ modId, mod, repository, selection, releases, tar
             options={variants.map((v) => ({ value: v, label: label(v) }))}
             value={variant}
             onChange={(v) => {
-              setVariant(v);
+              const own = getVersionsForVariant(mod, v);
+              onSelect({ variant: v, version: own.includes(selection.version) ? selection.version : (latestVersionOf(mod, v) ?? "") });
               setPage(1);
             }}
           />
@@ -115,9 +126,10 @@ export function VersionsTable({ modId, mod, repository, selection, releases, tar
           <tbody>
             {shown.map((version) => {
               const pre = releases[version]?.prerelease ?? isPrerelease(version);
-              const isCurrent = version === selection.version && variant === selection.variant;
+              const isCurrent = version === selection.version;
               const target = targetsOf[version];
               const range = target?.leviLamina;
+              const apps = installAppsFor(target?.side);
               return (
                 <tr key={version} aria-current={isCurrent ? "true" : undefined}>
                   <td className="mods-vt-channel">
@@ -128,6 +140,7 @@ export function VersionsTable({ modId, mod, repository, selection, releases, tar
                     <RouterLink href={buildModUrl(modId, mod, { variant, version })} aria-current={isCurrent ? "page" : undefined}>
                       {version}
                     </RouterLink>
+                    {version === latest ? <span className="kit-badge kit-badge-grass mods-vt-latest">{t.latest}</span> : null}
                     {isCurrent ? <span className="kit-sr-only"> ({t.current})</span> : null}
                   </td>
                   <td className="mods-vt-sides">
@@ -153,19 +166,45 @@ export function VersionsTable({ modId, mod, repository, selection, releases, tar
                     <td className="mods-vt-date">{releases[version] ? <RelativeDate value={releases[version]!.date} /> : null}</td>
                   ) : null}
                   <td className="mods-vt-actions">
-                    {/* lip installs into server folders; a client-only version is installed through LeviLauncher */}
-                    {!target || target.side.includes("server") ? (
-                      <CopyButton text={installCommand(modId, variant, version)} label={t.copyInstall(version)} />
-                    ) : null}
+                    {/* lip installs into server folders, LeviLauncher into clients */}
+                    {apps.map((app) => (
+                      <a
+                        key={app}
+                        className="mc-btn mc-btn-sm mods-vt-install"
+                        data-app={app}
+                        href={deepLink(app, modId, variant, version)}
+                        aria-label={t.installVersionWith(version, APP_NAMES[app])}
+                        title={t.installWith(APP_NAMES[app])}
+                      >
+                        <PixelIcon name="pickaxe" />
+                        {APP_NAMES[app]}
+                      </a>
+                    ))}
+                    {apps.includes("lip") ? <CopyButton text={installCommand(modId, variant, version)} label={t.copyInstall(version)} /> : null}
                     <a
-                      className="mc-icon-btn"
+                      className="mc-icon-btn kit-tooltip-host"
+                      data-placement="top"
                       href={getReleaseUrl(repository, releases[version])}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={t.releaseOnGitHub(version)}
                     >
                       <PixelIcon name="external" />
+                      <span className="mc-tooltip kit-tooltip" aria-hidden="true">
+                        <span className="mc-tooltip-title">{t.downloadFromGitHub}</span>
+                      </span>
                     </a>
+                    {/* makes it the page's selection (the header, the install panel, the URL), staying here */}
+                    {isCurrent ? (
+                      <span className="mods-vt-selected">
+                        <PixelIcon name="check" />
+                        {t.selected}
+                      </span>
+                    ) : (
+                      <button type="button" className="mc-btn mc-btn-sm mods-vt-select" aria-label={t.selectVersion(version)} onClick={() => onSelect({ variant, version })}>
+                        {t.select}
+                      </button>
+                    )}
                   </td>
                 </tr>
               );

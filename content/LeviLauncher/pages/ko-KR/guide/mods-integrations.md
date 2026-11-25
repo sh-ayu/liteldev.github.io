@@ -61,7 +61,7 @@ lip v0.40부터 `lip.toml`과 `.lip/state.json`의 각 엔트리는 실행 위�
 
 ### LeviMC Mods 페이지
 
-**LeviMC Mods** 페이지에는 [levimc.org/mods](https://levimc.org/mods/)의 모드 중 Windows x64 클라이언트용 빌드(`side = "client"`, `platform = "win-x64"`인 엔트리)가 있는 모드가 표시됩니다. 이름, ID, 작성자, 태그, 설명으로 검색하고, 관련도, 스타, 업데이트됨, 최신순으로 정렬하며, 게임 버전, LeviLamina 버전, 태그(라이브러리 / API나 경제 같은 권장 태그가 먼저 표시되고, 태그를 제외할 수도 있습니다), 라이선스(허용적 같은 분류 또는 SPDX ID), 의존성, 작성자(모드 페이지의 **…의 다른 모드**)로 필터링할 수 있습니다. 모드를 설치하면 `client` 변형을, 없으면 기본 변형을, 그것도 없으면 클라이언트용 빌드가 있는 첫 번째 다른 변형을 선택합니다. 모드 페이지에서 이러한 변형 중 다른 것을 고를 수도 있습니다.
+**LeviMC Mods** 페이지에는 [levimc.org/mods](https://levimc.org/mods/)의 모드 중 Windows x64 클라이언트용 빌드(`side = "client"`, `platform = "win-x64"`인 엔트리)가 있는 모드가 표시됩니다. 이름, ID, 작성자, 태그, 설명으로 검색하고, 관련도, 스타, 업데이트됨, 최신순으로 정렬하며, 게임 버전, LeviLamina 버전, 태그(라이브러리 / API나 경제 같은 권장 태그가 먼저 표시되고, 태그를 제외할 수도 있습니다), 라이선스(허용적 같은 분류 또는 SPDX ID), 의존성, 작성자(모드 페이지의 **…의 다른 모드**)로 필터링할 수 있습니다. 모드를 설치하면 `client` 변형을, 없으면 기본 변형을, 그것도 없으면 클라이언트용 빌드가 있는 첫 번째 다른 변형을 선택합니다. 모드 페이지에서 이러한 변형 중 다른 것을 고를 수도 있습니다. levimc.org의 모드 페이지에 있는 **Install with LeviLauncher** 버튼은 `levilauncher://install/<mod id>?version=<version>` 링크이며, LeviLauncher에 해당 모드의 그 버전을 설치하도록 요청합니다.
 
 ## 네이티브 모드 <Badge platform="android" />
 

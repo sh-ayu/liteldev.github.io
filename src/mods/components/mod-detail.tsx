@@ -1,5 +1,5 @@
 import { BASE } from "../base-path";
-import { useState, type MouseEvent } from "react";
+import { useCallback, useState, type MouseEvent } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { BrandIcon, PixelIcon } from "../kit-ui";
 import { featuredTagsOf } from "../data/featured-tags";
@@ -14,7 +14,7 @@ import { useRenames } from "../repository-renames";
 import type { EntryJson, LipInfo } from "../types";
 import { DependenciesList } from "./dependencies-list";
 import { HotbarRadio } from "./hotbar-radio";
-import { InstallDialog } from "./install-dialog";
+import { InstallButtons } from "./install-actions";
 import { LazyMarkdown } from "./lazy-markdown";
 import { RelativeDate } from "./local-date";
 import { ProjectIcon } from "./project-icon";
@@ -64,15 +64,24 @@ interface ModDetailProps {
 }
 
 export function ModDetail({ data, selection, tab: requestedTab, info: manifestInfo, variants, readmes }: ModDetailProps) {
-  const { t, locale } = useI18n();
+  const { t, locale, href } = useI18n();
+  const navigate = useNavigate();
   // the README in the interface language, unless the visitor picked another (kept across versions that have it)
   const [readmeFile, setReadmeFile] = useState<string>();
   const readme = readmes && (readmes.find((r) => r.file === readmeFile) ?? pickReadme(readmes, locale));
   const { id: modId, mod, entry, repository, releases } = data;
   const renames = useRenames();
-  const [installing, setInstalling] = useState(false);
   const info = manifestInfo || mod.info;
   const repoUrls = getRepoBaseUrls(repository, selection.version);
+  // the selection's sides, which say which apps install it (both, for a version the build did not read)
+  const side = data.targets[selection.variant]?.[selection.version]?.side;
+  /** The page has one selection, in its URL: the install panel and the Versions tab change it here. */
+  const select = useCallback(
+    (next: ModSelection) => {
+      void navigate(href(buildModUrl(modId, mod, next, requestedTab)), { preventScrollReset: true });
+    },
+    [navigate, href, modId, mod, requestedTab],
+  );
   const depCount = variants ? Object.keys(variantDeps(variants[selection.variant])).length : 0;
   // a mod without a gallery has no Gallery tab (an old ?tab=gallery link shows the Description)
   const showcase = data.showcase ?? [];
@@ -140,18 +149,26 @@ export function ModDetail({ data, selection, tab: requestedTab, info: manifestIn
         </div>
         <div className="mods-project-actions">
           <div className="mods-project-buttons">
-            <button type="button" className="mc-btn mc-btn-primary mc-btn-lg mods-install-btn" onClick={() => setInstalling(true)} aria-haspopup="dialog">
-              <PixelIcon name="pickaxe" />
-              {t.install}
-            </button>
+            <InstallButtons modId={modId} selection={selection} side={side} layout="header" />
             <a className="mc-btn mc-btn-lg mods-github-btn" href={repository} target="_blank" rel="noopener noreferrer" aria-label={t.viewOnGitHub} title={t.viewOnGitHub}>
               <BrandIcon name="github" size={18} />
             </a>
           </div>
-          <span className="kit-badge kit-badge-grass mods-project-version" title={t.version}>
+          {/* what the buttons install; it is changed in the install panel, one place for the whole page */}
+          <button
+            type="button"
+            className="kit-badge kit-badge-grass mods-project-version"
+            aria-label={t.changeVersion(selection.variant ? `${selection.variant} · ${selection.version}` : selection.version)}
+            onClick={() => {
+              const picker = document.getElementById("mods-install-title")?.closest("section");
+              picker?.scrollIntoView({ block: "start", behavior: "smooth" });
+              picker?.querySelector<HTMLElement>("select, [role=radio][aria-checked=true]")?.focus({ preventScroll: true });
+            }}
+          >
             {selection.variant ? `${selection.variant} · ` : ""}
             {selection.version}
-          </span>
+            <PixelIcon name="chevronDown" />
+          </button>
         </div>
       </header>
 
@@ -223,6 +240,7 @@ export function ModDetail({ data, selection, tab: requestedTab, info: manifestIn
                 selection={selection}
                 releases={releases}
                 targets={data.targets}
+                onSelect={select}
               />
             </section>
           ) : (
@@ -244,6 +262,8 @@ export function ModDetail({ data, selection, tab: requestedTab, info: manifestIn
             mod={mod}
             repository={repository}
             selection={selection}
+            tab={tab}
+            onSelect={select}
             targets={data.targets}
             lipToml={data.lipToml}
             releases={releases}
@@ -251,18 +271,6 @@ export function ModDetail({ data, selection, tab: requestedTab, info: manifestIn
           />
         </aside>
       </div>
-
-      <InstallDialog
-        open={installing}
-        onClose={() => setInstalling(false)}
-        name={info.name || entry.name}
-        modId={modId}
-        mod={mod}
-        repository={repository}
-        selection={selection}
-        releases={releases}
-        targets={data.targets}
-      />
     </div>
   );
 }
