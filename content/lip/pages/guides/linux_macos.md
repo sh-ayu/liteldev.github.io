@@ -71,7 +71,8 @@ The first time lip needs to run a Windows program, it prepares your system. That
 | What | Where it goes | Shared |
 | --- | --- | --- |
 | **Wine**: a build for your system, from [Kron4ek/Wine-Builds](https://github.com/Kron4ek/Wine-Builds) on Linux and from [Gcenx/macOS_Wine_builds](https://github.com/Gcenx/macOS_Wine_builds) on macOS | `wine/` in the data directory of lip: `$XDG_DATA_HOME/lip`, by default `~/.local/share/lip`, on Linux and on macOS | By every workspace. Downloaded once. |
-| **The Microsoft Visual C++ Redistributable**, which the server needs | Installed into the Wine prefix of the workspace | No. Once per workspace. |
+
+The server also needs the Microsoft Visual C++ runtime. Wine has one of its own, so lip installs nothing more.
 
 lip tells you when it installs Wine:
 
@@ -79,9 +80,9 @@ lip tells you when it installs Wine:
 lip runs the server with Wine <version>, which it installs once for every workspace, into <directory>.
 ```
 
-Both downloads are checked. Each version of lip knows the exact files it expects, by their SHA-256. A download that differs is deleted and not used, and the command fails before it changes the workspace. The downloaded archive and installer are deleted once they are used.
+The download is checked. Each version of lip knows the exact file it expects, by its SHA-256. A download that differs is deleted and not used, and the command fails before it changes the workspace. The downloaded archive is deleted once it is extracted.
 
-Neither step needs root.
+This needs no root.
 
 To free the space, delete the data directory while no lip runs. Nothing is lost: lip installs Wine again when it next needs it.
 
@@ -89,7 +90,7 @@ To free the space, delete the data directory while no lip runs. Nothing is lost:
 
 Wine keeps its "Windows", a registry and a `C:` drive, in a folder called the prefix. lip gives each workspace its own: `.lip/wine` in the server folder. Wine creates it the first time it runs there, which makes that first run slower.
 
-The prefix moves with the server folder. Deleting `.lip/wine` while the server is stopped is safe: Wine makes it again, and lip installs the Visual C++ Redistributable into it again.
+The prefix moves with the server folder. Deleting `.lip/wine` while the server is stopped is safe: Wine makes it again.
 
 To use another prefix, set `WINEPREFIX` yourself, for every lip command of that workspace:
 
@@ -159,12 +160,12 @@ lip does its work in a background process, the daemon. That does not change whic
 
 - **No Linux on arm64.** Nothing that was tried runs a LeviLamina server there reliably: [Hangover](https://github.com/AndreRH/hangover) runs the plain server but not the one LeviLamina has changed; Wine for x64 under [box64](https://github.com/ptitSeb/box64) loses the exit codes of Windows programs; Wine for x64 under [FEX](https://fex-emu.com/) started a LeviLamina server in only some attempts.
 - **No Wine for other systems.** On a system without a Wine of lip, anything that needs a Windows program fails with `lip runs the server with Wine on systems other than Windows, but has no Wine for <system>. Run the server on Windows, on Linux on x64 or on macOS.`
-- **The first start is slow.** Wine is downloaded and unpacked, the prefix is created, and the Visual C++ Redistributable is installed. Later starts skip all three.
+- **The first start is slow.** Wine is downloaded and unpacked, and the prefix is created. Later starts skip both.
 - **File names ignore case.** In a workspace of the Windows server, lip treats `Plugins/a.dll` and `plugins/a.dll` as the same file, as the programs under Wine do. If the folder holds two names that differ only in case where lip needs one, the command fails. Rename one of them.
 - **Quotes in the commands of packages.** Wine passes a `"` to the Windows command line as `\"`. A package whose install commands contain `"` may not work through Wine. Report it to the author of the package.
 - **Exit codes are those of Wine.** `lip run` exits with the code that `wine` exits with, or 128 plus the number of the signal that ended it.
-- **A proxy that changes downloads breaks the check.** When the SHA-256 of Wine or of the Visual C++ Redistributable is not the expected one, lip refuses the file. Try again later or on another network.
-- **A broken prefix.** When the Visual C++ Redistributable fails to install in a prefix, lip names the prefix. Delete that folder and run lip again. When `wine` itself cannot be run, delete `wine/` in the data directory so that lip installs it again.
+- **A proxy that changes downloads breaks the check.** When the SHA-256 of Wine is not the expected one, lip refuses the file. Try again later or on another network.
+- **A broken Wine.** When `wine` itself cannot be run, delete `wine/` in the data directory so that lip installs it again.
 - **Folders of older versions of lip.** A workspace that an earlier lip made for the platform `linux-x64` still works when it holds nothing but the server: lip reads it as the Linux server. With other packages in it, lip stops and says that it installs packages for `win-x64` only. Set up a new folder.
 
 The reasons behind these are in [Internals](../concepts/internals.md#system-dependencies).

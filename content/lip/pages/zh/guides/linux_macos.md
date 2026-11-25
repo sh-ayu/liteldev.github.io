@@ -71,7 +71,8 @@ lip 第一次需要运行 Windows 程序时，会先准备好系统。这发生�
 | 内容 | 放在哪里 | 是否共用 |
 | --- | --- | --- |
 | **Wine**：适合你系统的一个构建，Linux 上来自 [Kron4ek/Wine-Builds](https://github.com/Kron4ek/Wine-Builds)，macOS 上来自 [Gcenx/macOS_Wine_builds](https://github.com/Gcenx/macOS_Wine_builds) | lip 数据目录下的 `wine/`：Linux 和 macOS 上都是 `$XDG_DATA_HOME/lip`，默认 `~/.local/share/lip` | 所有工作区共用。只下载一次。 |
-| **Microsoft Visual C++ Redistributable**，服务器需要它 | 安装到工作区的 Wine 前缀里 | 不共用。每个工作区一次。 |
+
+服务器还需要 Microsoft Visual C++ 运行库。Wine 自带一份，所以 lip 不再额外安装。
 
 安装 Wine 时，lip 会告诉你：
 
@@ -79,9 +80,9 @@ lip 第一次需要运行 Windows 程序时，会先准备好系统。这发生�
 lip runs the server with Wine <version>, which it installs once for every workspace, into <directory>.
 ```
 
-这两样下载都会经过校验。每个版本的 lip 都通过 SHA-256 确切地知道它要的是哪个文件。不一致的下载会被删除、不会被使用，命令在更改工作区之前就失败。下载下来的压缩包和安装程序用完即删。
+下载会经过校验。每个版本的 lip 都通过 SHA-256 确切地知道它要的是哪个文件。不一致的下载会被删除、不会被使用，命令在更改工作区之前就失败。下载下来的压缩包解压后即删。
 
-这两步都不需要 root 权限。
+这一步不需要 root 权限。
 
 想腾出空间，可以在没有 lip 运行时删除数据目录。不会丢失任何东西：lip 下次需要时会重新安装 Wine。
 
@@ -89,7 +90,7 @@ lip runs the server with Wine <version>, which it installs once for every worksp
 
 Wine 把它的“Windows”（注册表和 `C:` 盘）放在一个叫作前缀的文件夹里。lip 给每个工作区单独一个：服务器文件夹里的 `.lip/wine`。Wine 第一次在那里运行时会创建它，所以第一次运行会慢一些。
 
-前缀会随服务器文件夹一起移动。在服务器停止时删除 `.lip/wine` 是安全的：Wine 会重新创建它，lip 会重新把 Visual C++ Redistributable 装进去。
+前缀会随服务器文件夹一起移动。在服务器停止时删除 `.lip/wine` 是安全的：Wine 会重新创建它。
 
 想使用别的前缀，请自己设置 `WINEPREFIX`，并且对该工作区的每条 lip 命令都这样设置：
 
@@ -159,12 +160,12 @@ lip 的工作是在后台进程（守护进程）里完成的。这不影响哪�
 
 - **不支持 arm64 的 Linux。** 试过的办法都不能在那里可靠地运行 LeviLamina 服务器：[Hangover](https://github.com/AndreRH/hangover) 能运行原版服务器，但运行不了被 LeviLamina 修改过的；[box64](https://github.com/ptitSeb/box64) 下的 x64 Wine 会丢失 Windows 程序的退出码；[FEX](https://fex-emu.com/) 下的 x64 Wine 只在部分尝试中启动了 LeviLamina 服务器。
 - **其他系统没有 Wine。** 在没有 lip 的 Wine 的系统上，凡是需要 Windows 程序的操作都会失败，并提示 `lip runs the server with Wine on systems other than Windows, but has no Wine for <system>. Run the server on Windows, on Linux on x64 or on macOS.`
-- **第一次启动很慢。** 要下载并解压 Wine、创建前缀、安装 Visual C++ Redistributable。之后的启动会跳过这三步。
+- **第一次启动很慢。** 要下载并解压 Wine、创建前缀。之后的启动会跳过这两步。
 - **文件名不区分大小写。** 在 Windows 服务器的工作区里，lip 把 `Plugins/a.dll` 和 `plugins/a.dll` 当作同一个文件，和 Wine 下的程序一样。如果文件夹里有两个只差大小写的名字，而 lip 需要的是其中唯一的一个，命令会失败。请给其中一个改名。
 - **包命令里的引号。** Wine 会把 `"` 以 `\"` 的形式传给 Windows 命令行。安装命令里含有 `"` 的包，通过 Wine 可能无法正常工作。请向包的作者反馈。
 - **退出码是 Wine 的。** `lip run` 以 `wine` 的退出码退出，或者以 128 加上结束它的信号编号退出。
-- **会改动下载内容的代理会让校验失败。** Wine 或 Visual C++ Redistributable 的 SHA-256 与预期不符时，lip 会拒绝这个文件。请稍后再试，或换一个网络。
-- **损坏的前缀。** Visual C++ Redistributable 在某个前缀里安装失败时，lip 会指出这个前缀。删除那个文件夹，再运行 lip。如果连 `wine` 本身都运行不了，请删除数据目录里的 `wine/`，让 lip 重新安装。
+- **会改动下载内容的代理会让校验失败。** Wine 的 SHA-256 与预期不符时，lip 会拒绝这个文件。请稍后再试，或换一个网络。
+- **损坏的 Wine。** 如果连 `wine` 本身都运行不了，请删除数据目录里的 `wine/`，让 lip 重新安装。
 - **旧版 lip 的文件夹。** 早期 lip 为 `linux-x64` 平台创建的工作区，如果里面只有服务器，仍然可以使用：lip 会把它读作 Linux 服务器。如果里面还有别的包，lip 会停下并说明它只为 `win-x64` 安装包。请新建一个文件夹重新安装。
 
 这些限制背后的原因见[内部机制](../concepts/internals.md#系统依赖)。

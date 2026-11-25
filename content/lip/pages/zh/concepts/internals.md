@@ -119,7 +119,7 @@ lip 被杀掉时，日志会留下。下一次操作，或者下一次 `lip run`
 工作区里的程序，也就是包的钩子命令和 Windows 服务器，需要系统提供两样东西。两样都由 lip 自己安装。
 
 - **Wine**，在 Linux 和 macOS 上。每个版本的 lip 都指定了一个用于 x64 Linux 的 Wine 构建（来自 [Kron4ek/Wine-Builds](https://github.com/Kron4ek/Wine-Builds)）和一个用于 macOS 的构建（来自 [Gcenx/macOS_Wine_builds](https://github.com/Gcenx/macOS_Wine_builds)），后者在 arm64 上由 Rosetta 2 运行。lip 只下载一次，解压到数据目录的 `wine/` 里，所有工作区共用。lip 从不运行别的 `wine`。
-- **Microsoft Visual C++ 运行库**（x64），即 Visual C++ Redistributable。注册表的 `HKLM\SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x64` 下有值 `Installed` = 1 时，视为已为系统安装。在 Windows 上，它的文件，也就是 Microsoft 允许应用程序随身携带的运行库 DLL（`msvcp140*.dll`、`vcruntime140*.dll`、`concrt140.dll` 和 `vccorlib140.dll`），已完整解压到数据目录的 `vc-runtime\14.44.35211` 里时，也视为已为用户安装。两种方式都没有安装时，Windows 上的 lip 从 Microsoft 下载 `Microsoft.VC.14.44.17.14.CRT.Redist.X64.base.vsix`，以运行 lip 的用户身份把这些 DLL 解压到那个目录：不需要管理员，也不会弹出用户帐户控制提示。运行库只为用户安装、没有为系统安装时，lip 把那个目录放在服务器和钩子命令的 `PATH` 最前面。在其他系统上，lip 下载 `vc_redist.x64.exe`，通过 Wine、在工作区的 Wine 前缀里以 `/install /quiet /norestart` 运行它，前缀的注册表用 `wine reg query` 读取。
+- **Microsoft Visual C++ 运行库**（x64），即 Visual C++ Redistributable，在 Windows 上。注册表的 `HKLM\SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x64` 下有值 `Installed` = 1 时，视为已为系统安装。在 Windows 上，它的文件，也就是 Microsoft 允许应用程序随身携带的运行库 DLL（`msvcp140*.dll`、`vcruntime140*.dll`、`concrt140.dll` 和 `vccorlib140.dll`），已完整解压到数据目录的 `vc-runtime\14.44.35211` 里时，也视为已为用户安装。两种方式都没有安装时，Windows 上的 lip 从 Microsoft 下载 `Microsoft.VC.14.44.17.14.CRT.Redist.X64.base.vsix`，以运行 lip 的用户身份把这些 DLL 解压到那个目录：不需要管理员，也不会弹出用户帐户控制提示。运行库只为用户安装、没有为系统安装时，lip 把那个目录放在服务器和钩子命令的 `PATH` 最前面。在 Linux 和 macOS 上，lip 不安装它：Wine 自带 Visual C++ 运行库，足以运行服务器。
 
 lip 这样保证安全：
 
@@ -128,7 +128,7 @@ lip 这样保证安全：
 - **一次一个。** 同时进行安装的多个 lip 进程，通过数据目录里的 `lock` 文件互相等待。
 - **在更改工作区之前。** lip 在会运行钩子命令的操作开始更改工作区之前、在 `lip setup` 安装 Windows 构建期间，以及在 `lip run` 启动 Windows 服务器之前准备系统。在这一步失败，工作区保持原样。
 
-Linux 服务器两样都不需要。一切都已安装时，准备系统只需要查一次注册表，在 Windows 上再看一下运行库的目录。
+Linux 服务器两样都不需要。一切都已安装时，准备系统只需要看一下 Wine 的目录；在 Windows 上则是查一次注册表，再看一下运行库的目录。
 
 通过 Wine 时，lip 以 `wine cmd /s /c <command>` 运行钩子命令，以 `wine` 加服务器文件的绝对路径运行服务器，并把 `WINEPREFIX` 设为工作区里的 `.lip/wine`、把 `WINEDEBUG` 设为 `-all`、把 `WINEDLLOVERRIDES` 设为 `mscoree,mshtml=;winemac.drv,winex11.drv=d`，除非你自己设置了它们。见 [Linux 与 macOS](../guides/linux_macos.md)。
 

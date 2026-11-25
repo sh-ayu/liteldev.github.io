@@ -34,7 +34,7 @@ On Windows `.lip` has the hidden attribute.
 | `server.lock` | The file of the **server lock**. The process that runs the server holds it, so that a workspace has at most one running server. | Harmless while no server runs. Never delete, rename or replace it while one does. |
 | `config.toml` | The [workspace configuration](configuration.md#workspace-configuration). | `restart` goes back to `never`. |
 | `logs/` | The [failure reports](#failure-reports). | You lose the reports. Safe at any time. |
-| `wine/` | On Linux and macOS: the Wine prefix that the Windows server and the hook commands run in. | Wine creates it again, and lip installs the Visual C++ runtime into it again. Stop the server first. |
+| `wine/` | On Linux and macOS: the Wine prefix that the Windows server and the hook commands run in. | Wine creates it again. Stop the server first. |
 
 lip may keep other entries in `.lip`. Do not rely on them.
 
