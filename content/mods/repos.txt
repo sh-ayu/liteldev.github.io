@@ -70,7 +70,6 @@ IceBlcokMC/PLand
 IceBlcokMC/PLand-LegacyRemoteCallApi
 Ieckseyr/HologramLib
 jasmijasmi/VV-toggle
-Kashifro/LL-ModMenu
 killcerr/better-ban
 killcerr/MinecartSpeedPlus
 killcerr/rocksdb-storage
@@ -157,14 +156,11 @@ ShrBox/ResourcePackEncryption
 Shulker-Studio/STweaks
 SkyEye-FAST/offer-flowers-faster-bedrock
 SnakyWarrior/SplitScreenMod
-spygamingog/Animated-Mojang-Android
 sunxiaochuan2231/EnchantForge
 superx101/CALL
 SurvivalApparatusCommunication/BedrockBugFixes
 TelluriumDev/BanExplosion
 theaddonn/Do-A-Barrel-Roll-Bedrock
-TheNevinPie/PocketOnPC
-TheNevinPie/Zoomlet
 Timiya-re/LL3_Mine2
 troveminecraft/ShanHai
 Unknown-Bloom/LOICollectionA
