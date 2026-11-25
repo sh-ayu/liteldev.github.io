@@ -13,7 +13,7 @@
     },
     "scale": 2,
     "frame": "windows",
-    "out": "../../../content/play/images",
+    "out": "../../../pages/play/images",
     "notes": [
       {
         "kind": "box",
@@ -113,7 +113,7 @@
     },
     "scale": 2,
     "frame": "windows",
-    "out": "../../../content/play/images",
+    "out": "../../../pages/play/images",
     "notes": [
       {
         "kind": "box",
@@ -236,7 +236,7 @@
     },
     "scale": 2,
     "frame": "windows",
-    "out": "../../../content/play/images",
+    "out": "../../../pages/play/images",
     "notes": [
       {
         "kind": "box",
@@ -336,7 +336,7 @@
     },
     "scale": 2,
     "frame": "windows",
-    "out": "../../../content/play/images",
+    "out": "../../../pages/play/images",
     "notes": [
       {
         "kind": "arrow",
@@ -383,7 +383,7 @@
     },
     "scale": 2,
     "frame": "windows",
-    "out": "../../../content/play/images",
+    "out": "../../../pages/play/images",
     "notes": [
       {
         "kind": "callout",
@@ -566,7 +566,7 @@
     },
     "scale": 2,
     "frame": "windows",
-    "out": "../../../content/play/images",
+    "out": "../../../pages/play/images",
     "notes": [
       {
         "kind": "box",
@@ -689,7 +689,7 @@
     },
     "scale": 2,
     "frame": "windows",
-    "out": "../../../content/play/images",
+    "out": "../../../pages/play/images",
     "notes": [
       {
         "kind": "arrow",
@@ -736,7 +736,7 @@
     },
     "scale": 2,
     "frame": "windows",
-    "out": "../../../content/play/images",
+    "out": "../../../pages/play/images",
     "notes": [
       {
         "kind": "box",
@@ -806,7 +806,7 @@
     },
     "scale": 2,
     "frame": "windows",
-    "out": "../../../content/play/images",
+    "out": "../../../pages/play/images",
     "notes": [
       {
         "kind": "callout",
@@ -906,7 +906,7 @@
     },
     "scale": 2,
     "frame": "windows",
-    "out": "../../../content/play/images",
+    "out": "../../../pages/play/images",
     "notes": [
       {
         "kind": "box",
@@ -976,7 +976,7 @@
     },
     "scale": 2,
     "frame": "windows",
-    "out": "../../../content/play/images",
+    "out": "../../../pages/play/images",
     "notes": [
       {
         "kind": "box",
@@ -1076,7 +1076,7 @@
     },
     "scale": 2,
     "frame": "windows",
-    "out": "../../../content/play/images",
+    "out": "../../../pages/play/images",
     "notes": [
       {
         "kind": "box",

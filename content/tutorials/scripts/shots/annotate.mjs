@@ -3,8 +3,8 @@
 //
 // A picture is one SVG file per language: a capture of the app (PNG, JPEG or WebP, taken at a device pixel ratio of
 // usually 2) embedded as a data URL, in a frame (a Windows window, an Android phone, or none), with annotations drawn
-// above it as vectors in the visual language of lip's screenshots (lip: docs/SCREENSHOTS.md,
-// tests/Lip.Cli.Tests/Tui/Screenshots/SvgRenderer.cs): boxes, ellipses, a dimmed focus, arrows from labels in the
+// above it as vectors in the visual language of lip's screenshots (lip: tests/Lip.Cli.Tests/Tui/Screenshots/README.md
+// and SvgRenderer.cs there): boxes, ellipses, a dimmed focus, arrows from labels in the
 // margins, numbered callouts with a legend, and keys to press. The same spec and capture give the same file, byte for
 // byte.
 //
@@ -149,6 +149,7 @@ function softBreakBetween(first, second) {
   return SOFT_BREAKS.includes(first) && !SOFT_BREAKS.includes(second);
 }
 
+/** @returns {Generator<[string, boolean]>} */
 function* units(paragraph, width) {
   let first = true;
   for (const word of paragraph.split(' ')) {
@@ -173,7 +174,7 @@ function* units(paragraph, width) {
 /**
  * The text as lines of at most `width` columns (lip's TextWidth.Wrap): broken at spaces, and before or after a wide
  * character as Chinese text is, but not before a closing mark or after an opening one; a word longer than a line
- * after the marks between its parts (/ \ . - _ # @), and where the line ends otherwise.
+ * after the marks between its parts (/ \ . - _ # and the at sign), and where the line ends otherwise.
  */
 export function wrap(text, width) {
   const lines = [];
@@ -375,13 +376,22 @@ function loadImage(source, options, what) {
   try {
     return readFileSync(file);
   } catch (error) {
-    throw new Error(`${what}: cannot read ${file} (${error.code ?? error.message}).`);
+    throw new Error(`${what}: cannot read ${file} (${error.code ?? error.message}).`, { cause: error });
   }
 }
 
 class Box {
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {number} w
+   * @param {number} h
+   */
   constructor(x, y, w, h) {
-    Object.assign(this, { x, y, w, h });
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
   }
   get right() {
     return this.x + this.w;
@@ -414,6 +424,7 @@ const outline = (b) => `M${fmt(b.x)} ${fmt(b.y)}H${fmt(b.right)}V${fmt(b.bottom)
 
 /** The caption and the badges of keys as rows that fit a panel, each with its offset from the left and width. */
 function keyRows(caption, keys, panelWidth) {
+  /** @type {{ text: string, caption: boolean, x: number, width: number }[][]} */
   const rows = [[]];
   let x = 14;
   if (caption) {

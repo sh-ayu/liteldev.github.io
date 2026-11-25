@@ -58,7 +58,7 @@ export function chromeLocaleFor(contentLang: string, preference: string | null):
 
 /**
  * {@link chromeLocaleFor} for this visitor: the content language until hydrated, then follows the stored preference.
- * The pre-paint script (src/prepaint.ts) hides the bar and footer of a visitor whose chrome will speak another
+ * The pre-paint script (src/main/prepaint.ts) hides the bar and footer of a visitor whose chrome will speak another
  * language than the page (html.kit-chrome-pending); they are shown again once it does, before the next paint.
  */
 function useChromeLocale(contentLang: string): string {
@@ -91,7 +91,7 @@ function useChromeLocale(contentLang: string): string {
 }
 
 /**
- * The page's language comes from its URL (src/routes.ts `localeOfPath`), and every page is prerendered in it.
+ * The page's language comes from its URL (src/main/routes.ts `localeOfPath`), and every page is prerendered in it.
  * `initial`: the language of the prerendered HTML being hydrated (the client passes <html lang>), used for the first
  * render only — 404.html is English for every unknown URL, also one under /zh-Hans/, and switches right after
  * hydrating (a layout effect: before the browser paints).

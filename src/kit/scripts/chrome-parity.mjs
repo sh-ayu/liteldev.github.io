@@ -5,8 +5,8 @@
 // root-relative, router attributes, the bar's layout variants (sticky; the phone menu, which docs sites put in
 // their drawer) — and compares them with the first page.
 //
-//   node kit/scripts/chrome-parity.mjs [url …]        (default: one page of every LeviMC site)
-//   node kit/scripts/chrome-parity.mjs http://127.0.0.1:4173/=https://levimc.org …   (a local preview, compared
+//   node src/kit/scripts/chrome-parity.mjs [url …]        (default: one page of every LeviMC site)
+//   node src/kit/scripts/chrome-parity.mjs http://127.0.0.1:4173/=https://levimc.org …   (a local preview, compared
 //                                                     as the origin after "=")
 //
 // Exit code 1 when a page differs (a unified diff of the first difference is printed) or has no chrome.

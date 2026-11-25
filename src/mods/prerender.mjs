@@ -45,20 +45,20 @@ for (const file of files) {
   if (!ssr.parsePageData(html)) throw new Error(`${file}: the page data is missing`);
 }
 
-// The mods' galleries, as the pages above loaded them (see src/server/showcase.ts).
+// The mods' galleries, as the pages above loaded them (see src/mods/server/showcase.ts).
 for (const [path, { body }] of ssr.showcaseFiles()) {
   mkdirSync(dirname(`dist/${path}`), { recursive: true });
   writeFileSync(`dist/${path}`, body);
 }
 
-// The mods' icons, scaled down to the sizes the pages show them at (see src/server/icons.ts).
+// The mods' icons, scaled down to the sizes the pages show them at (see src/mods/server/icons.ts).
 for (const [path, body] of ssr.iconFiles()) {
   mkdirSync(dirname(`dist/${path}`), { recursive: true });
   writeFileSync(`dist/${path}`, body);
 }
 
 // The JSON: /api/v4/mods/index.json and /api/v4/mods/<id>/index.json, and the
-// JSON from before version 4 next to the pages (see src/server/api.ts).
+// JSON from before version 4 next to the pages (see src/mods/server/api.ts).
 const json = await ssr.jsonFiles();
 rmSync("dist-api", { recursive: true, force: true });
 for (const [sitePath, body] of json) {
@@ -72,7 +72,7 @@ for (const [sitePath, body] of json) {
   writeFileSync(file, body);
 }
 
-// The home page's painted strip, one file per theme (see src/server/hero.ts).
+// The home page's painted strip, one file per theme (see src/mods/server/hero.ts).
 for (const file of ssr.HERO_FILES) writeFileSync(`dist/${file}`, ssr.heroSvg(file));
 
 // Crawlers see only the first page of the listing (the query string never

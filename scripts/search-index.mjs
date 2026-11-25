@@ -9,7 +9,7 @@
 // Runs in the deploy after every build is merged into <dist> (`docs-sites.mjs merge`), and writes
 //
 //   <dist>/_search/manifest.json        { "version": 1, "indexes": { "en": "/_search/en.<hash>.json", "zh-Hans": … } }
-//   <dist>/_search/<language>.<hash>.json   a MiniSearch index (kit/docs/shared/search.ts options) per language
+//   <dist>/_search/<language>.<hash>.json   a MiniSearch index (src/kit/docs/shared/search.ts options) per language
 //
 // The documents:
 //   * docs sites (kit 2.27+): <dist>/**/_kit/search-docs.json, the sections each docs build indexes for itself
@@ -21,7 +21,7 @@
 // lang> (a blog post has one URL in the language it is written in), else English. The index of a language holds
 // its pages and, for every site that has no page in that language, the site's English pages.
 //
-// Clients (kit/components/site-search.ts) load the manifest, then the index of the page's language, and fall back
+// Clients (src/kit/components/site-search.ts) load the manifest, then the index of the page's language, and fall back
 // to the site's own index when there is none (a docs site's dev server, a build without this step).
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';

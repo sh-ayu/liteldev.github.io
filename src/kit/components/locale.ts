@@ -36,6 +36,7 @@ export function usePreferredLocale<T extends AppLocale>(locales: readonly T[], f
   const [code, setCode] = useState<string>(fallback.code);
   const [synced, setSynced] = useState(false);
   const latest = useRef({ locales, fallback });
+  // eslint-disable-next-line react-hooks/refs -- the latest props, for the effects: the hook compares codes, not identity
   latest.current = { locales, fallback };
   const key = locales.map((l) => `${l.code}=${l.lang}`).join(',');
   // A layout effect: the switch from the prerendered locale happens right after hydration, before the

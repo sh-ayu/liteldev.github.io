@@ -14,18 +14,21 @@ Display type is **Manrope** (a modern geometric sans), body **Inter**. Since 2.2
 spacious**: hairline frames instead of outlines and bevels, frameless grids under hairlines, large display type, and
 the painting concentrated in two big moments (hero, footer) rather than sprinkled over every surface.
 
-**Stack:** Vite 8 + React 19 + react-router 7 + TypeScript + Tailwind CSS v4 (`@tailwindcss/vite`).
+**Stack:** Vite 8 + React 19 + react-router 8 + TypeScript + Tailwind CSS v4 (`@tailwindcss/vite`).
 Docs sites are compiled at build time (unified/remark/rehype + Shiki) and statically prerendered — one real
 HTML file per URL for GitHub Pages — then hydrated into a SPA.
 
 Version: see `VERSION` and the [Changelog](#changelog).
 
-**Where it lives (2.31).** The kit is a source folder of levimc.org, `src/kit/`, in the site's one package: nothing
-copies, fetches or publishes it. levimc.org (`src/main/`) and LeviMC Mods (`src/mods/`) import it by relative path;
-every docs site is a folder `content/<Site>/` (a `docs.config.ts`, `pages/`, `public/`) built by this engine through
-`scripts/docs-sites.mjs`; the Doxygen parts are in `doxygen/`. Sections below that speak of a site's own `kit/`
-folder, `package.json`, `vite.config.ts` or `fetch-kit` describe how the sites were built while each had its own
-repository (before 2026-11-16) and are kept for the reasoning behind the engine's options.
+**Where it lives.** The kit is a source folder of levimc.org, `src/kit/`, in the site's one package: nothing copies,
+fetches or publishes it. levimc.org (`src/main/`) and LeviMC Mods (`src/mods/`) import it by relative path; every
+docs site is a folder `content/<Site>/` (a `docs.config.ts`, `pages/`, `public/`) built by this engine through
+`scripts/docs-sites.mjs`; the Doxygen parts are in `doxygen/`.
+
+Paths in this document are relative to `src/kit/` (`components/prefs.ts`, `static/kit.js`, `tests/`) unless they
+start at the repository root (`src/…`, `content/…`, `scripts/…`, `doxygen/…`, `dist/`, `.build/`): `scripts/` is
+always the repository's, and the kit's own scripts are written `src/kit/scripts/…`. Commands run from the
+repository root.
 
 ---
 
@@ -34,16 +37,16 @@ repository (before 2026-11-16) and are kept for the reasoning behind the engine'
 1. [Layout](#layout)
 2. [Part of levimc.org](#part-of-levimcorg)
 3. [Dependencies](#dependencies)
-4. [Docs site: app structure & commands](#docs-site-app-structure--commands)
+4. [Docs sites: structure & commands](#docs-sites-structure--commands)
 5. [Site config API (`defineDocsConfig`)](#site-config-api-definedocsconfig)
 6. [Markdown support](#markdown-support)
-7. [Plain Vite apps (levimc.org, levimc.org/mods)](#plain-vite-apps-levimcorg-levimcorgmods) · [Cross-site preferences](#cross-site-preferences)
+7. [Apps (levimc.org, LeviMC Mods)](#apps-levimcorg-levimc-mods) · [Cross-site preferences](#cross-site-preferences)
 8. [Components](#components)
 9. [Static chrome & Doxygen](#static-chrome--doxygen)
 10. [Verification scripts](#verification-scripts)
 11. [Design rules — do / don't](#design-rules--do--dont)
-12. [Porting checklist: MkDocs sites](#porting-checklist-mkdocs-sites-levilamina-legacyscriptengine)
-13. [Porting checklist: VitePress sites](#porting-checklist-vitepress-sites-lip-levilauncher-levilaunchroid)
+12. [Adding a project's docs: from MkDocs](#adding-a-projects-docs-from-mkdocs)
+13. [Adding a project's docs: from VitePress](#adding-a-projects-docs-from-vitepress)
 14. [Known limitations](#known-limitations)
 15. [Maintaining the kit](#maintaining-the-kit)
 16. [Changelog](#changelog)
@@ -70,7 +73,8 @@ src/kit/
 │   ├── prose.css            .kit-prose doc typography (headings, lists, tables, quotes, footnotes, details…)
 │   ├── code.css             .kit-code Shiki blocks (title bar, CSS line numbers, copy button)
 │   ├── admonitions.css      .kit-adm (all MkDocs + VitePress + GitHub types) and .kit-tabs
-│   └── chrome.css           GlobalBar, footer, menus, theme + language menus, badges, tooltips, cards, hero layout
+│   ├── chrome.css           GlobalBar, footer, menus, theme + language menus, badges, tooltips, cards, hero layout
+│   └── search.css           the search dialog (not in index.css: imported by the apps and the docs app)
 ├── assets/
 │   ├── sprites.mjs          16×16 pixel sprites as text grids (the source of truth)
 │   ├── build-assets.mjs     → icons/*.svg, components/pixel-icons.ts, theme/generated.css (incl. the backdrop
@@ -81,7 +85,8 @@ src/kit/
 │   ├── GlobalBar.tsx (GlobalBar, GlobalNavList)  SiteFooter.tsx  LocaleSwitcher.tsx
 │   ├── ThemeToggle.tsx (ThemeSwitcher; ThemeToggle = deprecated alias)
 │   ├── PaintedBackdrop.tsx  PaintedHero.tsx  PixelButton.tsx  Card.tsx  Badge.tsx  Tooltip.tsx
-│   ├── Hotbar.tsx (HotbarTabs, Pagination)  PixelIcon.tsx (PixelIcon, BrandIcon)
+│   ├── Hotbar.tsx (HotbarTabs, Pagination)  PixelIcon.tsx (PixelIcon, BrandIcon)  PlatformPicker.tsx
+│   ├── SearchDialog.tsx  SiteSearch.tsx (useSiteSearch)  site-search.ts (the site-wide index)  focus.ts
 │   ├── prefs.ts             cross-site preferences: cookies levimc_theme / levimc_lang, locale matching,
 │   │                        pre-paint script (createPrefsInitScript)
 │   ├── theme.ts (ThemeProvider, useTheme, themeInitScript)  locale.ts (usePreferredLocale)
@@ -90,28 +95,33 @@ src/kit/
 │   ├── paint.ts             deterministic painted scenes (lily pond + block bridge / harbour sunrise + pixel boats)
 │   └── pixel-icons.ts       generated sprite data
 ├── docs/                  the static docs engine
-│   ├── node/                build side (Node): config.ts vite.ts site.ts content.ts links.ts nav.ts git.ts
-│   │   └── markdown/        preprocess.ts render.ts slug.ts shiki.ts shiki-themes.ts html-tags.ts
-│   ├── shared/              types.ts routing.ts head.ts search.ts (used by build and browser)
+│   ├── node/                build side (Node): config.ts vite.ts site.ts content.ts links.ts nav.ts git.ts convert.ts
+│   │   └── markdown/        preprocess.ts render.ts slug.ts shiki.ts shiki-themes.ts html-tags.ts image-size.ts
+│   ├── shared/              types.ts routing.ts head.ts search.ts platform.ts strings.ts (used by build and browser)
 │   ├── app/                 React app: index.html entry-client.tsx entry-server.tsx App.tsx data.ts enhance.ts
 │   │                        layouts/ (DocLayout HomeLayout NotFound) components/ (SiteNav Sidebar Toc reveal
 │   │                        SearchModal MobileDrawer DocFooter KitLink) docs.css styles.css layout-api.ts
-│   ├── build.mjs            client build → SSR build → prerender
-│   └── prerender.mjs
-├── ssg/prerender.mjs      prerenderRoutes() for plain Vite apps
-├── static/                non-React chrome (prebuilt; regenerate with build-static.mjs)
-│   ├── kit.css  kit-chrome.css  kit-nojs-dark.css
+│   ├── prerender.mjs        prerenderDocs(): one HTML file per URL, after the client and SSR builds
+│   └── build.mjs            the three steps for a site with a Vite config of its own (the repository's sites are
+│                            built by scripts/docs-sites.mjs instead)
+├── ssg/prerender.mjs      prerenderRoutes() for the apps (src/main/, src/mods/)
+├── static/                non-React chrome (generated and committed; regenerate with npm run kit:static)
+│   ├── build-static.mjs  snippets.tsx  nojs-dark.mjs  static-entry.css  chrome-entry.css  chrome-reset.css
+│   ├── kit.src.js  kit.src.globals.d.ts     the vanilla runtime's source and its build-time globals
 │   ├── kit.js (built from kit.src.js)  theme-init.js  theme-init-static.js  theme-init-doxygen.js
+│   ├── kit.css  kit-chrome.css  kit-nojs-dark.css
 │   ├── globalbar.html  footer.html  i18n/{globalbar,footer}.<locale>.html
 │   ├── pages/index.html  pages/404.html     former docs.levimc.org root redirect + themed 404
-│   └── icons/  grass.svg  levimc.svg  nojs-dark.mjs  snippets.tsx  build-static.mjs
+│   └── icons/  grass.svg  levimc.svg
 ├── scripts/               chrome-parity · serve-pages · linkcheck · url-parity · text-parity · smoke · shot · mkdocs-nav
-├── tests/                 prefs.test.mjs (node --test: cookies, locale mapping, inline scripts) ·
-│                          static.test.mjs (no-JS dark CSS, kit.js: footer year, chrome-only translation) ·
-│                          render.test.mjs (rendering budget of the CSS, backdrop tiles, hero files) ·
-│                          cross-site.e2e.mjs (Playwright: preferences shared by levimc.org and a docs site at levimc.org/<base>/)
-└── demo/                  the engine's test sites (not published): docs.config.ts (suffix/directory/pymdownx),
-                           lip.config.ts (folder/html/vitepress), single.config.ts (the docs as a single-locale site)
+├── tests/                 *.test.mjs (node --test; part of npm test): prefs (cookies, locale mapping, inline
+│                          scripts) · static (no-JS dark CSS, kit.js: footer year, chrome-only translation) · render
+│                          (rendering budget of the CSS, backdrop tiles, hero files) · locale-first · navtree ·
+│                          network-links · platform · slug · convert · preprocess-hoist · doxygen-chrome
+│                          cross-site.e2e.mjs (Playwright: preferences shared by levimc.org and a docs site)
+└── demo/                  the engine's test sites (not published): docs.config.ts (suffix/directory/pymdownx) with
+                           content/ and showcase/ (a custom layout), lip.config.ts (folder/html/vitepress) with
+                           lip-content/, single.config.ts (the docs as a single-locale site)
 
 doxygen/                   (repository root) the Doxygen chrome build-static.mjs writes — header.html, footer.html,
                            header-parts.json — with doxygen-kit.css, gen-header.mjs and patch-navtree.mjs, beside the
@@ -131,8 +141,7 @@ The kit is the one source of the LeviMC chrome — bar, footer, theme, docs engi
 | LeviLamina's API reference (`/LeviLamina/api/`) | `doxygen/` | `doxygen/build.sh`, after the build |
 
 `npm run build` makes them all into `dist/`. A change to the kit reaches every site with that build: there is no
-copy to refresh and no version to publish (until 2.30 levimc.org published the kit at `levimc.org/kit/v2/` and each
-site fetched it into a git-ignored `kit/` folder with `scripts/fetch-kit.mjs`; `vendor.mjs` copied it locally).
+copy to refresh and no version to publish.
 `<meta name="generator" content="levimc-kit <version>">` is on every page the kit renders.
 
 `node src/kit/scripts/chrome-parity.mjs` fetches one page of every LeviMC site and checks that they show the same
@@ -140,147 +149,86 @@ bar and footer (local previews: `http://127.0.0.1:4173/=https://levimc.org`).
 
 ## Dependencies
 
-Pinned, verified together (Node 24.22, npm 11.19; any Node ≥ 22.12 works — `assets/build-assets.mjs`
-needs Node ≥ 22.18 for native TypeScript stripping). Copy the fields of `package.template.json`.
+The kit has no package of its own: what it imports is in the repository's one `package.json` (exact versions, one
+`package-lock.json`, one `npm ci`). Node.js 22.22 or later (`engines`; CI and the deploy use Node 24): the build
+scripts import the kit's TypeScript as it is, and Node strips the types.
 
-| Package | Version | | Package | Version |
-|---|---|---|---|---|
-| react | 19.3.1 | | unified | 11.0.5 |
-| react-dom | 19.3.1 | | remark-parse | 11.0.0 |
-| react-router | 7.18.4 (`version-7` tag; 8.x exists but the LeviMC stack is v7) | | remark-gfm | 4.0.1 |
-| minisearch | 7.2.0 | | remark-frontmatter | 5.0.0 |
-| vite | 8.3.4 | | remark-rehype | 11.1.2 |
-| @vitejs/plugin-react | 6.1.2 | | rehype-raw | 7.0.0 |
-| tailwindcss | 4.3.3 | | hast-util-to-html | 9.0.5 |
-| @tailwindcss/vite | 4.3.3 | | hast-util-to-string | 3.0.1 |
-| typescript | 7.0.2 (6.0.x works too) | | mdast-util-to-string | 4.0.0 |
-| @types/react | 19.3.0 | | unist-util-visit | 5.1.0 |
-| @types/react-dom | 19.3.0 | | shiki | 4.5.0 |
-| @types/node | 24.19.2 | | @shikijs/transformers | 4.5.0 |
-| @types/hast | 3.0.5 | | yaml | 2.9.1 |
-| @types/mdast | 4.0.4 | | picomatch | 4.0.7 |
-| @types/unist | 3.0.3 | | @types/picomatch | 4.0.3 |
+| For | Packages |
+|---|---|
+| components and apps | react, react-dom, react-router, minisearch (the search dialog) |
+| every build | vite, @vitejs/plugin-react, tailwindcss, @tailwindcss/vite, typescript and the @types packages |
+| the docs engine (build time only) | unified, remark-parse, remark-gfm, remark-rehype, rehype-raw, hast-util-to-html, unist-util-visit, shiki, yaml, picomatch |
+| a locale with `convertFrom` | opencc-js (the engine loads it only then) |
+| the browser checks | playwright |
 
-Optional: `opencc-js` 1.4.2 (devDependency), only for a locale with `convertFrom`; the engine loads it only then.
+Playwright is a devDependency; its browser is installed once per machine with `npx playwright install chromium`.
+The kit's browser scripts (`src/kit/scripts/smoke.mjs`, `text-parity.mjs`, `shot.mjs` and `tests/cross-site.e2e.mjs`)
+resolve it from the package, or from `$LEVIMC_PW_DIR` (a directory containing `node_modules/playwright`) when that
+is set.
 
-The kit type-checks clean with TypeScript 7.0.2 and 6.0.3 (typescript-eslint needs < 6.1; levimc.org/mods pins 6.0.3).
+## Docs sites: structure & commands
 
-Playwright is only needed for `smoke.mjs`, `text-parity.mjs`, `shot.mjs` and `tests/cross-site.e2e.mjs`; they resolve it from
-`$LEVIMC_PW_DIR` (a directory containing `node_modules/playwright`) or from the app (`npm i -D playwright@1.56.1`).
-
-Plain Vite apps (levimc.org, levimc.org/mods) only need react, react-dom, react-router, vite,
-@vitejs/plugin-react, tailwindcss, @tailwindcss/vite, typescript and the @types packages; their tsconfig then
-includes `kit/components` (and `kit/ssg`), not `kit/**` (the docs engine needs the markdown packages' types).
-
-## Docs site: app structure & commands
-
-A docs site is a folder of `content/` (see `content/README.md`):
+A docs site is a folder of `content/` with a `docs.config.ts`. [content/README.md](../../content/README.md) is the
+guide to them (the sites, their URLs, the four sections, adding a project); this section is the engine's side.
 
 ```
 content/<Site>/
-├── docs.config.ts           defineDocsConfig({...})            (replaces mkdocs.yml / .vitepress/config.mts)
-├── pages/ (contentDir)      the markdown, images, logo.svg …
-├── public/                  static files served at the site root (optional)
+├── docs.config.ts           defineDocsConfig({...})
+├── pages/                   the markdown, images, logo …                    (contentDir: 'pages')
+├── public/                  static files served at the site's root, optional (publicDir: 'public')
 └── scripts/prebuild.mjs     run before every build and dev server (optional: generated pages, downloads)
 ```
 
-```sh
-node scripts/docs-sites.mjs build <Site>     # → .build/docs/<Site>/dist/, then its link check
-node scripts/docs-sites.mjs dev <Site>       # dev server, rebuilt as you edit
-```
-
-`scripts/docs-sites.mjs` loads the config and runs Vite with the repository as its root (the engine's own app,
-`src/kit/docs/app/`, must be inside Vite's root), `kitDocs(config, { configRoot, workDir })`: `configRoot` is the
-site's folder (the config's relative paths resolve against it), `workDir` where the SSR bundle and
-`client-pages.json` go (`.build/docs/<Site>/.kit/`). The rest of this section describes a site as a package of its
-own with the kit in its `kit/` folder, as each was before 2.31.
-
-### Where the app lives
-
-The app sits where the old generator config was; `kit/` sits next to `package.json`.
-
-**VitePress-style repos (lip, LeviLauncher) — markdown directly in `docs/`:** the app *is*
-`docs/` (it already holds a `package.json`):
-
-```
-docs/
-├── kit/                 levimc-kit, fetched (excluded from content automatically)
-├── package.json         replaces the VitePress one
-├── vite.config.ts  docs.config.ts  tsconfig.json  .gitignore (node_modules/ dist/ .kit/)
-├── public/              unchanged (served at the site root)
-├── index.md  guide/…  zh-CN/…      unchanged content
-└── .vitepress/          delete after the port (ignored meanwhile)
-```
-
-```ts
-// docs/docs.config.ts
-export default defineDocsConfig({ base: '/lip/', contentDir: '.', urlStyle: 'html', i18n: { mode: 'folder', … }, … });
-```
-
-With `contentDir: '.'` the engine automatically excludes the `kit/` folder, the output directory
-(`dist/`) and `.kit/`; `node_modules/`, every dot-folder (`.vitepress/`) and `public/` are always excluded.
-Add `exclude: ['README.md']` only if `docs/` has a README that is not a page. CI: `working-directory: docs`,
-upload `docs/dist`.
-
-**LeviLamina — app in `docs/main/`, content in `docs/main/contents/`:**
-
-```
-docs/main/
-├── kit/  package.json  vite.config.ts  docs.config.ts  tsconfig.json  .gitignore
-├── contents/            unchanged (index.md, *.zh.md, logo.svg, favicon.ico …)   ← contentDir: 'contents'
-└── (mkdocs.yml, requirements.txt, overrides/ — delete after the port)
-```
-
-The Doxyfile (`docs/api/Doxyfile`, run from the repo root) then references
-`docs/main/kit/static/kit-chrome.css`, `docs/main/kit/static/doxygen/doxygen-kit.css` and
-`docs/main/kit/static/kit.js`; CI builds in `docs/main` and merges the Doxygen output into `docs/main/dist/api/`.
-
-**LegacyScriptEngine — `mkdocs.yml` at the repo root, content in `docs/`:** the app is the repository root
-(`kit/`, `package.json`, … next to the old `mkdocs.yml`) with `contentDir: 'docs'` and
-`exclude: ['overrides/**']` (the theme overrides live inside `docs/`).
-
-```ts
-// vite.config.ts
-import { defineConfig } from 'vite';
-import { kitDocs } from './kit/docs/node/vite.ts';
-import docs from './docs.config.ts';
-export default defineConfig({ plugins: [kitDocs(docs)] }); // includes @vitejs/plugin-react + @tailwindcss/vite
-```
+Inside `contentDir`, `node_modules/`, every dot-folder and `public/` are never content. Nothing lists the sites: a
+folder of `content/` with a `docs.config.ts` is one. A site is named by its folder (`lip`, `content/lip`) or by a
+config file (`src/kit/demo/lip.config.ts`: the kit's test sites, built into `.build/docs/demo-lip/`).
 
 | Command | What it does |
 |---|---|
-| `npm run dev` (`vite`) | dev server with content hot-rebuild (open `http://localhost:5173/<Project>/`) |
-| `npm run build` (`node kit/docs/build.mjs [--config vite.config.ts]`) | client build → SSR build (`.kit/ssr/`) → prerender every route to `dist/` + `404.html`, `sitemap.xml`, `.nojekyll`, search indexes; prints warnings (unresolved links, missing anchors, escaped pseudo-tags) and writes them to `.kit/warnings.txt` |
-| `npm run preview` | `serve-pages.mjs dist --base /<Project>/ --port 4173` (GitHub Pages semantics) |
-| `npm run typecheck` | `tsc --noEmit` (covers the kit and the app) |
-| `npm run linkcheck` | internal links, redirects and anchors (add `--external` for every external URL) |
-| `npm run smoke` | Playwright smoke test against the preview server |
+| `node scripts/docs-sites.mjs list` | the sites, one per line |
+| `node scripts/docs-sites.mjs dev <Site>` (`npm run dev:docs -- <Site>`) | the site's `scripts/prebuild.mjs`, then a dev server that rebuilds the content as you edit (`--port <n>`, `--host`) |
+| `node scripts/docs-sites.mjs build [<Site> …]` | per site, one process each: `scripts/prebuild.mjs`, client build → SSR build → prerender of every route into `.build/docs/<Site>/dist/` (with `404.html`, `sitemap.xml`, `.nojekyll`, the search indexes), then the link check of its pages. No name: every site. The build prints its warnings (unresolved links, missing anchors, escaped pseudo-tags) and writes them to `.build/docs/<Site>/.kit/warnings.txt` |
+| `npm run build` (`node scripts/build.mjs`) | the whole of levimc.org into `dist/`; its `docs` part builds every site and copies each build into `dist/` (`node scripts/docs-sites.mjs merge dist`) |
+| `npm run preview` | `dist/` served like GitHub Pages at `http://127.0.0.1:4173/` |
+| `npm run typecheck` | covers every `docs.config.ts` with the kit and the apps |
+| `npm run linkcheck` | internal links, redirects and anchors of the whole `dist/` |
+| `npm run smoke` | the browser checks of the built site, every docs site among them ([Verification scripts](#verification-scripts)) |
 
-Equivalent manual steps: `vite build && vite build --ssr && node kit/docs/prerender.mjs`.
+`scripts/docs-sites.mjs` loads the config and runs Vite with the repository as its root (the engine's own app,
+`docs/app/`, must be inside Vite's root) and no config file:
 
-GitHub Actions (Pages):
+```js
+import { build } from 'vite';
+import { kitDocs } from '../src/kit/docs/node/vite.ts';
+import { prerenderDocs } from '../src/kit/docs/prerender.mjs';
 
-```yaml
-- uses: actions/setup-node@v4
-  with: { node-version: 24 }
-- run: npm ci && npm run build
-- run: node src/kit/scripts/linkcheck.mjs dist --base /<Project>/ --site-origin https://levimc.org
-- uses: actions/upload-pages-artifact@v5
-  with: { path: dist }
+const out = '.build/docs/<Site>';
+const plugins = () => kitDocs({ ...config, outDir: `${out}/dist` }, { configRoot: 'content/<Site>', workDir: `${out}/.kit` });
+await build({ root: repo, configFile: false, plugins: plugins() });                         // client
+await build({ root: repo, configFile: false, plugins: plugins(), build: { ssr: true } });   // → <workDir>/ssr/
+await prerenderDocs({ root: repo, workDir });                                               // one HTML file per URL
 ```
 
-Use `fetch-depth: 0` in `actions/checkout` if you want accurate "Last updated" dates (git history).
+`kitDocs` includes @vitejs/plugin-react and @tailwindcss/vite. `configRoot` is the site's folder: the config's
+relative paths (`contentDir`, `publicDir`, `layouts`, `outDir`) resolve against it (default: Vite's root). `workDir`
+is where the SSR bundle, `client-pages.json` and `warnings.txt` go (default: `<root>/.kit`).
+
+The CI and deploy workflows check the repository out with `fetch-depth: 0`: the "Last updated" dates come from the
+git history.
 
 ### What the engine produces
 
-* `dist/<route>` — real HTML per URL. MkDocs-style sites: `a/b.md` → `a/b/index.html` (URL `a/b/`);
+In the site's output folder (`.build/docs/<Site>/dist/`; with `i18n.localeFirst` it mirrors the host root and these
+are under the site's base, see that option):
+
+* `<route>` — real HTML per URL. MkDocs-style sites: `a/b.md` → `a/b/index.html` (URL `a/b/`);
   VitePress-style: `a/b.md` → `a/b.html` (URL `a/b` with `cleanUrls`, else `a/b.html`). GitHub Pages serves
-  both `a/b` and `a/b.html`, so every URL that works today keeps working with **no redirect**.
+  both `a/b` and `a/b.html`, so every URL a MkDocs or VitePress site had keeps working with **no redirect**.
 * `<head>`: title, description, canonical, hreflang alternates (+ x-default), Open Graph, theme-color,
   the no-flash theme script and the root-only language redirect.
-* `dist/assets/pages/*.js` — one lazily loaded chunk per page (SPA navigation); the first load reuses the
+* `assets/pages/*.js` — one lazily loaded chunk per page (SPA navigation); the first load reuses the
   prerendered HTML (no duplicate download) and hydrates with `hydrateRoot`.
-* `dist/assets/search-<locale>.<hash>.json` — MiniSearch index per locale (CJK indexed as character
+* `assets/search-<locale>.<hash>.json` — MiniSearch index per locale (CJK indexed as character
   bigrams), lazy-loaded on first search.
 * `404.html` (themed, locale-aware), `sitemap.xml` (with hreflang), `.nojekyll`, content assets
   (MkDocs: every non-markdown file in `contentDir`, verbatim; VitePress: `public/` + hashed images).
@@ -288,7 +236,8 @@ Use `fetch-depth: 0` in `actions/checkout` if you want accurate "Last updated" d
 ## Site config API (`defineDocsConfig`)
 
 ```ts
-import { defineDocsConfig } from './kit/docs/node/config.ts';
+// content/<Site>/docs.config.ts
+import { defineDocsConfig } from '../../src/kit/docs/node/config.ts';
 export default defineDocsConfig({ … });
 ```
 
@@ -325,17 +274,17 @@ export default defineDocsConfig({ … });
 | `nav` | `NavEntry[]` or `{ [locale]: NavEntry[] }` | the sections (see [Navigation model](#navigation-model-kit-226)); MkDocs `nav` (verbatim YAML structure works) / VitePress `{ text, items }` objects |
 | `navTranslations` | `{ [locale]: { 'User Guides': '用户指南' } }` | static-i18n `nav_translations` |
 | `sidebar` | `'tabs'` (default) \| `'tree'` \| `false` \| `SidebarConfig` \| `{ [locale]: SidebarConfig }` | `'tabs'` = the LeviMC model: every top-level `nav` entry is a section (a tab) and its tree is the sidebar of its pages. The object forms (VitePress array / `{ '/guide/': [...] }` multi-sidebar) are **deprecated** (kit 2.19, build warning) but keep working |
-| `layouts` | `{ name: './path/Component.tsx' }` | custom page layouts for `layout: <name>` frontmatter (props: `CustomLayoutProps` from `kit/docs/app/layout-api.ts`) |
+| `layouts` | `{ name: './path/Component.tsx' }` | custom page layouts for `layout: <name>` frontmatter (props: `CustomLayoutProps` from `docs/app/layout-api.ts`) |
 | `lastUpdated` | `true` | `git log` timestamp per file; silently absent without git history |
 | `hostname` | `'https://levimc.org'` | canonical / og:url / hreflang origin (defaults to `sitemap.hostname`) |
 | `sitemap` | `{ hostname }` \| `false` | |
 | `head` | `[[tag, attrs, content?], …]` | extra head tags (VitePress format) |
 | `outline` | `[2, 4]` (python-markdown) / `[2, 3]` (commonmark) | "On this page" levels (`outline: false` in frontmatter hides it) |
-| `social` | `[{ icon: 'github'\|'discord'\|'telegram'\|'x'\|'youtube'\|'email', link, label? }]` | icons in the docs header (the bar's GitHub button is always the LiteLDev organisation) |
+| `social` | `[{ icon: 'github'\|'discord'\|'telegram'\|'x'\|'youtube'\|'email', link, label? }]` | icons after the resources, at the end of the site column (the bar's GitHub button is always the LiteLDev organisation) |
 | `footer` | — | deprecated in kit 2 and ignored: the footer is the same on every LeviMC site |
 | `ui` | `{ [locale]: Partial<UiStrings> }` | override the docs UI strings (e.g. VitePress `docFooter`, `editLink.text`); leave the bar's and footer's labels to the kit |
 | `titleTemplate` | `':title - :site Docs'` | every LeviMC docs site uses the default; home pages (every locale's `index`, and `layout: home`) get the template without `:title` (`LeviLamina Docs`), the 404 page `Page not found - LeviLamina Docs` |
-| `header` | `{ tabsRow?, links? }` | layout of the docs row and its resources slot: see [Header](#header-the-docs-own-row) |
+| `header` | `{ tabsRow?, links? }` | the resources at the end of the site column: see [Header](#header-kit-222-the-levimc-bar-only) |
 | `sidebarExpand` | `false` | open every sidebar group (overrides the collapse policy of the [navigation model](#navigation-model-kit-226)) |
 | `outDir` | `'dist'` | |
 | `searchExclude` | globs on page keys | |
@@ -356,13 +305,13 @@ export default defineDocsConfig({ … });
 
 ### Navigation model (kit 2.26)
 
-One model on every docs site (and the Doxygen API, which generates its chrome from the LeviLamina docs' `dist/_kit/nav.json`):
+One model on every docs site (and the Doxygen API, which generates its chrome from the LeviLamina docs' `_kit/nav.json`):
 
 * **No header row of the docs' own.** Search is in the LeviMC bar (GlobalBar `search`), which sticks at the top.
 * **The site column** (SiteNav) on every page, home included: the brand (logo + name → the docs home), then the
   **sections**, then the **resources** (`header.links`, then the `repo` GitHub link). Each section is exactly one
   sidebar tree: the current one is open, the others open in place on a click.
-* **The four sections of a project's docs**, in this order and no others (kit 2.26; levimc.org's `docs/<Project>/`):
+* **The four sections of a project's docs**, in this order and no others (kit 2.26; levimc.org's `content/<Project>/`):
   1. **Overview** — the home page itself, a section that is a link and has no pages (`{ text: 'Overview', link: '/' }`,
      the locale's home: `/zh-Hans/` …); it is the current section on the home page. The project introduced, with a
      short demo (a code sample, a screenshot).
@@ -398,7 +347,8 @@ header: { links: [{ kind: 'download', link: 'https://github.com/LiteLDev/<projec
 repo: 'https://github.com/LiteLDev/<project>',
 ```
 
-The build also writes **`dist/_kit/nav.json`**: per locale code `{ lang, label, prefix, title, home, tabs: [{ text, link }],
+The build also writes **`_kit/nav.json`** under the site's base (`dist/LeviLamina/_kit/nav.json`): per locale code
+`{ lang, label, prefix, title, home, tabs: [{ text, link }],
 resources: [{ kind: 'download' | 'changelog' | 'github', text, link }] }` with absolute paths (base included) — the
 Doxygen header and drawer are generated from it.
 
@@ -483,15 +433,15 @@ column's (SiteNav).
   app has re-rendered it (`chromeLocales` = the UI languages none of the site's locales covers), so it never
   flashes in the other language first.
 * A site with a single locale: the bar's menu offers the 9 chrome languages; a choice re-renders the chrome in
-  place — the content stays in the site's language (`demo/vite.single.config.ts`, `npm run smoke:single`).
+  place — the content stays in the site's language (`demo/single.config.ts`).
 
 | Option | Type / default | Notes |
 |---|---|---|
-| `header` | `{ tabsRow?: 'auto' \| true \| false; links?: { kind: 'download' \| 'changelog'; link: string; text?: { [locale]: string } }[] }` | see [Header](#header-the-docs-own-row) |
+| `header` | `{ tabsRow?: 'auto' \| true \| false; links?: { kind: 'download' \| 'changelog'; link: string; text?: { [locale]: string } }[] }` | see [Header](#header-kit-222-the-levimc-bar-only) |
 | `sidebarExpand` | `false` | open every group of every section. Default: all groups of a section with ≤ 24 links, else only the group holding the current page (plus `collapsed: false`) |
 
-`social`: other icons (Discord, …) at the end of the docs header. The bar's GitHub button always opens the LiteLDev
-organisation; the project's repository is the resources slot's GitHub icon (`repo`).
+`social`: other icons (Discord, …) after the resources, at the end of the site column. The bar's GitHub button
+always opens the LiteLDev organisation; the project's repository is the resources' GitHub link (`repo`).
 
 ## Markdown support
 
@@ -517,7 +467,7 @@ kit transforms → Shiki → HTML). No markdown is parsed in the browser.
   [Content per platform](#content-per-platform)), GitHub alerts `> [!NOTE|TIP|IMPORTANT|WARNING|CAUTION]`, `<span v-pre>` (kept; `{{ }}`
   is never interpolated), fence meta `{1,3-5}` / `[file.js]` / `:line-numbers`.
 * **`compat: 'python-markdown'`** (MkDocs sites) reproduces Python-Markdown's block rules so the text and
-  structure match the live MkDocs output: 4-space list nesting (2–3-space items are siblings), a list
+  structure match what MkDocs rendered: 4-space list nesting (2–3-space items are siblings), a list
   cannot interrupt a paragraph, an un-indented block after a blank line ends the list, an indented
   paragraph block inside a list keeps later `-` lines literal, `#Heading` without space, block-level raw
   HTML is captured to its closing tag (even inside list items), tables need a blank line before them and
@@ -536,95 +486,91 @@ kit transforms → Shiki → HTML). No markdown is parsed in the browser.
 * **Heading ids**: `pymdownx` = Python-Markdown toc + `pymdownx.slugs.slugify(case='lower')` (text →
   strip tags → NFC → lowercase → drop chars outside `[\w\- ]` (Unicode) → spaces to `-`, no trimming,
   duplicates `_1`, `_2`; "🔑 SQL数据库" → `-sql数据库`). `vitepress` = @mdit-vue slugify (duplicates `-1`).
-  Verified identical to the live sites on every LeviLamina/LSE page.
+  Verified identical to what MkDocs generated on every LeviLamina/LSE page.
 * **Links** are rewritten at build time to the target's canonical, base-prefixed URL: relative `.md`
   (with/without locale suffix, `./`, `../`, anchors), extensionless VitePress links, root-absolute links
   (`/zh-CN/guide/x`), own-origin absolute links. The current page's locale wins when that translation exists
   (static-i18n semantics); `x.zh.md` / `/zh-CN/…` pin a locale. External links get
   `target="_blank" rel="noopener"`. Unresolvable links and missing anchors are build warnings.
 
-## Plain Vite apps (levimc.org, levimc.org/mods)
+## Apps (levimc.org, LeviMC Mods)
+
+The site's two React apps — levimc.org itself (`src/main/`) and LeviMC Mods (`src/mods/`, published at `/mods/`) —
+import the kit's theme, components and prerenderer by relative path. Both have the same parts:
 
 ```
-<app>/
-├── kit/                       fetched
-├── index.html                 pre-paint script + fonts, <!--app-head--> in <head>, <div id="root"><!--app-html--></div>
-├── src/styles.css             @import "../kit/theme/tailwind.css"; @source "./";
-├── src/App.tsx                routes; wrap in <ThemeProvider>; <PaintedBackdrop/> <GlobalBar sticky …/> … <SiteFooter/>
-├── src/entry-client.tsx       hydrateRoot(…, <BrowserRouter><App/></BrowserRouter>)
-├── src/entry-server.tsx       export function render(url) { return { html, head, lang } }
-├── prerender.mjs              prerenderRoutes({ routes, notFound })
-└── vite.config.ts             plugins: [react(), tailwindcss()]
+src/main/   (src/mods/)
+├── index.html                 placeholders the app's Vite config fills in <head> (the pre-paint scripts, the fonts),
+│                              <!--app-head--> and <div id="root"><!--app-html--></div> for the prerender
+├── styles.css                 @import "../kit/theme/tailwind.css"; @source "./";
+├── App.tsx                    routes in <ThemeProvider>; .kit-shell → <PaintedBackdrop/> <GlobalBar sticky …/> … <SiteFooter/>
+├── entry-client.tsx           hydrateRoot(…)
+├── entry-server.tsx           export function render(url) → { html, head, lang }
+├── prerender.mjs              prerenderRoutes({ routes, notFound }) from ../kit/ssg/prerender.mjs
+└── vite.config.ts             plugins: [react(), tailwindcss(), …]
 ```
 
-`index.html` head: the pre-paint script must run before CSS paints — an inline `<script>` with
-`createThemeInitScript({ appLocales: { locales: LOCALES, prerendered: 'en' } })` (the app's languages and the one
-its pages are prerendered in; add `legacyTheme` / `legacyLang` to migrate a site's old localStorage keys once,
-e.g. levimc.org: `{ legacyTheme: ['theme'], legacyLang: [{ key: 'locale', map: { zh: 'zh-CN' } }] }`),
-then the fonts (`FONT_HEAD_HTML` from `kit/components/fonts.ts`): preconnect to fonts.googleapis.com /
-fonts.gstatic.com and the css2 URL for Inter, Manrope, JetBrains Mono (`display=swap`; `theme/fonts.css`
-adds metric-matched fallbacks, so the swap does not shift the layout). CJK uses the system stack — never ship a
-CJK webfont. `demo/app/` is a complete example (`npm run build:app && npm run preview:app && npm run smoke:app`).
+`<head>`: the pre-paint script must run before CSS paints — an inline `<script>` with `createThemeInitScript(…)`
+(`legacyTheme` / `legacyLang` migrate a site's old localStorage keys once, levimc.org:
+`{ legacyTheme: ['theme'], legacyLang: [{ key: 'locale', map: … }] }`; `speculation` says which same-origin pages
+the browser may prerender), then the fonts (`FONT_HEAD_HTML` from `components/fonts.ts`): preconnect to
+fonts.googleapis.com / fonts.gstatic.com and the css2 URL for Inter, Manrope, JetBrains Mono (`display=swap`;
+`theme/fonts.css` adds metric-matched fallbacks, so the swap does not shift the layout). CJK uses the system stack —
+never ship a CJK webfont. `src/main/prepaint.ts` and `src/main/vite.config.ts` are the example.
 
-The GlobalBar is the app's only header there (`sticky`), with the app's own languages:
+The GlobalBar is the app's only header (`sticky`), with the app's own languages:
 
 ```tsx
-const LOCALES = [{ code: 'en', lang: 'en', label: 'English' }, { code: 'zh-CN', lang: 'zh-CN', label: '简体中文' }, …] as const;
-const [locale, setLocale] = usePreferredLocale(LOCALES, LOCALES[0]);   // the cross-site preference, else the browser
 <GlobalBar
-  current="packages" locale={locale.lang} sticky
-  languages={{ options: LOCALES.map(({ code, label, lang }) => ({ code, label, lang })), current: locale.code, onSelect: setLocale }}
-  siteOrigin="https://levimc.org" linkComponent={RouterLink}               // same-site bar links stay in the app
-  isAppPath={(p) => p.startsWith('/mods/')}                                // …but only this app's part of the origin
+  current="mods" locale={chrome} sticky
+  languages={{ options: LOCALES.map(({ code, label, lang }) => ({ code, label, lang, href: alternates[code] })), current: locale.code }}
+  siteOrigin="https://levimc.org" linkComponent={RouterLink}   // same-site bar links stay in the app
+  isAppPath={isAppPath}                                        // …but only the paths this app's router renders
+  search={siteSearch.bar}                                      // useSiteSearch(): the search of every LeviMC site
 />
-<SiteFooter locale={locale.lang} siteOrigin="https://levimc.org" linkComponent={RouterLink} isAppPath={(p) => p.startsWith('/mods/')} />
+<SiteFooter locale={chrome} siteOrigin="https://levimc.org" linkComponent={RouterLink} isAppPath={isAppPath} />
 ```
 
-Two apps share the levimc.org origin: the site itself and LeviMC Mods (`mods/` in LiteLDev/levimc.org, built with
-Vite `base: '/mods/'` and deployed into `dist/mods/`). Each passes `isAppPath` for its own part — levimc.org
-`(p) => !p.startsWith('/mods/')`, LeviMC Mods `(p) => p.startsWith('/mods/')` — so a bar link into the other app is
-an ordinary link that loads it.
+The apps and the docs sites share the levimc.org origin, and each app's router renders only its own part of it: a
+bar or footer link into another part must be an ordinary link that loads it. `siteOrigin` + `linkComponent` hand
+same-site links to the app's router, and the app keeps the others out of it (`isAppPath`, or in the link component
+itself: `src/main/components/SiteHeader.tsx`, `src/main/other-sites.ts`).
 
-```tsx
-```
+**Language.** Both apps prerender every page in the language of its URL (`/about/`, `/zh-Hans/about/`,
+`/zh-Hans/mods/`), so no page waits for the language; the language menu's options are links to the same page in each
+language (`href`), and a choice is stored as the cross-site preference. Only the root redirects by the stored
+preference or the browser's language (`localeRedirectScript`, `docs/shared/head.ts`, as on the docs). A stored
+language the app has no pages in but the kit has chrome strings for (de, ja …) is the bar's and footer's language:
+the pre-paint script adds `html.kit-chrome-pending`, which hides them (`visibility: hidden`, no layout shift) until
+the app has rendered them in it and calls `revealPendingChrome()`; a CSS fail-safe shows them after 1.5 s.
 
-`usePreferredLocale` renders the fallback locale on the server and the first client render (no hydration
-mismatch), then switches to the preferred one right after hydration, before the next paint. So that a visitor
-whose language is not the prerendered one never sees it first, the pre-paint script with `appLocales` (same
-locales, same mapping: the stored preference, else `navigator.languages`) adds `html.kit-chrome-pending` and
-`html.kit-content-pending` exactly when the app will switch: the bar's contents, `<main>` and the footer text are
-`visibility: hidden` (no layout shift; the theme and backdrop already show) until `usePreferredLocale` has
-re-rendered and removes both classes (`revealPendingChrome()`). A CSS fail-safe shows the page after 1.5 s if
-the app's JavaScript never runs. Keep the locales in one module that `vite.config.ts` and the app both import
-(`demo/app/src/locales.ts`). `smoke.mjs --app` fails if a stored `zh-CN` preference paints the prerendered
-language.
+For an app whose language is state, not a URL, the kit has `usePreferredLocale(locales, fallback)` (`locale.ts`): it
+renders the fallback locale on the server and the first client render (no hydration mismatch), then switches to the
+preferred one right after hydration, before the next paint. With `createThemeInitScript({ appLocales: { locales,
+prerendered } })` the pre-paint script adds `html.kit-chrome-pending` and `html.kit-content-pending` exactly when the
+app will switch, so the prerendered language is never painted first. Neither app of the site uses it now.
 
-```tsx
-// src/entry-server.tsx
-import { renderToString } from 'react-dom/server';
-import { StaticRouter } from 'react-router';
-import { App } from './App';
-export function render(url: string) {
-  const html = renderToString(<StaticRouter location={url}><App /></StaticRouter>);
-  return { html, head: `<title>…</title><link rel="canonical" href="https://levimc.org${url}">`, lang: 'en' };
-}
+**Prerender.** Each app is built in three steps, from the repository root for levimc.org (`scripts/build.mjs`) and
+in `.build/mods/` for LeviMC Mods (`scripts/mods/run.mjs`):
+
+```sh
+vite build src/main
+vite build src/main --ssr entry-server.tsx --outDir <repo>/.kit/ssr
+node src/main/prerender.mjs
 ```
 
 ```js
-// prerender.mjs
-import { prerenderRoutes } from './kit/ssg/prerender.mjs';
-await prerenderRoutes({
-  routes: ['/', '/projects/', '/features/', '/community/', '/about/', '/support/'],   // levimc.org
-  // levimc.org/mods: base: '/mods/', routes: async () => ['/mods/', ...(await listTeeth()).map((t) => `/mods/${t}/`)],
-  notFound: '/404',
-});
+// src/main/prerender.mjs
+import { prerenderRoutes } from '../kit/ssg/prerender.mjs';
+const { files } = await prerenderRoutes({ routes: ROUTE_PATHS, notFound: NOT_FOUND_PATH });
+// src/mods/prerender.mjs: prerenderRoutes({ routes, base: '/mods/', … })
 ```
 
-Build: `vite build && vite build --ssr src/entry-server.tsx --outDir .kit/ssr && node prerender.mjs`
-(`npm run ssg:build` in `package.template.json`). Routes are written directory-style (`/about/` →
-`about/index.html`); use trailing-slash routes in react-router (`path="/about/"`) and link to them exactly
-(the canonical URLs in `components/projects.ts` all end in `/`). `prerenderRoutes` also writes `404.html`
-and `.nojekyll`, inserts the head and body with replacement functions (content may contain `$&`) and adds
+`prerenderRoutes` reads the client build's `dist/index.html` and the SSR module `.kit/ssr/entry-server.js` in the
+working directory (`root`, `distDir`, `ssrEntry` change that). Routes are written directory-style (`/about/` →
+`about/index.html`); use trailing-slash routes in react-router (`path="/about/"`) and link to them exactly (the
+canonical URLs in `components/projects.ts` all end in `/`). It also writes `404.html` and `.nojekyll`, inserts the
+head and body with replacement functions (content may contain `$&`) and adds
 `<meta name="generator" content="levimc-kit <version>">` unless the page has one.
 
 ## Cross-site preferences
@@ -646,8 +592,8 @@ Theme and language are one choice for all of levimc.org and *.levimc.org (`compo
   `zh-CN`/`zh-HK`/`zh-TW`/`zh` → the site's zh variant (Traditional tags prefer `zh-HK`/`zh-TW`), otherwise
   the base language, otherwise English. The same algorithm runs inline (`PREFS_CORE_JS`) in the docs root
   redirect and kit.js; `tests/prefs.test.mjs` keeps both in step.
-* `tests/cross-site.e2e.mjs` proves the sharing in Chromium with the real cookie rules of
-  https://levimc.org and https://levimc.org (requests answered from local builds).
+* `tests/cross-site.e2e.mjs` proves the sharing in Chromium with the real cookie rules of https://levimc.org,
+  between levimc.org's own pages and a docs site (requests answered from the local build; `npm run smoke`).
 
 ## Components
 
@@ -655,7 +601,7 @@ All components are SSR-safe and render identical markup on server and client.
 
 | Component | Purpose / key props |
 |---|---|
-| `GlobalBar` | the bar at the top of every LeviMC site — identical everywhere: the LeviMC mark (`BrandMark`), tabs **Home · Projects ▾ · Mods · Blog · Community · About** (`globalNav()`), then **language menu · theme menu · GitHub** (→ LiteLDev); below 960px the tabs fold into one menu (≤ 400px the triggers lose their chevrons). **Projects ▾** lists the projects of `PROJECTS` (`projects.ts`) that have a documentation site (`docs`), two by two under a "Docs" heading with their count, on a faint wash of the primary: each tile (logo, name, two-line blurb) is one link to the project's docs; the GitHub organisation at the bottom; on phones it is a collapsed section of the menu. Props: `current` (`'home'\|'projects'\|'mods'\|'blog'\|'community'\|'about'`), `currentProject` (docs: marks the project and the Projects tab), `locale`, `strings`, `languages` (`{ options, current, onSelect?, linkComponent? }`; the options are the site's locales, named the kit's way — `uiLocaleName`; omitted → the 9 chrome languages, stored as the preference, then `onLanguageChange` or a reload), `siteOrigin` + `linkComponent` + `isAppPath` (same-site links through the router), `menu` (false when the site's own drawer carries the links, see `GlobalNavList`), `onMenu` + `menuOpen` + `menuControls` (≤ 960px the menu button — the same button in the same place as levimc.org's, `data-kit-gbar-menu` — is a plain `<button>` that calls `onMenu` instead of opening the bar's dropdown, with `aria-expanded={menuOpen}`, `aria-controls={menuControls}`, `aria-haspopup="dialog"`: docs sites open their drawer with it; static markup renders it with `menuControls` alone and binds it in kit.js), `sticky`. The LeviMC wordmark is a mask (`.kit-wordmark`, no webfont), its text kept for assistive technology. `github`, `brandIcon` and `currentDocs` are deprecated (ignored / alias). A labelled region; `<details>` menus work without JS. No props to hide, add or reorder tabs or controls |
+| `GlobalBar` | the bar at the top of every LeviMC site — identical everywhere: the LeviMC mark (`BrandMark`), tabs **Home · Tutorials · FAQ · Projects ▾ · Mods · Blog · Community · About** (`globalNav()`), then **language menu · theme menu · GitHub** (→ LiteLDev); below 960px the tabs fold into one menu (≤ 400px the triggers lose their chevrons). **Projects ▾** lists the projects of `PROJECTS` (`projects.ts`) that have a documentation site (`docs`), two by two under a "Docs" heading with their count, on a faint wash of the primary: each tile (logo, name, two-line blurb) is one link to the project's docs; the GitHub organisation at the bottom; on phones it is a collapsed section of the menu. Props: `current` (`'home'\|'tutorials'\|'faq'\|'projects'\|'mods'\|'blog'\|'community'\|'about'`), `currentProject` (docs: marks the project and the Projects tab), `locale`, `strings`, `languages` (`{ options, current, onSelect?, linkComponent? }`; the options are the site's locales, named the kit's way — `uiLocaleName`; omitted → the 9 chrome languages, stored as the preference, then `onLanguageChange` or a reload), `siteOrigin` + `linkComponent` + `isAppPath` (same-site links through the router), `menu` (false when the site's own drawer carries the links, see `GlobalNavList`), `onMenu` + `menuOpen` + `menuControls` (≤ 960px the menu button — the same button in the same place as levimc.org's, `data-kit-gbar-menu` — is a plain `<button>` that calls `onMenu` instead of opening the bar's dropdown, with `aria-expanded={menuOpen}`, `aria-controls={menuControls}`, `aria-haspopup="dialog"`: docs sites open their drawer with it; static markup renders it with `menuControls` alone and binds it in kit.js), `sticky`. The LeviMC wordmark is a mask (`.kit-wordmark`, no webfont), its text kept for assistive technology. `github`, `brandIcon` and `currentDocs` are deprecated (ignored / alias). A labelled region; `<details>` menus work without JS. No props to hide, add or reorder tabs or controls |
 | `GlobalNavList` | the bar's tabs + the Projects menu as a vertical list (the bar's phone menu; the "LeviMC" part of the docs drawer) |
 | `ThemeSwitcher` | the theme menu: **Auto** (default; follows `prefers-color-scheme` live) / Light / Dark. Trigger sprite + name and the checked item come from `html[data-theme-pref]` via CSS (right before hydration and on static pages); the choice is the cross-site `levimc_theme` cookie. `ThemeToggle` is a deprecated alias |
 | `LocaleSwitcher` | `options[{ code, label, short?, lang, href? }]` (`href` → links to the equivalent page; none → buttons), `current`, `onSelect(code, option)`, `persist` (default: store `lang` as the cross-site `levimc_lang`; a modified click on a link opens it elsewhere and stores nothing), `linkComponent`, `showLabel` |
@@ -695,7 +641,9 @@ YouTube `https://www.youtube.com/@LeviLamina`, `mailto:contact@levimc.org`. lip'
 
 ## Static chrome & Doxygen
 
-`static/` is prebuilt — consumers copy files, no build needed:
+`static/` is generated by `npm run kit:static` (`static/build-static.mjs`) and committed. It is the chrome for pages
+React does not render: the Doxygen API reference (`doxygen/`), the site's 404 and legacy redirect pages
+(`src/legacy/build.mjs`); the builds also read `nojs-dark.mjs`.
 
 * `kit.css` — full theme incl. Tailwind preflight (standalone pages). `kit-chrome.css` — the chrome plus the docs
   layout (`docs/app/docs.css`: header row, drawer, sidebar title, table of contents), no preflight, cascade layers
@@ -719,8 +667,8 @@ YouTube `https://www.youtube.com/@LeviLamina`, `mailto:contact@levimc.org`. lip'
   project cards) and `pages/404.html` (the one 404 of every site: `.kit-notfound` card with the red "Error 404"
   label, title `Page not found - LeviMC Docs`, the levimc.org action, then the projects with docs): skip link,
   generator meta, no-JS dark theme, footer year, the LeviMC mark as favicon; they reference assets under
-  `/levimc-kit/` (copy `kit.css`, `kit.js`, `kit-nojs-dark.css`, `icons/`, `levimc.svg` there; levimc.org's
-  `legacy/build.mjs` builds its legacy redirect pages from `pages/404.html` and copies exactly what they reference).
+  `/levimc-kit/` (`--asset-base`). `src/legacy/build.mjs` builds the site's legacy redirect pages from
+  `pages/404.html`, points them at `/_kit/` and copies exactly what they reference into `dist/_kit/`.
 
 ### LeviLamina Doxygen (`doxygen/`)
 
@@ -793,16 +741,42 @@ scroll-spy binary-searches cached targets and touches classes only when the sect
 
 ## Verification scripts
 
-All are Node ESM with no dependencies beyond Playwright (where noted).
+The checks of the whole repository, the kit included. CI (`.github/workflows/ci.yml`) runs them all on every pull
+request and every push to `main`:
+
+| Command | Checks |
+|---|---|
+| `npm run typecheck` | `tsc --noEmit` — all the TypeScript (`tsconfig.json`: the kit, the apps, every `docs.config.ts`) — and `tsc --noEmit -p tsconfig.scripts.json` — all the JavaScript (`.mjs`, `.js`; `checkJs`): the kit's scripts and tests and `static/kit.src.js`, whose build-time globals are declared in `static/kit.src.globals.d.ts` |
+| `npm run lint` | ESLint over the whole repository; no warnings allowed |
+| `npm test` | every unit test (`node --test`), `src/kit/tests/*.test.mjs` among them: preferences and the inline scripts, the static chrome, the rendering budget, the engine's routing, navigation, slugs, markdown and platforms, the Doxygen chrome |
+| `npm run build` | the whole site into `dist/`, each docs site with its own link check |
+| `node scripts/docs-sites.mjs build src/kit/demo src/kit/demo/lip.config.ts src/kit/demo/single.config.ts` | the engine's test sites, each built and link-checked |
+| `npm run linkcheck` | internal links, redirects and anchors of the whole `dist/` |
+| `npm run smoke` | every browser check against the built `dist/` (below) |
+
+`npm run smoke` is `node scripts/smoke-all.mjs [main] [chrome] [docs] [mods] [prefs]` (no name: all five). It needs
+the build and Playwright's Chromium (`npx playwright install chromium`, once per machine) and starts the preview
+servers itself, on free ports:
+
+| Part | Script | On |
+|---|---|---|
+| `main` | `scripts/smoke.mjs` | levimc.org's own pages, languages, blog and 404 handling |
+| `chrome` | `src/kit/scripts/smoke.mjs --app` | the LeviMC bar, footer, theme and language on levimc.org's pages and the blog |
+| `docs` | `src/kit/scripts/smoke.mjs` (docs mode) | the same, and the docs' navigation, search, tabs and copy buttons, on every docs site of `content/` |
+| `mods` | `scripts/mods/smoke.mjs` | LeviMC Mods, served by its own preview (`.build/mods/`) |
+| `prefs` | `src/kit/tests/cross-site.e2e.mjs` | theme and language shared between levimc.org and a docs site (`--app dist --docs dist --docs-base /lip/`) |
+
+The kit's scripts on their own (Node ESM; Playwright where noted):
 
 ```sh
 # GitHub Pages emulation: file → 200, /x → x.html, /x → 301 /x/ for any directory, repeated slashes collapsed
-# (//about/ serves about/index.html), else 404.html (404)
-node src/kit/scripts/serve-pages.mjs dist --base /LeviLamina/ --port 4173
+# (//about/ serves about/index.html), else 404.html (404).   npm run preview = dist --base / --port 4173
+node src/kit/scripts/serve-pages.mjs .build/docs/lip/dist --base / --port 4173
 
 # internal links (+ redirects + #anchors); --external checks every external URL with curl
-node src/kit/scripts/linkcheck.mjs dist --base /LeviLamina/ --site-origin https://levimc.org \
-     [--external] [--allow-redirect-hosts aka.ms,discord.gg,qm.qq.com] [--ignore-paths /LeviLamina/api/] [--json out.json]
+node src/kit/scripts/linkcheck.mjs .build/docs/LeviLamina/dist --base /LeviLamina/ --site-origin https://levimc.org \
+     [--locale-first zh-Hans,zh-Hant] [--external] [--allow-redirect-hosts aka.ms,discord.gg,qm.qq.com] \
+     [--ignore-paths /LeviLamina/api/] [--other-sites /mods/] [--json out.json]
 
 # every live URL (sitemap.xml, else crawl) must answer 200 with 0 redirects locally;
 # --anchors also requires every live heading id (old #deep-links) to exist on the local page
@@ -813,27 +787,41 @@ node src/kit/scripts/text-parity.mjs --live https://levimc.org/LeviLamina/ --loc
      [--paths a/,b/ | --paths-file f] [--live-selector 'article.md-content__inner' | '.vp-doc'] [--json out.json]
      # a path may differ per side: --paths 'daemon/overview.html=>daemon/overview/'
 
-# browser smoke test (Playwright): docs mode, or app mode for plain Vite apps
-node src/kit/scripts/smoke.mjs --url http://127.0.0.1:4173/LeviLamina/ [--search-term hook] [--pages a/,b/,c/] [--redirect-lang zh]
-node src/kit/scripts/smoke.mjs --app --url http://127.0.0.1:4173/ [--pages about/,projects/] [--current home] [--not-found missing/]
+# browser smoke test (Playwright): docs mode for a docs site, app mode for the apps
+node src/kit/scripts/smoke.mjs --url http://127.0.0.1:4173/LeviLamina/ [--search-term hook] [--pages a/,b/,c/] \
+     [--tabs-page x/] [--copy-page x/] [--redirect-lang zh] [--current projects] [--headed]
+node src/kit/scripts/smoke.mjs --app --url http://127.0.0.1:4173/ [--pages about/,community/] [--current about] \
+     [--not-found missing/] [--headed]
 
-# kit unit tests (cookies, locale mapping, pre-paint script, docs root redirect) and the cross-site e2e
-node --test "kit/tests/*.test.mjs"
-node src/kit/tests/cross-site.e2e.mjs --app <app dist> --docs <docs dist> --docs-base /Demo/
+# the kit's unit tests alone, and the cross-site e2e (Playwright)
+node --test "src/kit/tests/*.test.mjs"
+node src/kit/tests/cross-site.e2e.mjs --app dist --docs dist --docs-base /lip/
 
+# the same bar and footer on one page of every LeviMC site (a local preview: http://127.0.0.1:4173/=https://levimc.org)
+node src/kit/scripts/chrome-parity.mjs [url …]
+
+# a screenshot (Playwright)
 node src/kit/scripts/shot.mjs <url> <out.png> [light|dark] [w] [h] [--full]
 ```
 
 Both smoke modes check the unified chrome: the GlobalBar's canonical tabs (in order, with their canonical
-URLs) and controls (language · theme · GitHub), Auto as the default theme following the system live, theme and
-language stored in the `levimc_theme` / `levimc_lang` cookies and applied after a reload from the cookie alone,
-the menu keys of the theme and language menus, no paint of the prerendered language for a stored `zh-CN`
-preference (apps and single-locale docs: the chrome and `<main>` stay hidden until they switch),
-the 390px layout (controls visible, exactly one menu button whose menu holds every bar link and the five docs
-projects, no sideways scroll), no console or hydration errors and the themed 404. Docs mode adds SPA
-navigation, the docs header (no duplicated controls, sticky while the bar scrolls away), Ctrl+K search, the
-language menu landing on the equivalent page, the root-only redirect (stored preference wins, also after an
-in-site link), content tabs and copy buttons.
+URLs) and controls (language · theme · GitHub), the current tab, Auto as the default theme following the system
+live, theme and language stored in the `levimc_theme` / `levimc_lang` cookies and applied after a reload from the
+cookie alone, the menu keys of the theme and language menus, no paint of the prerendered language for a stored
+preference, the 390px layout (controls visible, exactly one menu button whose menu holds every bar link and the
+docs projects, no sideways scroll), no console or hydration errors and the themed 404.
+
+Docs mode adds SPA navigation, the docs chrome (no header row; one search trigger, in the LeviMC bar, which sticks;
+no duplicated controls in the site column), the navigation model of kit 2.26 (the brand is the home link; the first
+section may be the home page — Overview — and is then the current one there; no other section links the home page;
+the current section holds the page, and prev / next stays inside it), Ctrl+K search, the language menu landing on
+the equivalent page, the root-only redirect (stored preference wins, also after an in-site link), content tabs and
+copy buttons (the copied text compared without Windows' CRLF line ends). The current tab it expects is `tutorials`
+or `faq` on those two sites and `projects` on every project's docs; `--current` overrides it.
+
+`tests/cross-site.e2e.mjs` loads `https://levimc.org/` and `https://levimc.org<docs-base>` in Chromium with every
+request answered from the two builds (`--app`, `--docs`; the same `dist/` for the merged site), so the browser's
+real cookie rules apply; it picks levimc.org's language codes (`zh-Hant`).
 
 External link verdicts: `ok`, `ok-redirect` (`/releases/latest` and allow-listed hosts), `ok-auth`
 (GitHub edit links redirect to sign-in), `redirect` (update the link to the final URL), `blocked`
@@ -861,7 +849,7 @@ External link verdicts: `ok`, `ok-redirect` (`/releases/latest` and allow-listed
   `scroll(root)`), scrims are plain colour. Blend a texture over a painting as a `background-blend-mode` layer with its
   opacity baked into the tile (`--kit-backdrop-brush`, `--kit-footer-brush`), not as a `mix-blend-mode` element.
 * Put the GlobalBar first on every page, unmodified: same tabs, same controls, same order on every site. A site's
-  own navigation goes below it as a light secondary row (the docs header) or in the page itself.
+  own navigation goes in the page itself (the docs: the site column).
 * Read and write theme / language only through the kit (`ThemeProvider`, `LocaleSwitcher`, `usePreferredLocale`,
   `prefs.ts`), so the choice is shared by every LeviMC site.
 
@@ -881,105 +869,110 @@ External link verdicts: `ok`, `ok-redirect` (`/releases/latest` and allow-listed
 * Don't ship CJK webfonts, recolour sprites, or add new display typefaces.
 * Don't render dates/random values differently on server and client (hydration); format dates with
   `timeZone: 'UTC'` like the kit does.
-* Don't edit a site's `kit/` (it is fetched); change the kit in levimc.org.
+* Don't edit what a build writes (`static/kit.js`, `static/theme-init*.js`, `theme/generated.css`, `theme/hero.css`,
+  `components/pixel-icons.ts`): change the source and regenerate ([Maintaining the kit](#maintaining-the-kit)).
 * Don't add theme, language or GitHub-organisation controls to a site's own header (they live in the GlobalBar),
-  and don't store those preferences under site-specific keys. The project's own repository icon belongs in the
-  docs header's resources slot (`repo`), nowhere else.
-* Don't give a docs site a Home tab, dropdown tabs, single-page tabs or external tabs: tabs are sections (one sidebar
-  tree each), the brand is the home link, and downloads / changelogs go to `header.links`
+  and don't store those preferences under site-specific keys. The project's own repository link belongs in the
+  site column's resources (`repo`), nowhere else.
+* Don't give a docs site dropdown tabs, external tabs or single-page tabs other than the home page's (Overview):
+  tabs are sections (one sidebar tree each), the brand is the home link, and downloads / changelogs go to `header.links`
   ([Navigation model](#navigation-model-kit-226)). Don't leave a doc page outside every section (the build warns).
 * Don't add a second menu button: on phones and tablets the LeviMC bar's menu button opens the site's own menu.
 
-## Porting checklist: MkDocs sites (LeviLamina, LegacyScriptEngine)
+## Adding a project's docs: from MkDocs
 
-1. Vendor the kit; add `package.json` (template), `tsconfig.json`, `vite.config.ts`, `.gitignore`.
-2. `node src/kit/scripts/mkdocs-nav.mjs mkdocs.yml` → paste into `docs.config.ts`. Keep `urlStyle: 'directory'`,
-   `i18n.mode: 'suffix'` (locales `en` default + `zh`, `lang: 'zh'` like the live site), `slug: 'pymdownx'`,
-   `markdown.compat: 'python-markdown'`, `sidebar: 'tabs'`, `hostname`/`sitemap: { hostname: 'https://levimc.org' }`.
-3. `exclude: ['overrides/**']` (theme overrides are not content). Delete `mkdocs.yml`, `requirements.txt`,
-   `overrides/` once the port is merged (the language-redirect script there is replaced by the kit's).
-4. `logo`/`favicon` paths stay as in `theme.logo`/`theme.favicon` (they are copied verbatim).
-5. `editLink: 'https://github.com/LiteLDev/<Repo>/edit/<branch>/<docs_dir>/:path'`.
-6. Fix nav entries pointing at external own-site URLs: `https://levimc.org/LeviLamina/api` →
-   `https://levimc.org/LeviLamina/api/`; `https://levimc.org/about` → `https://levimc.org/about/`.
-7. `npm run build` — fix every warning (unresolved links, missing anchors). Known in LeviLamina today:
-   `build_guide(.zh).md` links `architecture.md` (should be `../architecture.md`) and
-   `how_to_guides/testing_guide.md` (missing page).
-8. Serve, then: `linkcheck` (0 internal errors; `--ignore-paths /LeviLamina/api` because Doxygen is merged
-   later in CI), `linkcheck --external` (fix `redirect`/`broken`), `url-parity --anchors` (all live URLs 200,
-   0 redirects, every old #anchor present), `text-parity` (expect only the documented differences below), `smoke`.
+A project's docs live in `content/<Project>/` of this repository. "Adding a project's docs" in
+[content/README.md](../../content/README.md) has the steps (the folder, the config with `i18n.localeFirst` and
+`formerPrefixes`, turning the project's own GitHub Pages off); these are the engine's details for sources written
+for MkDocs (LeviLamina and LegacyScriptEngine came this way).
 
-   Reference results for the unmodified upstream content built with this kit (kit 1.0.0):
-   LeviLamina — 88 pages, URL parity 88/88 + all 1106 heading anchors, text parity 99.978 % (74/87 pages
-   identical; 12 of the 13 differences are only MkDocs' stray backslash before `<` — `Observable\<T>`,
-   `Overload\<Params>`, `CoroTask\<T>`, `Generator\<T>`, `Listener\<T>`, `Cancellable\<T>`, `Expected\<T>`,
-   `\<=1.7.5` — which the kit renders as the author wrote them; with `markdown.literalBackslashes: true` it is
-   86/87 identical, 99.998 %). LegacyScriptEngine — 92 pages, URL parity 92/92 + all 1537 anchors, text parity
-   80/91 identical (99.977 %, every remaining difference listed under Known limitations).
-9. CI: replace the mkdocs job with `npm ci && npm run build`; keep the Doxygen job and merge
-   `site/api` into `dist/api` as before (header/footer/CSS from `kit/static/doxygen`).
+1. The markdown goes to `content/<Project>/pages/` as it is: `x.md`, `x.zh.md`, the images and other files beside
+   them (with `urlStyle: 'directory'` every non-markdown file is copied verbatim, so `logo` / `favicon` keep the
+   paths of `theme.logo` / `theme.favicon`). `mkdocs.yml`, `requirements.txt` and the theme's `overrides/` are not
+   content: leave them behind (the language-redirect script there is replaced by the kit's).
+2. `node src/kit/scripts/mkdocs-nav.mjs path/to/mkdocs.yml` prints `nav`, `navTranslations`, `i18n` and the site's
+   metadata as JSON for `docs.config.ts`. Keep `urlStyle: 'directory'`, `i18n.mode: 'suffix'`, `slug: 'pymdownx'`,
+   `markdown.compat: 'python-markdown'` and `sidebar: 'tabs'`: every URL and every heading id then stays as MkDocs
+   made it.
+3. Arrange `nav` as the four sections of the [navigation model](#navigation-model-kit-226); the build warns about
+   a page in no section and a top-level entry that is not a section.
+4. Nav entries that point at pages of levimc.org outside the docs name the exact URL, with its trailing slash:
+   `https://levimc.org/LeviLamina/api/`, `https://levimc.org/about/`.
+5. `node scripts/docs-sites.mjs build <Project>` — fix every warning (unresolved links, missing anchors). The link
+   check of the site's pages runs with the build.
+6. While the old site is still online, serve the build (`node src/kit/scripts/serve-pages.mjs
+   .build/docs/<Project>/dist --base /`) and compare: `url-parity.mjs --anchors` (every live URL answers 200 with no
+   redirect, every old #anchor exists), `text-parity.mjs` (expect only the differences under
+   [Known limitations](#known-limitations)), `linkcheck.mjs --external` (fix `redirect` / `broken`), `smoke.mjs`.
 
-## Porting checklist: VitePress sites (lip, LeviLauncher, LeviLaunchroid)
+## Adding a project's docs: from VitePress
 
-1. Vendor; add the four files. `contentDir: 'docs'`, `urlStyle: 'html'`, `cleanUrls` as in the old config
-   (LeviLauncher: `true`; lip: `false`), `i18n.mode: 'folder'` with the old locales (`root` → default with
-   `prefix: ''`; `zh-CN`, `zh-HK`, `es-ES`, … with `prefix: '<code>/'`), `slug: 'vitepress'`,
+The same for sources written for VitePress (lip and LeviLauncher came this way):
+
+1. The markdown and its locale folders go to `content/<Project>/pages/`; `public/` either stays inside it (the
+   default `publicDir`) or becomes `content/<Project>/public/` with `publicDir: 'public'`. `.vitepress/` is left
+   behind. Keep `urlStyle: 'html'`, `cleanUrls` as in the old config (LeviLauncher: `true`; lip: `false`),
+   `i18n.mode: 'folder'` with each locale's `folder` as it was, `slug: 'vitepress'` and
    `markdown.compat: 'commonmark'`.
-2. Move `themeConfig.nav` → `nav: { [locale]: … }`, `themeConfig.sidebar` → `sidebar: { [locale]: … }` (the
-   builder functions can be pasted as-is; they return the same shapes). `docFooter`/`editLink.text`/labels →
-   `ui` or `editLink.text`. `head` stays VitePress-shaped. `public/` is picked up automatically.
+2. `themeConfig.nav` and `themeConfig.sidebar` become `nav` (`{ text, link }` / `{ text, items }` entries work as
+   they are), arranged as the four sections of the [navigation model](#navigation-model-kit-226) with
+   `sidebar: 'tabs'`. `docFooter`, `editLink.text` and the other labels → `ui` or `editLink.text`. `head` stays
+   VitePress-shaped.
 3. Remove the inline language-redirect `<script>` from `head` (the kit does root-only redirects from the
    cross-site language preference).
-4. Home page frontmatter (`layout: home`, `hero`, `features`) works unchanged.
-5. Build, fix warnings, run the same verification as for MkDocs. lip was ported in `demo/lip.config.ts` as
-   a reference: 56 pages, 0 build warnings, 0 internal link errors, URL parity 52/52 (+ heading anchors),
-   text parity 100 % (51/51 pages identical), smoke 11/11.
+4. Vue components inside markdown are not supported, except `<Badge>`; the build reports the others.
+5. Build, fix the warnings and compare as for MkDocs. `demo/lip.config.ts` is a VitePress-style site (folder
+   locales, `.html` URLs, a `layout: home` page, the deprecated `sidebar` object) kept as one of the engine's test
+   sites.
 
 ## Known limitations
 
-* Python-Markdown compatibility is targeted at the constructs used in LiteLDev docs. Remaining differences on
-  the live pages are all source bugs or quirks where the kit renders the author's intent:
+* Python-Markdown compatibility is targeted at the constructs used in the LiteLDev docs. The differences from what
+  MkDocs rendered were all source bugs or quirks where the kit renders the author's intent:
   unbalanced `**` handled differently (pymdownx.betterem: LL `usage_guidelines`, LSE `NBT.zh`), `hh:mm:ss`
-  eaten by pymdownx.emoji on the live site (LSE `Economy`), 2-space-indented fences inside footnotes (live
-  renders them as inline code "json …"; the kit renders code blocks — LSE `i18n`), `Array<NBT object>` /
-  `Object<string, NBT Object>` (the live site lets the browser swallow them as tags; the kit shows them), a
+  eaten by pymdownx.emoji (LSE `Economy`), 2-space-indented fences inside footnotes (MkDocs rendered them as inline
+  code "json …"; the kit renders code blocks — LSE `i18n`), `Array<NBT object>` /
+  `Object<string, NBT Object>` (MkDocs let the browser swallow them as tags; the kit shows them), a
   stray double backtick in LSE `NBTValue`, and LeviLamina's escaped generics (`Observable<T>`, `<=1.7.5`, …
   instead of MkDocs' `Observable\<T>`, `\<=1.7.5`; opt back in with `markdown.literalBackslashes: true`).
-* pymdownx extensions that LiteLDev configures but never uses (critic, keys, mark, caret, tilde,
+* pymdownx extensions that LiteLDev configured but never used (critic, keys, mark, caret, tilde,
   smartsymbols, emoji, arithmatex, abbr, def_list, attr_list beyond heading ids) are not implemented.
 * VitePress Vue components inside markdown are not supported, except `<Badge>`; unknown tags are escaped and
   reported.
-* Search indexes prose and inline code, not fenced code blocks (LeviLamina: 416 KB en / 655 KB zh raw,
-  105 KB / 168 KB gzipped; loaded only when search is opened).
+* Search indexes prose and inline code, not fenced code blocks.
 * The theme menu trigger's `aria-label` is the generic "Theme" until hydration (kit.js: until it runs); its
   sprite, visible state name and the checked item are correct immediately (CSS from `html[data-theme-pref]`).
-* The "language pending" hiding (apps, single-locale docs, static pages) has a 1.5 s fail-safe: when the
-  scripts take longer, the prerendered language shows until they run.
+* The "language pending" hiding (the apps' chrome, single-locale docs, static pages) has a 1.5 s fail-safe: when
+  the scripts take longer, the prerendered language shows until they run.
 * Doxygen's own markup keeps a few axe findings the kit does not touch: icon-only links in the tree
   (`link-name`), no `<h1>`, and doxygen-awesome's floating TOC outside the landmarks (`region`).
 * Language preferences stored by pre-kit sites under their own keys (e.g. VitePress's `levilauncher-docs-locale`)
   are not read; kit 1.0's `levimc-locale-<site>` keys and the 1.0 theme key are migrated.
-* `lastUpdated` needs git history (`fetch-depth: 0` in CI).
+* `lastUpdated` needs the git history: a shallow clone gives no dates (the workflows check out with
+  `fetch-depth: 0`).
 
 ## Maintaining the kit
 
 Commands run from the repository root, with the site's dependencies installed (`npm ci`).
 
-* Sprites: edit `assets/sprites.mjs`, then `npm run kit:assets` (regenerates `assets/icons/`,
-  `components/pixel-icons.ts`, `theme/generated.css` — including the painted backdrop scenes from
-  `components/paint.ts` — and `theme/hero.css`).
-* Static chrome: `npm run kit:static` (snippets, `kit.js` from `kit.src.js`, `kit.css`, `kit-chrome.css`,
-  `kit-nojs-dark.css`, pages, and the Doxygen templates in `doxygen/`). Rebuild it after any change to the
-  components, the theme CSS, `prefs.ts` or `i18n.ts`.
+* Sprites: edit `assets/sprites.mjs`, then `npm run kit:assets` (`assets/build-assets.mjs`: regenerates
+  `assets/icons/`, `components/pixel-icons.ts`, `theme/generated.css` — including the painted backdrop scenes from
+  `components/paint.ts` — and `theme/hero.css` with its two scene files).
+* Static chrome: `npm run kit:static` (`static/build-static.mjs`: the snippets, `kit.js` from `kit.src.js`,
+  `theme-init*.js`, `kit.css`, `kit-chrome.css`, `kit-nojs-dark.css`, `pages/`, and in `doxygen/` at the repository
+  root `header.html`, `footer.html` and `header-parts.json`). Rebuild it after any change to the components, the
+  theme CSS, `prefs.ts`, `i18n.ts` or `kit.src.js`, and commit what it wrote. `kit.js` and `theme-init*.js` are
+  generated: neither linted nor type-checked — `kit.src.js` is both.
 * Test sites: `node scripts/docs-sites.mjs build src/kit/demo src/kit/demo/lip.config.ts src/kit/demo/single.config.ts`
   builds and link-checks the three (→ `.build/docs/demo/`, `demo-lip/`, `demo-single/`); serve one with
   `node src/kit/scripts/serve-pages.mjs .build/docs/demo/dist --base / --port 4173`, then
-  `node src/kit/scripts/smoke.mjs --url http://127.0.0.1:4173/Demo/`. Cross-site:
-  `node src/kit/tests/cross-site.e2e.mjs --app dist --docs .build/docs/demo/dist`.
-* Bump `VERSION` and `components/version.ts` together for a release (the tests and build-static check they agree)
-  and add a [Changelog](#changelog) entry.
-* CI (`.github/workflows/ci.yml`) type-checks, tests and builds the whole site and the test sites on every pull
-  request. Before merging a chrome change, run `scripts/chrome-parity.mjs` against a preview.
+  `node src/kit/scripts/smoke.mjs --url http://127.0.0.1:4173/Demo/`.
+* Before a pull request: `npm run typecheck && npm run lint && npm test`, then `npm run build`,
+  `npm run linkcheck` and `npm run smoke` ([Verification scripts](#verification-scripts)). CI
+  (`.github/workflows/ci.yml`) runs the same, and the test sites' build, on every pull request and every push to `main`.
+* Bump `VERSION` and `components/version.ts` together for a release (`tests/prefs.test.mjs` and build-static check
+  they agree) and add a [Changelog](#changelog) entry.
+* Before merging a chrome change, run `node src/kit/scripts/chrome-parity.mjs` against a preview.
 
 ## Changelog
 
@@ -1000,6 +993,11 @@ fetched, nothing published.
   (`docs/node/git.ts`, one `git log --name-status -M` over the repository).
 * **Doxygen:** `static/doxygen/` moved to `doxygen/` at the repository root, beside the Doxyfile; `build-static.mjs`
   writes `header.html`, `footer.html` and `header-parts.json` there.
+* **Checks:** `static/kit.src.js` is type-checked with the rest of the repository's JavaScript, its build-time globals
+  declared in `static/kit.src.globals.d.ts`. `scripts/smoke.mjs` follows the navigation model of kit 2.26 (the first
+  section may be the home page, Overview), expects the current bar tab `tutorials` / `faq` on those sites and
+  `projects` on a project's docs, and compares copied code without Windows' CRLF line ends.
+  `tests/cross-site.e2e.mjs` picks levimc.org's language codes (`zh-Hant`).
 
 ### 2.30.0
 

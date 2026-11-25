@@ -6,11 +6,12 @@ mod in it can be installed with [lip](https://github.com/LiteLDev/lip), and Levi
 browses the same catalogue.
 
 It is a static site built from the mods' own repositories — the ones
-[`content/mods/repos.txt`](../../content/mods/repos.txt) names, see [Registry](#registry) — with the LeviMC web stack — [Vite](https://vite.dev), React 19,
-[React Router](https://reactrouter.com) 7, TypeScript and Tailwind CSS v4 — and
-the shared LeviMC design system, levimc-kit, beside it in `src/kit/` (see
-[Design system](#design-system)). It is
-built with Vite `base: '/mods/'`: every page and file is under `/mods/`.
+[`content/mods/repos.txt`](../../content/mods/repos.txt) names, see [Registry](#registry) — with the LeviMC web
+stack — [Vite](https://vite.dev), React 19, [React Router](https://reactrouter.com) 8, TypeScript and Tailwind CSS
+v4 — and the shared LeviMC design system, the kit, beside it in `src/kit/` (see [Design system](#design-system)).
+It is one part of levimc.org's one package and one build (the [root README](../../README.md)), built with Vite
+`base: '/mods/'`: every page and file is under `/mods/`, except the pages in the other languages
+(`/<lang>/mods/`) and the JSON (`/api/v4/mods/`).
 
 - **The listing** (`/mods/`) has the whole catalogue baked in: search as you type,
   filters, sort (relevance — when nothing is searched, the default order below — popularity,
@@ -49,7 +50,7 @@ built with Vite `base: '/mods/'`: every page and file is under `/mods/`.
   however it was reached.
 - The interface is in English, 简体中文 and 繁體中文, each at its own URLs: the
   locale segment comes first, as everywhere on levimc.org — `/mods/…`, `/zh-Hans/mods/…`,
-  `/zh-Hant/mods/…` (`src/locales.ts`) — and every page is prerendered in each language, with
+  `/zh-Hant/mods/…` (`src/mods/locales.ts`) — and every page is prerendered in each language, with
   hreflang alternates. The old URLs (`/mods/zh-Hans/…`) are redirect pages to the new ones. `/mods/` alone redirects to the visitor's language preference
   shared by every LeviMC site (else the browser's); the LeviMC bar's language menu
   links to the same page in another language and stores the choice. The theme
@@ -75,12 +76,13 @@ The listing's state is its query string, written in this order:
 Lists are comma-separated (`tags=economy,-library`); the groups combine with AND. Unknown keys and values are
 ignored, and a filter's count says how many mods it would leave. Older links keep working where they still mean
 something: `env=` is read as `side=`, `sort=stars` and `sort=downloads` sort by popularity, and `tags=` matches the normalised tags;
-`cat=`, `license=oss`, loader platforms (`platform=lse`) and `per=` are ignored. `src/lib/catalog-query.ts` is the
+`cat=`, `license=oss`, loader platforms (`platform=lse`) and `per=` are ignored. `src/mods/lib/catalog-query.ts` is the
 reference LeviLauncher follows (it forces `side=client` and its own platform).
+
 ## JSON
 
 Every page has its data under `/api/v4/mods/` (version 4: lip v0.40's keys). Both are written by
-`src/server/api.ts`; the shapes are `CatalogJson` and `ModJson` in `src/types.ts`. GitHub Pages also serves a
+`src/mods/server/api.ts`; the shapes are `CatalogJson` and `ModJson` in `src/mods/types.ts`. GitHub Pages also serves a
 folder's `index.json`, so `/api/v4/mods/` is the listing too (and `/api/v4/mods` redirects there). Keys whose value is unknown are left out (marked `?`). Ids are
 `github.com/<owner>/<repo>`; a variant's name is `""` for the default one.
 
@@ -134,21 +136,21 @@ default order (a query string does not reach the host, so filtering is left to t
 launchers that read them there (LeviLauncher 1.0.6 to 1.1.0-beta.3): `tooth` for `id`, `icon` for `logo`, `env` for
 `side`, `dependsOn` (the keys of `deps`), and each version's `variants` as
 `[ { label, platform?, dependencies, leviLamina?, install } ]`, with a top-level `variants: [ { label, versions } ]`.
-They are made from the version 4 JSON and lipr's `tooth.json` data (`src/server/legacy-json.ts`), so a version
+They are made from the version 4 JSON and lipr's `tooth.json` data (`src/mods/server/legacy-json.ts`), so a version
 without a `tooth.json` is not in them (lip before v0.40 cannot read it). The listing also has the mods unlisted only
 because they do not depend on LeviLamina, after the listed ones. `categories` and `platforms` stay empty. Frozen:
 new keys go to version 4 only.
 
 ## Registry
 
-[`repos.txt`](repos.txt) lists the GitHub repositories the catalogue is built from, one `owner/repo` per line. It
+[`content/mods/repos.txt`](../../content/mods/repos.txt) lists the GitHub repositories the catalogue is built from, one `owner/repo` per line. It
 replaces [lipr](https://github.com/LiteLDev/lipr) (lip's registry, which the site used to read): it started as the
 repositories of every package lipr had.
 
-- **Versions.** `src/server/registry.ts` lists each repository's tags (`git ls-remote`); every `v<semver>` tag is a
-  version, read the way lip v0.40 reads a package: the `lip.toml` at that tag (`src/lib/lipfile.ts`: format 4, its
+- **Versions.** `src/mods/server/registry.ts` lists each repository's tags (`git ls-remote`); every `v<semver>` tag is a
+  version, read the way lip v0.40 reads a package: the `lip.toml` at that tag (`src/mods/lib/lipfile.ts`: format 4, its
   Scriban templates rendered, checked like lip checks it — one that lip cannot read makes the tag no version), else,
-  only when the tag has none, its `tooth.json`, read as lip reads one (`src/lib/manifest.ts` `toothToV4`: each
+  only when the tag has none, its `tooth.json`, read as lip reads one (`src/mods/lib/manifest.ts` `toothToV4`: each
   variant's entries for the sides its LeviLamina dependency implies, followed through the mods it depends on, and
   for every platform a launcher can force when it names none). It also makes the repairs lipr's maintainers made by
   hand: the tag is the version (a manifest saying `v1.2.0`, or not bumped), and a `tooth.json` is filed under the
@@ -170,24 +172,25 @@ repositories of every package lipr had.
   (branch `mods/add/<owner>/<repo>`) is not proposed again. To take a mod off, close its pull request or delete its line.
   `node scripts/mods/discover.mjs --dry-run` shows what it would propose (needs `GH_TOKEN`). The workflow token's code
   search limit is shared and often exhausted (HTTP 429): the script waits as GitHub asks for up to ten minutes, then
-  skips the run with a warning. A `MODS_SEARCH_TOKEN` secret (a personal token, no scopes) gives it a limit of its own.
+  skips the run with a warning. A `MODS_SEARCH_TOKEN` secret (a personal token, no scopes; the script reads it as
+  `SEARCH_TOKEN`) gives it a limit of its own.
 
 ## Data
 
-At build time (`src/server/catalog.ts`) the registry is enriched with:
+At build time (`src/mods/server/catalog.ts`) the registry is enriched with:
 
 | Source | Used for | Without it |
 | ------ | -------- | ---------- |
 | the latest version's package file | tags (shown as published; see [Tags](#tags)), sides and platforms (any entry's), dependencies, the default variant (among those with a `server` entry, else a `client` one: for a `lip.toml` version the default `""`, then `client`, then the others by name; for a `tooth.json` version `client`, then `""`, then the others — rule A2, which LeviLauncher and LeviLauncher-Android use for the client) | — |
 | every version's package file | "Required by", Game Version (every version's dependency ranges, followed to LeviLamina and its `bds` version), each version's sides, platforms and LeviLamina range | — |
-| GitHub GraphQL (`GITHUB_TOKEN`) | where renamed repositories live, stars, release dates, creation date, license (SPDX id; `src/data/licenses.ts` overrides the few GitHub cannot tell), organization owner | links keep the id's path, no stars, dates are when the build first saw a version, no "Newest" sort and no License filter |
+| GitHub GraphQL (`GITHUB_TOKEN`) | where renamed repositories live, stars, release dates, creation date, license (SPDX id; `src/mods/data/licenses.ts` overrides the few GitHub cannot tell), organization owner | links keep the id's path, no stars, dates are when the build first saw a version, no "Newest" sort and no License filter |
 | GitHub REST releases (`GITHUB_TOKEN`; one request per repository, as GraphQL refuses release files for a batch) | downloads: release files' download counts, over every release | no downloads (popularity is stars alone) |
-| `docs/showcase/showcase.json` on each mod's default branch | the Gallery tab (`src/server/showcase.ts`) | no Gallery tab |
-| each mod's logo (`info.logo`, a `tooth.json`'s `avatar_url`; `https://` only) | the icon in rows and on pages, downloaded once and scaled with [sharp](https://sharp.pixelplumbing.com) (a devDependency) to 96/144/288 px WebP under `/mods/icons/` (`src/server/icons.ts`), served with `srcset` | no logo, or one that does not load: a drawn one (see [Drawn logos](#drawn-logos)); one sharp cannot read: the original file |
+| `docs/showcase/showcase.json` on each mod's default branch | the Gallery tab (`src/mods/server/showcase.ts`) | no Gallery tab |
+| each mod's logo (`info.logo`, a `tooth.json`'s `avatar_url`; `https://` only) | the icon in rows and on pages, downloaded once and scaled with [sharp](https://sharp.pixelplumbing.com) (a devDependency) to 96/144/288 px WebP under `/mods/icons/` (`src/mods/server/icons.ts`), served with `srcset` | no logo, or one that does not load: a drawn one (see [Drawn logos](#drawn-logos)); one sharp cannot read: the original file |
 
 ### Drawn logos
 
-A mod without a logo that loads gets one drawn at build time (`src/server/logo-art.ts`), scaled like any other,
+A mod without a logo that loads gets one drawn at build time (`src/mods/server/logo-art.ts`), scaled like any other,
 in the manner of the logos mods ship: a small vector scene of textured isometric blocks under a sky, with an emblem
 for what the mod is about, and the owner's GitHub avatar as a round badge in the bottom-right corner. There is no
 text: the name is next to the logo wherever it is shown.
@@ -240,7 +243,7 @@ repository's default branch. The gallery is not tied to a version; the next buil
   references; embedded `data:image/png|webp|jpeg` sprites and `#id` references are fine). The build log says
   what it left out (`showcase: …`).
 
-**Default order** (relevance without a search, `src/lib/ranking.ts`), fitted
+**Default order** (relevance without a search, `src/mods/lib/ranking.ts`), fitted
 over the whole catalogue at every build, one row per repository:
 negative-binomial GLMs give the stars and dependents a mod like it would get
 (stars: covariates fixed before anyone could star it, chosen by BIC — age,
@@ -250,7 +253,7 @@ its actual stars and dependents against those; and each game version it is
 behind the newest costs ln q, q being how often the catalogue's mods keep
 supporting the next version. The build log prints the fitted model.
 
-**Popularity** (the Popularity sort, `src/lib/popularity.ts`): how widely a mod
+**Popularity** (the Popularity sort, `src/mods/lib/popularity.ts`): how widely a mod
 is used, from its release downloads (installs: lip and the launchers download
 release files) and its stars, each as ln(1 + n) standardised over the catalogue
 (one row per repository), averaged. A mod whose releases have no files has
@@ -260,7 +263,7 @@ unknown downloads, not none: its stars stand for both. Rows show both counts
 ### Tags
 
 Nothing is curated by hand beyond `repos.txt`: a mod's tags are its package file's `info.tags`, and the JSON carries
-them untouched. Only the pages (and LeviLauncher) read them, through `src/data/featured-tags.ts`:
+them untouched. Only the pages (and LeviLauncher) read them, through `src/mods/data/featured-tags.ts`:
 
 - a tag is compared in lower case, without a `category:` prefix (`category:Utility` is `utility`);
 - tags that say what the side and platform already say, or that nearly every mod has, are never shown: `platform:*`,
@@ -292,7 +295,7 @@ Every other tag follows, most used first. `lse`, `quickjs` and `nodejs` are ordi
 rarely declare their dependency on it, so these are how they are found.
 
 The registry has every package lip installs, so it also holds what is not a mod. The listing
-(search, filters, counts, sitemap) has only mods; `src/lib/listing.ts` decides,
+(search, filters, counts, sitemap) has only mods; `src/mods/lib/listing.ts` decides,
 from each package's latest manifest and its repository, again on every build:
 
 | Package | Shown as | Why |
@@ -321,14 +324,14 @@ root is `src/mods/`), with `MODS_REPOS_FILE` naming `content/mods/repos.txt` and
 
 | Command | What it does |
 | --- | --- |
-| `node scripts/mods/run.mjs build` | client build, SSR build, then `prerender.mjs` writes every page, the JSON from before version 4, the hero paintings and `sitemap.xml` to `.build/mods/dist/` (the site's `/mods/`), the pages in the other languages to `dist-locales/<lang>/` (the site's `/<lang>/mods/`; the files they load stay under `/mods/`), and the JSON to `dist-api/` (the site's `/api/`). `npm run build -- mods` does this and copies them into the site's `dist/` |
-| `node scripts/mods/run.mjs preview` | serves that build the way GitHub Pages does, on <http://127.0.0.1:4173/mods/> |
-| `npm run lint` | ESLint (typescript-eslint, React hooks) |
-| `npm run typecheck` | `tsc --noEmit` (the whole site) |
-| `npm test` | unit tests (`node:test`; the whole site's): package files (against lip's golden data), query parsing and filters, tags, licenses, search, URLs, README rendering, prerendering |
-| `node scripts/mods/run.mjs budget` | checks the size budgets of the built home page, JavaScript and CSS |
+| `node scripts/mods/run.mjs build` | client build, SSR build, then `prerender.mjs` writes every page, the JSON from before version 4, the hero paintings and `sitemap.xml` to `.build/mods/dist/` (the site's `/mods/`), the pages in the other languages to `dist-locales/<lang>/` (the site's `/<lang>/mods/`; the files they load stay under `/mods/`), and the JSON to `dist-api/` (the site's `/api/`). `npm run build -- mods` does this and copies them into the site's `dist/` (which `npm run build -- main` made) |
+| `node scripts/mods/run.mjs preview` | serves that build the way GitHub Pages does, on <http://127.0.0.1:4173/mods/> (`--port` for another port) |
 | `node scripts/mods/run.mjs linkcheck` | checks every internal link and anchor in the build |
-| `npm run smoke:mods` | browser test of the built site against the preview (needs Playwright), every mod page included |
+| `npm run budget` | `node scripts/mods/run.mjs budget`: checks the size budgets of the built home page, JavaScript and CSS |
+| `npm run smoke -- mods` | browser test of the build, every mod page included (`scripts/mods/smoke.mjs`). It starts the preview itself, on a free port; `node scripts/mods/run.mjs smoke` runs it against a preview that is running on port 4173. Playwright is a devDependency: `npx playwright install chromium` once per machine |
+| `npm run typecheck` | `tsc --noEmit` over the TypeScript and the JavaScript of the whole repository |
+| `npm run lint` | ESLint (typescript-eslint, React hooks) over the whole repository, no warnings allowed |
+| `npm test` | unit tests (`node:test`; the whole repository's). This app's: package files (against lip's golden data), query parsing and filters, tags, licenses, search, URLs, README rendering, prerendering |
 
 ## Layout
 
@@ -344,6 +347,9 @@ src/mods/
   base-path.ts        BASE, the site's path on levimc.org (`/mods/`)
   i18n.ts             interface strings (en, zh-CN, zh-Hant); locales.ts lists the languages and their URL segments
   kit-ui.ts           the kit components the site uses
+  types.ts            the shapes of the catalogue, a mod and the JSON
+  page-data.ts        the data embedded in a prerendered page; page-store.ts fetches it as the reader navigates
+  styles.css          the app's styles, on the kit's theme
   data/               featured tags (with their groups), license families, sides, sprite names
   pages/              home, mod and 404 pages
   components/         listing (search, toolbar, filters, rows), mod page (header, tabs, versions,
@@ -351,22 +357,25 @@ src/mods/
   lib/                catalogue query (parse/serialize/run), search, package files (lip.toml, tooth.json), URLs, markdown helpers
   server/             build-time data: registry, catalogue, GitHub, JSON, icons, galleries, hero paintings
   public/             icon.png
+  **/*.test.ts        unit tests, beside what they test
 content/mods/repos.txt  the repositories the catalogue is built from (see Registry)
 scripts/mods/           run.mjs (dev, build, preview, checks), discover.mjs (proposes new repositories in pull requests),
                         preview.mjs, smoke.mjs, budget.mjs
 ```
 
+The build's output (`.build/mods/`) and the registry cache (`.cache/mods/`) are git-ignored.
+
 ## Design system
 
-Colours, fonts, components and the whole LeviMC chrome (the bar on top, the footer) come from levimc-kit,
-which is beside this app in [`src/kit`](../kit/README.md) and imported by relative path (`../kit/components/…`). The
-bar and footer links into the rest of levimc.org (Home, Blog, …) are ordinary links (`isAppPath`): only `/mods/` and
-`/<lang>/mods/` are this app.
+Colours, fonts, components and the whole LeviMC chrome (the bar on top, the footer) come from the kit, which is
+beside this app in [`src/kit`](../kit/README.md) and imported by relative path (`../kit/components/…`). The bar and
+footer links into the rest of levimc.org (Home, Blog, …) load in full (`KitRouterLink`,
+`src/mods/components/router-link.tsx`): only `/mods/` and `/<lang>/mods/` are this app.
 
 ## Deployment
 
 levimc.org's build (`npm run build`, `scripts/build.mjs`) builds this app after the site itself and copies its
 `dist/` to the site's `/mods/`, each `dist-locales/<lang>/` to `/<lang>/mods/` and `dist-api/` to `/api/`;
 `.github/workflows/deploy.yml` runs it on every push to `main` (a merged discovery pull request among them) and
-every hour, so the site picks up new versions. `.github/workflows/ci.yml` lints, tests and builds it with the rest
-of the site on every pull request.
+every hour, so the site picks up new versions. `.github/workflows/ci.yml` type-checks, lints, tests and builds it
+with the rest of the site on every pull request and every push to `main`, then checks the links, the size budgets and the pages in a browser.

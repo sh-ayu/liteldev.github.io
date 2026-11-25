@@ -2,11 +2,11 @@
 // The language is part of the URL, like on every LeviMC site: English at the site's own paths (/, /about/ …),
 // Simplified Chinese under /zh-Hans/ (/zh-Hans/about/ …), Traditional Chinese under /zh-Hant/. Every page is
 // prerendered in each language. Only the root (/) redirects: to the visitor's stored language (cookie levimc_lang),
-// else to the browser language's locale (see ROOT_REDIRECT_SCRIPT in src/prepaint.ts).
+// else to the browser language's locale (see ROOT_REDIRECT_SCRIPT in src/main/prepaint.ts).
 export type Locale = 'en' | 'zh-Hans' | 'zh-Hant';
 
 export interface SiteLocale {
-  /** The site's own code (keys of src/i18n/locales): also the URL segment and the BCP-47 tag. */
+  /** The site's own code (keys of src/main/i18n/locales): also the URL segment and the BCP-47 tag. */
   code: Locale;
   /** BCP-47 tag: <html lang>, hreflang, the kit chrome's locale, and the value stored as the cross-site preference. */
   lang: string;

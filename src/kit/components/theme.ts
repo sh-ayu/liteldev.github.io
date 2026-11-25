@@ -159,6 +159,7 @@ export function useTheme(): ThemeContextValue {
 /** true after hydration — use to gate UI that must not render on the server. */
 export function useMounted(): boolean {
   const [m, setM] = useState(false);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- what the hook is for: false while hydrating, true after
   useEffect(() => setM(true), []);
   return m;
 }

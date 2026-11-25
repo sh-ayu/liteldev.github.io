@@ -1,10 +1,11 @@
 #!/usr/bin/env node
-// Browser smoke test of the built site, served like GitHub Pages (`pnpm preview`).
+// Browser smoke test of the built site, served like GitHub Pages (`node scripts/mods/run.mjs preview`); part of
+// `npm run smoke` (scripts/smoke-all.mjs), which starts the preview itself.
 //
-//   node scripts/smoke.mjs --url http://127.0.0.1:4173/ [--headed] [--skip-all-pages]
+//   node scripts/mods/run.mjs smoke [--url http://127.0.0.1:4173/mods/] [--headed] [--skip-all-pages]
 //
-// Needs Playwright: either in $LEVIMC_PW_DIR (a node_modules directory) or installed in the app
-// (`pnpm add -D playwright`). Checks the listing (default order, search as you type, filters and
+// Needs Playwright's Chromium (`npx playwright install chromium`); $LEVIMC_PW_DIR names another node_modules
+// directory to take Playwright from. Checks the listing (default order, search as you type, filters and
 // their counts, exclusions, sort, page size, pagination, empty state, view mode, keyboard, the phone
 // drawer), the density targets (results above the fold), the listing URLs (and the old keys that
 // still work or are dropped), mod pages
@@ -23,7 +24,7 @@ const root = (opt("--url", "http://127.0.0.1:4173/") ?? "").replace(/\/?$/, "/")
 const require = createRequire(process.env.LEVIMC_PW_DIR ? `${process.env.LEVIMC_PW_DIR}/` : import.meta.url);
 const { chromium } = require("playwright");
 
-// tab titles: "<Page> - LeviMC", inside LeviMC Mods "<mod> - Mods - LeviMC" (see src/page-data.ts)
+// tab titles: "<Page> - LeviMC", inside LeviMC Mods "<mod> - Mods - LeviMC" (see src/mods/page-data.ts)
 const HOME_TITLE = "Mods - LeviMC";
 // the site's path (/mods/ on levimc.org)
 const base = new URL(root).pathname;
@@ -31,6 +32,9 @@ const base = new URL(root).pathname;
 const localeRoot = (lang) => new URL(`/${lang}${base}`, root).href;
 // a mod page (LeviLamina itself is the platform: it has a page, but is not in the listing)
 const LEVILAMINA = "github.com/LiteLDev/LeviLamina/";
+// a mod with a variant of its own (LeviLamina's `client` is a legacy client variant: the page shows it as part of
+// the default one, src/mods/lib/legacy-variants.ts)
+const PLAND = "github.com/IceBlcokMC/PLand/";
 const results = [];
 async function check(name, fn) {
   try {
@@ -45,6 +49,12 @@ async function check(name, fn) {
 function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
+
+/**
+ * What the checks keep on the window of a page: the mark that a full page load would wipe, and the layout shift so far.
+ * @typedef {typeof window & { __smokeMarker?: number, __cls: number }} SmokeWindow
+ * @typedef {PerformanceEntry & { hadRecentInput: boolean, value: number }} LayoutShift
+ */
 
 const proxy = process.env.HTTPS_PROXY || process.env.https_proxy;
 const browser = await chromium.launch({
@@ -123,14 +133,14 @@ async function open(path, ctx = context) {
     if (/Failed to load resource: net::ERR_FAILED/.test(m.text())) return; // a blocked third-party request
     errors.push(`console: ${m.text()} ${location}`);
   });
-  const response = await page.goto(root + path, { waitUntil: "networkidle" });
+  const response = /** @type {import("playwright").Response} */ (await page.goto(root + path, { waitUntil: "networkidle" }));
   return { page, errors, response };
 }
 const rows = (page) => page.locator(".mods-results-list > li");
 const rowNames = (page) => page.locator(".mods-results-list .mods-row-name").allInnerTexts();
 const statusText = (page) => page.locator("#mods-status").innerText();
-const markLoad = (page) => page.evaluate(() => (window.__smokeMarker = 1));
-const sameDocument = async (page) => (await page.evaluate(() => window.__smokeMarker)) === 1;
+const markLoad = (page) => page.evaluate(() => (/** @type {SmokeWindow} */ (window).__smokeMarker = 1));
+const sameDocument = async (page) => (await page.evaluate(() => /** @type {SmokeWindow} */ (window).__smokeMarker)) === 1;
 const applied = (page) => page.waitForFunction(() => !document.documentElement.hasAttribute("data-mods-pending"));
 const searchBox = ".mods-search-listing input[type=search]";
 /** The listing has caught up with the URL (and with what was typed). */
@@ -138,13 +148,13 @@ const settled = async (page) => {
   await applied(page);
   await page.waitForTimeout(250);
 };
-const entries = (page) => page.evaluate(() => JSON.parse(document.getElementById("mods-page-data").textContent).catalog.entries);
+const entries = (page) => page.evaluate(() => JSON.parse(/** @type {HTMLElement} */ (document.getElementById("mods-page-data")).textContent).catalog.entries);
 /** The ids of the rows shown. */
 const rowIds = (page) => page.locator(".mods-results-list .mods-row").evaluateAll((els) => els.map((e) => e.dataset.id));
 /** The filter option whose name starts with `name` (case-sensitive: plain tags are written "#tag"). */
 const optionNamed = (page, scope, name) =>
   page.locator(`${scope} .mods-opt-btn`).filter({ has: page.locator(".mods-opt-label", { hasText: new RegExp(`^${name}`) }) });
-/** Does a mod have a tag key (`tags=` value: a featured tag takes its aliases along, see src/data/featured-tags.ts)? */
+/** Does a mod have a tag key (`tags=` value: a featured tag takes its aliases along, see src/mods/data/featured-tags.ts)? */
 const tagged = (e, key) => tagKeys(e.tags).includes(key);
 
 console.log(`smoke: ${root}`);
@@ -181,7 +191,7 @@ await check("default order: by rank, at most three mods of one author on page 1"
 
 await check("hero is compact and the results start above the fold (1440×900, list)", async () => {
   const m = await home.evaluate(() => {
-    const hero = document.querySelector(".mods-hero").getBoundingClientRect();
+    const hero = /** @type {Element} */ (document.querySelector(".mods-hero")).getBoundingClientRect();
     const items = [...document.querySelectorAll(".mods-results-list > li")].map((li) => li.getBoundingClientRect());
     return { hero: hero.height, first: items[0].top, full: items.filter((r) => r.top >= 0 && r.bottom <= innerHeight).length };
   });
@@ -365,7 +375,7 @@ await check("top and bottom pagers: page 2 is current, Back returns to page 1", 
   await settled(home);
   assert((await home.locator('.mods-pager-top [aria-current="page"]').innerText()) === "2", "page 2 not current");
   assert((await rowNames(home))[0] !== firstBefore, "same first row");
-  const top = await home.evaluate(() => document.querySelector("[data-scroll-anchor]").getBoundingClientRect().top);
+  const top = await home.evaluate(() => /** @type {Element} */ (document.querySelector("[data-scroll-anchor]")).getBoundingClientRect().top);
   assert(top >= -1 && top < 200, `results not brought into view (${top}px)`);
   await home.goBack();
   await home.waitForURL((u) => !new URL(u).searchParams.has("page"));
@@ -392,6 +402,7 @@ await check("empty state: one message, no pagers, Clear search works", async () 
 await check("listing URLs, and old ones: kept keys work, removed keys and values are dropped", async () => {
   const all = (n, t) => n.length === Math.min(20, total) && t.length === 0;
   const count = (filter) => Math.min(20, catalog.filter(filter).length);
+  /** @type {[string, (names: string[], chips: string[]) => boolean][]} */
   const cases = [
     ["?q=land", (n) => n.some((x) => /land/i.test(x))],
     ["?q=%E9%A2%86%E5%9C%B0", (n) => n.some((x) => /PLand/i.test(x))],
@@ -502,7 +513,7 @@ await check("install: the header's deep link and the panel's command are the sel
 
 await check("install panel: picking a version makes it the page's selection (URL, header, deep links)", async () => {
   const select = mod.locator(".mods-install-panel select");
-  const values = await select.locator("option").evaluateAll((options) => options.map((o) => o.value));
+  const values = await select.locator("option").evaluateAll((options) => options.map((o) => /** @type {HTMLOptionElement} */ (o).value));
   const older = values[2];
   assert(older, "fewer than 3 versions");
   await select.selectOption(older);
@@ -534,7 +545,7 @@ await check("tabs: versions table marks the current version, Select changes it i
   const deps = await mod.locator(".mods-deps-tab section:first-child .mods-dep").count();
   assert(deps > 0, "no dependencies");
   // "Required by" needs levilauncher.json; a build without it leaves the section out
-  const known = await mod.evaluate(() => JSON.parse(document.getElementById("mods-page-data").textContent).dependentsKnown);
+  const known = await mod.evaluate(() => JSON.parse(/** @type {HTMLElement} */ (document.getElementById("mods-page-data")).textContent).dependentsKnown);
   const dependents = await mod.locator(".mods-deps-tab section:nth-child(2) .mods-dep").count();
   assert(!known || dependents > 0, "no dependents");
   return `${deps} required, required by ${known ? dependents : "(unknown)"}`;
@@ -542,20 +553,20 @@ await check("tabs: versions table marks the current version, Select changes it i
 
 await check("another variant and version load in the browser", async () => {
   await markLoad(mod);
-  await mod.goto(`${root}${LEVILAMINA}?tab=versions`, { waitUntil: "networkidle" });
+  await mod.goto(`${root}${PLAND}?tab=versions`, { waitUntil: "networkidle" });
   await markLoad(mod);
-  await mod.locator('.mods-versions-tab [role="radio"]', { hasText: /^client$/ }).click();
+  await mod.locator('.mods-versions-tab [role="radio"]', { hasText: /^headless$/ }).click();
   const older = mod.locator(".mods-vt-version a:not([aria-current])").nth(2);
   const version = (await older.innerText()).trim();
   await older.click();
-  await mod.waitForURL((u) => new URL(u).searchParams.get("version") === version && new URL(u).searchParams.get("variant") === "client");
+  await mod.waitForURL((u) => new URL(u).searchParams.get("version") === version && new URL(u).searchParams.get("variant") === "headless");
   await mod.waitForFunction(
     (v) => document.querySelector(".mods-project-version")?.textContent?.includes(v) && !!document.querySelector("[data-doc-content], .mods-readme-empty"),
     version,
     { timeout: 20000 },
   );
   assert(await sameDocument(mod), "page reloaded");
-  return `client@${version}`;
+  return `headless@${version}`;
 });
 
 await check("old mod URLs: ?variant=&version=, an invalid version, /index.html", async () => {
@@ -563,7 +574,7 @@ await check("old mod URLs: ?variant=&version=, an invalid version, /index.html",
   const { page } = await open(`${LEVILAMINA}?variant=nope&version=0.0.0-nope`, ctx);
   const shown = (await page.locator(".mods-project-version").innerText()).trim();
   const latest = await page.evaluate(() => {
-    const d = JSON.parse(document.getElementById("mods-page-data").textContent);
+    const d = JSON.parse(/** @type {HTMLElement} */ (document.getElementById("mods-page-data")).textContent);
     return d.prerendered.version;
   });
   assert(shown === latest, `${shown} shown, latest is ${latest}`);
@@ -616,13 +627,13 @@ await check("density at 1024×768 (list): at least 3 rows", async () => {
 
 await check("chips: one line, never cut off, the rest behind +N (1440 list and grid, 390 and 320 phones)", async () => {
   const seen = [];
-  for (const [label, options, view] of [
+  for (const [label, options, view] of /** @type {[string, typeof DESKTOP | typeof PHONE, string][]} */ ([
     ["1440 list", DESKTOP, "list"],
     ["1440 grid", DESKTOP, "grid"],
     ["390", PHONE, "list"],
     ["390 grid", PHONE, "grid"],
     ["320", { ...PHONE, viewport: { width: 320, height: 640 } }, "list"],
-  ]) {
+  ])) {
     const ctx = await newContext(options, { fonts: true });
     await ctx.addInitScript((v) => localStorage.setItem("levimc-mods:view", v), view);
     const { page } = await open("", ctx);
@@ -639,7 +650,7 @@ await check("chips: one line, never cut off, the rest behind +N (1440 list and g
 await check("+N chip: its tooltip lists the other chips, fully visible on hover and on focus", async () => {
   const seen = [];
   // (at 1440 the list rows have room for every chip)
-  for (const [label, options, view] of [["1440 grid", DESKTOP, "grid"], ["390", PHONE, "list"]]) {
+  for (const [label, options, view] of /** @type {[string, typeof DESKTOP | typeof PHONE, string][]} */ ([["1440 grid", DESKTOP, "grid"], ["390", PHONE, "list"]])) {
     const ctx = await newContext(options, { fonts: true });
     await ctx.addInitScript((v) => localStorage.setItem("levimc-mods:view", v), view);
     const { page } = await open("", ctx);
@@ -649,12 +660,12 @@ await check("+N chip: its tooltip lists the other chips, fully visible on hover 
     await page.evaluate(() => window.scrollBy(0, -200));
     for (const how of ["hover", "focus"]) {
       await page.mouse.move(0, 0);
-      await page.evaluate(() => document.activeElement?.blur());
+      await page.evaluate(() => /** @type {HTMLElement | null} */ (document.activeElement)?.blur());
       if (how === "hover") await host.hover();
       else await host.locator("button").focus();
       await page.waitForTimeout(250);
       const m = await host.evaluate((el) => {
-        const tip = el.querySelector(".mods-row-more-tip");
+        const tip = /** @type {HTMLElement} */ (el.querySelector(".mods-row-more-tip"));
         const r = tip.getBoundingClientRect();
         // tooltips take no pointer events, which elementFromPoint skips: let it hit-test for a moment
         tip.style.pointerEvents = "auto";
@@ -667,7 +678,7 @@ await check("+N chip: its tooltip lists the other chips, fully visible on hover 
           inView: r.left >= 0 && r.right <= innerWidth && r.top >= 0,
           hit,
           lines: tip.querySelectorAll(".mc-tooltip-lore").length,
-          hidden: el.closest(".mods-row-tags").querySelectorAll(":scope > [data-chip].is-overflow").length,
+          hidden: /** @type {Element} */ (el.closest(".mods-row-tags")).querySelectorAll(":scope > [data-chip].is-overflow").length,
         };
       });
       assert(m.visible && m.inView && m.hit, `${label} ${how}: ${JSON.stringify(m)}`);
@@ -720,8 +731,8 @@ await check("language: 简体中文 links to /zh-Hans/mods/ (same page and query
   await page.waitForFunction(() => document.querySelector(".kit-hero-name")?.textContent === "LeviMC 模组");
   const cookie = (await ctx.cookies(root)).find((c) => c.name === "levimc_lang")?.value;
   assert(cookie === "zh-Hans", `cookie ${cookie}`);
-  const ui = await page.evaluate(() => ({ hero: document.querySelector(".kit-hero-name")?.textContent, placeholder: document.querySelector(".mods-search-listing input")?.placeholder, tab: document.querySelector('.kit-gbar-nav [aria-current="page"]')?.textContent, lang: document.documentElement.lang }));
-  assert(ui.hero === "LeviMC 模组" && /搜索/.test(ui.placeholder) && /模组/.test(ui.tab) && ui.lang === "zh-Hans", JSON.stringify(ui));
+  const ui = await page.evaluate(() => ({ hero: document.querySelector(".kit-hero-name")?.textContent, placeholder: /** @type {HTMLInputElement | null} */ (document.querySelector(".mods-search-listing input"))?.placeholder, tab: document.querySelector('.kit-gbar-nav [aria-current="page"]')?.textContent, lang: document.documentElement.lang }));
+  assert(ui.hero === "LeviMC 模组" && /搜索/.test(/** @type {string} */ (ui.placeholder)) && /模组/.test(/** @type {string} */ (ui.tab)) && ui.lang === "zh-Hans", JSON.stringify(ui));
   // a row leads to the mod page in the same language
   await page.click("a.mods-card-link");
   await page.waitForURL((u) => u.href.startsWith(`${localeRoot("zh-Hans")}github.com/`));
@@ -774,7 +785,7 @@ await check("phones (390×844): compact hero, results above the fold, 3 rows vis
   const phone = await newContext(PHONE);
   const { page } = await open("", phone);
   const m = await page.evaluate(() => {
-    const hero = document.querySelector(".mods-hero").getBoundingClientRect();
+    const hero = /** @type {Element} */ (document.querySelector(".mods-hero")).getBoundingClientRect();
     const items = [...document.querySelectorAll(".mods-results-list > li")].map((li) => li.getBoundingClientRect());
     return { hero: hero.height, first: items[0].top, full: items.filter((r) => r.top >= 0 && r.bottom <= innerHeight).length };
   });
@@ -827,16 +838,16 @@ await check("phones: a search from a mod page lands on the results", async () =>
 await check("no layout shift on load (CLS ≤ 0.05)", async () => {
   const ctx = await newContext(DESKTOP);
   await ctx.addInitScript(() => {
-    window.__cls = 0;
+    /** @type {SmokeWindow} */ (window).__cls = 0;
     new PerformanceObserver((list) => {
-      for (const e of list.getEntries()) if (!e.hadRecentInput) window.__cls += e.value;
+      for (const e of /** @type {LayoutShift[]} */ (list.getEntries())) if (!e.hadRecentInput) /** @type {SmokeWindow} */ (window).__cls += e.value;
     }).observe({ type: "layout-shift", buffered: true });
   });
   const out = [];
   for (const path of ["", LEVILAMINA]) {
     const { page } = await open(path, ctx);
     await page.waitForTimeout(500);
-    const cls = await page.evaluate(() => window.__cls);
+    const cls = await page.evaluate(() => /** @type {SmokeWindow} */ (window).__cls);
     assert(cls <= 0.05, `CLS ${cls.toFixed(3)} on /${path}`);
     out.push(cls.toFixed(3));
     await page.close();

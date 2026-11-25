@@ -4,9 +4,12 @@
 //   npm run build && npm run preview      # serve-pages.mjs on :4173
 //   node scripts/smoke.mjs --url http://127.0.0.1:4173/
 //
-// The kit's own smoke test checks the unified LeviMC chrome contract (`node kit/scripts/smoke.mjs --app …`, see
+// Part of `npm run smoke` (scripts/smoke-all.mjs), which serves the site itself.
+//
+// The kit's own smoke test checks the unified LeviMC chrome contract (`node src/kit/scripts/smoke.mjs --app …`, see
 // the README); this one checks what this site does on top: its pages and languages, the blog, the 404 handling.
-// Playwright is resolved from $LEVIMC_PW_DIR or the app.
+// Needs Playwright's Chromium (`npx playwright install chromium`); $LEVIMC_PW_DIR names another node_modules
+// directory to take Playwright from.
 import { createRequire } from 'node:module';
 
 const args = process.argv.slice(2);
@@ -17,13 +20,15 @@ const { chromium } = require('playwright');
 
 const ROUTES = ['', 'community/', 'about/', 'support/'];
 const LANG = { en: 'en', zh: 'zh-Hans', 'zh-Hant': 'zh-Hant' };
-/** Each language's pages: English at the site's paths, the others under their prefix (src/i18n/config.ts). */
+/** Each language's pages: English at the site's paths, the others under their prefix (src/main/i18n/config.ts). */
 const PREFIX = { en: '', zh: 'zh-Hans/', 'zh-Hant': 'zh-Hant/' };
 const H1 = {
   en: { '': 'Mod Bedrock', 'community/': 'Get Involved', 'about/': 'The story of a small team.', 'support/': 'Support LeviMC' },
   zh: { '': '随心所欲', 'community/': '参与进来', 'about/': '一个小团队的故事。', 'support/': '支持 LeviMC' },
   'zh-Hant': { '': '隨心所欲', 'community/': '參與進來', 'about/': '一個小團隊的故事。', 'support/': '支持 LeviMC' },
 };
+
+/** The window of a page, with the mark that a full page load would wipe. @typedef {Window & { __lmMarker?: number }} MarkedWindow */
 
 const results = [];
 const check = async (name, fn) => {
@@ -43,6 +48,7 @@ const assert = (c, msg) => {
 // Use the environment's proxy when there is one (for the live-data checks); loopback always goes direct.
 const proxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.HTTP_PROXY || process.env.http_proxy;
 const browser = await chromium.launch(proxy ? { proxy: { server: proxy, bypass: '<-loopback>,localhost,127.0.0.1' } } : {});
+/** @param {{ locale?: string, width?: number, height?: number, scheme?: 'light' | 'dark', mobile?: boolean, userAgent?: string }} [options] */
 const newContext = async ({ locale, width = 1440, height = 900, scheme = 'light', mobile = false, userAgent } = {}) => {
   const ctx = await browser.newContext({ viewport: { width, height }, colorScheme: scheme, isMobile: mobile, hasTouch: mobile, deviceScaleFactor: mobile ? 2 : 1, userAgent });
   // the visitor's cross-site LeviMC language preference (cookie levimc_lang, host-only on 127.0.0.1)
@@ -164,14 +170,14 @@ await check('client-side navigation from the header (no full reload, canonical U
   const page = await ctx.newPage();
   const errs = watch(page);
   await page.goto(base, { waitUntil: 'networkidle' });
-  await page.evaluate(() => (window.__lmMarker = 1));
+  await page.evaluate(() => (/** @type {MarkedWindow} */ (window).__lmMarker = 1));
   await page.click('.kit-gbar-nav a[href="/community/"]');
   await page.waitForURL((u) => u.pathname === '/community/');
   await page.waitForSelector('h1:has-text("Get Involved")');
-  assert((await page.evaluate(() => window.__lmMarker)) === 1, 'page reloaded');
+  assert((await page.evaluate(() => /** @type {MarkedWindow} */ (window).__lmMarker)) === 1, 'page reloaded');
   await page.click('.kit-gbar-nav a[href="/about/"]');
   await page.waitForURL((u) => u.pathname === '/about/');
-  assert((await page.evaluate(() => window.__lmMarker)) === 1, 'page reloaded');
+  assert((await page.evaluate(() => /** @type {MarkedWindow} */ (window).__lmMarker)) === 1, 'page reloaded');
   assert(!errs.length, errs.join(' | '));
   await ctx.close();
   return '/ → /community/ → /about/';
@@ -242,15 +248,15 @@ await check('language switcher: links to the same page in the other language, st
   const page = await ctx.newPage();
   const errs = watch(page);
   await page.goto(base + 'community/', { waitUntil: 'networkidle' });
-  await page.evaluate(() => (window.__lmMarker = 1));
+  await page.evaluate(() => (/** @type {MarkedWindow} */ (window).__lmMarker = 1));
   assert((await page.locator('[data-kit-locale-switcher]').innerText()).trim() === 'English', 'trigger label is not "English"');
   await page.click('[data-kit-locale-switcher]');
   await page.click('.kit-locale [role="menuitemradio"][data-locale="zh-Hans"]');
   await page.waitForURL((u) => u.pathname === '/zh-Hans/community/');
   await page.waitForFunction(() => document.documentElement.lang === 'zh-Hans');
-  assert((await page.evaluate(() => window.__lmMarker)) === 1, 'page reloaded');
+  assert((await page.evaluate(() => /** @type {MarkedWindow} */ (window).__lmMarker)) === 1, 'page reloaded');
   assert((await page.locator('[data-kit-locale-switcher]').innerText()).trim() === '简体中文', 'trigger label is not "简体中文"');
-  assert(!(await page.locator('.kit-locale').evaluate((d) => d.open)), 'language menu still open');
+  assert(!(await page.locator('.kit-locale').evaluate((/** @type {HTMLDetailsElement} */ d) => d.open)), 'language menu still open');
   await page.waitForFunction(() => document.querySelector('h1')?.textContent.includes('参与进来'), null, { timeout: 5000 });
   assert((await page.locator('.lm-qq-group').count()) === 3, 'QQ groups missing in zh');
   assert((await ctx.cookies()).find((c) => c.name === 'levimc_lang')?.value === 'zh-Hans', 'not stored in the cookie');
@@ -271,6 +277,7 @@ await check('language switcher: links to the same page in the other language, st
 });
 
 await check('root redirect: / follows the stored language, else the browser language; deep links never redirect', async () => {
+  /** @type {[{ locale?: string, browserLocale?: string }, string, string][]} */
   const cases = [
     [{ locale: 'zh' }, '', '/zh-Hans/'],
     [{ browserLocale: 'zh-TW' }, '', '/zh-Hant/'],
@@ -378,12 +385,12 @@ await check('mobile (390px): the bar folds its entries into its menu; it closes 
   await page.keyboard.press('Escape');
   await panel.waitFor({ state: 'hidden' });
   assert(await page.evaluate(() => !!document.activeElement?.closest('.kit-gbar-more')), 'focus not returned to the menu button');
-  await page.evaluate(() => (window.__lmMarker = 1));
+  await page.evaluate(() => (/** @type {MarkedWindow} */ (window).__lmMarker = 1));
   await toggle.click();
   await page.click('.kit-gbar-more-panel a[href="/about/"]');
   await page.waitForURL((u) => u.pathname === '/about/');
   await panel.waitFor({ state: 'hidden' });
-  assert((await page.evaluate(() => window.__lmMarker)) === 1, 'page reloaded');
+  assert((await page.evaluate(() => /** @type {MarkedWindow} */ (window).__lmMarker)) === 1, 'page reloaded');
   assert(!errs.length, errs.join(' | '));
   await ctx.close();
   return 'ok';
@@ -403,7 +410,7 @@ await check('header: one bar, every destination once; Projects menu opens; cross
   await page.click('.kit-gbar-projects > summary');
   const panel = page.locator('.kit-gbar-projects-panel');
   assert(await panel.locator('a.kit-proj-main[href="https://levimc.org/LeviLamina/"]').isVisible(), 'LeviLamina leads to its docs');
-  assert((await panel.locator('a.kit-proj-main').evaluateAll((as) => as.every((a) => /^https:\/\/levimc\.org\/(LeviLamina|LegacyScriptEngine|lip|LeviLauncher|BeDD|bedboo)\/$/.test(a.href)))), 'Projects menu lists a project without docs');
+  assert((await panel.locator('a.kit-proj-main').evaluateAll((/** @type {HTMLAnchorElement[]} */ as) => as.every((a) => /^https:\/\/levimc\.org\/(LeviLamina|LegacyScriptEngine|lip|LeviLauncher|BeDD|bedboo)\/$/.test(a.href)))), 'Projects menu lists a project without docs');
   assert((await panel.locator('.kit-proj-link').count()) === 0, 'Projects menu rows carry extra links');
   await page.keyboard.press('Escape');
   await ctx.close();
@@ -418,16 +425,16 @@ await check('header fits: inline tabs from 961 px up (en, zh) with room before t
       const page = await ctx.newPage();
       await page.goto(base + PREFIX[locale], { waitUntil: 'networkidle' });
       const s = await page.evaluate(() => {
-        const inner = document.querySelector('.kit-gbar-inner');
-        const nav = document.querySelector('.kit-gbar-nav');
-        const end = document.querySelector('.kit-gbar-end');
+        const inner = /** @type {Element} */ (document.querySelector('.kit-gbar-inner'));
+        const nav = /** @type {Element} */ (document.querySelector('.kit-gbar-nav'));
+        const end = /** @type {Element} */ (document.querySelector('.kit-gbar-end'));
         const shown = getComputedStyle(nav).display !== 'none';
         return { shown, overflow: inner.scrollWidth > inner.clientWidth, room: shown ? Math.round(end.getBoundingClientRect().left - nav.getBoundingClientRect().right) : null };
       });
       assert(!s.overflow, `${locale}@${width}: the bar overflows`);
       assert(s.shown === width > 960, `${locale}@${width}: inline nav ${s.shown ? 'shown' : 'hidden'}`);
       if (s.shown) {
-        assert(s.room >= 16, `${locale}@${width}: only ${s.room}px between the tabs and the controls`);
+        assert(/** @type {number} */ (s.room) >= 16, `${locale}@${width}: only ${s.room}px between the tabs and the controls`);
         seen.push(`${locale}@${width} ${s.room}px`);
       }
       await ctx.close();
@@ -504,7 +511,7 @@ await check('blog: old Hexo permalinks, tag/category slugs and archives are kept
 });
 
 await check('blog: feeds (rss.xml, atom.xml, feed.json) list the latest posts with absolute links; <link rel="alternate">', async () => {
-  // Feeds publish at most the latest 20 posts (blog/feeds.ts).
+  // Feeds publish at most the latest 20 posts (src/main/blog/feeds.ts).
   const expectedItems = Math.min(BLOG.filter((path) => /^\/blog\/\d{4}\/\d{2}\/\d{2}\/[^/]+\/$/.test(path)).length, 20);
   const rss = await (await fetch(base + 'blog/rss.xml')).text();
   const items = (rss.match(/<item>/g) || []).length;
@@ -542,14 +549,14 @@ await check('blog: navigating between posts stays in the app and loads the next 
   const page = await ctx.newPage();
   const errs = watch(page);
   await page.goto(base + 'blog/', { waitUntil: 'networkidle' });
-  await page.evaluate(() => (window.__lmMarker = 1));
+  await page.evaluate(() => (/** @type {MarkedWindow} */ (window).__lmMarker = 1));
   await page.click('.lm-blog-card-title a[href="/blog/2023/07/31/machine-learning-killaura-detect/"]');
   await page.waitForURL((u) => u.pathname === '/blog/2023/07/31/machine-learning-killaura-detect/');
   await page.waitForSelector('[data-doc-content] h2#引言');
   await page.click('.lm-blog-pager a[rel="prev"]');
   await page.waitForURL((u) => u.pathname === '/blog/2023/07/26/original-fix-BeeCrash/');
   await page.waitForSelector('[data-doc-content] h3#起因');
-  assert((await page.evaluate(() => window.__lmMarker)) === 1, 'page reloaded');
+  assert((await page.evaluate(() => /** @type {MarkedWindow} */ (window).__lmMarker)) === 1, 'page reloaded');
   await page.waitForFunction(() => document.title.startsWith('蜂巢崩服问题的解决'), null, { timeout: 5000 });
   assert(!errs.length, errs.join(' | '));
   await ctx.close();

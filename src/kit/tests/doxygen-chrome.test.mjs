@@ -54,7 +54,7 @@ for (const logo of ['../../logo.svg', '']) {
     const written = run(doxygen(r.header, logo)).replace(head, `<script type="text/javascript">${parts.themeInit}</script>`);
     assert.equal(written, doxygen(inline, logo));
     assert.equal(run(r.footer), footerSrc);
-    assert.ok(r.header.length < 4000 && r.footer.length < 1200, 'the chrome is not in the page');
+    assert.ok(r.header.length < 4000 && /** @type {string} */ (r.footer).length < 1200, 'the chrome is not in the page');
   });
 }
 

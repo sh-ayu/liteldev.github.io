@@ -17,7 +17,7 @@ const manifest = JSON.parse(readFileSync('dist/.vite/manifest.json', 'utf8'));
 rmSync('dist/.vite', { recursive: true, force: true });
 const inEntry = new Set();
 for (const queue = Object.keys(manifest).filter((k) => manifest[k].isEntry); queue.length; ) {
-  const k = queue.pop();
+  const k = /** @type {string} */ (queue.pop());
   if (inEntry.has(k)) continue;
   inEntry.add(k);
   queue.push(...(manifest[k].imports ?? []));
@@ -42,7 +42,7 @@ function chunksOf(key) {
   return { js, css };
 }
 
-// A page hydrates only after its own chunk (every page but the home, see src/App.tsx) and, for a blog post or page,
+// A page hydrates only after its own chunk (every page but the home, see src/main/App.tsx) and, for a blog post or page,
 // its markdown chunk have loaded: fetch them alongside the entry script.
 const blogPreload = JSON.parse(readFileSync('.kit/blog-preload.json', 'utf8'));
 let preloaded = 0;

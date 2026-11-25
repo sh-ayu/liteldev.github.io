@@ -111,7 +111,9 @@ async function load(site, command) {
   const loaded = await loadConfigFromFile({ command, mode: command === 'build' ? 'production' : 'development' }, site.config, site.dir);
   if (!loaded) throw new Error(`${rel(site.config)}: no config`);
   const out = buildDir(site.id);
-  const config = { ...loaded.config, outDir: join(out, 'dist') };
+  // a docs.config.ts exports a DocsConfig, which Vite's loader types as its own config
+  const docsConfig = /** @type {import('../src/kit/docs/node/config.ts').DocsConfig} */ (/** @type {unknown} */ (loaded.config));
+  const config = { ...docsConfig, outDir: join(out, 'dist') };
   const workDir = join(out, '.kit');
   return { config, workDir, plugins: () => kitDocs(config, { configRoot: site.dir, workDir }) };
 }
@@ -129,6 +131,7 @@ async function buildSite(site) {
   const { build } = await import('vite');
   const { prerenderDocs } = await import('../src/kit/docs/prerender.mjs');
   const { config, workDir, plugins } = await load(site, 'build');
+  /** @type {import('vite').InlineConfig} */
   const shared = { root: REPO, configFile: false, logLevel: 'warn' };
   await build({ ...shared, plugins: plugins() });
   await build({ ...shared, plugins: plugins(), build: { ssr: true } });

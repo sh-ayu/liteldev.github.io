@@ -1,4 +1,4 @@
-// lip documentation — levimc-kit site config. Built from this folder by levimc.org's deploy (docs/README.md) since
+// lip documentation — levimc-kit site config. Built from this folder by levimc.org's deploy (content/README.md) since
 // 2026-11-16, before by LiteLDev/lip's own (docs/). English at /lip/, Simplified Chinese at /zh-Hans/lip/ (sources
 // in content/zh/), Traditional Chinese at /zh-Hant/lip/ (content/zh-Hant/, written by scripts/zh-hant.mjs): the
 // language first, levimc.org's one scheme. The URLs before (/lip/zh-Hans/…, /lip/zh/…, /lip/zh-Hant/…) redirect.
@@ -304,7 +304,7 @@ export default defineDocsConfig({
   // the pages; CONTRIBUTING.md, next to it, is for writers
   contentDir: 'pages',
   // public/ next to content/: lip's screenshot generator (tests/Lip.Cli.Tests/Tui/Screenshots in LiteLDev/lip) writes
-  // the pictures into docs/lip/public/screenshots/ of a checkout of this repository named liteldev.github.io next to
+  // the pictures into content/lip/public/screenshots/ of a checkout of this repository named liteldev.github.io next to
   // lip's (or into LIP_SCREENSHOTS_DIR).
   publicDir: 'public',
   repo,

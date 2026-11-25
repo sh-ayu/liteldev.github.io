@@ -9,7 +9,7 @@
 //   as 代理伺服器, not as 代理 and 服务器 one after the other.
 // - A word that maps to itself keeps a longer word from being taken apart: 包含 is not 包 (套件) and 含.
 // - 安装包 stays 安裝套件, "to install packages": write 安装程序 for the installer of Windows.
-// - Add a pair when a page reads wrong in Traditional Chinese. `npm run zh-hant` writes the pages again.
+// - Add a pair when a page reads wrong in Traditional Chinese. `node content/lip/scripts/zh-hant.mjs` writes the pages again.
 export const TERMS = {
   // What the interface and the commands are about.
   服务器: '伺服器',

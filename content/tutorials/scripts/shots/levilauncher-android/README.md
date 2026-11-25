@@ -1,8 +1,9 @@
 # Pictures of LeviLauncher for Android
 
-`capture.mjs` makes the pictures `play-with-mods-android-*` (`content/play/images/`) and `first-android-mod-*`
-(`content/develop/images/`) from the real app, the release named in `LAUNCHER_VERSION`, on an Android emulator. See
-`../SHOTS.md` for the annotator and the rules of the pictures.
+`capture.mjs` makes the pictures `play-with-mods-android-*` (`content/tutorials/pages/play/images/<lang>/`) and
+`first-android-mod-*` (`content/tutorials/pages/develop/images/<lang>/`) from the real app, the release named in
+`LAUNCHER_VERSION`, on an Android emulator. See [SHOTS.md](../SHOTS.md) for the annotator and the rules of the
+pictures.
 
 ## What it does
 
@@ -22,13 +23,13 @@
    `screencap`, WebP. The targets of the notes are the bounds of the views, by resource id or by the app's text.
 5. Writes `captures/` (the WebP files, `seen.json` with the views it found, and `shots.json`; not committed) and the
    SVGs. After changing only the notes in `specs()`, `node scripts/shots/levilauncher-android/capture.mjs
-   --from-captures` redraws the SVGs from the last captures, without a device.
+   --from-captures` (in `content/tutorials/`) redraws the SVGs from the last captures, without a device.
 
 ## Running it
 
 Needs the Android SDK (`ANDROID_HOME`, or `%LOCALAPPDATA%\Android\Sdk`) with `platform-tools`, `emulator`,
 `build-tools;35.0.0`, `platforms;android-35` and `system-images;android-35;google_apis;x86_64`, a JDK (`JAVA_HOME`
-for `keytool`), Node and `ffmpeg` with libwebp on `PATH`.
+for `keytool`), Node.js and `ffmpeg` with libwebp on `PATH`. The script uses no npm package.
 
 ```sh
 # once: an AVD with a 2400 × 1080 screen (the launcher is landscape only)
@@ -36,7 +37,7 @@ avdmanager create avd -n levi-shots -k "system-images;android-35;google_apis;x86
 # every time
 emulator -avd levi-shots -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect -wipe-data -no-snapshot &
 adb wait-for-device && adb shell 'while [ "$(getprop sys.boot_completed)" != 1 ]; do sleep 2; done'
-cd tutorials
+cd content/tutorials
 node scripts/shots/levilauncher-android/capture.mjs        # about 5 minutes
 adb emu kill
 ```

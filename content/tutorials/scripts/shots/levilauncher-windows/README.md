@@ -1,8 +1,8 @@
 # Pictures of LeviLauncher for Windows
 
-The pictures of [Play with mods on Windows](../../../content/play/play-with-mods.md)
-(`content/play/images/<lang>/play-with-mods-*.svg`) are made here, from the real interface of LeviLauncher v1.1.0 with
-fake data. Read [SHOTS.md](../SHOTS.md) first.
+The pictures of [Play with mods on Windows](../../../pages/play/play-with-mods.md)
+(`content/tutorials/pages/play/images/<lang>/play-with-mods-*.svg`, without the `play-with-mods-android-*` ones) are
+made here, from the real interface of LeviLauncher v1.1.0 with fake data. Read [SHOTS.md](../SHOTS.md) first.
 
 LeviLauncher's interface is React in a WebView, and LeviLauncher has a preview of it in the browser for its own tests:
 `npm run dev:ui-review` in its `frontend/` serves the interface with every Go binding replaced by a fixture
@@ -20,11 +20,12 @@ LeviLauncher's interface is React in a WebView, and LeviLauncher has a preview o
 ## Making the pictures
 
 You need Git, Go and [`wails3`](https://v3.wails.io/) (v3.0.0-beta.19, for the bindings of the interface), Node.js,
-and Playwright with Chromium:
+and Playwright with Chromium. Playwright is a devDependency of the repository (`npm ci` at its root); its Chromium is
+installed once per machine:
 
 ```sh
-cd tutorials
-npm i --no-save playwright && npx playwright install chromium     # once
+cd content/tutorials
+npx playwright install chromium                                    # once
 node scripts/shots/levilauncher-windows/capture.mjs                # every picture
 node scripts/shots/levilauncher-windows/capture.mjs --only play-with-mods-06-launch
 ```
@@ -32,8 +33,8 @@ node scripts/shots/levilauncher-windows/capture.mjs --only play-with-mods-06-lau
 The first run clones LeviLauncher at `v1.1.0` into `%TEMP%\levimc-shots\LeviLauncher-v1.1.0` (or uses the checkout in
 `LEVILAUNCHER_DIR`), creates the two embedded files a fresh checkout lacks (`internal/leviloader/LeviLauncher.dll`,
 `frontend/dist/index.html`) as empty files, generates the bindings (`wails3 generate bindings -clean=true`) and installs
-the frontend (`npm ci`). `LEVIMC_PW_DIR` names a folder where Playwright is installed, if not in `tutorials/`;
-`LEVIMC_SHOTS_PORT` another port than 5179.
+the frontend (`npm ci`). `LEVIMC_PW_DIR` names a folder with another installation of Playwright to use instead of the
+repository's; `LEVIMC_SHOTS_PORT` another port than 5179.
 
 Each picture is captured in a fresh browser, at 1024 × 640 (the window of LeviLauncher), in the light theme, with
 reduced motion, in UTC, after the window has stopped changing. Every screen goes through `assertDesensitized`. Running
@@ -48,5 +49,6 @@ Look at every picture before you commit it, on a light and on a dark page.
 - A step fails to find something: the steps find things by the texts of LeviLauncher's own locale files
   (`t('<key>')`), by roles and by a few test ids. The error names what it waited for; compare with the source of
   the page in the checkout (`frontend/src/pages/`) and fix the step.
-- New versions of the game or of LeviOptimize: `node scripts/shots/levilauncher-windows/refresh-data.mjs`, then change
-  `INSTANCE` in `capture.mjs` (and the version numbers in the tutorial) if the newest version with LeviLamina changed.
+- New versions of the game or of LeviOptimize: `node scripts/shots/levilauncher-windows/refresh-data.mjs` (in
+  `content/tutorials/`), then change `INSTANCE` in `capture.mjs` (and the version numbers in the tutorial) if the
+  newest version with LeviLamina changed.

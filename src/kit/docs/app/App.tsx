@@ -221,6 +221,7 @@ export function App() {
   // On the static 404 page the locale is taken from the URL after hydration (SSR renders the default).
   const [notFoundLocale, setNotFoundLocale] = useState(site.defaultLocale);
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- the 404 page's locale is known in the browser only
     if (!route) setNotFoundLocale(localeOf(fullPath));
   }, [route, fullPath]);
   const locale = route?.locale ?? notFoundLocale;
@@ -231,6 +232,7 @@ export function App() {
 
   useHead(route, locale);
   useScrollManagement(route ? route.page : fullPath, location.hash);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- navigating closes the drawer
   useEffect(() => setDrawerOpen(false), [fullPath]);
   useEffect(() => {
     document.documentElement.classList.toggle('kit-scroll-lock', searchOpen || drawerOpen);

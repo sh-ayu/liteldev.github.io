@@ -1,8 +1,9 @@
 #!/usr/bin/env node
-// Checks the converter of scripts/zh-hant.mjs: what a Simplified Chinese page becomes in Traditional Chinese,
-// and what is kept as written. `npm test` runs it; it exits with 1 when a case fails.
+// Checks the converter of zh-hant.mjs: what a Simplified Chinese page becomes in Traditional Chinese,
+// and what is kept as written. `npm test` and every build of the site (prebuild.mjs) run it; it exits with 1 when
+// a case fails.
 //
-//   node scripts/zh-hant.test.mjs
+//   node content/lip/scripts/zh-hant.test.mjs
 import { convertPage } from './zh-hant.mjs';
 
 /** The cases: a name, a Simplified page, and the Traditional page it becomes. */

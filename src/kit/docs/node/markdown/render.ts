@@ -105,7 +105,7 @@ const KIND: Record<string, string> = {
 export function splitFrontmatter(src: string): { data: Record<string, unknown>; body: string } {
   const m = /^﻿?---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/.exec(src);
   if (!m) return { data: {}, body: src.replace(/^﻿/, '') };
-  let data: Record<string, unknown> = {};
+  let data: Record<string, unknown>;
   try {
     data = (parseYaml(m[1]!) as Record<string, unknown>) ?? {};
   } catch {

@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 // End-to-end check that theme + language preferences are shared across the LeviMC sites, under the browser's
-// real cookie rules: Chromium loads https://levimc.org/ (a plain app build) and https://levimc.org/<base>/ (a docs
-// build, published by its own repository on the same origin) and every request for that host is answered from the
+// real cookie rules: Chromium loads https://levimc.org/ (levimc.org's own pages) and https://levimc.org/<base>/ (a docs
+// site, another build on the same origin) and every request for that host is answered from the
 // local builds with GitHub Pages semantics (Playwright request routing — no DNS, TLS or server needed;
 // anything else, e.g. Google Fonts, is blocked).
 //
-//   node kit/tests/cross-site.e2e.mjs --app <app dist> --docs <docs dist> [--docs-base /Demo/]
+//   node src/kit/tests/cross-site.e2e.mjs --app <app dist> --docs <docs dist> [--docs-base /Demo/]
 //
-// Needs Playwright (LEVIMC_PW_DIR or the app's node_modules). Exit code 1 on failure.
+// Needs Playwright's Chromium (`npx playwright install chromium`; LEVIMC_PW_DIR names another node_modules
+// directory). Part of `npm run smoke` (scripts/smoke-all.mjs: prefs). Exit code 1 on failure.
 import { readFileSync } from 'node:fs';
 import { extname } from 'node:path';
 import { createRequire } from 'node:module';
@@ -56,6 +57,7 @@ const check = async (name, fn) => {
     console.log(`  ✘ ${name} — ${e.message.split('\n')[0]}`);
   }
 };
+/** @type {(c: unknown, m?: string) => asserts c} */
 const assert = (c, m) => {
   if (!c) throw new Error(m);
 };
@@ -67,11 +69,11 @@ await check('levimc.org: Dark + 繁體中文 are stored on the parent domain (Do
   await page.click('[data-kit-theme-toggle]');
   await page.click('[data-kit-theme-value="dark"]');
   await page.click('[data-kit-locale-switcher]');
-  await page.click('.kit-gbar [data-kit-lang-value="zh-HK"]');
+  await page.click('.kit-gbar [data-kit-lang-value="zh-Hant"]');
   const cookies = await ctx.cookies(APP);
   for (const [name, value] of [
     ['levimc_theme', 'dark'],
-    ['levimc_lang', 'zh-HK'],
+    ['levimc_lang', 'zh-Hant'],
   ]) {
     const c = cookies.find((x) => x.name === name);
     assert(c, `${name} missing`);

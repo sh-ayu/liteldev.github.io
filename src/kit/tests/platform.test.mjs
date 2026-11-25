@@ -46,8 +46,14 @@ const UA = {
   linux: 'Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0',
 };
 
-/** Run `fn` with a fake navigator (and localStorage holding `stored`, when given). */
+/**
+ * Run `fn` with a fake navigator (and localStorage holding `stored`, when given).
+ * @template T
+ * @param {{ userAgent?: string, maxTouchPoints?: number, stored?: string, userAgentData?: object }} options
+ * @param {() => T} fn
+ */
 function withBrowser({ userAgent = '', maxTouchPoints = 0, stored, userAgentData } = {}, fn) {
+  /** @type {[string, PropertyDescriptor | undefined][]} */
   const saved = ['navigator', 'localStorage'].map((k) => [k, Object.getOwnPropertyDescriptor(globalThis, k)]);
   const store = new Map(stored ? [[PLATFORM_STORAGE_KEY, stored]] : []);
   Object.defineProperty(globalThis, 'navigator', { value: { userAgent, maxTouchPoints, userAgentData }, configurable: true });
@@ -80,6 +86,7 @@ test('preferredPlatform: ?platform= > earlier choice > device', () => {
   assert.equal(withBrowser({ userAgent: UA.windows, stored: 'nope' }, () => preferredPlatform('?platform=nope')), 'windows');
 });
 
+/** @type {import('../docs/node/markdown/render.ts').RenderOptions} */
 const OPTS = {
   compat: 'commonmark',
   slug: 'vitepress',
@@ -89,7 +96,7 @@ const OPTS = {
   admonitionTitles: 'vitepress',
   containers: { vitepress: true, mkdocs: true },
   outline: [2, 3],
-  styles: {},
+  styles: /** @type {import('../docs/node/markdown/shiki.ts').TokenStyles} */ ({}), // no code block is rendered
   strings: { copyCode: 'Copy', copied: 'Copied', footnotes: 'Footnotes', backToRef: 'Back' },
   resolveLink: () => null,
 };
@@ -180,6 +187,7 @@ test('detectPlatformChoice: Macs are Apple silicon, others x64 unless the user a
 
 /** withBrowser for an async `fn` (the fake navigator stays until it settles). */
 async function withBrowserAsync(opts, fn) {
+  /** @type {[string, PropertyDescriptor | undefined][]} */
   const saved = ['navigator', 'localStorage'].map((k) => [k, Object.getOwnPropertyDescriptor(globalThis, k)]);
   const store = new Map(opts.stored ? [[PLATFORM_STORAGE_KEY, opts.stored]] : []);
   Object.defineProperty(globalThis, 'navigator', { value: { userAgent: opts.userAgent ?? '', maxTouchPoints: 0, userAgentData: opts.userAgentData }, configurable: true });

@@ -6,7 +6,7 @@ The pictures of the launchers and the other apps with a window are not screensho
 SVG file drawn from a capture of the **real interface** of the app, made by a script that starts the app with **fake
 data**, takes the screen at 2× pixel density, and reads where the things to point at are from the live interface.
 The annotations are drawn above the capture as vectors, in the visual language of lip's pictures of its terminal
-interface (lip: `docs/SCREENSHOTS.md`), so that every tutorial of the site points at things the same way.
+interface (LiteLDev/lip: `tests/Lip.Cli.Tests/Tui/Screenshots/README.md`), so that every tutorial of the site points at things the same way.
 
 ```
 content/tutorials/scripts/shots/
@@ -49,8 +49,15 @@ await writeShots(spec, 'pages/play/images', { baseDir: here });      // or rende
 | `readSpecFile(file)`, `imageInfo(bytes)`, `textWidth(text)`, `wrap(text, columns)`, `fmt(number)` | helpers the CLI and the tests use. |
 
 The demo (`scripts/shots/demo/`) is the smallest complete example: `capture.mjs` draws two mock screens in Chromium
-with Playwright (`npm i --no-save playwright && npx playwright install chromium` once), reads the rectangles of the
-elements marked `data-shot`, and writes the captures and `shots.json`; the annotator then writes `out/`.
+with Playwright (a devDependency of the repository: `npx playwright install chromium` once per machine), reads the
+rectangles of the elements marked `data-shot`, and writes the captures and `shots.json`; the annotator then writes
+`out/`:
+
+```sh
+cd content/tutorials
+node scripts/shots/demo/capture.mjs
+node scripts/shots/annotate.mjs scripts/shots/demo/shots.json
+```
 
 ## The spec
 
@@ -147,9 +154,9 @@ read on a light and on a dark interface, and on the light and the dark theme of 
   ![LeviLauncher 的“启动”页面：“当前实例”为“Survival”，装有 LeviLamina，“启动”按钮启动它。](../../play/images/zh-Hans/play-with-mods-06-launch.svg)
   ```
 
-- Nobody writes the Traditional Chinese pages: they are converted from the Simplified ones, and a separate change
-  makes a converted page use `images/zh-Hant/…` in place of `images/zh-Hans/…` wherever that file exists. Write the
-  zh-Hant pictures, and the zh-Hans page refers to the zh-Hans ones.
+- Nobody writes the Traditional Chinese pages: they are converted from the Simplified ones, and the docs engine
+  makes a converted page use `images/zh-Hant/…` in place of `images/zh-Hans/…` wherever that file exists
+  (`src/kit/docs/node/convert.ts`). Write the zh-Hant pictures, and the zh-Hans page refers to the zh-Hans ones.
 - **Alternative text**: always, one sentence in the language of the page that names the screen and says what matters
   in it, for whoever cannot see the picture. Labels of the interface in quotes, as the interface writes them in
   that language.

@@ -19,20 +19,23 @@ content/<Site>/
 ├── docs.config.ts        the site: base, title, languages, navigation (defineDocsConfig, src/kit/docs/node/config.ts)
 ├── pages/                the markdown (and the images beside it)
 ├── public/               static files served at the site's root (optional)
-└── scripts/              the site's own tools (optional); scripts/prebuild.mjs runs before every build and dev server
+├── scripts/              the site's own tools (optional); scripts/prebuild.mjs runs before every build and dev server
+└── test/                 tests of the pages (optional; bedboo's reads from the network: npm run test:bedboo)
 ```
 
 The folder name of a project's docs is the project's id in the kit (`PROJECTS` in `src/kit/components/projects.ts`)
 and its base: `content/lip/` is published at `levimc.org/lip/`. Nothing lists the sites: adding a folder with a
 `docs.config.ts` adds one. They share the site's one `package.json`, the docs engine (`src/kit/docs/`) and the
-type-check (`npm run typecheck` covers every `docs.config.ts`).
+type-check and lint (`npm run typecheck` and `npm run lint` cover every `docs.config.ts` and every script).
 
 ```sh
 node scripts/docs-sites.mjs list             # the sites
 node scripts/docs-sites.mjs dev lip          # one site on a local server, rebuilt as you edit
 node scripts/docs-sites.mjs build lip        # → .build/docs/lip/dist/, then its link check
 npm run build                                # the whole of levimc.org, every docs site merged in (dist/)
-npm run linkcheck && npm run preview         # http://127.0.0.1:4173/
+npm run linkcheck                            # every link of the built site
+npm run smoke -- docs                        # every docs site in a browser (npx playwright install chromium, once)
+npm run preview                              # http://127.0.0.1:4173/
 ```
 
 `build` runs, per site: its `scripts/prebuild.mjs` when it has one (lip writes its Traditional Chinese pages, BeDD

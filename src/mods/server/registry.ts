@@ -45,7 +45,7 @@ import { parseRepoList } from "../lib/repo-list.ts";
 import type { LipDoc, LiprEntry, LiprIndex, ModIndex, RawModEntry, Side } from "../types";
 import { mapLimit } from "./map-limit.ts";
 
-// content/mods/repos.txt: scripts/build.mjs and scripts/dev.mjs name it (they run this app in .build/mods/)
+// content/mods/repos.txt: scripts/mods/run.mjs names it (it runs this app in .build/mods/)
 const REPOS_FILE = process.env.MODS_REPOS_FILE ?? "repos.txt";
 const CACHE_FILE = process.env.MODS_REGISTRY_CACHE ?? ".cache/registry.json";
 /** 3: lip.toml (`v4`) beside tooth.json (`v3`); a version 2 cache is migrated (see readRepos). */

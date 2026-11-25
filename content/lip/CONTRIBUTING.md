@@ -44,12 +44,12 @@ order, the same pictures in their language.
 
 `scripts/zh-hant.mjs` writes `pages/zh-Hant/` from `pages/zh/`. The build and the dev server run it first
 (`scripts/prebuild.mjs`), and `node content/lip/scripts/zh-hant.mjs` runs it alone. **Do not edit `pages/zh-Hant/`,
-and do not commit it**: it is in the repository's `.gitignore`, and the script deletes what it did not write. The "Edit this page" link of a Traditional Chinese page
-opens the Simplified page it was made from. A Traditional page has no "Last updated" date, since git does not know
-it.
+and do not commit it**: it is in the repository's `.gitignore`, and the script deletes what it did not write. The
+"Edit this page" link of a Traditional Chinese page opens the Simplified page it was made from. A Traditional page
+has no "Last updated" date, since git does not know it.
 
-While the dev server runs, run `node content/lip/scripts/zh-hant.mjs` in another terminal after you changed a Simplified page, to see its
-Traditional page change.
+While the dev server runs, run `node content/lip/scripts/zh-hant.mjs` in another terminal after you changed a
+Simplified page, to see its Traditional page change.
 
 The script exists because the interface of lip does not say in Traditional Chinese what a conversion of characters
 makes of its Simplified text: 服务器 is 伺服器 there, not 服務器; 设置 is 設定, 缓存 is 快取, 界面 is 介面. For a
@@ -59,8 +59,8 @@ page, outside its code, its link targets and its URLs, the script does three thi
    of the interface in Simplified Chinese becomes the text that the interface shows in Traditional Chinese
    (`**建立伺服器…**`, `「首頁」`, `「套用」`: the quotation marks “ ” become 「 」 everywhere). The pairs are those of
    `scripts/interface-texts.json`, read from the `L.T(en, zhHans, zhHant)` calls of lip's `src/Lip.Cli/Tui/` by
-   `node content/lip/scripts/interface-texts.mjs [<lip checkout>]` (by default a `lip` checkout next to this repository's). Run it again,
-   and commit the file, when the interface changes its texts.
+   `node content/lip/scripts/interface-texts.mjs [<lip checkout>]` (by default `LIP_DIR`, else a `lip` checkout next
+   to this repository's). Run it again, and commit the file, when the interface changes its texts.
 2. **Terms.** The words of `scripts/zh-hant-terms.mjs` become their words of Taiwan, the longest match first.
 3. **Characters.** OpenCC (`cn` → `tw`) converts the rest, as the kit does for a page that has no file of its own.
 
@@ -76,7 +76,8 @@ So, in a Simplified Chinese page:
 - When a Traditional page reads wrong, add the word to `scripts/zh-hant-terms.mjs`, and build again. A word that
   maps to itself keeps a longer word whole (`包含` is not `包`, 套件, and `含`).
 - When the script itself converts something wrongly, or keeps what it should convert, add a case to
-  `scripts/zh-hant.test.mjs` with the fix; `npm test` runs the cases (and so does every build).
+  `scripts/zh-hant.test.mjs` with the fix; `node content/lip/scripts/zh-hant.test.mjs` runs the cases, and so do
+  `npm test` and every build of the site (`scripts/prebuild.mjs`).
 - The labels of the tabs and the sidebar in Traditional Chinese are written by hand, in `LABELS['zh-Hant']` of
   `docs.config.ts`.
 

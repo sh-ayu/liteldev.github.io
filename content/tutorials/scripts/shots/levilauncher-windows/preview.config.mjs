@@ -3,6 +3,7 @@
 // fixture, on the port in LEVIMC_SHOTS_PORT. capture.mjs copies this file and fixture.js into frontend/e2e/support/ of
 // the LeviLauncher checkout.
 import { readFileSync } from 'node:fs';
+// @ts-expect-error -- a file of the LeviLauncher checkout, beside which capture.mjs copies this one
 import previewConfig from './ui-preview.config.mjs';
 
 export default (env) => {

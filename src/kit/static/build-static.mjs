@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Builds the non-React chrome in static/ (run from an app that has the kit's dependencies installed):
+// Builds the non-React chrome in static/ (`npm run kit:static`):
 //   globalbar.html, footer.html          GlobalBar (language + theme menus, GitHub) and SiteFooter as plain HTML (en)
 //   i18n/globalbar.<locale>.html …       the same for every UI locale
 //   theme-init.js, theme-init-doxygen.js pre-paint scripts (theme + language preference; load blocking in <head>)
@@ -8,10 +8,10 @@
 //   kit.css                              compiled Tailwind v4 + full kit theme (covers all static markup)
 //   kit-chrome.css                       chrome only, no preflight, layers unwrapped (Doxygen)
 //   kit-nojs-dark.css                    kit.css's dark theme for readers without JavaScript
-//   pages/index.html, pages/404.html     former docs.levimc.org root (redirect page) + themed 404 (legacy/build.mjs)
+//   pages/index.html, pages/404.html     former docs.levimc.org root (redirect page) + themed 404 (src/legacy/build.mjs)
 //   doxygen/header.html, doxygen/footer.html  Doxygen HTML_HEADER / HTML_FOOTER with the kit chrome
 //
-// Usage: node kit/static/build-static.mjs [--out <dir>] [--asset-base /levimc-kit/]
+// Usage: node src/kit/static/build-static.mjs [--out <dir>] [--asset-base /levimc-kit/]
 import { mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -97,12 +97,12 @@ const head = (title, { first = '', extra = '' } = {}) => `<meta charset="utf-8">
   <link rel="stylesheet" href="${assetBase}kit.css">
   <noscript><link rel="stylesheet" href="${assetBase}kit-nojs-dark.css" media="(prefers-color-scheme: dark)"></noscript>
   <link rel="icon" href="${assetBase}levimc.svg" type="image/svg+xml">${extra ? `\n  ${extra}` : ''}`;
-const icon = (name) => `${assetBase}icons/${name.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase())}.svg`;
 // the cards are page content (English, like the rest of the page): kit.js translates only the chrome
 const docsCards = projects.DOCS_PROJECTS.map(
   (p) =>
     `<a class="px-card kit-card" href="${p.url}"><span class="kit-card-icon kit-slot"><img src="${p.logo}" width="52" height="52" alt="" class="kit-card-logo"></span><span class="kit-card-body"><span class="kit-card-title">${p.name}</span> <span class="kit-card-desc">${esc(i18n.UI_STRINGS.en.projectBlurbs[p.id])}</span></span></a>`,
 ).join('\n        ');
+/** @param {{ title: string, first?: string, extraHead?: string, main: string, mainClass?: string }} options */
 const page = ({ title, first, extraHead, main, mainClass = 'kit-static-main' }) => `<!doctype html>
 <html lang="en">
 <head>
@@ -138,7 +138,7 @@ writeFileSync(
     </section>`,
   }),
 );
-// the 404 of the legacy docs pages (legacy/build.mjs): the one 404 look of every LeviMC site (chrome.css .kit-notfound:
+// the 404 of the legacy docs pages (src/legacy/build.mjs): the one 404 look of every LeviMC site (chrome.css .kit-notfound:
 // compass, red "Error 404" label, title, text, actions), plus the projects with docs, like levimc.org's 404
 const en = i18n.UI_STRINGS.en;
 writeFileSync(
@@ -308,7 +308,7 @@ await build({
   },
 });
 const cssFile = readdirSync(tmp).find((f) => f.endsWith('.css'));
-renameSync(join(tmp, cssFile), join(out, 'kit.css'));
+renameSync(join(tmp, /** @type {string} */ (cssFile)), join(out, 'kit.css'));
 rmSync(tmp, { recursive: true, force: true });
 writeFileSync(join(out, 'kit-nojs-dark.css'), noJsDarkCss(readFileSync(join(out, 'kit.css'), 'utf8')));
 
@@ -326,7 +326,7 @@ await build({
   },
 });
 const chromeFile = readdirSync(tmp).find((f) => f.endsWith('.css'));
-writeFileSync(join(out, 'kit-chrome.css'), unwrapLayers(readFileSync(join(tmp, chromeFile), 'utf8')));
+writeFileSync(join(out, 'kit-chrome.css'), unwrapLayers(readFileSync(join(tmp, /** @type {string} */ (chromeFile)), 'utf8')));
 rmSync(tmp, { recursive: true, force: true });
 
 /** Remove `@layer a,b;` statements and unwrap `@layer x { … }` blocks (brace matching, strings respected). */

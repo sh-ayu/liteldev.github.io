@@ -1,10 +1,12 @@
-// Tests for legacy/build.mjs (part of `npm test`).
-// Add --live (node legacy/build.test.mjs --live) to also check every redirect target on the live site.
+// Tests for src/legacy/build.mjs (part of `npm test`).
+// Add --live (node src/legacy/build.test.mjs --live), or set LIVE=1, to also check every redirect target on the live
+// site: deploy.yml does, after each deploy.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
+import { devNull } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
@@ -284,7 +286,7 @@ test('404.html runs the forwarding map before rendering', () => {
 
 test('every page: the kit chrome — skip link, no-JS dark theme, generator, footer year, Mods and Blog links', () => {
   for (const [f, page] of html) {
-    const lang = /<html lang="([^"]+)">/.exec(page)[1];
+    const lang = /** @type {RegExpExecArray} */ (/<html lang="([^"]+)">/.exec(page))[1];
     const skip = lang.startsWith('zh-') ? '跳到正文' : 'Skip to content'; // zh-CN and zh-HK (old zh-Hant pages)
     assert.ok(page.includes(`<body>\n  <a class="kit-skip-link" href="#kit-main" data-kit-t="skipToContent">${skip}</a>\n`), `${f}: skip link first in <body>`);
     assert.ok(page.includes('<main id="kit-main"'), `${f}: skip link target`);
@@ -305,7 +307,7 @@ test('every page: the kit chrome — skip link, no-JS dark theme, generator, foo
   }
 });
 
-test('kit.js (from kit/static) runs the menus, the cross-site preferences and the footer year', () => {
+test('kit.js (from src/kit/static) runs the menus, the cross-site preferences and the footer year', () => {
   const js = files.get('_kit/kit.js').toString();
   assert.equal(js, readFileSync(join(repo, 'src/kit/static/kit.js'), 'utf8'));
   for (const needle of ['levimc_theme', 'levimc_lang', 'Domain=levimc.org', '[data-kit-year]', '[data-kit-theme-value]', '[data-kit-lang-value]']) assert.ok(js.includes(needle), needle);
@@ -330,14 +332,14 @@ test('kit assets: every /_kit/ reference is published, nothing else', () => {
 
 test('static GlobalBar reproduces the kit rendering for the Projects tab', () => {
   const kit404 = readFileSync(join(repo, 'src/kit/static/pages/404.html'), 'utf8');
-  assert.ok(kit404.includes(globalBar('en')), 'en GlobalBar with aria-current on Projects matches kit/static/pages/404.html');
+  assert.ok(kit404.includes(globalBar('en')), 'en GlobalBar with aria-current on Projects matches src/kit/static/pages/404.html');
   const zh = globalBar('zh-CN', 'LeviLauncher');
   // Projects in the bar and in the phone menu + LeviLauncher in both Projects lists
   assert.equal(zh.match(/aria-current="page"/g).length, 4);
 });
 
 test('CLI rejects a missing <dist>', () => {
-  assert.throws(() => execFileSync(process.execPath, [join(repo, 'src/legacy/build.mjs')], { stdio: 'pipe' }), (e) => e.status === 2);
+  assert.throws(() => execFileSync(process.execPath, [join(repo, 'src/legacy/build.mjs')], { stdio: 'pipe' }), (e) => /** @type {{ status?: number }} */ (e).status === 2);
 });
 
 test('live: every redirect target answers 200 with no redirect and has every mapped heading id', { skip: !process.argv.includes('--live') && !process.env.LIVE }, () => {
@@ -350,7 +352,7 @@ test('live: every redirect target answers 200 with no redirect and has every map
   }
   for (const p of PROJECT_SITES) need(`${ORIGIN}/${p}/`);
   for (const [url, ids] of targets) {
-    const out = execFileSync('curl', ['-s', '-o', '/dev/null', '--max-time', '30', '-w', '%{http_code} %{num_redirects} %{redirect_url}', url], { encoding: 'utf8' });
+    const out = execFileSync('curl', ['-s', '-o', devNull, '--max-time', '30', '-w', '%{http_code} %{num_redirects} %{redirect_url}', url], { encoding: 'utf8' });
     assert.equal(out.trim(), '200 0', url);
     if (!ids.length) continue;
     const page = execFileSync('curl', ['-s', '--max-time', '30', url], { encoding: 'utf8' });

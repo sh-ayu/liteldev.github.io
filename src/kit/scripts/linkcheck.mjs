@@ -112,6 +112,7 @@ const idsOf = (file) => {
   return idCache.get(file);
 };
 
+/** @type {{ checked: number, broken: { page: string, url: string, reason: string }[], redirects: { page: string, url: string, location: string }[], anchors: { page: string, url: string, anchor: string }[], ignored: number }} */
 const internal = { checked: 0, broken: [], redirects: [], anchors: [], ignored: 0 };
 const external = new Map(); // url → [{ page, url }]
 const SKIP_SCHEMES = /^(mailto|tel|javascript|data|blob|about|sms|irc|ftp):/i;

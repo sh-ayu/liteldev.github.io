@@ -34,6 +34,7 @@ export function useRole(): [Role, (role: Role) => void] {
       // storage blocked: the default stays
     }
     const initial = fromHash() ?? (isRole(stored) ? stored : undefined);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- the stored role is read after hydration: the prerendered page has the default
     if (initial) setRoleState(initial);
     const onHash = () => {
       const r = fromHash();
@@ -57,6 +58,7 @@ export function useRole(): [Role, (role: Role) => void] {
 /** The visitor's device, known only after hydration (the prerendered page offers the Windows download first). */
 function usePlatform(): DevicePlatform | undefined {
   const [platform, setPlatform] = useState<DevicePlatform>();
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- the visitor's platform is known in the browser only
   useEffect(() => setPlatform(detectPlatform()), []);
   return platform;
 }

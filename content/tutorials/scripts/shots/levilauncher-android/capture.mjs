@@ -9,7 +9,7 @@
 // labels). On each screen it reads the interface with `uiautomator dump`, checks its text with assertDesensitized,
 // takes the screen with `screencap`, and takes the targets of the notes from the bounds of the views (by resource id,
 // or by the text the app shows). It writes the captures and shots.json to captures/ (not committed), and the SVGs to
-// content/play/images and content/develop/images.
+// pages/play/images and pages/develop/images.
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import os from 'node:os';
@@ -60,7 +60,7 @@ function buildTools() {
     for (let i = 0; i < Math.max(x.length, y.length); i++) if ((x[i] ?? 0) !== (y[i] ?? 0)) return (x[i] ?? 0) - (y[i] ?? 0);
     return 0;
   });
-  return path.join(dir, versions.at(-1));
+  return path.join(dir, /** @type {string} */ (versions.at(-1)));
 }
 
 /** The stand-in for the game: placeholder/AndroidManifest.xml, linked, aligned and signed with a throwaway key. */
@@ -205,7 +205,9 @@ function prepareDevice(apk, placeholder) {
   // which the picture of that dialog needs; the game is never launched).
   try {
     adb('uninstall', 'com.mojang.minecraftpe');
-  } catch {}
+  } catch {
+    // it was not installed
+  }
   adb('install', placeholder);
   return [model, serial ?? '', sh('settings', 'get', 'global', 'device_name').trim()].filter((s) => s && s !== 'null');
 }
@@ -224,6 +226,7 @@ const L = {
  */
 async function tour(locale, key, sensitive) {
   const t = L[key];
+  /** @type {Record<string, { file: string, at: Record<string, object> }>} */
   const out = {};
   const dir = path.join(here, 'captures', key);
   mkdirSync(dir, { recursive: true });
@@ -357,7 +360,7 @@ function specs(seen) {
   const per = (f) => Object.fromEntries(LANGS.map((lang) => [lang, f(lang)]));
   const image = (screen) => per((lang) => seen[CAPTURE_OF[lang]][screen].file);
   const at = (screen, key) => per((lang) => seen[CAPTURE_OF[lang]][screen].at[key]);
-  const shot = (name, screen, title, notes, out = '../../../../content/play/images') => ({ name, title, image: image(screen), scale: SCALE, frame: 'android', out, notes });
+  const shot = (name, screen, title, notes, out = '../../../../pages/play/images') => ({ name, title, image: image(screen), scale: SCALE, frame: 'android', out, notes });
   const label = (en, hans, hant) => ({ en, 'zh-Hans': hans, 'zh-Hant': hant });
 
   return [
@@ -435,7 +438,7 @@ function specs(seen) {
       [
         { kind: 'box', target: at('mods', 'addMod') },
         { kind: 'arrow', side: 'bottom', target: at('mods', 'addMod'), label: label('Pick your .levipack', '选择你的 .levipack', '選擇你的 .levipack') },
-      ], '../../../../content/develop/images'),
+      ], '../../../../pages/develop/images'),
   ];
 }
 

@@ -74,7 +74,7 @@ const zh: Labels = {
   v12660: 'Bedrock 1.26.60',
 };
 
-// The LeviMC navigation model (kit/README.md "Navigation model"): every top-level entry is a section, i.e. an entry
+// The LeviMC navigation model (src/kit/README.md "Navigation model"): every top-level entry is a section, i.e. an entry
 // of the site column with the sidebar tree of its pages. Four sections, in this order: Overview (the home page itself:
 // what bedboo is, with a code sample; no pages below it), Guides (how to do one thing: connect, load plugins, drive a
 // real client, run the agent), Concepts (how bedboo works and why it behaves as it does) and Reference (the API, the

@@ -28,6 +28,7 @@ function Group({ item, path, depth, onNavigate, idPath, openAll }: ItemProps) {
   const [open, setOpen] = useState(active || item.collapsed === false || (!!openAll && !item.collapsed));
   // reveal the current page after client-side navigation
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- navigating opens the group of the current page; the visitor may close it again
     if (active) setOpen(true);
   }, [active]);
   const listId = `kit-sb-${idPath}`;

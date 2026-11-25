@@ -11,7 +11,7 @@
 import { createServer } from 'node:http';
 import { createReadStream, existsSync, statSync, realpathSync } from 'node:fs';
 import { extname, join, resolve, sep } from 'node:path';
-import { pathToFileURL, fileURLToPath } from 'node:url';
+import { fileURLToPath } from 'node:url';
 
 export const CONTENT_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -61,6 +61,7 @@ const isDir = (p) => {
  */
 export function resolvePagesPath(dist, base, pathname) {
   const root = resolve(dist);
+  /** @type {() => { status: 404, file: string | null }} */
   const notFound = () => ({ status: 404, file: isFile(join(root, '404.html')) ? join(root, '404.html') : null });
   let p;
   try {

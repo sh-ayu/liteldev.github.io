@@ -1259,7 +1259,7 @@
 }
 
 @layer components {
-  /* ================================================================== static pages (kit/static/pages) */
+  /* ================================================================== static pages (src/kit/static/pages) */
   .kit-static-main {
     flex: 1;
     display: grid;

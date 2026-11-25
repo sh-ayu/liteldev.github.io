@@ -1,6 +1,6 @@
 // Unit tests for the static chrome: the no-JavaScript dark theme converter (static/nojs-dark.mjs, used for
 // kit-nojs-dark.css and by the docs build) and the vanilla runtime static/kit.js (footer year, chrome-only
-// translation). Run: node --test "kit/tests/*.test.mjs" (no dependencies).
+// translation). Run: node --test "src/kit/tests/*.test.mjs" (no dependencies).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -52,7 +52,10 @@ test('static/kit-nojs-dark.css holds every .dark rule of static/kit.css, with .d
 // ------------------------------------------------------------------ kit.js in a minimal DOM
 const CHROME = '.kit-gbar, .kit-footer, .kit-skip-link, .kit-dox-drawer-network';
 
-/** A fake element: `chrome` says whether it sits in the bar/footer/skip link (for matches/closest). */
+/**
+ * A fake element: `chrome` says whether it sits in the bar/footer/skip link (for matches/closest).
+ * @param {{ text?: string, attrs?: Record<string, string>, chrome?: boolean }} [options]
+ */
 function el({ text = '', attrs = {}, chrome = false } = {}) {
   const a = { ...attrs };
   const cls = new Set();
@@ -71,7 +74,10 @@ function el({ text = '', attrs = {}, chrome = false } = {}) {
   };
 }
 
-/** Run kit.js once: `nodes` maps a selector kit.js queries to the fake elements it finds. */
+/**
+ * Run kit.js once: `nodes` maps a selector kit.js queries to the fake elements it finds.
+ * @param {{ nodes?: Record<string, object[]>, cookie?: string, now?: number }} [options]
+ */
 function runKit({ nodes = {}, cookie = '', now } = {}) {
   const root = el({ attrs: { lang: 'en' } });
   root.style = {};
@@ -89,7 +95,7 @@ function runKit({ nodes = {}, cookie = '', now } = {}) {
   const window = { matchMedia: () => ({ matches: false, addEventListener() {} }), addEventListener() {}, localStorage: null };
   const Clock = class extends Date {
     constructor(...args) {
-      super(...(args.length ? args : [now ?? Date.now()]));
+      super(.../** @type {[number]} */ (args.length ? args : [now ?? Date.now()]));
     }
   };
   vm.runInNewContext(read('../static/kit.js'), {

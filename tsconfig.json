@@ -18,5 +18,9 @@
     "types": ["node", "vite/client"]
   },
   "include": ["src", "content/*/*.ts"],
-  "exclude": ["node_modules", "dist", ".kit", ".build", ".cache"]
+  "exclude": [
+    "node_modules", "dist", ".kit", ".build", ".cache",
+    // the globals of the kit's vanilla runtime (kit.src.js): for tsconfig.scripts.json only
+    "src/kit/static/kit.src.globals.d.ts"
+  ]
 }

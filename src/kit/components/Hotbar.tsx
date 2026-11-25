@@ -23,7 +23,7 @@ export function HotbarTabs({ tabs, value, onChange, label, children, className }
   const listRef = useRef<HTMLDivElement>(null);
   const onKey = (e: KeyboardEvent<HTMLDivElement>) => {
     const i = tabs.findIndex((t) => t.id === value);
-    let n = i;
+    let n: number;
     if (e.key === 'ArrowRight') n = (i + 1) % tabs.length;
     else if (e.key === 'ArrowLeft') n = (i - 1 + tabs.length) % tabs.length;
     else if (e.key === 'Home') n = 0;

@@ -170,7 +170,7 @@ const DONE_ICON =
 function parseMeta(langRaw: string, meta: string) {
   // VitePress: ```js{1,3-4} [file.js]   pymdownx: ```py title="file.py" hl_lines="1 3" linenums="1"
   let lang = langRaw;
-  let highlight = new Set<number>();
+  const highlight = new Set<number>();
   let title: string | undefined;
   let lineNumbers: boolean | undefined;
   const braced = /^([^{]*)\{([\d,\s-]+)\}$/.exec(lang);

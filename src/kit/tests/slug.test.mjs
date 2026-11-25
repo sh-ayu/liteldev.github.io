@@ -1,4 +1,4 @@
-// Heading ids (kit/docs/node/markdown/slug.ts).
+// Heading ids (src/kit/docs/node/markdown/slug.ts).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { slugVitepress, slugPymdownx } from '../docs/node/markdown/slug.ts';

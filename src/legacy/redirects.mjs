@@ -2,11 +2,11 @@
 // them under docs.levimc.org before the project docs moved to levimc.org/<Repo>/).
 //
 // GitHub Pages serves this repository (the organisation site) for every path of levimc.org that no project
-// repository with Pages owns (project repos own /<Repo>/). legacy/build.mjs turns this table into
+// repository with Pages owns (project repos own /<Repo>/). src/legacy/build.mjs turns this table into
 //   * a real redirect page for every old URL (dist/<from>/…, meta refresh + location.replace + canonical), and
 //   * the forwarding map that dist/404.html runs before rendering (old URL variants, aliases, wrong case).
 //
-// All targets are canonical, redirect-free URLs (answer 200 directly); `node legacy/build.test.mjs --live`
+// All targets are canonical, redirect-free URLs (answer 200 directly); `node src/legacy/build.test.mjs --live`
 // verifies them, and every mapped heading id, against the live site. Since 2026-11-16 the targets are the
 // language-first URLs (/zh-Hans/LeviLamina/…, MIGRATION.md): until a project's docs are built here (content/<Project>/),
 // the 404 forwards its language-first URLs to where its own repository still publishes them (LANGUAGE_SEGMENTS).
@@ -34,6 +34,9 @@ export const ORIGIN = 'https://levimc.org';
  * elsewhere), so they keep answering 200 with the same bytes.
  * `fallbacks` send anything else under the old site to the matching locale's home (first matching prefix).
  * Targets are relative to `to`; `project` marks that project in the redirect pages' Projects menu.
+ * @typedef {[from: string, to: string, lang: string, title: string, hash: boolean | Record<string, string[]>]} MovedPage
+ * @typedef {{ from: string, to: string, project?: string, oldName: string, newName: string, pages: MovedPage[], aliases?: [from: string, to: string][], files?: string[], fallbacks?: [prefix: string, to: string][] }} MovedSite
+ * @type {MovedSite[]}
  */
 export const MOVED_SITES = [
   {

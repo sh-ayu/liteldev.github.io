@@ -94,3 +94,22 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v5
+
+  # After the deploy: every page the retired sites' addresses are sent to answers on levimc.org, without a further
+  # redirect and with the headings their old #anchors map to (src/legacy/build.test.mjs).
+  live:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - run: node --test src/legacy/build.test.mjs
+        env:
+          LIVE: 1

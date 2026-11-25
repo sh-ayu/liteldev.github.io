@@ -1,13 +1,15 @@
 // Usage: node shot.mjs <url> <out.png> [light|dark] [width] [height] [--full]
-// Screenshots a page with headless Chromium. Remote assets (Google Fonts etc.) go through the local proxy.
+// Screenshots a page with headless Chromium. Remote assets (Google Fonts etc.) go through the environment's proxy
+// (HTTPS_PROXY / HTTP_PROXY) when there is one.
 import { createRequire } from 'node:module';
-const require = createRequire(process.env.LEVIMC_PW_DIR + '/');
+const require = createRequire(process.env.LEVIMC_PW_DIR ? process.env.LEVIMC_PW_DIR + '/' : import.meta.url);
 const { chromium } = require('playwright');
 const args = process.argv.slice(2);
 const full = args.includes('--full');
 const [url, out, scheme = 'light', w = '1440', h = '900'] = args.filter(a => a !== '--full');
-const browser = await chromium.launch({ proxy: { server: 'http://127.0.0.1:1080', bypass: 'localhost,127.0.0.1' } });
-const page = await browser.newPage({ viewport: { width: +w, height: +h }, colorScheme: scheme, deviceScaleFactor: 1 });
+const proxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.HTTP_PROXY || process.env.http_proxy;
+const browser = await chromium.launch(proxy ? { proxy: { server: proxy, bypass: 'localhost,127.0.0.1' } } : {});
+const page = await browser.newPage({ viewport: { width: +w, height: +h }, colorScheme: /** @type {'light' | 'dark'} */ (scheme), deviceScaleFactor: 1 });
 const errors = [];
 page.on('pageerror', e => errors.push(String(e)));
 page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });

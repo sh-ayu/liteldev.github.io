@@ -37,5 +37,6 @@ export function useFocusTrap(ref: RefObject<HTMLElement | null>, active: boolean
       document.removeEventListener('keydown', onKey);
       if (prev && document.contains(prev)) prev.focus({ preventScroll: true });
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- the trap is set up when it becomes active; `ref` is a ref object and `onEscape` may be a new function on every render
   }, [active]);
 }

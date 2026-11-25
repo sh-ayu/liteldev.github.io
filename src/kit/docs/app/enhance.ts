@@ -29,7 +29,7 @@ async function copyText(text: string): Promise<boolean> {
     ta.style.opacity = '0';
     document.body.appendChild(ta);
     ta.select();
-    let ok = false;
+    let ok: boolean;
     try {
       ok = document.execCommand('copy');
     } catch {
@@ -206,5 +206,6 @@ export function useContentEnhancements(ref: RefObject<HTMLElement | null>, key: 
       window.removeEventListener('hashchange', revealHash);
       resizeObserver?.disconnect();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- `ref` is a ref object: its identity does not change
   }, [key, navigate]);
 }

@@ -142,7 +142,7 @@ export function createLinkResolver(ctx: LinkContext, page: PageRoute) {
   return (href: string, kind: 'a' | 'img'): LinkResolution | null => {
     const raw = href.trim();
     if (!raw) return null;
-    let h = raw;
+    const h = raw;
     // own-site absolute URL → treat as root-absolute internal link
     const ownPrefix = ownPrefixes.find((o) => h.toLowerCase().startsWith(o.toLowerCase()));
     if (ownPrefix && origin) {

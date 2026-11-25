@@ -2,7 +2,7 @@
 // Writes scripts/interface-texts.json: the texts of lip's interface, Simplified → Traditional Chinese, which
 // scripts/zh-hant.mjs gives a text of the interface that a page marks (**新建服务器…** → **建立伺服器…**).
 //
-//   node scripts/interface-texts.mjs [<lip checkout>]     (npm run interface-texts)
+//   node content/lip/scripts/interface-texts.mjs [<lip checkout>]
 //
 // The texts are read from the L.T(en, zhHans, zhHant) calls of src/Lip.Cli/Tui/ in a checkout of LiteLDev/lip: the
 // one given, else $LIP_DIR, else a `lip` checkout next to this repository's (as lip's screenshot generator writes

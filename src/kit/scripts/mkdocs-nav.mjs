@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Print a defineDocsConfig() skeleton (nav, navTranslations, i18n, site metadata) from an mkdocs.yml.
-// Usage: node kit/scripts/mkdocs-nav.mjs path/to/mkdocs.yml > docs.config.generated.json
-// Needs the `yaml` package (part of the kit's dependency set). Python tags (!!python/...) are ignored.
+// Usage: node src/kit/scripts/mkdocs-nav.mjs path/to/mkdocs.yml > docs.config.generated.json
+// Needs the `yaml` package (a devDependency of the repository). Python tags (!!python/...) are ignored.
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { dirname, resolve } from 'node:path';

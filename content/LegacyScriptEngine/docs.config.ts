@@ -1,5 +1,5 @@
 // levimc.org/LegacyScriptEngine/: the LegacyScriptEngine documentation, built with levimc-kit by levimc.org's deploy
-// (docs/README.md). Imported from LiteLDev/LegacyScriptEngine (develop), where it was ported 1:1 from the former
+// (content/README.md). Imported from LiteLDev/LegacyScriptEngine (develop), where it was ported 1:1 from the former
 // mkdocs.yml (MkDocs Material + mkdocs-static-i18n). English at /LegacyScriptEngine/, Simplified Chinese at
 // /zh-Hans/LegacyScriptEngine/ (sources stay x.zh.md), Traditional Chinese at /zh-Hant/LegacyScriptEngine/, converted
 // from it: levimc.org's one scheme, the language first (2026-11-16). The URLs before
@@ -38,7 +38,7 @@ export default defineDocsConfig({
   // and LanguageSupport are h5 headings, so keep the full depth instead of the kit default [2, 4].
   outline: [2, 6],
   sidebar: 'tabs',
-  // The LeviMC navigation model (kit/README.md "Navigation model"): every top-level entry is a section with its
+  // The LeviMC navigation model (src/kit/README.md "Navigation model"): every top-level entry is a section with its
   // sidebar tree, the same four on every project's docs, in this order: Overview (the home page: what LSE is, the
   // engines and a minimal plugin; a link with no tree), Guides (one task each, step by step), Concepts (how plugins,
   // engines and the API work) and Reference (the API). Tutorials (installing LSE, your first plugin) live at

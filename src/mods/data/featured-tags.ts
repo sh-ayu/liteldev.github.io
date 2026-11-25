@@ -11,7 +11,7 @@ export interface FeaturedTag {
   /** Other (normalised) tags that count as this one. */
   aliases: readonly string[];
   label: Labels;
-  /** Its kit sprite (`kit/assets/sprites.mjs` key). */
+  /** Its kit sprite (`src/kit/assets/sprites.mjs` key). */
   icon: SpriteName;
 }
 

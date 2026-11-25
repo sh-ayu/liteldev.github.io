@@ -183,7 +183,7 @@ test('callouts get a legend in the footer, and keys a row of badges', () => {
 
 test('a callout at the edge of the capture widens the margin so it is not cut', () => {
   const svg = renderShot(base([{ kind: 'callout', n: 1, target: { x: 0, y: 20, width: 40, height: 20 } }]), 'en');
-  const cx = Number(/<circle cx="([\d.]+)"/.exec(svg)[1]);
+  const cx = Number(/** @type {RegExpExecArray} */ (/<circle cx="([\d.]+)"/.exec(svg))[1]);
   assert.ok(cx - 10 >= 0, `the callout at ${cx} is cut`);
 });
 

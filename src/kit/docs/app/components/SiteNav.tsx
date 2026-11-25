@@ -29,6 +29,7 @@ function firstLink(items: NavItem[]): string | undefined {
 function Section({ item, tree, active, path, idPrefix, onNavigate }: { item: NavItem; tree: SidebarData; active: boolean; path: string; idPrefix: string; onNavigate?: () => void }) {
   const [open, setOpen] = useState(active);
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- navigating opens the section of the current page; the visitor may close it again
     if (active) setOpen(true);
   }, [active]);
   const listId = `kit-sn-${idPrefix}`;

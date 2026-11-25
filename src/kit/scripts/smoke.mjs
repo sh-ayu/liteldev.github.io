@@ -11,8 +11,8 @@
 // the cross-site cookies (levimc_theme / levimc_lang) and applied again after a reload, no console or hydration
 // errors, the phone layout (one menu button, the bar's, at the same place on every site; on docs sites it opens
 // the drawer: sections → section tree → Resources → LeviMC links; no sideways scroll) and the themed 404.
-// Docs mode adds: the navigation IA (kit 2.22: no header row; the site column has the brand = home and the sections,
-// the current one holds the page, prev/next stays inside it), SPA navigation, Ctrl+K search (its trigger is in the
+// Docs mode adds: the navigation IA (kit 2.26: no header row; the site column has the brand = home and the sections,
+// the first of which may be the home page; the current one holds the page, prev/next stays inside it), SPA navigation, Ctrl+K search (its trigger is in the
 // LeviMC bar, which sticks), the language menu landing on the equivalent page, the root-only language redirect (the
 // stored preference wins), content tabs, copy buttons and no duplicated controls in the site column. Exit code 1 on any failure.
 import { createRequire } from 'node:module';
@@ -56,12 +56,19 @@ const check = async (name, fn) => {
     console.log(`  ✘ ${name} — ${String(e?.message ?? e).split('\n')[0]}`);
   }
 };
+/** @type {(c: unknown, msg?: string) => asserts c} */
 const assert = (c, msg) => {
   if (!c) throw new Error(msg);
 };
 
-// LEVIMC_CHROME: a browser executable to use instead of Playwright's own download (e.g. an installed Chrome)
-const browser = await chromium.launch({ headless: !args.includes('--headed'), executablePath: process.env.LEVIMC_CHROME || undefined, proxy: { server: 'http://127.0.0.1:1080', bypass: 'localhost,127.0.0.1' } });
+// LEVIMC_CHROME: a browser executable to use instead of Playwright's own download (e.g. an installed Chrome).
+// The environment's proxy is used when there is one (fonts and other remote files); loopback always goes direct.
+const proxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.HTTP_PROXY || process.env.http_proxy;
+const browser = await chromium.launch({
+  headless: !args.includes('--headed'),
+  executablePath: process.env.LEVIMC_CHROME || undefined,
+  ...(proxy ? { proxy: { server: proxy, bypass: '<-loopback>,localhost,127.0.0.1' } } : {}),
+});
 const newCtx = (o = {}) => browser.newContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light', ...o });
 const ctx = await newCtx();
 await ctx.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: new URL(base).origin });
@@ -85,7 +92,7 @@ await page.goto(base, { waitUntil: 'networkidle' });
 // Pages to visit: --pages, else links found on the home page.
 let pages = (opt('--pages', '') || '').split(',').filter(Boolean).map((p) => base + p.replace(/^\//, ''));
 if (!pages.length) {
-  pages = await page.$$eval(APP ? 'main a[href], [data-kit-globalbar] a[href]' : '[data-kit-hero] a[href], .kit-sitenav a[href], [data-doc-content] a[href]', (as, b) => {
+  pages = await page.$$eval(APP ? 'main a[href], [data-kit-globalbar] a[href]' : '[data-kit-hero] a[href], .kit-sitenav a[href], [data-doc-content] a[href]', (/** @type {HTMLAnchorElement[]} */ as, b) => {
     const out = [];
     for (const a of as) {
       const h = a.href.split('#')[0];
@@ -124,11 +131,11 @@ await check('GlobalBar: canonical tabs in order, controls (language · theme · 
     const g = document.querySelector('[data-kit-globalbar]');
     if (!g) return null;
     const tabs = [...g.querySelectorAll('.kit-gbar-nav > ul > li')].map((li) => {
-      const a = li.querySelector(':scope > a');
+      const a = /** @type {?HTMLAnchorElement} */ (li.querySelector(':scope > a'));
       const t = li.querySelector('[data-kit-t]');
       return { key: t?.getAttribute('data-kit-t'), href: a?.href ?? null };
     });
-    const end = g.querySelector('.kit-gbar-end');
+    const end = /** @type {Element} */ (g.querySelector('.kit-gbar-end'));
     const order = [...end.children].map((c) =>
       c.matches('.kit-gbar-search') ? 'search' : c.matches('.kit-locale') ? 'language' : c.matches('.kit-theme') ? 'theme' : c.matches('.kit-gbar-github') ? 'github' : c.matches('.kit-gbar-more, [data-kit-gbar-menu]') ? 'menu' : c.className,
     );
@@ -143,10 +150,12 @@ await check('GlobalBar: canonical tabs in order, controls (language · theme · 
     // same-site tabs may be router links (root-relative), so compare the resolved path on this origin too
     assert(samePage(href, url), `${key} → ${href}`);
   }
-  // the docs' search trigger (kit 2.22) sits before the controls
+  // the docs' search trigger sits before the controls
   const ctl = bar.order.filter((o) => o !== 'menu' && o !== 'search');
   assert(JSON.stringify(ctl) === JSON.stringify(['language', 'theme', 'github']), `controls ${bar.order.join(',')}`);
-  const want = opt('--current', APP ? null : 'projects');
+  // the tutorials and the FAQ have tabs of their own; every project's docs are under Projects
+  const site = unlang(new URL(base).pathname).split('/').filter(Boolean).pop();
+  const want = opt('--current', APP ? null : site === 'tutorials' || site === 'faq' ? site : 'projects');
   if (want) assert(bar.current === want, `current tab ${bar.current}, expected ${want}`);
   return `${keys.join(' · ')} | ${bar.order.join(' · ')}${bar.current ? ` | current: ${bar.current}` : ''}`;
 });
@@ -162,7 +171,7 @@ await check('GlobalBar + footer: the shared brand, GitHub → LiteLDev, the comp
       footerMark: !!f?.querySelector('.kit-footer-logo .kit-brand-mark'),
       columns: f ? f.querySelectorAll('.kit-footer-col').length : -1,
       social: f ? [...f.querySelectorAll('.kit-footer-social a')].map((a) => a.getAttribute('href')) : [],
-      support: f?.querySelector('.kit-footer-support')?.href,
+      support: /** @type {HTMLAnchorElement | null | undefined} */ (f?.querySelector('.kit-footer-support'))?.href,
     };
   });
   assert(r.mark, 'no LeviMC mark in the bar');
@@ -223,7 +232,7 @@ await check('language: the choice is stored in the cross-site cookie and applied
   const expected = isLink
     ? await p.evaluate((l) => {
         const alt = document.querySelector(`link[rel="alternate"][hreflang="${l}"]`);
-        return alt ? new URL(alt.getAttribute('href')).pathname : null;
+        return alt ? new URL(/** @type {string} */ (alt.getAttribute('href'))).pathname : null;
       }, lang)
     : null;
   await item.click();
@@ -232,7 +241,7 @@ await check('language: the choice is stored in the cross-site cookie and applied
   assert(v === lang, `cookie levimc_lang = ${v}, chose ${lang}`);
   let landed = new URL(p.url()).pathname;
   if (isLink) {
-    await p.waitForFunction((l) => document.documentElement.lang.toLowerCase().split('-')[0] === l.toLowerCase().split('-')[0], lang, { timeout: 10000 });
+    await p.waitForFunction((l) => document.documentElement.lang.toLowerCase().split('-')[0] === l.toLowerCase().split('-')[0], /** @type {string} */ (lang), { timeout: 10000 });
     landed = new URL(p.url()).pathname;
     if (expected) assert(landed === expected, `landed on ${landed}, expected ${expected}`);
   }
@@ -328,12 +337,12 @@ await check('phone (390px): bar controls visible, one menu with the bar links, n
     if (order.includes('kit-drawer-sidebar')) assert(await p.locator('#kit-drawer .kit-drawer-sidebar .kit-sb-title').count(), 'the drawer tree has no section title');
     for (let i = 0; i < 60; i++) await p.keyboard.press('Tab');
     assert(await p.evaluate(() => !!document.activeElement?.closest('#kit-drawer')), 'focus escaped the drawer');
-    links = await p.$$eval('#kit-drawer .kit-gbar-list a', (as) => as.map((a) => a.href));
+    links = await p.$$eval('#kit-drawer .kit-gbar-list a', (/** @type {HTMLAnchorElement[]} */ as) => as.map((a) => a.href));
     await p.keyboard.press('Escape');
     await p.waitForSelector('#kit-drawer', { state: 'hidden' });
   } else {
     await gbarMenu.click();
-    links = await p.$$eval('.kit-gbar-more-panel a', (as) => as.map((a) => a.href));
+    links = await p.$$eval('.kit-gbar-more-panel a', (/** @type {HTMLAnchorElement[]} */ as) => as.map((a) => a.href));
     await p.keyboard.press('Escape');
   }
   for (const [key, url] of CANONICAL_TABS) if (url) assert(links.some((h) => samePage(h, url)), `menu lacks ${key}`);
@@ -357,7 +366,7 @@ await check('404 page is themed and returns 404', async () => {
 if (!APP) {
   await check('client-side navigation (no full reload)', async () => {
     await page.goto(base, { waitUntil: 'networkidle' });
-    await page.evaluate(() => (window.__kitSmokeMarker = 1));
+    await page.evaluate(() => (/** @type {Window & { __kitSmokeMarker?: number }} */ (window).__kitSmokeMarker = 1));
     const cur = new URL(page.url()).pathname;
     const candidates = page.locator('.kit-sitenav a[href]:not([target]), .kit-hero a[href]:not([target]), [data-doc-content] a[href^="/"]:not([target])');
     let link = null;
@@ -373,11 +382,11 @@ if (!APP) {
     await link.click();
     await page.waitForURL((u) => u.pathname === href?.split('#')[0], { timeout: 10000 });
     await page.waitForSelector('[data-doc-content]');
-    assert((await page.evaluate(() => window.__kitSmokeMarker)) === 1, 'page was fully reloaded');
+    assert((await page.evaluate(() => /** @type {Window & { __kitSmokeMarker?: number }} */ (window).__kitSmokeMarker)) === 1, 'page was fully reloaded');
     assert(!errs.length, errs.join(' | '));
     return href;
   });
-  await check('docs chrome (kit 2.22): no header row; search in the LeviMC bar, which sticks; the site column', async () => {
+  await check('docs chrome: no header row; search in the LeviMC bar, which sticks; the site column', async () => {
     await page.goto(pages[0] ?? base, { waitUntil: 'networkidle' });
     const r = await page.evaluate(() => ({
       row: !!document.querySelector('.kit-site-header'),
@@ -392,11 +401,11 @@ if (!APP) {
     assert(!r.dup.length, `duplicated controls in the site column: ${r.dup.join(', ')}`);
     // a short page may not scroll far: make room below the content
     await page.evaluate(() => {
-      document.querySelector('.kit-shell')?.style.setProperty('padding-bottom', '150vh');
+      /** @type {?HTMLElement} */ (document.querySelector('.kit-shell'))?.style.setProperty('padding-bottom', '150vh');
       window.scrollTo(0, 1200);
     });
     await page.waitForTimeout(150);
-    const bar = await page.evaluate(() => document.querySelector('[data-kit-globalbar]').getBoundingClientRect().top);
+    const bar = await page.evaluate(() => /** @type {Element} */ (document.querySelector('[data-kit-globalbar]')).getBoundingClientRect().top);
     assert(Math.abs(bar) < 1, `the LeviMC bar is not stuck (top ${bar})`);
     return 'bar stuck at 0, search in the bar, site column';
   });
@@ -418,6 +427,8 @@ if (!APP) {
           sectionLinks: sections.map((x) => x.getAttribute('href')),
           newTab: nav ? nav.querySelectorAll('.kit-sn-sections a[target="_blank"]').length : 0,
           activeCount: nav ? nav.querySelectorAll('.kit-sn-section.is-active').length : 0,
+          activeLink: active?.querySelector(':scope > .kit-sn-section-btn')?.getAttribute('href') ?? null,
+          atHome: !!brand && new URL(brand, location.href).pathname === location.pathname,
           current: nav?.querySelector('a.kit-sb-link.is-active')?.getAttribute('href') ?? null,
           currentInActive: !!active?.querySelector('a.kit-sb-link.is-active'),
           pager: [...document.querySelectorAll('.kit-pager-link')].map((a) => a.getAttribute('href')),
@@ -431,11 +442,12 @@ if (!APP) {
         problems.push(`${at}: no site column`);
         continue;
       }
-      if (r.sectionLinks.includes(r.brand)) problems.push(`${at}: a section links the home page (the brand is the home link)`);
+      // kit 2.26: the first section of a project's docs (Overview) is the home page; no other section links it
+      if (r.sectionLinks.indexOf(r.brand) > 0) problems.push(`${at}: a section other than the first links the home page`);
       if (r.newTab) problems.push(`${at}: ${r.newTab} section(s) open in a new tab`);
       if (r.repo > 1) problems.push(`${at}: ${r.repo} repository links`);
-      if (r.home) {
-        if (r.activeCount) problems.push(`${at}: a section is current on the home page`);
+      if (r.home || r.atHome) {
+        if (r.activeCount > 1 || (r.activeCount === 1 && r.activeLink !== r.brand)) problems.push(`${at}: a section other than the home page's is current on the home page`);
         continue;
       }
       if (r.activeCount !== 1) problems.push(`${at}: ${r.activeCount} current sections`);
@@ -545,10 +557,11 @@ if (!APP) {
       }
     }
     if (!btn) return 'skipped — no code block on the sampled pages (pass --copy-page)';
-    const code = await btn.evaluate((b) => b.closest('.kit-code').querySelector('pre code').innerText.replace(/\n$/, ''));
+    const code = await btn.evaluate((b) => /** @type {HTMLElement} */ (/** @type {Element} */ (b.closest('.kit-code')).querySelector('pre code')).innerText.replace(/\n$/, ''));
     await btn.click();
     await page.waitForFunction((b) => b.hasAttribute('data-copied'), await btn.elementHandle(), { timeout: 3000 });
-    const clip = await page.evaluate(() => navigator.clipboard.readText());
+    // Windows' clipboard hands the text back with CRLF line ends
+    const clip = (await page.evaluate(() => navigator.clipboard.readText())).replace(/\r\n/g, '\n');
     assert(clip === code, 'clipboard content differs from code');
     return `${clip.length} chars`;
   });

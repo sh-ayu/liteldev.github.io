@@ -1,14 +1,11 @@
 // Vite plugin for levimc-kit docs sites.
 //
-//   // vite.config.ts
-//   import { defineConfig } from 'vite';
-//   import { kitDocs } from './kit/docs/node/vite';
-//   import docs from './docs.config';
-//   export default defineConfig({ plugins: [kitDocs(docs)] });
+//   // scripts/docs-sites.mjs makes each site's Vite config:
+//   plugins: [kitDocs(docs, { configRoot: 'content/<Site>', workDir: '.build/docs/<Site>' })]
 //
 // It compiles all markdown at build start, exposes the site through virtual modules (one lazily loaded
 // chunk per page), serves the SPA in dev, and emits search indexes, sitemap.xml, .nojekyll and content
-// assets for the client build. `node kit/docs/build.mjs` runs client build → SSR build → prerender.
+// assets for the client build. `node src/kit/docs/build.mjs` runs client build → SSR build → prerender.
 
 import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -150,7 +147,7 @@ export function kitDocs(userConfig: DocsConfig, options: KitDocsPluginOptions = 
     if (!b.warnings.length) return;
     log(`[kit-docs] ${b.warnings.length} warning(s):`);
     for (const w of b.warnings.slice(0, 200)) log(`  - ${w}`);
-    if (b.warnings.length > 200) log(`  … and ${b.warnings.length - 200} more (see .kit/warnings.txt)`);
+    if (b.warnings.length > 200) log(`  … and ${b.warnings.length - 200} more (see .kit/warnings.txt in the site's build folder)`);
   };
 
   const plugin: Plugin = {

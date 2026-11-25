@@ -1,6 +1,6 @@
-// Serves the built site like GitHub Pages (`pnpm preview`): dist/ at /mods/, dist-locales/<lang>/ at
+// Serves the built site like GitHub Pages (`node scripts/mods/run.mjs preview`, in .build/mods/): dist/ at /mods/, dist-locales/<lang>/ at
 // /<lang>/mods/ and dist-api/ at /api/, as the levimc.org build puts them.
-//   node scripts/preview.mjs [--port 4173] [--host 127.0.0.1]
+//   node scripts/mods/preview.mjs [--port 4173] [--host 127.0.0.1]
 import { createServer } from "node:http";
 import { existsSync, readdirSync } from "node:fs";
 import { createPagesServer, resolvePagesPath } from "../../src/kit/scripts/serve-pages.mjs";

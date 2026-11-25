@@ -2,15 +2,15 @@
  * levimc-kit overlay for doxygen-awesome-css v2.4.1 ("Impression, Craft" on Doxygen API pages): the API reference
  * looks and behaves like the docs pages around it.
  *
- * Doxyfile:
- *   HTML_HEADER            = docs/api/header.html          (kit/static/doxygen/gen-header.mjs, from the docs' _kit/nav.json)
- *   HTML_FOOTER            = <kit>/static/doxygen/footer.html
- *   HTML_EXTRA_STYLESHEET  = docs/api/doxygen-awesome-css/doxygen-awesome.css \
- *                            <kit>/static/kit-chrome.css \
- *                            <kit>/static/doxygen/doxygen-kit.css
- *   HTML_EXTRA_FILES       = <kit>/static/kit.js
+ * doxygen/Doxyfile (doxygen/build.sh makes the files under .cache/doxygen/):
+ *   HTML_HEADER            = .cache/doxygen/header.html    (doxygen/gen-header.mjs, from the docs' _kit/nav.json)
+ *   HTML_FOOTER            = .cache/doxygen/footer.html
+ *   HTML_EXTRA_STYLESHEET  = .cache/doxygen/doxygen-awesome-css/doxygen-awesome.css \
+ *                            src/kit/static/kit-chrome.css \
+ *                            doxygen/doxygen-kit.css
+ *   HTML_EXTRA_FILES       = src/kit/static/kit.js .cache/doxygen/kit-dox-chrome.js
  *   HTML_COLORSTYLE        = LIGHT      (the kit scripts toggle html.dark-mode / html.light-mode)
- * After doxygen: node <kit>/static/doxygen/patch-navtree.mjs <output dir> (the tree renders a window of a long list).
+ * After doxygen: node doxygen/patch-navtree.mjs <output dir> (the tree renders a window of a long list).
  * Do NOT include doxygen-awesome-darkmode-toggle.js: kit.js owns the theme (cookie levimc_theme, shared by every LeviMC site).
  *
  * kit-chrome.css carries the docs layout (docs/app/docs.css): the header row, the drawer, the sidebar title and the

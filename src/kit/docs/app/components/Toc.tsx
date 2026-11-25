@@ -47,6 +47,7 @@ export function useActiveHeading(ids: string[], page?: string): string | null {
       io.disconnect();
       end?.disconnect();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- `key` is the ids joined: `ids` may be a new array on every render
   }, [key]);
   return active;
 }

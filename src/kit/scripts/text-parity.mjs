@@ -10,8 +10,8 @@
 //
 // A path may map different URLs on both sides with "=>": --paths daemon/overview.html=>daemon/overview/
 //
-// Without --paths the live sitemap.xml is used. Requires Playwright (resolved from $LEVIMC_PW_DIR or the
-// app's node_modules).
+// Without --paths the live sitemap.xml is used. Requires Playwright's Chromium ($LEVIMC_PW_DIR names
+// another node_modules directory to take Playwright from).
 import { createRequire } from 'node:module';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
@@ -207,7 +207,8 @@ function hunks(ops) {
   return out;
 }
 
-const browser = await chromium.launch({ proxy: { server: process.env.HTTPS_PROXY || process.env.https_proxy || 'http://127.0.0.1:1080', bypass: 'localhost,127.0.0.1' } });
+const proxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.HTTP_PROXY || process.env.http_proxy;
+const browser = await chromium.launch(proxy ? { proxy: { server: proxy, bypass: 'localhost,127.0.0.1' } } : {});
 const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
 async function grab(url, selectors) {
   const page = await ctx.newPage();

@@ -14,9 +14,9 @@
 (() => {
   const params = new URLSearchParams(location.search);
   const scene = params.get('scene') || 'installed';
-  const audit = window.__audit;
+  const audit = /** @type {any} */ (window).__audit; // LeviLauncher's fixture: not typed here
   const fixtureCall = audit.call;
-  const data = window.__levimcShotsData; // set by capture.mjs (versions, the instance, the mod)
+  const data = /** @type {any} */ (window).__levimcShotsData; // set by capture.mjs (versions, the instance, the mod)
   if (!data) throw new Error('levimc-shots: no window.__levimcShotsData; run capture.mjs.');
   const ROOT = 'D:\\LeviLauncher';
   const INSTANCE = data.instance; // { name, gameVersion, leviLamina }

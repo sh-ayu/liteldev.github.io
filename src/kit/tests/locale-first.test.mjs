@@ -1,15 +1,16 @@
 // Unit tests for the language-first URLs of the docs engine (kit 2.23, `i18n.localeFirst`): route path ↔ URL
-// (docs/shared/routing.ts) and the resolved config. The built demo (kit/demo, `npm run build`) checks the output.
+// (docs/shared/routing.ts) and the resolved config. The built test sites (src/kit/demo, built by ci.yml) check the output.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { localeFromPath, localeRoot, pathUrl, siteRoots, sitePath } from '../docs/shared/routing.ts';
 import { resolveConfig } from '../docs/node/config.ts';
 
-const locales = [
+// (only what the routing reads of a locale)
+const locales = /** @type {import('../docs/shared/types.ts').LocaleInfo[]} */ ([
   { code: 'en', prefix: '' },
   { code: 'zh-Hans', prefix: 'zh-Hans/' },
   { code: 'zh-Hant', prefix: 'zh-Hant/' },
-];
+]);
 const FIRST = { base: '/LeviLamina/', locales, localeFirst: true, defaultLocale: 'en' };
 const AFTER = { base: '/LeviLamina/', locales, defaultLocale: 'en' };
 

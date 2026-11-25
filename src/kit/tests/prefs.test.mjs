@@ -1,5 +1,5 @@
 // Unit tests for the cross-site preferences (components/prefs.ts) and the inline scripts built from them
-// (pre-paint script, docs root language redirect). Run: node --test "kit/tests/*.test.mjs" (Node ≥ 22.18).
+// (pre-paint script, docs root language redirect). Run: node --test "src/kit/tests/*.test.mjs" (Node ≥ 22.18).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -18,7 +18,11 @@ import { localeRedirectScript } from '../docs/shared/head.ts';
 import { KIT_VERSION } from '../components/version.ts';
 
 // ------------------------------------------------------------------ a tiny browser for the inline scripts
-/** Cookie jar with Domain / host-only semantics, as document.cookie exposes it to one host. */
+/** @typedef {{ name: string, value: string, domain?: string, host?: string, secure?: boolean, maxAge?: number, sameSite?: string, path?: string }} Cookie */
+/**
+ * Cookie jar with Domain / host-only semantics, as document.cookie exposes it to one host.
+ * @param {{ url?: string, cookies?: Cookie[], storage?: Record<string, string>, languages?: string[], referrer?: string, dark?: boolean }} [options]
+ */
 function browserEnv({ url = 'https://levimc.org/', cookies = [], storage = {}, languages = ['en-US'], referrer = '', dark = false } = {}) {
   const u = new URL(url);
   const jar = cookies.map((c) => ({ ...c }));
@@ -42,6 +46,7 @@ function browserEnv({ url = 'https://levimc.org/', cookies = [], storage = {}, l
       set cookie(s) {
         const [pair, ...parts] = s.split(';').map((x) => x.trim());
         const [name, value] = [pair.slice(0, pair.indexOf('=')), pair.slice(pair.indexOf('=') + 1)];
+        /** @type {Cookie} */
         const c = { name, value, host: u.hostname };
         for (const p of parts) {
           const [k, v] = p.split('=');
@@ -240,6 +245,7 @@ test('pre-paint (plain apps): the page waits for usePreferredLocale exactly when
 });
 
 // ------------------------------------------------------------------ docs root language redirect
+/** @typedef {Parameters<typeof localeRedirectScript>[0]} Site (the locales here carry no label: the script reads none) */
 const SITE = {
   base: '/LeviLauncher/',
   siteKey: 'LeviLauncher',
@@ -251,7 +257,7 @@ const SITE = {
     { code: 'ja-JP', lang: 'ja-JP', prefix: 'ja-JP/' },
   ],
 };
-const redirect = localeRedirectScript(SITE);
+const redirect = localeRedirectScript(/** @type {Site} */ (SITE));
 const at = (path, o = {}) => run(redirect, browserEnv({ url: 'https://levimc.org' + path, ...o }));
 const pref = (v) => [{ name: 'levimc_lang', value: v, domain: 'levimc.org' }];
 // ------------------------------------------------------------------ cross-site prerendering (kit 2.21)
@@ -279,12 +285,13 @@ test('pre-paint: adds speculation rules where the browser supports them, never o
   assert.equal(disabled.added.length, 0);
 });
 test('speculation rules: same-origin by default, `include` narrows, `exclude` removes the build\'s own paths', () => {
-  const where = (scope) => speculationRules(scope).prerender[0].where.and;
+  /** @typedef {{ where: { and: object[] }, eagerness: string }} Rule */
+  const where = (scope) => /** @type {Rule} */ (speculationRules(scope).prerender[0]).where.and;
   assert.deepEqual(where()[0], { href_matches: '/*' });
   assert.deepEqual(where({ include: ['/mods/*', '/lip/*'] })[0], { or: [{ href_matches: '/mods/*' }, { href_matches: '/lip/*' }] });
   assert.deepEqual(where({ exclude: ['/lip/*'] }).at(-1), { not: { href_matches: '/lip/*' } });
   assert.match(JSON.stringify(where()), /\[download\].*\[target=_blank\]/);
-  assert.equal(speculationRules().prerender[0].eagerness, 'moderate');
+  assert.equal(/** @type {Rule} */ (speculationRules().prerender[0]).eagerness, 'moderate');
 });
 
 test('redirect: only the site root; the stored preference maps to the nearest locale', () => {
@@ -311,7 +318,7 @@ test('redirect: no preference → the first matching browser language; kit 1.0 p
   assert.equal(root.replaced, null, 'a stored "root" (English) choice keeps the root');
 });
 test('redirect (localeFirst, kit 2.23): the root goes to /<lang>/<base>, a referrer on any of its roots is in-site', () => {
-  const lf = localeRedirectScript({
+  const lf = localeRedirectScript(/** @type {Site} */ ({
     ...SITE,
     localeFirst: true,
     locales: [
@@ -319,7 +326,7 @@ test('redirect (localeFirst, kit 2.23): the root goes to /<lang>/<base>, a refer
       { code: 'zh-Hans', lang: 'zh-Hans', prefix: 'zh-Hans/' },
       { code: 'ja', lang: 'ja', prefix: 'ja/' },
     ],
-  });
+  }));
   const at2 = (path, o = {}) => run(lf, browserEnv({ url: 'https://levimc.org' + path, ...o }));
   assert.equal(at2('/LeviLauncher/', { cookies: pref('zh-CN') }).replaced, '/zh-Hans/LeviLauncher/');
   assert.equal(at2('/LeviLauncher/', { languages: ['ja-JP'] }).replaced, '/ja/LeviLauncher/');

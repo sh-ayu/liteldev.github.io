@@ -1,6 +1,6 @@
 // The site's routes. Canonical URLs use the trailing-slash form (GitHub Pages serves /projects/ from
 // projects/index.html with 200; /projects would be a 301), so every link points at these paths exactly.
-// Every page exists in each locale (src/i18n/config.ts): /about/, /zh-Hans/about/, /zh-Hant/about/. The blog's posts
+// Every page exists in each locale (src/main/i18n/config.ts): /about/, /zh-Hans/about/, /zh-Hant/about/. The blog's posts
 // and pages are the exception: they are written in one language (Chinese) and have one URL each (/blog/…, as on the
 // old blog), shown in the language they are written in; the blog's listings (index, tags, categories, archives)
 // exist in every locale.

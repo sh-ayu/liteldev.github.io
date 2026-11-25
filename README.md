@@ -36,16 +36,29 @@ npm run dev:docs -- lip      # one docs site (node scripts/docs-sites.mjs list)
 # Build the whole static site into dist/
 npm run build
 
-# Check it
-npm run typecheck && npm run lint && npm test
-npm run linkcheck
+# Check the sources
+npm run typecheck            # TypeScript and JavaScript
+npm run lint                 # ESLint, no warnings allowed
+npm test                     # unit tests
+
+# Check the built site
+npm run linkcheck            # every link
+npm run budget               # size budgets of LeviMC Mods
+npm run smoke                # the browser checks (npx playwright install chromium, once)
 
 # Serve dist/ at http://127.0.0.1:4173/
 npm run preview
 ```
 
 `npm run build -- main docs` builds only those parts (`main`, `mods`, `docs`, `search`). The Mods build reads each
-repository from GitHub: set `GITHUB_TOKEN` to avoid its rate limits.
+repository from GitHub: set `GITHUB_TOKEN` to avoid its rate limits. `npm run smoke -- docs mods` runs only those
+checks (`main`, `chrome`, `docs`, `mods`, `prefs`).
+
+LeviLamina's API reference is made after the build, when Doxygen is installed: `bash doxygen/build.sh`.
+
+CI (`.github/workflows/ci.yml`) runs all of these checks on every pull request and every push to `main`;
+`deploy.yml` builds and publishes the site on every push to `main` and every hour, then checks the retired sites'
+redirects on the live site.
 
 ## Contributing
 

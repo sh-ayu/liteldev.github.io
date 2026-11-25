@@ -245,7 +245,7 @@ function encodePng({ width, height, data }) {
       }
       if (sum < bestSum) [best, bestSum] = [line, sum];
     }
-    best.copy(raw, y * (stride + 1));
+    /** @type {Buffer} */ (best).copy(raw, y * (stride + 1));
   }
   const chunk = (type, body) => {
     const len = Buffer.alloc(4);

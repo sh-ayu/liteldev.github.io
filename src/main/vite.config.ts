@@ -12,7 +12,7 @@ import { levimcBlog } from './blog/plugin.ts';
 /**
  * Inlines the no-flash theme script, the root's language redirect and the kit's web fonts into index.html, and — like every docs page —
  * a dark stylesheet for readers without JavaScript whose system is dark: the built stylesheet's .dark rules as
- * :root rules (kit/static/nojs-dark.mjs), in <noscript> with media="(prefers-color-scheme: dark)".
+ * :root rules (src/kit/static/nojs-dark.mjs), in <noscript> with media="(prefers-color-scheme: dark)".
  */
 function levimcHead(): Plugin {
   let ssr = false;

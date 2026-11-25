@@ -267,7 +267,7 @@ export class Particles {
       const g = this.grp[i];
       const p = this.pos;
       const v = this.vel;
-      let alpha = 1;
+      let alpha: number;
       let size = this.base[i]!;
       if (a < 0) {
         alpha = 0;

@@ -24,7 +24,7 @@
 // SPLIT_CHILD bytes moves into a script of its own, which navtree.js already loads on demand (a string
 // childrenData is a script name; getData reads the variable of that name).
 //
-//   node kit/static/doxygen/patch-navtree.mjs <doxygen html output dir>
+//   node doxygen/patch-navtree.mjs <doxygen html output dir>
 import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';

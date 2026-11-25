@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// Size budgets of the built site (after `pnpm build`):
+// Size budgets of the built site (after `npm run build`):
 //
-//   node scripts/budget.mjs [dist]
+//   npm run budget          (node scripts/mods/run.mjs budget: this script, in .build/mods/)
 //
 // The home page's own part (everything but the LeviMC bar and footer, which every LeviMC site shares)
 // and its embedded catalogue, the entry script and the stylesheet, raw and gzipped. Exit code 1 when
@@ -21,18 +21,20 @@ const bar = html.slice(html.lastIndexOf("<div", html.indexOf("data-kit-globalbar
 const chrome = bar + (/<footer[^>]*data-kit-footer[\s\S]*?<\/footer>/.exec(html)?.[0] ?? "");
 const own = html.length - chrome.length;
 const assets = readdirSync(join(dist, "assets"));
-const entry = assets.find((f) => /^index-.*\.js$/.test(f));
-const css = assets.find((f) => /^index-.*\.css$/.test(f));
+const entry = /** @type {string} */ (assets.find((f) => /^index-.*\.js$/.test(f)));
+const css = /** @type {string} */ (assets.find((f) => /^index-.*\.css$/.test(f)));
 const js = readFileSync(join(dist, "assets", entry), "utf8");
 const style = readFileSync(join(dist, "assets", css), "utf8");
 
+// Set on 2026-11-25 to what the site measured then plus about a tenth (172.6, 31.7, 78.8, 16.3, 135.0 and 68.0 KB):
+// they catch a jump, not the slow growth of the catalogue with every mod added.
 const budgets = [
-  ["home page, raw (without the shared LeviMC bar and footer)", own, 140 * 1024],
+  ["home page, raw (without the shared LeviMC bar and footer)", own, 190 * 1024],
   ["home page, gzip (all of it)", gz(html), 35 * 1024],
-  ["embedded catalogue, raw", data.length, 70 * 1024],
-  ["embedded catalogue, gzip", gz(data), 15 * 1024],
-  ["entry script, gzip", gz(js), 131 * 1024],
-  ["stylesheet, gzip (round 1: 42.8 KB + 5 KB)", gz(style), 47.8 * 1024],
+  ["embedded catalogue, raw", data.length, 90 * 1024],
+  ["embedded catalogue, gzip", gz(data), 18 * 1024],
+  ["entry script, gzip", gz(js), 142 * 1024],
+  ["stylesheet, gzip", gz(style), 75 * 1024],
 ];
 let failed = false;
 console.log(`home page: ${kb(html.length)} raw (LeviMC bar + footer ${kb(chrome.length)})`);

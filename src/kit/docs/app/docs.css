@@ -581,7 +581,7 @@
     min-height: 60vh;
   }
 
-  /* search: kit/theme/search.css (kit 2.27: every LeviMC site has the site-wide search) */
+  /* search: src/kit/theme/search.css (kit 2.27: every LeviMC site has the site-wide search) */
   /* ================================================================== drawer */
   .kit-drawer-root {
     position: fixed;

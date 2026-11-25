@@ -219,7 +219,7 @@
     width: 3.5rem;
   }
 
-  /* "I want to…": hotbar tabs for players, server owners and developers (src/components/Roles.tsx) */
+  /* "I want to…": hotbar tabs for players, server owners and developers (src/main/components/Roles.tsx) */
   .lm-roles {
     width: 100%;
     margin-top: 2rem;
@@ -1480,7 +1480,7 @@
     margin-bottom: 1rem;
   }
 
-  /* the docs' h1 scale (kit/theme/prose.css .kit-prose h1), so a post reads like a docs page */
+  /* the docs' h1 scale (src/kit/theme/prose.css .kit-prose h1), so a post reads like a docs page */
   .lm-blog-post-title {
     font-size: clamp(2rem, 1.6rem + 1.4vw, 2.625rem);
     font-weight: 700;

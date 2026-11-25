@@ -1,10 +1,10 @@
-// LeviLamina docs, built from this folder by levimc.org's deploy (docs/README.md) since 2026-11-16, before in
+// LeviLamina docs, built from this folder by levimc.org's deploy (content/README.md) since 2026-11-16, before in
 // LiteLDev/LeviLamina (docs/main/). English at /LeviLamina/, Simplified Chinese at /zh-Hans/LeviLamina/, Traditional
 // Chinese at /zh-Hant/LeviLamina/ (converted from it): levimc.org's one scheme, the language first. The URLs before
 // (/LeviLamina/zh-Hans/…, /LeviLamina/zh/…, /LeviLamina/zh-Hant/…) redirect.
-// Content lives in contents/ (x.md = English, x.zh.md = Chinese). Register new pages in `nav` below
-// and their Chinese nav labels in `navTranslations.zh`. See kit/README.md for every option.
-// The C++ reference (/LeviLamina/api/) is Doxygen over LeviLamina's headers, made by the deploy from api/Doxyfile.
+// The pages are in pages/ (x.md = English, x.zh.md = Chinese). Register new pages in `nav` below
+// and their Chinese nav labels in `navTranslations.zh`. See src/kit/README.md for every option.
+// The C++ reference (/LeviLamina/api/) is Doxygen over LeviLamina's headers, made by the deploy (doxygen/build.sh).
 import { defineDocsConfig } from '../../src/kit/docs/node/config.ts';
 
 // Pages that left this site keep answering at every URL they had: English, zh-Hans/, the former zh/ and zh-Hant/
@@ -63,7 +63,7 @@ export default defineDocsConfig({
   markdown: { compat: 'python-markdown', lineNumbers: true, codeTitle: 'pygments' },
   lastUpdated: true,
   sidebar: 'tabs',
-  // The LeviMC navigation model (kit/README.md "Navigation model"): every top-level entry is a section, i.e. a tab of
+  // The LeviMC navigation model (src/kit/README.md "Navigation model"): every top-level entry is a section, i.e. a tab of
   // the site column and the sidebar tree of its pages. Every LeviMC project has the same four, in this order:
   // Overview (the home page alone: what LeviLamina is, with a small mod as the example; no pages below it), Guides
   // (how to use one part of the API, step by step), Concepts (how LeviLamina works) and Reference (the complete

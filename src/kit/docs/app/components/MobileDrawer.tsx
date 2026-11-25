@@ -15,7 +15,7 @@ import type { UiStrings } from '../../../components/i18n';
  * The docs' one menu (phones and tablets, or when the section tabs do not fit), opened by the LeviMC bar's menu
  * button: the site's sections, the current section's tree (titled with the section), the resources (header.links
  * and the repository), then the LeviMC network links of the bar. The Doxygen API pages render the same markup
- * (kit/static): keep the class names in sync.
+ * (src/kit/static): keep the class names in sync.
  *
  * The body is rendered only once the drawer was first opened: until then the closed drawer is an empty shell
  * (no second sidebar, no network list to hydrate and style on every page).

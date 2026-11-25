@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-// Writes the Traditional Chinese pages, content/zh-Hant/**/*.md, from the Simplified ones, content/zh/**/*.md, with
-// the words that the interface of lip uses in Traditional Chinese. `npm run build` and `npm run dev` run it first
-// (prebuild, predev); the pages it writes are not committed (.gitignore). See CONTRIBUTING.md.
+// Writes the Traditional Chinese pages, pages/zh-Hant/**/*.md, from the Simplified ones, pages/zh/**/*.md, with
+// the words that the interface of lip uses in Traditional Chinese. The build and the dev server of the site run it
+// first (prebuild.mjs); the pages it writes are not committed (.gitignore). See CONTRIBUTING.md.
 //
-//   node scripts/zh-hant.mjs [--quiet]
+//   node content/lip/scripts/zh-hant.mjs [--quiet]
 //
-// scripts/zh-hant.test.mjs (`npm test`) checks the converter.
+// zh-hant.test.mjs (`npm test`) checks the converter.
 //
 // A page is converted in three steps, and only outside what is kept as written (fenced code, inline code, link
 // targets, URLs):
@@ -118,7 +118,7 @@ function target(link) {
   return hash < 0 ? path : path + '#' + words(link.slice(hash + 1));
 }
 
-// What is kept as written, as levimc-kit keeps it (kit/docs/node/convert.ts): fenced code, inline code, link
+// What is kept as written, as levimc-kit keeps it (src/kit/docs/node/convert.ts): fenced code, inline code, link
 // targets (`](…`, href="…", src="…"), autolinks and bare URLs. A bare URL ends before a `]` and before Chinese
 // punctuation (，。、；：！？（）「」《》“”‘’… and the like), so that one in the text of a link or of a picture,
 // with such a mark right after it, does not take the rest of the line, and the target that follows, with it.

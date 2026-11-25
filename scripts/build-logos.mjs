@@ -3,7 +3,7 @@
 //
 // A project that has its own logo keeps it (fetched from its repository, see UPSTREAM). The others get one in the
 // kit's "Impression, Craft" style — the same recipe as the LeviMC Mods logos (BarelyEnoughItems, Bedstones, …):
-// a Monet scene from the kit's painter behind (kit/components/paint.ts), a crisp 32×32 pixel object in front,
+// a Monet scene from the kit's painter behind (src/kit/components/paint.ts), a crisp 32×32 pixel object in front,
 // with its shadow, its reflection in the water and a few floating pixels. Every logo is seeded: re-running the
 // script gives the same pixels.
 //
@@ -188,7 +188,7 @@ const DESIGNS = {
       // the ribbon: across the lid along both diagonals, then down the middle of each face
       const ribbonLit = '#79b061', ribbonShade = '#4f8a4f';
       px.fill((x, y) => onTop(x, y) && (Math.abs((x - cx) / 2 - (y - top)) < 0.7 || Math.abs((x - cx) / 2 + (y - top)) < 0.7), '#8dc06a');
-      for (const [fx, col] of [[10, ribbonLit], [21, ribbonShade]]) {
+      for (const [fx, col] of /** @type {[number, string][]} */ ([[10, ribbonLit], [21, ribbonShade]])) {
         const y0 = Math.ceil(yTop(fx + 0.5));
         for (let y = y0; y <= y0 + depth - 1; y++) px.set(fx, y, col);
       }
@@ -215,6 +215,7 @@ const DESIGNS = {
         }
       };
       // [left column, top, joints, blades: [joint, dir, length]]
+      /** @type {[number, number, number[], [number, number, number][]][]} */
       const stalks = [
         [7, 10, [15, 21], [[15, -1, 5]]],
         [14, 4, [10, 16, 22], [[10, 1, 6], [16, -1, 4]]],
@@ -423,7 +424,11 @@ mkdirSync(OUT, { recursive: true });
 const browser = await chromium.launch({ executablePath: CHROME });
 const page = await browser.newPage({ viewport: { width: SIZE, height: SIZE } });
 
-/** Loads an image (data URL) into the page and returns a THUMB×THUMB WebP, trimmed to its opaque box when asked. */
+/**
+ * Loads an image (data URL) into the page and returns a THUMB×THUMB WebP, trimmed to its opaque box when asked.
+ * @param {string} dataUrl
+ * @param {{ trim: boolean, crisp?: boolean }} options
+ */
 async function thumb(dataUrl, { trim, crisp }) {
   const url = await page.evaluate(
     async ({ dataUrl, T, trim, crisp }) => {
@@ -434,7 +439,7 @@ async function thumb(dataUrl, { trim, crisp }) {
       const src = document.createElement('canvas');
       src.width = W;
       src.height = H;
-      const s = src.getContext('2d');
+      const s = /** @type {CanvasRenderingContext2D} */ (src.getContext('2d'));
       s.drawImage(img, 0, 0, W, H);
       let [x0, y0, x1, y1] = [0, 0, W, H];
       if (trim) {
@@ -449,7 +454,7 @@ async function thumb(dataUrl, { trim, crisp }) {
       }
       const out = document.createElement('canvas');
       out.width = out.height = T;
-      const o = out.getContext('2d');
+      const o = /** @type {CanvasRenderingContext2D} */ (out.getContext('2d'));
       o.imageSmoothingEnabled = !crisp;
       o.imageSmoothingQuality = 'high';
       o.drawImage(src, x0, y0, x1 - x0, y1 - y0, 0, 0, T, T);

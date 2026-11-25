@@ -19,7 +19,7 @@ async function bedrockTypes() {
   try {
     res = await fetch(TYPES_URL, { signal: AbortSignal.timeout(30_000) });
   } catch (e) {
-    throw new Error(`cannot fetch ${TYPES_URL} (offline? behind a proxy, NODE_USE_ENV_PROXY=1; or BEDBOO_TYPES=<a local bedrock.d.ts>): ${e.cause?.message ?? e.message}`);
+    throw new Error(`cannot fetch ${TYPES_URL} (offline? behind a proxy, NODE_USE_ENV_PROXY=1; or BEDBOO_TYPES=<a local bedrock.d.ts>): ${e.cause?.message ?? e.message}`, { cause: e });
   }
   if (!res.ok) throw new Error(`${TYPES_URL}: HTTP ${res.status}`);
   return res.text();

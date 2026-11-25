@@ -29,6 +29,7 @@ export function HomeLayout({ route, page, t }: { route: RouteMeta; page: PageDat
   const features = page.features ?? [];
   // prerendered with the author's order; the visitor's platform (?platform=, earlier choice, device) only in the browser
   const [platform, setPlatform] = useState<DevicePlatform>();
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- the visitor's platform is known in the browser only
   useEffect(() => setPlatform(preferredPlatform()), []);
   // kit 2.22.1: the site's column starts under the banner and stays hidden while any of the banner is on screen
   const heroRef = useRef<HTMLDivElement>(null);

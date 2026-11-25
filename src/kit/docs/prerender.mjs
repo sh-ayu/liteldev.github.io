@@ -5,6 +5,7 @@ import { existsSync, mkdirSync, readFileSync, rmdirSync, rmSync, writeFileSync, 
 import { dirname, join, resolve } from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 
+/** @param {{ root?: string, outDir?: string, workDir?: string }} [options] */
 export async function prerenderDocs({ root = process.cwd(), outDir, workDir = join(root, '.kit') } = {}) {
   const ssrEntry = join(workDir, 'ssr/entry-server.js');
   const manifestPath = join(workDir, 'client-pages.json');

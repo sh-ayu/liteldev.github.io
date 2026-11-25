@@ -188,7 +188,7 @@
       var named = row.querySelectorAll('[data-kit-l10n-aria]');
       for (var n = 0; n < named.length; n++) {
         var el = named[n];
-        var am = null;
+        var am;
         try {
           am = JSON.parse(el.getAttribute('data-kit-l10n-aria') || 'null');
         } catch (e) {
@@ -245,7 +245,7 @@
 
   // ------------------------------------------------------------------ menus + clicks
   document.addEventListener('click', function (e) {
-    var t = e.target && e.target.closest ? e.target : null;
+    var t = /** @type {?HTMLElement} */ (e.target && /** @type {KitTarget} */ (e.target).closest ? e.target : null);
     var th = t && t.closest('[data-kit-theme-value]');
     if (th) {
       applyTheme(th.getAttribute('data-kit-theme-value'), true);
@@ -263,7 +263,7 @@
     // close <details class="kit-menu"> when clicking outside or choosing an item inside
     each('details.kit-menu[open]', function (d) {
       var inside = t && d.contains(t);
-      var choice = inside && t.closest('.kit-menu-panel a, .kit-menu-panel button');
+      var choice = inside && /** @type {HTMLElement} */ (t).closest('.kit-menu-panel a, .kit-menu-panel button');
       if (!inside || choice) {
         d.open = false;
         if (choice && choice.tagName === 'BUTTON') {
@@ -282,7 +282,8 @@
     return p ? Array.prototype.slice.call(p.querySelectorAll('[role^="menuitem"]')) : [];
   }
   document.addEventListener('pointerdown', function (e) {
-    pointerOpen = !!(e.target && e.target.closest && e.target.closest('details.kit-menu'));
+    var t = /** @type {KitTarget} */ (e.target);
+    pointerOpen = !!(t && t.closest && t.closest('details.kit-menu'));
   });
   document.addEventListener('keydown', function (e) {
     pointerOpen = false;
@@ -295,11 +296,12 @@
       return;
     }
     if (e.altKey || e.ctrlKey || e.metaKey) return;
-    var d = e.target && e.target.closest ? e.target.closest('details.kit-menu') : null;
+    var t = /** @type {HTMLElement} */ (e.target);
+    var d = /** @type {?HTMLDetailsElement} */ (t && t.closest ? t.closest('details.kit-menu') : null);
     if (!d) return;
     var items = menuItems(d);
     if (!items.length) return;
-    var sum = e.target.closest('summary');
+    var sum = t.closest('summary');
     var onTrigger = !!sum && sum.parentNode === d;
     var i = items.indexOf(document.activeElement);
     var n = items.length;
@@ -326,7 +328,7 @@
   document.addEventListener(
     'toggle',
     function (e) {
-      var d = e.target;
+      var d = /** @type {HTMLDetailsElement} */ (e.target);
       if (!d || !d.matches || !d.matches('details.kit-menu') || !d.open) return;
       each('details.kit-menu[open]', function (o) {
         if (o !== d && !o.contains(d)) o.open = false;
@@ -428,10 +430,10 @@
     };
     if (dslot)
       dslot.addEventListener('click', function (e) {
-        if (!e.target.closest('#MSearchSelect, #MSearchClose, input')) focusSearch();
+        if (!/** @type {Element} */ (e.target).closest('#MSearchSelect, #MSearchClose, input')) focusSearch();
       });
     document.addEventListener('keydown', function (e) {
-      var tg = e.target;
+      var tg = /** @type {HTMLElement} */ (e.target);
       var editing = tg && (tg.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(tg.tagName));
       if (((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && (e.key === 'k' || e.key === 'K')) || (e.key === '/' && !editing && !e.ctrlKey && !e.metaKey && !e.altKey)) {
         if (focusSearch()) e.preventDefault();
@@ -450,7 +452,7 @@
       treeDone = true;
       realInitNavTree.apply(window, treeArgs);
       // shown once it has opened on the current page (or after a moment, e.g. a page that is not in the tree)
-      var tree = document.getElementById('nav-tree');
+      var tree = /** @type {HTMLElement} */ (document.getElementById('nav-tree'));
       if (!tree) return;
       var ready = function () {
         tree.classList.add('kit-tree-ready');
@@ -466,7 +468,7 @@
       }
       setTimeout(ready, 2500);
     };
-    var realInitNavTree = window.initNavTree;
+    var realInitNavTree = /** @type {Function} */ (window.initNavTree);
     if (typeof realInitNavTree === 'function') {
       window.initNavTree = function () {
         treeArgs = arguments;
@@ -478,21 +480,21 @@
     // the tree's title (the current tab's name, like the docs sidebar) and the outline's title wait in the header
     var dtitles = document.querySelector('.kit-dox-pane-titles');
     var sbTitle = dtitles && dtitles.querySelector('.kit-dox-sitenav, .kit-sb-title');
-    var tocTitle = dtitles && dtitles.querySelector('.kit-toc-title');
+    var tocTitle = /** @type {Element} */ (dtitles && dtitles.querySelector('.kit-toc-title'));
     var dtree = document.getElementById('nav-tree');
     var dside = document.getElementById('side-nav');
     // (in a holder that keeps the site's locales, so the language preference still relabels it)
     if (dtree && sbTitle) {
       var sbHold = document.createElement('div');
       sbHold.className = 'kit-dox-sb-head';
-      sbHold.setAttribute('data-kit-site-locales', dtitles.getAttribute('data-kit-site-locales') || '[]');
+      sbHold.setAttribute('data-kit-site-locales', /** @type {Element} */ (dtitles).getAttribute('data-kit-site-locales') || '[]');
       sbHold.appendChild(sbTitle);
       dtree.insertBefore(sbHold, dtree.firstChild);
     }
 
     // ---- the drawer (the docs' MobileDrawer): the sections, the API Reference tree, the resources, the LeviMC links
-    var droot = document.querySelector('.kit-dox-drawer-root');
-    var dsheet = droot && droot.querySelector('.kit-drawer');
+    var droot = /** @type {?HTMLElement} */ (document.querySelector('.kit-dox-drawer-root'));
+    var dsheet = /** @type {HTMLElement} */ (droot && droot.querySelector('.kit-drawer'));
     var dtreeSlot = droot && droot.querySelector('.kit-dox-drawer-sidebar');
     var lastFocus = null;
     var menuButtons = function () {
@@ -512,7 +514,7 @@
         buildTree();
         droot.hidden = false;
         root.classList.add('kit-scroll-lock');
-        var close = droot.querySelector('.kit-dox-drawer-close');
+        var close = /** @type {HTMLElement} */ (droot.querySelector('.kit-dox-drawer-close'));
         // focus after the drawer's first frame: focusing now would force a style pass over the whole (large) page
         // on top of the one that frame does anyway
         if (close)
@@ -529,7 +531,7 @@
         requestAnimationFrame(reveal);
         if (dtree && !dtree.querySelector('.selected') && window.MutationObserver) {
           var ro = new MutationObserver(function () {
-            if (!dtree.querySelector('.selected')) return;
+            if (!/** @type {HTMLElement} */ (dtree).querySelector('.selected')) return;
             ro.disconnect();
             requestAnimationFrame(reveal);
           });
@@ -550,14 +552,15 @@
       document.addEventListener(
         'pointerdown',
         function (e) {
-          if (treeDone || !e.target || !e.target.closest || !e.target.closest('.kit-gbar [data-kit-gbar-menu]')) return;
+          var t = /** @type {KitTarget} */ (e.target);
+          if (treeDone || !t || !t.closest || !t.closest('.kit-gbar [data-kit-gbar-menu]')) return;
           if (dtree && dtreeSlot) dtreeSlot.appendChild(dtree);
           buildTree();
         },
         true,
       );
       document.addEventListener('click', function (e) {
-        var t = e.target && e.target.closest ? e.target : null;
+        var t = /** @type {?HTMLElement} */ (e.target && /** @type {KitTarget} */ (e.target).closest ? e.target : null);
         if (!t) return;
         if (t.closest('.kit-gbar [data-kit-gbar-menu]')) {
           e.preventDefault();
@@ -565,7 +568,7 @@
         } else if (drawerOpen() && (t.closest('.kit-dox-drawer-close') || t.closest('.kit-drawer-scrim'))) setDrawer(false);
         else if (drawerOpen() && t.closest('.kit-drawer a[href]') && !t.closest('#nav-tree .item > a:first-child') && e.button === 0 && !(e.ctrlKey || e.metaKey || e.shiftKey || e.altKey)) {
           // a link to this page's anchor scrolls (below); any other navigates: close either way
-          if (!t.closest('a[href]').getAttribute('href').match(/^javascript:/)) setDrawer(false);
+          if (!/** @type {string} */ (/** @type {Element} */ (t.closest('a[href]')).getAttribute('href')).match(/^javascript:/)) setDrawer(false);
         }
       });
       document.addEventListener('keydown', function (e) {
@@ -575,7 +578,7 @@
           setDrawer(false);
         } else if (e.key === 'Tab') {
           // keep the focus inside the dialog
-          var f = dsheet.querySelectorAll('a[href], button, summary, input, [tabindex]:not([tabindex="-1"])');
+          var f = /** @type {NodeListOf<HTMLElement>} */ (dsheet.querySelectorAll('a[href], button, summary, input, [tabindex]:not([tabindex="-1"])'));
           if (!f.length) return;
           var first = f[0];
           var last = f[f.length - 1];
@@ -608,6 +611,7 @@
     var dcontents = document.querySelector('#doc-content div.contents');
     var toc = [];
     var blocks = []; // { el, from, to } in document order: the boxes the binary search reads first
+    /** @type {ArrayLike<HTMLAnchorElement>} */
     var tocLinks = [];
     var mobileList = null;
     var escapeHtml = function (s) {
@@ -701,7 +705,7 @@
       if (!toc.length) return;
       var se = document.scrollingElement || root;
       var atEnd = window.innerHeight + window.scrollY >= se.scrollHeight - 2;
-      var line = atEnd ? window.innerHeight - 1 : dtop.getBoundingClientRect().bottom + 24;
+      var line = atEnd ? window.innerHeight - 1 : /** @type {HTMLElement} */ (dtop).getBoundingClientRect().bottom + 24;
       var b = lastAbove(0, blocks.length - 1, function (i) {
         return blocks[i].el;
       }, line);
@@ -813,7 +817,7 @@
       }
     };
     if (hashTarget()) {
-      var landed = hashTarget();
+      var landed = /** @type {HTMLElement} */ (hashTarget());
       settleOn(landed);
       window.addEventListener('load', function () {
         // a click or a scroll by the reader in the meantime wins
@@ -825,7 +829,8 @@
     document.addEventListener(
       'click',
       function (e) {
-        var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+        var tg = /** @type {HTMLElement} */ (e.target);
+        var a = /** @type {?HTMLAnchorElement} */ (tg && tg.closest ? tg.closest('a[href]') : null);
         if (!a || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
         if (!a.closest('#page-nav, #nav-tree, #doc-content, .kit-dox-toc-mobile')) return;
         var u = new URL(a.href, location.href);
@@ -835,7 +840,7 @@
         e.preventDefault();
         e.stopPropagation();
         if (location.hash !== u.hash) history.pushState(null, '', u.hash);
-        var det2 = a.closest('.kit-dox-toc-mobile');
+        var det2 = /** @type {?HTMLDetailsElement} */ (a.closest('.kit-dox-toc-mobile'));
         if (det2) det2.open = false;
         if (drawerOpen()) setDrawer(false);
         t.scrollIntoView();

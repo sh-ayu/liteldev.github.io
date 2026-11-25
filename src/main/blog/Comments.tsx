@@ -20,6 +20,7 @@ export default function Comments({ path }: { path: string }) {
   const lang = info.lang === 'en' ? 'en' : 'zh-CN';
   // the language at the moment the client finishes loading (it may change while it loads)
   const langRef = useRef(lang);
+  // eslint-disable-next-line react-hooks/refs -- the latest language, read when the client has loaded
   langRef.current = lang;
 
   useEffect(() => {
@@ -70,7 +71,6 @@ export default function Comments({ path }: { path: string }) {
       instance.current = null;
     };
     // a new page gets a fresh instance; the language is updated in place below
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path]);
 
   useEffect(() => {

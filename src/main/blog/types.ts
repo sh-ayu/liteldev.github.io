@@ -1,4 +1,4 @@
-// Blog data shared by the build (blog/content.ts) and the app (src/blog/).
+// Blog data shared by the build (content.ts, plugin.ts) and the app.
 
 export interface BlogTerm {
   name: string;

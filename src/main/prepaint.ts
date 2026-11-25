@@ -2,11 +2,11 @@
 // stylesheet paints:
 //  - theme: the cross-site LeviMC preference (cookie levimc_theme on levimc.org: Auto / Light / Dark, Auto by
 //    default), applied as html.dark + data-theme-pref;
-//  - language: every page is prerendered in its URL's language (/, /zh-Hans/, /zh-Hant/, see src/i18n/config.ts),
+//  - language: every page is prerendered in its URL's language (/, /zh-Hans/, /zh-Hant/, see src/main/i18n/config.ts),
 //    so nothing waits for it. Only the root redirects (ROOT_REDIRECT_SCRIPT, like the docs' root): exactly / goes
 //    to the visitor's stored language (cookie levimc_lang), else the browser language's locale; deep links never;
 //  - chrome language: a stored language the site has no content in but the kit has chrome strings for (de, ja …)
-//    is the bar's and footer's language (src/i18n chromeLocaleFor): they stay hidden until React has rendered them
+//    is the bar's and footer's language (src/main/i18n chromeLocaleFor): they stay hidden until React has rendered them
 //    in it (html.kit-chrome-pending, at most 1.5 s; never for English or Chinese, which have pages).
 // The previous site's localStorage keys ("theme" = light | dark, "locale" = en | zh) are migrated once.
 import { createThemeInitScript } from '../kit/components/theme.ts';
@@ -35,5 +35,5 @@ export const PREPAINT_SCRIPT =
     speculation: { include: otherSitePatterns(LOCALES.filter((l) => l.prefix).map((l) => l.prefix.slice(0, -1))) },
   }) + CHROME_PENDING_JS;
 
-/** The root-only language redirect (/ → /zh-Hans/ …), the docs' own (kit/docs/shared/head.ts). */
+/** The root-only language redirect (/ → /zh-Hans/ …), the docs' own (src/kit/docs/shared/head.ts). */
 export const ROOT_REDIRECT_SCRIPT = localeRedirectScript({ base: '/', siteKey: 'levimc', locales: [...LOCALES], defaultLocale: DEFAULT_LOCALE });

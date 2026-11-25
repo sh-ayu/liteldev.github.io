@@ -30,7 +30,7 @@ function splitSelectors(list) {
  * each list), with `.dark` replaced by `:root`; the pages load it inside <noscript> with
  * media="(prefers-color-scheme: dark)". `.dark` is only ever set on the root element and kit.css has no
  * `:not(.dark)` selectors, so this applies exactly the rules the class would.
- * @param {string} css kit/static/kit.css or a site's built stylesheet (minified, flat — no CSS nesting)
+ * @param {string} css src/kit/static/kit.css or a site's built stylesheet (minified, flat — no CSS nesting)
  * @param {{ source?: string }} [opts] what generated it from what, for the banner comment
  */
 export function noJsDarkCss(css, opts = {}) {

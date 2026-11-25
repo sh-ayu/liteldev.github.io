@@ -21,7 +21,7 @@ import { isSitePath, legacyLocale, LOCALES, localeBase, withLocale } from "./loc
  * (`/zh-Hans/mods/…`), so nothing waits for the language — but a visitor
  * whose stored language the site has no pages in while the kit has chrome
  * strings for it (de, ja …) sees the bar and footer only once they speak it
- * (`useChromeLocale`, src/chrome-locale.ts; html.kit-chrome-pending).
+ * (`useChromeLocale`, src/mods/chrome-locale.ts; html.kit-chrome-pending).
  */
 const contentBases = [...new Set(LOCALES.map((l) => l.lang.toLowerCase().split("-")[0]))];
 const prefsScript =
@@ -84,7 +84,7 @@ function kitHead(): Plugin {
 /**
  * Readers without JavaScript whose system is dark get the dark theme, as on
  * every docs page: the built stylesheet's .dark rules as :root rules
- * (kit/static/nojs-dark.mjs), linked in <noscript> with
+ * (src/kit/static/nojs-dark.mjs), linked in <noscript> with
  * media="(prefers-color-scheme: dark)" from the page template.
  */
 function noJsDark(): Plugin {
@@ -115,7 +115,7 @@ function noJsDark(): Plugin {
 }
 
 /**
- * `pnpm dev` renders every page on the server like the production build
+ * `npm run dev:mods` renders every page on the server like the production build
  * does, so the dev server and `dist/` share one code path.
  */
 function devServerRender(): Plugin {

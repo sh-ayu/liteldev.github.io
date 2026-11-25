@@ -1,5 +1,5 @@
 // Unit tests for static/doxygen/patch-navtree.mjs: the tree data split (splitTreeData) and the patches it applies
-// to a navtree.js-shaped source. Run: node --test "kit/tests/*.test.mjs" (no dependencies).
+// to a navtree.js-shaped source. Run: node --test "src/kit/tests/*.test.mjs" (no dependencies).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';

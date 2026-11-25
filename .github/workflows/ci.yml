@@ -1,11 +1,15 @@
-# Checks a pull request the way the deploy builds the site (deploy.yml, which runs on every push to main): type-check,
-# lint, tests, the whole build with every docs site's link check, the kit's test sites and the link check of the
-# whole site. LeviLamina's API reference (Doxygen) is made in the deploy only.
+# Every check of the repository, on each pull request and each push to main: type-check (TypeScript and JavaScript),
+# lint, the unit tests, the whole build with every docs site's link check (as deploy.yml builds it), the kit's test
+# sites, the link check of the whole site, the size budgets of LeviMC Mods and the browser checks.
+# LeviLamina's API reference (Doxygen) is made in the deploy only; the deploy does not wait for this workflow.
 # Pull requests the discovery workflow opens (mods-discover.yml) start no workflows of their own.
 name: CI
 
 on:
   pull_request:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 concurrency:
@@ -34,6 +38,9 @@ jobs:
 
       - run: npm test
 
+      # bedboo's API pages name every member bedboo's types declare (read from LiteLDev/bedboo's default branch).
+      - run: npm run test:bedboo
+
       # The registry cache the Pages deploy saves (see deploy.yml); read only here.
       - uses: actions/cache/restore@v6
         with:
@@ -50,3 +57,12 @@ jobs:
       - run: node scripts/docs-sites.mjs build src/kit/demo src/kit/demo/lip.config.ts src/kit/demo/single.config.ts
 
       - run: npm run linkcheck
+
+      # LeviMC Mods: the sizes of its home page, embedded catalogue, entry script and stylesheet.
+      - run: npm run budget
+
+      # The browser checks (scripts/smoke-all.mjs), in Chromium: levimc.org's pages, the LeviMC bar and footer, every
+      # docs site, LeviMC Mods, and the preferences shared between the sites.
+      - run: npx playwright install --with-deps chromium
+
+      - run: npm run smoke

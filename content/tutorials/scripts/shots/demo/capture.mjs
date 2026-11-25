@@ -3,7 +3,8 @@
 // the rectangles of its marked elements, checks that the page shows nothing of the machine (assertDesensitized), and
 // writes the captures and shots.json. A real capture script starts the real app with fake data instead of a mock page.
 //
-//   npm i --no-save playwright && npx playwright install chromium     (once, in tutorials/)
+//   npx playwright install chromium                                   (once per machine)
+//   cd content/tutorials
 //   node scripts/shots/demo/capture.mjs                               writes captures/ and shots.json
 //   node scripts/shots/annotate.mjs scripts/shots/demo/shots.json     writes out/<lang>/*.svg
 import { mkdirSync, writeFileSync } from 'node:fs';
@@ -124,9 +125,9 @@ async function capture(browser, html, file) {
   mkdirSync(path.dirname(file), { recursive: true });
   await app.screenshot({ path: file });
   const rects = await page.evaluate(() => {
-    const origin = document.querySelector('#app').getBoundingClientRect();
+    const origin = /** @type {Element} */ (document.querySelector('#app')).getBoundingClientRect();
     const out = {};
-    for (const el of document.querySelectorAll('[data-shot]')) {
+    for (const el of /** @type {NodeListOf<HTMLElement>} */ (document.querySelectorAll('[data-shot]'))) {
       const r = el.getBoundingClientRect();
       out[el.dataset.shot] = { x: r.x - origin.x, y: r.y - origin.y, width: r.width, height: r.height };
     }

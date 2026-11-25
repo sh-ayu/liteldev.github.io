@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // The social card of levimc.org (og:image) → public/og/levimc.jpg, 1200×630 (JPEG: a painting compresses far better than as PNG).
 //
-// The kit's light scene (Monet's lily pond with the block-built bridge, kit/components/paint.ts) on the right, the
+// The kit's light scene (Monet's lily pond with the block-built bridge, src/kit/components/paint.ts) on the right, the
 // LeviMC mark, name and tagline on the canvas colour on the left — the site's hero in one picture. Seeded: re-running
 // the script gives the same pixels (up to font rendering).
 //

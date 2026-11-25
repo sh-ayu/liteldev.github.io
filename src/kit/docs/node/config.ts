@@ -1,8 +1,8 @@
 // levimc-kit docs engine — configuration API.
 //
-//   // docs.config.ts
-//   import { defineDocsConfig } from './kit/docs/node/config';
-//   export default defineDocsConfig({ base: '/LeviLamina/', title: 'LeviLamina', contentDir: 'docs/main/contents', … });
+//   // content/<Site>/docs.config.ts
+//   import { defineDocsConfig } from '../../src/kit/docs/node/config.ts';
+//   export default defineDocsConfig({ base: '/LeviLamina/', title: 'LeviLamina', contentDir: 'pages', … });
 //
 // See README.md ("Site config API") for every option with MkDocs / VitePress equivalents.
 

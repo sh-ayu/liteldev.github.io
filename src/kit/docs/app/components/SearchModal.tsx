@@ -7,7 +7,7 @@ import { loadSearchIndex, loadSiteSearch, preloadSiteSearch, searchLanguageOf } 
 import type { UiStrings } from '../../../components/i18n';
 
 // kit 2.27: the docs search the whole LeviMC network — levimc.org's site-wide index of the page's language
-// (kit/components/site-search.ts) — and only their own index when there is none (the dev server, a build that is
+// (src/kit/components/site-search.ts) — and only their own index when there is none (the dev server, a build that is
 // not deployed with levimc.org).
 
 const language = () => (typeof window === 'undefined' ? 'en' : searchLanguageOf(window.location.pathname));

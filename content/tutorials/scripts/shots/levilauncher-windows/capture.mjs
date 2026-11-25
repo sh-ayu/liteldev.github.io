@@ -1,10 +1,10 @@
-// The pictures of the tutorial "Play with mods on Windows" (content/play/play-with-mods.md), from the real interface of
+// The pictures of the tutorial "Play with mods on Windows" (pages/play/play-with-mods.md), from the real interface of
 // LeviLauncher for Windows with fake data. See README.md in this folder.
 //
 // It checks out LeviLauncher at TAG, starts its own UI preview (the React interface in Vite, every Go binding mocked by
 // LeviLauncher's e2e fixture) with the data of this folder (fixture.js, data/), drives it in Chromium with Playwright
 // in each language, checks every screen with assertDesensitized, reads the rectangles to point at from the live page,
-// and writes captures/<lang>/<name>.webp, shots.json and content/play/images/<lang>/<name>.svg.
+// and writes captures/<lang>/<name>.webp, shots.json and pages/play/images/<lang>/<name>.svg.
 //
 //   node scripts/shots/levilauncher-windows/capture.mjs [--only <name>,...]
 import { spawn, spawnSync } from 'node:child_process';
@@ -17,7 +17,7 @@ import { assertDesensitized, writeShots } from '../annotate.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const tutorials = path.resolve(here, '../../..');
-const OUT = path.join(tutorials, 'content/play/images');
+const OUT = path.join(tutorials, 'pages/play/images');
 const REPO = 'https://github.com/LiteLDev/LeviLauncher.git';
 const TAG = 'v1.1.0';
 const PORT = Number(process.env.LEVIMC_SHOTS_PORT || 5179);
@@ -43,7 +43,12 @@ const TYPES = { '.json': 'application/json', '.webp': 'image/webp', '.png': 'ima
 // ---------------------------------------------------------------------------------------------------------------------
 // LeviLauncher and its preview
 
-/** Runs a command; npm, npx and wails3 are scripts (.cmd) on Windows, which only a shell runs: their arguments are plain. */
+/**
+ * Runs a command; npm, npx and wails3 are scripts (.cmd) on Windows, which only a shell runs: their arguments are plain.
+ * @param {string} command
+ * @param {string[]} args
+ * @param {{ shell?: boolean } & import('node:child_process').SpawnSyncOptions} [options]
+ */
 function run(command, args, { shell = process.platform === 'win32', ...options } = {}) {
   const line = [command, ...args].join(' ');
   console.log(`> ${line}`);
@@ -213,8 +218,9 @@ async function around(page, text, { minWidth = 0, bordered = false } = {}) {
   const r = await page.evaluate(
     ([text, minWidth, bordered]) => {
       const visible = (el) => el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden';
-      const matches = [...document.querySelectorAll('body *')].filter(
-        (el) => visible(el) && el.innerText?.trim() === text && ![...el.children].some((c) => c.innerText?.trim() === text),
+      /** @type {(HTMLElement | null)[]} */
+      const matches = /** @type {HTMLElement[]} */ ([...document.querySelectorAll('body *')]).filter(
+        (el) => visible(el) && el.innerText?.trim() === text && !/** @type {HTMLElement[]} */ ([...el.children]).some((c) => c.innerText?.trim() === text),
       );
       for (let el of matches) {
         while (el && el !== document.body) {
@@ -247,7 +253,7 @@ const union = (...rects) => {
 async function settle(page) {
   await page.evaluate(() => document.fonts.ready);
   await page.addStyleTag({ content: '*, *::before, *::after { caret-color: transparent !important; }' });
-  await page.evaluate(() => document.activeElement?.blur?.());
+  await page.evaluate(() => /** @type {HTMLElement | null} */ (document.activeElement)?.blur?.());
   // An empty spot of the sidebar, between its pages and the theme switch: no hover effect anywhere.
   await page.mouse.move(28, 480);
   let previous = null;
@@ -263,7 +269,7 @@ async function settle(page) {
 /** What the window shows as text, for assertDesensitized: the text, the values of the inputs, the title. */
 const shownText = (page) =>
   page.evaluate(() =>
-    [document.title, document.body.innerText, ...[...document.querySelectorAll('input, textarea')].map((el) => el.value)].join('\n'),
+    [document.title, document.body.innerText, ...[.../** @type {NodeListOf<HTMLInputElement | HTMLTextAreaElement>} */ (document.querySelectorAll('input, textarea'))].map((el) => el.value)].join('\n'),
   );
 
 /** Encodes a PNG as WebP in Chromium (the canvas of a blank page). */
@@ -276,7 +282,7 @@ async function toWebP(encoder, png) {
       const canvas = document.createElement('canvas');
       canvas.width = image.naturalWidth;
       canvas.height = image.naturalHeight;
-      canvas.getContext('2d').drawImage(image, 0, 0);
+      /** @type {CanvasRenderingContext2D} */ (canvas.getContext('2d')).drawImage(image, 0, 0);
       return canvas.toDataURL('image/webp', quality);
     },
     [png.toString('base64'), WEBP_QUALITY],
@@ -490,7 +496,7 @@ const SHOTS = [
     ),
     scene: 'installed',
     hash: '/',
-    steps: async (page, t) => page.getByTestId('primary-launch-button').waitFor(),
+    steps: async (page) => page.getByTestId('primary-launch-button').waitFor(),
     targets: async (page, t) => ({
       // The button of the instance picker: it says "Current Instance" and the name.
       instance: await box(page.getByRole('button', { name: t('launcherpage.currentVersion') })),
@@ -677,7 +683,7 @@ async function captureShot(browser, encoder, shot, lang, t, data) {
   });
   try {
     await context.addInitScript((d) => {
-      window.__levimcShotsData = d;
+      /** @type {Window & { __levimcShotsData?: unknown }} */ (window).__levimcShotsData = d;
     }, data);
     await routeNetwork(context);
     const page = await context.newPage();
@@ -745,7 +751,7 @@ async function main() {
           image: Object.fromEntries(Object.keys(LOCALES).map((lang) => [lang, `captures/${lang}/${shot.name}.webp`])),
           scale: SCALE,
           frame: 'windows',
-          out: '../../../content/play/images',
+          out: '../../../pages/play/images',
           notes: shot.notes(r),
         });
       }

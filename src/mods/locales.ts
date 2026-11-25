@@ -1,7 +1,7 @@
 // The site's UI languages. The language is part of the URL, like on every LeviMC site: the locale segment comes
 // first, before the base — English at /mods/…, Simplified Chinese at /zh-Hans/mods/…, Traditional Chinese at
 // /zh-Hant/mods/… — and every page is prerendered in each. Only /mods/ itself redirects, to the visitor's
-// stored language (levimc_lang, see kit/components/prefs.ts) or else the browser's (vite.config.ts). Mod data
+// stored language (levimc_lang, see src/kit/components/prefs.ts) or else the browser's (vite.config.ts). Mod data
 // (names, descriptions, READMEs) stays as published. The old URLs (/mods/zh-Hans/…, from before the language came
 // first) are redirect pages (prerender.mjs). Kept free of React: vite.config.ts loads it in Node.
 import { BASE } from "./base-path.ts";

@@ -66,7 +66,6 @@ export interface Manifest {
 
 export type HitRegion = 'head' | 'face' | 'body' | 'skirt' | 'arm' | 'leg';
 
-const FPS = 30;
 /** MMD units per metre (export_pmx.MMD_SCALE) */
 export const MMD_SCALE = 12.5;
 /** levi/toon.py RAMP_THRESHOLD / RAMP_BY_KEY: the N.L where each palette key turns to its shade tone */

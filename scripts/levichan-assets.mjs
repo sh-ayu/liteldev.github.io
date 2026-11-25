@@ -9,7 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 
-const args = Object.fromEntries(process.argv.slice(2).reduce((a, v, i, all) => (v.startsWith('--') ? [...a, [v.slice(2), all[i + 1]]] : a), []));
+const args = Object.fromEntries(process.argv.slice(2).reduce((a, v, i, all) => (v.startsWith('--') ? [...a, [v.slice(2), all[i + 1]]] : a), /** @type {[string, string][]} */ ([])));
 if (!args.pmx || !args.motions) {
   console.error('usage: node scripts/levichan-assets.mjs --pmx <dir> --motions <dir> [--out public/levichan]');
   process.exit(2);

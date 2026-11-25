@@ -90,8 +90,8 @@ const anchors = args.includes('--anchors');
 const results = [];
 for (const u of [...urls].slice(0, max).sort()) {
   const loc = localBase + u.slice(liveBase.length);
-  let status = 0;
-  let location = null;
+  let status;
+  let location;
   let body = '';
   try {
     const r = await fetch(loc, { redirect: 'manual' });

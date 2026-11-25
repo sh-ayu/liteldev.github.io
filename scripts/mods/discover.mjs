@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-// Finds mod repositories repos.txt does not name yet and proposes each one in a pull request that adds it
+// Finds mod repositories content/mods/repos.txt does not name yet and proposes each one in a pull request that adds it
 // (.github/workflows/mods-discover.yml runs it every two hours):
 //
-//   node scripts/discover.mjs [--dry-run] [--max 20]
+//   node scripts/mods/discover.mjs [--dry-run] [--max 20]
 //
 // A candidate is a repository GitHub's code search finds a lip.toml or a tooth.json at the top of (what lipr searched
 // for), not a fork, with a `v<semver>` tag whose package file lip can read: its lip.toml, else (only when it has none,
-// as lip does) its tooth.json. Whether it is a LeviLamina mod is left to the build (lib/listing.ts), which knows every
+// as lip does) its tooth.json. Whether it is a LeviLamina mod is left to the build (src/mods/lib/listing.ts), which knows every
 // package it could depend on. Merging the pull request lists it; closing it
 // keeps it out: a repository that ever had a pull request (its branch, `mods/add/<owner>/<repo>`) is never
 // proposed again. Removing a line from repos.txt by hand works the same way only for repositories that came in
@@ -14,7 +14,7 @@
 // owner (GitHub redirects that to it) counts as listed.
 //
 // Needs GH_TOKEN (or GITHUB_TOKEN) with contents and pull-requests write access to GITHUB_REPOSITORY (default
-// LiteLDev/levimc.org), and git for listing tags. SEARCH_TOKEN, when set, is used for the code search alone: the code
+// LiteLDev/liteldev.github.io), and git for listing tags. SEARCH_TOKEN, when set, is used for the code search alone: the code
 // search allowance of a workflow's GITHUB_TOKEN (10 requests a minute) is shared beyond this workflow and is often used
 // up before the first request, while a personal token has its own.
 import { execFileSync } from "node:child_process";
@@ -28,7 +28,7 @@ const dryRun = args.includes("--dry-run");
 const max = Number(args.includes("--max") ? args[args.indexOf("--max") + 1] : 20);
 const token = process.env.GH_TOKEN ?? process.env.GITHUB_TOKEN;
 const searchToken = process.env.SEARCH_TOKEN || token;
-const target = process.env.GITHUB_REPOSITORY ?? "LiteLDev/levimc.org";
+const target = process.env.GITHUB_REPOSITORY ?? "LiteLDev/liteldev.github.io";
 const REPOS_PATH = "content/mods/repos.txt";
 /** Package files at the top of a repository: lip.toml (lip v0.40), and tooth.json (lip before it). */
 const SEARCHES = ["format path:/ filename:lip.toml", "format_version path:/ filename:tooth.json"];
@@ -42,6 +42,7 @@ if (!token) {
 class RateLimited extends Error {}
 
 /** How long GitHub asks to wait before the next request (milliseconds), and what said so. */
+/** @returns {Promise<[number, string]>} */
 async function retryDelay(res) {
   const after = Number(res.headers.get("retry-after"));
   if (after > 0) return [after * 1000, "retry-after"];
@@ -167,7 +168,7 @@ function body(repository, tag, count, manifest) {
     "",
     "Merge it to list the repository's versions on LeviMC Mods at the next deploy. Close it to keep the repository out: the discovery never proposes a repository twice.",
     "",
-    "_Opened by `mods/scripts/discover.mjs` (`.github/workflows/mods-discover.yml`)._",
+    "_Opened by `scripts/mods/discover.mjs` (`.github/workflows/mods-discover.yml`)._",
   ].join("\n");
 }
 

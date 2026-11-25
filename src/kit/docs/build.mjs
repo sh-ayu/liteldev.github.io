@@ -1,9 +1,10 @@
 #!/usr/bin/env node
-// One-shot production build for a levimc-kit docs site:
+// One-shot production build for a levimc-kit docs site that has a Vite config of its own (levimc.org's docs sites
+// are built by scripts/docs-sites.mjs, which runs the same three steps):
 //   1. client build   (vite build)                → dist/
 //   2. SSR build      (vite build --ssr)          → .kit/ssr/entry-server.js
 //   3. prerender      (react-dom/server)          → dist/**/index.html, 404.html (+ sitemap.xml, .nojekyll, search indexes from step 1)
-// Usage: node kit/docs/build.mjs [--config vite.config.ts]
+// Usage: node src/kit/docs/build.mjs [--config vite.config.ts]
 import { resolve } from 'node:path';
 import { build } from 'vite';
 import { prerenderDocs } from './prerender.mjs';

@@ -11,7 +11,7 @@ import { defineDocsConfig, type LocaleConfig, type NavEntry } from '../../src/ki
 const repo = 'https://github.com/LiteLDev/LeviLauncher';
 
 // --- Navigation -----------------------------------------------------------------------------------
-// The LeviMC navigation model (kit/README.md "Navigation model"), the same four sections on every project's site:
+// The LeviMC navigation model (src/kit/README.md "Navigation model"), the same four sections on every project's site:
 //   Overview  - the home page (what LeviLauncher is, both downloads, a short example), no pages below it;
 //   Guides    - one task per page: Core Workflows (the Download page first), Advanced, then the Help group
 //               (troubleshooting, community & feedback);

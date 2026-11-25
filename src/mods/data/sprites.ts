@@ -1,4 +1,4 @@
-// The kit sprites the site draws (`kit/assets/sprites.mjs`, by their keys there),
+// The kit sprites the site draws (`src/kit/assets/sprites.mjs`, by their keys there),
 // each a CSS class in `styles.css` (`.mods-sprite-<name>`, or `.mods-mask-<name>`
 // for the one-colour ones, see components/sprite.tsx).
 import type { Locale } from "../locales.ts";

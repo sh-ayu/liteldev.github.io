@@ -46,6 +46,7 @@ export function usePlatformChoice<T extends PlatformOption>(options: readonly T[
   const [choice, setChoice] = useState<PlatformChoice | null>(); // undefined: not hydrated yet; null: unknown device
   useEffect(() => {
     let alive = true;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- the stored choice is read after hydration: the prerendered page has none
     setChoice(currentPlatformChoice() ?? null);
     const off = onPlatformChoice((p) => setChoice(p));
     void devicePlatformChoice().then(() => {

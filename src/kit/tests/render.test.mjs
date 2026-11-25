@@ -1,7 +1,7 @@
 // Rendering budget of the kit (kit 2.19, design rule D1/D2): what the theme may ask the compositor and the GPU to do.
 // Checks the CSS sources (theme/*.css, docs/app/docs.css, static/doxygen/doxygen-kit.css) and the prebuilt static
 // chrome (static/kit.css, static/kit-chrome.css) once it has been regenerated from kit ≥ 2.19 sources.
-// Run: node --test "kit/tests/*.test.mjs" (no dependencies).
+// Run: node --test "src/kit/tests/*.test.mjs" (no dependencies).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
@@ -18,7 +18,7 @@ const SOURCES = [
   '../../../doxygen/doxygen-kit.css',
 ].filter((f) => existsSync(url(f)));
 // The prebuilt chrome is checked once it is built from kit ≥ 2.19 sources (the painted backdrop's tiles are a marker
-// of that); an older build is reported as skipped: run `node kit/static/build-static.mjs`.
+// of that); an older build is reported as skipped: run `node src/kit/static/build-static.mjs`.
 const STATIC = ['../static/kit.css', '../static/kit-chrome.css'].filter((f) => existsSync(url(f)));
 const isCurrentStatic = (css) => css.includes('--kit-backdrop-dabs');
 
@@ -78,7 +78,7 @@ test('theme and docs CSS keep the rendering budget: no infinite animation, backd
 
 test('prebuilt static chrome keeps the rendering budget (once rebuilt from kit ≥ 2.19)', (t) => {
   const current = STATIC.filter((f) => isCurrentStatic(read(f)));
-  if (!current.length) return t.skip(`${STATIC.join(', ')} predate kit 2.19: run node kit/static/build-static.mjs`);
+  if (!current.length) return t.skip(`${STATIC.join(', ')} predate kit 2.19: run npm run kit:static`);
   assert.deepEqual(current.flatMap((f) => checkCss(f.replace('../', ''), read(f))), []);
 });
 

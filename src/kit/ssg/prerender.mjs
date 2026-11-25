@@ -1,7 +1,7 @@
 // Generic static prerendering for plain Vite + React apps (levimc.org, levimc.org/mods/).
 //
-//   // prerender.mjs (in the app)
-//   import { prerenderRoutes } from './kit/ssg/prerender.mjs';
+//   // src/main/prerender.mjs, src/mods/prerender.mjs
+//   import { prerenderRoutes } from '../kit/ssg/prerender.mjs';
 //   await prerenderRoutes({
 //     routes: ['/', '/projects/', '/community/', '/about/', '/features/', '/support/'],
 //     notFound: '/404',            // rendered to 404.html (GitHub Pages serves it for missing paths)
@@ -10,7 +10,7 @@
 // Requirements:
 //   1. `vite build` (client) → dist/index.html containing the placeholders <!--app-head--> and <!--app-html-->
 //      (inside <div id="root">), and optionally <html lang="…"> (rewritten per page).
-//   2. `vite build --ssr src/entry-server.tsx --outDir .kit/ssr` → module exporting
+//   2. `vite build --ssr entry-server.tsx --outDir .kit/ssr` → module exporting
 //        render(url: string): { html: string; head?: string; lang?: string; status?: number } | Promise<…>
 //      (use <StaticRouter location={url}> and keep the client's <BrowserRouter> markup identical).
 //   3. entry-client.tsx hydrates with hydrateRoot(document.getElementById('root'), <App/>).
@@ -94,7 +94,7 @@ export async function prerenderRoutes(o) {
 
 // run as a CLI (compares real paths, so a symlinked or relative script path still counts)
 if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  // CLI: node kit/ssg/prerender.mjs /route/ /other/ [--not-found /404] [--base /]
+  // CLI: node src/kit/ssg/prerender.mjs /route/ /other/ [--not-found /404] [--base /]
   const args = process.argv.slice(2);
   const nf = args.includes('--not-found') ? args[args.indexOf('--not-found') + 1] : undefined;
   const base = args.includes('--base') ? args[args.indexOf('--base') + 1] : '/';

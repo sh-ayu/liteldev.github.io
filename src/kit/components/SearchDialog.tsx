@@ -1,6 +1,6 @@
 // levimc-kit — the search dialog of every LeviMC site (kit 2.27; before, the docs' SearchModal). It searches a
-// MiniSearch index of kit/docs/shared/search.ts's shape: the site-wide one (kit/components/site-search.ts, absolute
-// paths, every LeviMC site) or a docs site's own. Styles: kit/theme/search.css.
+// MiniSearch index of src/kit/docs/shared/search.ts's shape: the site-wide one (src/kit/components/site-search.ts, absolute
+// paths, every LeviMC site) or a docs site's own. Styles: src/kit/theme/search.css.
 import { useDeferredValue, useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode, type UIEvent } from 'react';
 import { tokenizeQuery } from '../docs/shared/search';
 import { useFocusTrap } from './focus';
@@ -66,11 +66,13 @@ export function SearchDialog({ open, onClose, t, load, indexKey, hrefOf, onNavig
   const panel = useRef<HTMLDivElement>(null);
   const list = useRef<HTMLUListElement>(null);
   const loadRef = useRef(load);
+  // eslint-disable-next-line react-hooks/refs -- the latest `load`, for the effect below, which must not restart when it changes
   loadRef.current = load;
   useFocusTrap(panel, open, onClose);
 
   useEffect(() => {
     if (!open) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- a dialog that opens (or a new index) starts empty, then loads
     setLoaded(null);
     setError(false);
     let live = true;
@@ -105,6 +107,7 @@ export function SearchDialog({ open, onClose, t, load, indexKey, hrefOf, onNavig
   }, [loaded, deferred]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- a new query starts at its first result
     setSel(0);
     setShown(PAGE);
   }, [deferred]);

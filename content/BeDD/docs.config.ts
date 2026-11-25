@@ -71,7 +71,7 @@ const LABELS: Record<string, Labels> = {
   },
 };
 
-// The LeviMC navigation model (kit/README.md "Navigation model"): every top-level entry is a section with the sidebar
+// The LeviMC navigation model (src/kit/README.md "Navigation model"): every top-level entry is a section with the sidebar
 // tree of its pages, the same four on every LeviMC docs site, in this order: Overview (the home page alone: what
 // Be.D.D. is, with the recordings of it running), Guides (one task each; Help last), Concepts (the ideas behind it)
 // and Reference (the whole interface: command line, configuration, WebSocket, UI tree, tap). The pages keep the URLs
