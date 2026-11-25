@@ -62,9 +62,9 @@ interface InstallButtonsProps {
 }
 
 /**
- * "Install with lip" (server) and/or "Install with LeviLauncher" (client) for
+ * "Install with LeviLauncher" (client) and/or "Install with lip" (server) for
  * the page's selection: plain links to the deep links, so they work before
- * the page hydrates; the first is the primary button. Followed, they show
+ * the page hydrates; both look the same, as neither is the lesser way. Followed, they show
  * {@link DeepLinkHint}.
  */
 export function InstallButtons({ modId, selection, side, layout }: InstallButtonsProps) {
@@ -74,10 +74,10 @@ export function InstallButtons({ modId, selection, side, layout }: InstallButton
   return (
     <div className={`mods-install-actions mods-install-actions-${layout}`}>
       <div className="mods-install-links">
-        {apps.map((app, i) => (
+        {apps.map((app) => (
           <a
             key={app}
-            className={`mc-btn${i === 0 ? " mc-btn-primary" : ""}${layout === "header" ? " mc-btn-lg" : ""} mods-install-btn`}
+            className={`mc-btn mc-btn-primary${layout === "header" ? " mc-btn-lg" : ""} mods-install-btn`}
             href={deepLink(app, modId, selection.variant, selection.version)}
             data-app={app}
             onClick={() => setFollowed(app)}

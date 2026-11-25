@@ -28,8 +28,8 @@ built with Vite `base: '/mods/'`: every page and file is under `/mods/`.
   and version, which change the URL), and everything acts on it directly: the header's buttons, the panel's
   buttons, the `lip install` command (a version with a server entry) and Download from GitHub. The buttons are
   deep links, by the sides the version runs on: a server version gets "Install with lip", a client version
-  "Install with LeviLauncher", one for both gets both. The header's version badge brings the panel's picker into
-  view. In the Versions tab each row has the same actions for its own version (install with its app, copy its
+  "Install with LeviLauncher", one for both gets both, LeviLauncher first and styled alike. The header's version
+  badge brings the panel's picker into view. In the Versions tab each row has the same actions for its own version (install with its app, copy its
   `lip install` command, its release) and "Select", which makes it the page's selection without leaving the tab;
   the selected row is highlighted and each variant's latest release marked. The version's link is its permalink.
 - **Deep links**, agreed with lip and LeviLauncher (`lib/mods.ts` `deepLink`):

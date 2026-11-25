@@ -113,9 +113,10 @@ test("deep links: lip:// and levilauncher://install/<module-path>[?version=][&va
 test("install apps by side: lip for servers, LeviLauncher for clients", () => {
   assert.deepEqual(installAppsFor(["server"]), ["lip"]);
   assert.deepEqual(installAppsFor(["client"]), ["levilauncher"]);
-  assert.deepEqual(installAppsFor(["server", "client"]), ["lip", "levilauncher"]);
-  assert.deepEqual(installAppsFor(undefined), ["lip", "levilauncher"]);
-  assert.deepEqual(installAppsFor([]), ["lip", "levilauncher"]);
+  assert.deepEqual(installAppsFor(["server", "client"]), ["levilauncher", "lip"]);
+  assert.deepEqual(installAppsFor(["client", "server"]), ["levilauncher", "lip"]);
+  assert.deepEqual(installAppsFor(undefined), ["levilauncher", "lip"]);
+  assert.deepEqual(installAppsFor([]), ["levilauncher", "lip"]);
 });
 
 test("install commands and pre-releases", () => {

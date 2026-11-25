@@ -1646,6 +1646,14 @@
       flex-direction: row;
       align-items: center;
     }
+    /* the buttons take what is left beside the version, wrapping (two stack on a phone) rather than pushing it out */
+    .mods-project-buttons {
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+    .mods-project-version {
+      flex: none;
+    }
   }
   @media (max-width: 640px) {
     /* phones: icon and name on one row; summary, stats and the buttons under both */
@@ -1673,6 +1681,15 @@
     }
     .mods-project-actions {
       margin-top: 0.75rem;
+      flex-wrap: wrap;
+    }
+    /* the buttons get the whole row, the version goes under them; a long label wraps rather than being cut */
+    .mods-project-actions > .mods-project-buttons {
+      flex-basis: 100%;
+    }
+    .mods-install-actions-header .mods-install-btn {
+      white-space: normal;
+      text-align: center;
     }
     .mods-tabs-nav .mods-tabs > a {
       padding-inline: 0.75rem;

@@ -345,11 +345,12 @@ export function deepLinks(tooth: string, variant: string, version: string): Reco
 /**
  * The apps that install a version, by the sides its entries run on: lip
  * installs into server folders, LeviLauncher into clients. A version the build
- * did not read (`undefined`, or no sides) shows both, server first.
+ * did not read (`undefined`, or no sides) shows both. LeviLauncher comes
+ * first, as most people who open the page play on a client.
  */
 export function installAppsFor(side: readonly string[] | undefined): InstallApp[] {
-  if (!side?.length) return ["lip", "levilauncher"];
-  return [...(side.includes("server") ? (["lip"] as const) : []), ...(side.includes("client") ? (["levilauncher"] as const) : [])];
+  if (!side?.length) return ["levilauncher", "lip"];
+  return [...(side.includes("client") ? (["levilauncher"] as const) : []), ...(side.includes("server") ? (["lip"] as const) : [])];
 }
 
 /**
