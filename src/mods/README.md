@@ -22,21 +22,24 @@ It is one part of levimc.org's one package and one build (the [root README](../.
   versions (`?variant=&version=`) are fetched in the browser: the package file's data from the mod's
   JSON, the README from GitHub. Tabs: Description, Gallery (`?tab=gallery`, when the mod has one, see
   [Galleries](#galleries)), Versions (`?tab=versions`), Dependencies
-  (`?tab=dependencies`). The sidebar shows the sides and platforms of the selection, the author (the repository
-  owner, with "More by …" setting `?author=`), the license's family and SPDX id, and the tags.
+  (`?tab=dependencies`). The sidebar shows the sides, platforms and LeviLamina range of the selection, the
+  license's family and SPDX id, the links (the selection's release among them), the author (the repository owner,
+  with "More by …" setting `?author=`) and the tags.
 - **Installing**: a mod page has one selection, the variant and version in its URL (`?variant=&version=`; the bare
-  page is the default variant's latest version). It is picked in one place, the sidebar's Install panel (variant
-  and version, which change the URL), and everything acts on it directly: the header's buttons, the panel's
-  buttons, the `lip install` command (a version with a server entry) and Download from GitHub. The buttons are
-  deep links, by the sides the version runs on: a server version gets "Install with lip", a client version
-  "Install with LeviLauncher", one for both gets both, LeviLauncher first and styled alike. The header's version
-  badge brings the panel's picker into view. In the Versions tab each row has the same actions for its own version (install with its app, copy its
-  `lip install` command, its release) and "Select", which makes it the page's selection without leaving the tab;
-  the selected row is highlighted and each variant's latest release marked. The version's link is its permalink.
+  page is the default variant's latest version), and each thing is in one place. The variant (a mod with several) is
+  picked with the one menu button beside the mod's name
+  (it names the selected variant; the list opens from it, however many there are); the version in the Versions tab and nowhere else, by a click
+  anywhere on its row, which stays in the tab (the version itself is a link, its permalink; the selected row is highlighted and checked,
+  each variant's latest release marked). The header states the selection among the mod's facts; a version that is
+  not the variant's latest gets a notice under the header, with "Back to latest". It is installed with the
+  header's one "Install" button, whose menu asks where to, by the sides the version runs on: "Client" (a deep
+  link, "Install with LeviLauncher") and/or "Server" ("Install with lip", and under it the `lip install` command,
+  for the server that is another machine); the menu stays open after a link was followed, for the hint below. The
+  sidebar only informs: it has no control.
 - **Deep links**, agreed with lip and LeviLauncher (`lib/mods.ts` `deepLink`):
   `lip://install/<id>[?version=<semver>][&variant=<variant>]` and the same with `levilauncher://`. The id keeps its
   case, the version has no `v`, and the default variant is left out. A page cannot tell whether the app is
-  installed, so a followed link shows only a hint under the button: "Nothing happened?" with a link to get
+  installed, so a followed link shows only a hint in the Install menu: "Nothing happened?" with a link to get
   LeviLauncher or install lip.
 - **JSON**: every page has its data under `/api/v4/mods/` (linked from the page as `rel="alternate"`), see
   [JSON](#json); the JSON from before version 4 stays next to the pages for older launchers.

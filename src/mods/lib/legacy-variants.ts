@@ -1,4 +1,4 @@
-// Legacy client variants, folded for the mod page's pickers (the install panel's variant switch,
+// Legacy client variants, folded for the mod page's pickers (the variant switch beside the mod's name,
 // the Versions tab), the way LeviLauncher reads them
 // (internal/lipcore/engine/compat_legacy_variants.go, rule R1).
 //

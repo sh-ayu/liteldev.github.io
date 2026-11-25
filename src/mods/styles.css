@@ -1063,23 +1063,58 @@
     outline: 2px solid var(--color-focus);
     outline-offset: 1px;
   }
-  .mods-opt-btn[aria-pressed="true"] {
-    --px-border: color-mix(in srgb, var(--color-primary-strong) 70%, var(--color-line-strong));
+  .mods-opt-btn[aria-checked="true"] {
     color: var(--color-ink);
-    background: var(--color-primary-soft);
   }
-  .mods-opt-mark {
+  /* a checkbox: the filter options' and every labelled one (`.mods-check`) */
+  .mods-checkbox {
     display: inline-grid;
     place-items: center;
     flex: none;
     width: 16px;
     height: 16px;
+    color: var(--color-on-primary);
+    background: var(--color-surface);
+    box-shadow: inset 0 0 0 2px var(--color-line-strong);
+    transition:
+      background-color 0.1s,
+      box-shadow 0.1s;
   }
-  .mods-opt-btn[aria-pressed="true"] .mods-opt-mark {
-    color: var(--color-primary-strong);
+  .mods-checkbox > .mods-mask {
+    width: 12px;
+    height: 12px;
   }
-  .dark .mods-opt-btn[aria-pressed="true"] .mods-opt-mark {
-    color: var(--color-primary);
+  .mods-opt-btn:hover .mods-checkbox,
+  .mods-check:hover .mods-checkbox {
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--color-ink) 55%, var(--color-line-strong));
+  }
+  .mods-opt-btn[aria-checked="true"] .mods-checkbox,
+  .mods-check > input:checked + .mods-checkbox {
+    background: var(--color-primary-strong);
+    box-shadow: inset 0 0 0 2px var(--color-primary-strong);
+  }
+  .mods-check {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+  }
+  .mods-check > input {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .mods-check > input:focus-visible + .mods-checkbox {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
   }
   .mods-opt-label {
     flex: 1 1 auto;
@@ -1094,30 +1129,6 @@
     color: var(--color-muted);
     font-variant-numeric: tabular-nums;
   }
-  .mods-opt-exclude {
-    flex: none;
-    width: 1.5rem;
-    height: 1.5rem;
-    opacity: 0;
-    transition: opacity 0.12s;
-  }
-  .mods-opt:hover .mods-opt-exclude,
-  .mods-opt:focus-within .mods-opt-exclude,
-  .mods-opt-exclude[aria-pressed="true"] {
-    opacity: 1;
-  }
-  @media (hover: none) {
-    .mods-opt-exclude {
-      opacity: 1;
-    }
-  }
-  .mods-opt-exclude[aria-pressed="true"] {
-    color: var(--color-mc-redstone);
-  }
-  .mods-opt.is-excluded .mods-opt-btn {
-    --px-border: color-mix(in srgb, var(--color-mc-redstone) 55%, var(--color-line));
-    background: color-mix(in srgb, var(--color-mc-redstone) 10%, var(--color-surface));
-  }
   .mods-opt.is-excluded .mods-opt-label {
     text-decoration: line-through;
   }
@@ -1127,20 +1138,6 @@
   }
   .mods-opt.is-dimmed .mods-opt-btn:hover {
     background: transparent;
-  }
-  /* a zero-count option's exclude button is as dim (and inert) as the option */
-  .mods-opt.is-dimmed .mods-opt-exclude {
-    opacity: 0;
-    cursor: default;
-  }
-  .mods-opt.is-dimmed:hover .mods-opt-exclude,
-  .mods-opt.is-dimmed:focus-within .mods-opt-exclude {
-    opacity: 0.45;
-  }
-  @media (hover: none) {
-    .mods-opt.is-dimmed .mods-opt-exclude {
-      opacity: 0.45;
-    }
   }
   .mods-opt-mono {
     font-family: var(--font-mono);
@@ -1169,12 +1166,6 @@
     text-transform: uppercase;
     letter-spacing: 0.04em;
     color: var(--color-muted);
-  }
-  .mods-opt-exclude-spacer {
-    flex: none;
-    width: 1.5rem;
-    height: 1.5rem;
-    margin: var(--px);
   }
   .mods-group-more {
     margin: 0.25rem 0 0 0.25rem;
@@ -1307,31 +1298,154 @@
     overflow-wrap: anywhere;
   }
 
-  /* ================================================================== install: the deep links and the install panel */
-  .mods-install-actions {
+  /* ================================================================== install: the header's button and its menu */
+  .mods-project-actions {
     display: flex;
-    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
     min-width: 0;
   }
-  .mods-install-links {
+  .mods-install-btn.mc-btn {
+    min-width: 11rem;
+    padding-inline: 1.5rem 1.25rem;
+  }
+  .mods-install-btn > .kit-menu-chevron {
+    margin-left: 0.25rem;
+    opacity: 0.85;
+  }
+  .mods-install[open] > .mods-install-btn {
+    background: var(--mc-btn-bg-hover);
+  }
+  .mods-github-btn.mc-btn {
+    flex: none;
+    width: 3.25rem;
+    padding: 0;
+  }
+  .mods-install-menu {
+    --px-border: var(--color-line-strong);
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    z-index: 70;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 0.625rem;
+    width: min(25rem, calc(100vw - 2 * var(--mods-gutter)));
+    padding: 0.75rem;
+    color: var(--color-ink);
+    background: var(--color-surface);
+    box-shadow:
+      0 calc(var(--px) * -1) 0 0 var(--px-border),
+      0 var(--px) 0 0 var(--px-border),
+      calc(var(--px) * -1) 0 0 0 var(--px-border),
+      var(--px) 0 0 0 var(--px-border),
+      var(--shadow-float);
+    animation: kit-menu-in 0.14s var(--ease-soft);
+  }
+  /* what the menu installs: the page's selection */
+  .mods-install-what {
+    display: flex;
+    align-items: baseline;
     gap: 0.5rem;
+    margin: 0;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-muted);
   }
-  .mods-install-actions-header .mods-install-links {
-    justify-content: flex-end;
+  .mods-install-version {
+    min-width: 0;
+    font-family: var(--font-mono);
+    color: var(--color-ink);
+    overflow-wrap: anywhere;
   }
-  .mods-install-actions-panel .mods-install-links > .mods-install-btn {
-    flex: 1 1 100%;
+  .mods-install-apps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  /* an entry per side: where to (Client / Server), then with what */
+  .mods-install-app {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0.75rem;
+    color: var(--color-ink);
+    background: color-mix(in srgb, var(--color-ink) 4%, transparent);
+    box-shadow: inset 0 0 0 1px var(--color-line);
+    transition: background-color 0.12s var(--ease-soft);
+  }
+  .mods-install-app:hover {
+    background: var(--color-primary-soft);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-primary) 55%, var(--color-line));
+  }
+  .mods-install-app:focus-visible {
+    outline: var(--px) solid var(--color-focus);
+    outline-offset: var(--px);
+  }
+  .mods-install-app-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 2.25rem;
+    height: 2.25rem;
+    background: var(--color-surface);
+    box-shadow: inset 0 0 0 1px var(--color-line);
+  }
+  .mods-install-app-text {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .mods-install-app-side {
+    font-size: 0.9375rem;
+    font-weight: 650;
+    line-height: 1.3;
+  }
+  .mods-install-app-with {
+    font-size: 0.8125rem;
+    color: var(--color-muted);
+  }
+  .mods-install-app-go {
+    flex: none;
+    opacity: 0.5;
+    transition: transform 0.12s var(--ease-soft);
+  }
+  .mods-install-app:hover .mods-install-app-go {
+    opacity: 1;
+    transform: translateX(2px);
+  }
+  /* the command: for the server that is not this machine */
+  .mods-install-run {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+    margin-top: 0.5rem;
+  }
+  .mods-install-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-muted);
+  }
+  .mods-install-run .mods-install-box .mods-install-command {
+    padding: 0.375rem 0;
+    font-size: 0.8125rem;
   }
   /* empty until a deep link was followed (a live region, so it stays in the page) */
   .mods-deeplink-hint {
     margin: 0;
+    padding-top: 0.5rem;
     font-size: 0.8125rem;
     color: var(--color-muted);
+    border-top: 1px solid var(--color-line);
   }
-  .mods-deeplink-hint:not(:empty) {
-    margin-top: 0.375rem;
+  .mods-deeplink-hint:empty {
+    display: none;
   }
   .mods-deeplink-hint a {
     color: var(--color-link);
@@ -1340,44 +1454,109 @@
   .mods-deeplink-hint a:hover {
     text-decoration: underline;
   }
-  .mods-install-actions-header .mods-deeplink-hint {
-    text-align: right;
+  @media (max-width: 640px) {
+    /* phones: a sheet at the bottom of the screen, like the version picker's */
+    .mods-install-menu {
+      position: fixed;
+      top: auto;
+      left: 0.75rem;
+      right: 0.75rem;
+      bottom: 0.75rem;
+      width: auto;
+    }
+    .mods-install[open] > summary::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 69;
+      background: rgb(0 0 0 / 0.4);
+      cursor: default;
+    }
   }
-  .mods-install-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-  .mods-install-panel > .mods-panel-title {
-    margin-bottom: 0;
-  }
-  .mods-install-field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.375rem;
-    min-width: 0;
-  }
-  .mods-install-label {
-    font-size: 0.8125rem;
+
+  /* ================================================================== the selection, in the header */
+  /* a data value: mono */
+  .mods-project-version {
+    font-family: var(--font-mono);
     font-weight: 600;
+    color: var(--color-ink);
+  }
+  /* the variant switch, beside the name */
+  .mods-project-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1rem;
+  }
+  .mods-variant-menu {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .mods-variant-trigger.mc-btn {
+    gap: 0.5rem;
+    max-width: 100%;
+    padding-inline: 0.625rem 0.5rem;
+    font-weight: 500;
+  }
+  .mods-variant-key {
+    flex: none;
     color: var(--color-muted);
   }
-  .mods-install-field > .hotbar {
-    align-self: flex-start;
-    max-width: 100%;
-    overflow-x: auto;
-  }
-  .mods-install-select {
+  .mods-variant-value {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-family: var(--font-mono);
+    font-weight: 600;
+  }
+  .mods-variant-menu[open] > .mods-variant-trigger {
+    --px-border: color-mix(in srgb, var(--color-ink) 45%, var(--color-line-strong));
+    background: var(--mc-btn-bg-hover);
+  }
+  .mods-variant-panel.kit-menu-panel {
+    left: 0;
+    right: auto;
+    min-width: 12rem;
+    max-width: min(22rem, calc(100vw - 2 * var(--mods-gutter)));
+    max-height: min(60vh, 20rem);
+  }
+  .mods-variant-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: var(--font-mono);
+  }
+  .mods-project-latest.kit-badge {
+    margin: 0;
+    font-size: 0.6875rem;
+    line-height: 1.125rem;
+  }
+  /* an older version: said once, between the header and what is read below */
+  .mods-old-version {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.875rem;
+    margin: 0 var(--px) 1rem;
+    padding: 0.625rem 0.875rem;
     font-size: 0.875rem;
+    font-weight: 500;
     color: var(--color-ink);
-    cursor: pointer;
+    background: color-mix(in srgb, var(--color-mc-gold) 14%, var(--color-surface));
+    box-shadow:
+      0 0 0 var(--px) color-mix(in srgb, var(--color-mc-gold) 60%, var(--color-line-strong)),
+      inset 3px 0 0 var(--color-mc-gold);
   }
-  .mods-install-download {
-    align-self: flex-start;
+  .mods-old-version > svg {
+    flex: none;
   }
-  .mods-install-panel .mods-side-all {
-    margin-top: 0;
+  .mods-old-version > a {
+    font-weight: 650;
+    color: var(--color-link);
+    white-space: nowrap;
+  }
+  .mods-old-version > a:hover {
+    text-decoration: underline;
   }
 
   /* ================================================================== install command */
@@ -1602,57 +1781,20 @@
   .mods-project-stats > .mods-project-cat + .mods-project-cat {
     margin-left: -0.75rem;
   }
-  .mods-project-actions {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.5rem;
-  }
-  .mods-project-buttons {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-  .mods-github-btn.mc-btn {
-    width: 3rem;
-    padding: 0;
-  }
-  .mods-project-version {
-    /* a data value: mono, like the README header's version (not a micro-label) */
-    font-family: var(--font-mono);
-    font-weight: 500;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    /* a button: it opens the install panel's picker */
-    border: 0;
-    cursor: pointer;
-  }
-  .mods-project-version:hover {
-    background: color-mix(in srgb, var(--badge) 28%, transparent);
-  }
-  .mods-project-version > svg {
-    flex: none;
-    width: 12px;
-    height: 12px;
-  }
-  @media (max-width: 760px) {
+  @media (max-width: 640px) {
+    /* phones: the button takes the row under the heading */
     .mods-project-head {
       grid-template-columns: auto minmax(0, 1fr);
       gap: 1rem;
     }
     .mods-project-actions {
       grid-column: 1 / -1;
-      flex-direction: row;
-      align-items: center;
     }
-    /* the buttons take what is left beside the version, wrapping (two stack on a phone) rather than pushing it out */
-    .mods-project-buttons {
-      min-width: 0;
+    .mods-install {
       flex: 1 1 auto;
     }
-    .mods-project-version {
-      flex: none;
+    .mods-install-btn.mc-btn {
+      width: calc(100% - 2 * var(--px));
     }
   }
   @media (max-width: 640px) {
@@ -1668,7 +1810,7 @@
       align-self: center;
       padding: 0.375rem;
     }
-    .mods-project-name {
+    .mods-project-title {
       align-self: end;
     }
     .mods-project-by {
@@ -1681,15 +1823,6 @@
     }
     .mods-project-actions {
       margin-top: 0.75rem;
-      flex-wrap: wrap;
-    }
-    /* the buttons get the whole row, the version goes under them; a long label wraps rather than being cut */
-    .mods-project-actions > .mods-project-buttons {
-      flex-basis: 100%;
-    }
-    .mods-install-actions-header .mods-install-btn {
-      white-space: normal;
-      text-align: center;
     }
     .mods-tabs-nav .mods-tabs > a {
       padding-inline: 0.75rem;
@@ -1715,14 +1848,6 @@
     .mods-project-summary,
     .mods-project-stats {
       grid-column: 1 / -1;
-    }
-    .mods-project-buttons,
-    .mods-install-actions-header,
-    .mods-install-btn {
-      flex: 1 1 auto;
-    }
-    .mods-install-actions-header .mods-deeplink-hint {
-      text-align: left;
     }
   }
 
@@ -1992,9 +2117,6 @@
   .kit-pagination.mods-versions-pager {
     margin: 0 0 0 auto;
   }
-  .mods-toggle[aria-pressed="false"] {
-    color: var(--color-muted);
-  }
   .mods-versions-table {
     width: 100%;
     border-collapse: collapse;
@@ -2013,8 +2135,28 @@
     vertical-align: middle;
     border-bottom: 1px solid var(--color-line);
   }
+  /* the whole row picks its version */
+  .mods-versions-table tbody tr {
+    cursor: pointer;
+  }
+  .mods-versions-table tbody tr[aria-current] {
+    cursor: default;
+  }
+  .mods-versions-table tbody tr:not([aria-current]):hover td {
+    background: color-mix(in srgb, var(--color-ink) 4.5%, transparent);
+  }
+  .mods-versions-table tbody tr:not([aria-current]):hover .mods-vt-version a {
+    text-decoration: underline;
+  }
+  .mods-versions-table tbody tr:has(a:focus-visible) td {
+    background: color-mix(in srgb, var(--color-focus) 12%, transparent);
+  }
   .mods-versions-table tr[aria-current] td {
     background: var(--color-primary-soft);
+  }
+  /* the page's selection: a bar at the row's start */
+  .mods-versions-table tr[aria-current] td:first-child {
+    box-shadow: inset 3px 0 0 var(--color-primary);
   }
   .mods-vt-channel {
     width: 1.5rem;
@@ -2057,39 +2199,21 @@
     white-space: nowrap;
     color: var(--color-muted);
   }
-  .mods-vt-actions {
-    width: 1%;
-    white-space: nowrap;
-    text-align: right;
-  }
-  .mods-vt-actions > * {
-    vertical-align: middle;
-  }
-  .mods-vt-actions .mc-icon-btn {
-    width: 2rem;
-    height: 2rem;
-  }
   .mods-vt-latest {
     margin-left: 0.375rem;
     font-size: 0.6875rem;
   }
-  .mods-vt-install.mc-btn {
-    margin-right: 0.25rem;
+  /* the selected row's check, at its end */
+  .mods-vt-check {
+    width: 1.5rem;
+    text-align: right;
+    color: var(--color-primary-strong);
   }
-  /* "Select" and "Selected" take the same room, so the buttons line up row by row */
-  .mods-vt-select.mc-btn,
-  .mods-vt-selected {
-    min-width: 6rem;
-    margin-left: 0.25rem;
-  }
-  .mods-vt-selected {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.25rem;
-    font-size: 0.8125rem;
-    font-weight: 600;
+  .dark .mods-vt-check {
     color: var(--color-primary);
+  }
+  .mods-vt-check > svg {
+    vertical-align: middle;
   }
   @media (max-width: 767px) {
     /* phones: each version is a stacked row */
@@ -2106,8 +2230,8 @@
     }
     .mods-versions-table tr {
       display: grid;
-      grid-template-columns: 1rem minmax(0, 1fr);
-      grid-template-areas: "dot version";
+      grid-template-columns: 1rem minmax(0, 1fr) auto;
+      grid-template-areas: "dot version check";
       align-items: center;
       column-gap: 0.5rem;
       padding: 0.5rem 0.25rem;
@@ -2132,18 +2256,15 @@
       white-space: normal;
       overflow-wrap: anywhere;
     }
-    /* the actions get a row of their own, under the facts */
-    .mods-vt-actions {
-      grid-column: 2 / -1;
+    .mods-vt-check {
+      grid-area: check;
       width: auto;
-      margin-top: 0.25rem;
-      text-align: left;
     }
     .mods-vt-sides,
     .mods-vt-platforms,
     .mods-vt-range,
     .mods-vt-date {
-      grid-column: 2 / -1;
+      grid-column: 2 / 3;
       max-width: none;
       font-size: 0.8125rem;
     }
@@ -2247,6 +2368,11 @@
   }
   .mods-facts dd {
     margin: 0;
+  }
+  .mods-fact-range {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    overflow-wrap: anywhere;
   }
   .mods-fact-chips {
     display: flex;

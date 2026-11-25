@@ -1,11 +1,21 @@
 import { BASE } from "../base-path";
 import { useCallback, useState, type MouseEvent } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { BrandIcon, PixelIcon } from "../kit-ui";
+import { PixelIcon } from "../kit-ui";
 import { featuredTagsOf } from "../data/featured-tags";
 import { formatNumber, useI18n } from "../i18n";
 import { DEFAULT_STATE, serializeQuery } from "../lib/catalog-query";
-import { buildModUrl, getAllVersions, getRepoBaseUrls, ownerUrl, variantDeps, type ModSelection, type ModTab } from "../lib/mods";
+import {
+  buildModUrl,
+  getAllVersions,
+  getRepoBaseUrls,
+  getSortedVariants,
+  getVersionsForVariant,
+  ownerUrl,
+  variantDeps,
+  type ModSelection,
+  type ModTab,
+} from "../lib/mods";
 import { pickReadme, readmeLabel, type Readme } from "../lib/readme-language";
 import { readStorage, STORAGE_KEYS } from "../lib/storage";
 import type { PageData } from "../page-data";
@@ -14,7 +24,7 @@ import { useRenames } from "../repository-renames";
 import type { EntryJson, LipInfo } from "../types";
 import { DependenciesList } from "./dependencies-list";
 import { HotbarRadio } from "./hotbar-radio";
-import { InstallButtons } from "./install-actions";
+import { InstallActions, latestVersionOf } from "./install-actions";
 import { LazyMarkdown } from "./lazy-markdown";
 import { RelativeDate } from "./local-date";
 import { ProjectIcon } from "./project-icon";
@@ -22,6 +32,7 @@ import { RouterLink } from "./router-link";
 import { Sprite } from "./sprite";
 import { ProjectSidebar } from "./project-sidebar";
 import { ShowcaseGallery } from "./showcase-gallery";
+import { VariantMenu } from "./variant-menu";
 import { VersionsTable } from "./versions-table";
 
 export type ModPageData = Extract<PageData, { kind: "mod" }>;
@@ -75,13 +86,16 @@ export function ModDetail({ data, selection, tab: requestedTab, info: manifestIn
   const repoUrls = getRepoBaseUrls(repository, selection.version);
   // the selection's sides, which say which apps install it (both, for a version the build did not read)
   const side = data.targets[selection.variant]?.[selection.version]?.side;
-  /** The page has one selection, in its URL: the install panel and the Versions tab change it here. */
+  /** The page has one selection, in its URL: the variant switch beside the name and the Versions tab change it here. */
   const select = useCallback(
     (next: ModSelection) => {
       void navigate(href(buildModUrl(modId, mod, next, requestedTab)), { preventScrollReset: true });
     },
     [navigate, href, modId, mod, requestedTab],
   );
+  const modVariants = getSortedVariants(mod);
+  const latest = latestVersionOf(mod, selection.variant);
+  const isLatest = selection.version === latest;
   const depCount = variants ? Object.keys(variantDeps(variants[selection.variant])).length : 0;
   // a mod without a gallery has no Gallery tab (an old ?tab=gallery link shows the Description)
   const showcase = data.showcase ?? [];
@@ -102,7 +116,21 @@ export function ModDetail({ data, selection, tab: requestedTab, info: manifestIn
           <ProjectIcon icon={entry.logo} iconId={entry.logoId} size={96} eager />
         </span>
         <div className="mods-project-heading">
-          <h1 className="mods-project-name">{info.name || entry.name}</h1>
+          <div className="mods-project-title">
+            <h1 className="mods-project-name">{info.name || entry.name}</h1>
+            {/* the variant is picked here, beside the name it is a flavour of (one button, however many there are); its versions are in the Versions tab */}
+            {modVariants.length > 1 ? (
+              <VariantMenu
+                variants={modVariants}
+                value={selection.variant}
+                onChange={(variant) => {
+                  // the same version of the other variant when it has one, else its latest
+                  const own = getVersionsForVariant(mod, variant);
+                  select({ variant, version: own.includes(selection.version) ? selection.version : (latestVersionOf(mod, variant) ?? "") });
+                }}
+              />
+            ) : null}
+          </div>
           <p className="mods-project-by">
             {t.by}{" "}
             <a href={ownerUrl(entry.owner)} target="_blank" rel="noopener noreferrer">
@@ -111,6 +139,12 @@ export function ModDetail({ data, selection, tab: requestedTab, info: manifestIn
           </p>
           {info.description ? <p className="mods-project-summary">{info.description}</p> : null}
           <ul className="mods-project-stats">
+            {/* the page's selection, as a fact: it is changed in the Versions tab */}
+            <li className="mods-project-selection">
+              <Sprite name="paper" />
+              <span className="mods-project-version">{selection.version}</span>
+              {isLatest ? <span className="kit-badge kit-badge-grass mods-project-latest">{t.latest}</span> : null}
+            </li>
             {(entry.downloads ?? 0) > 0 ? (
               <li>
                 <Sprite name="chest" />
@@ -147,30 +181,20 @@ export function ModDetail({ data, selection, tab: requestedTab, info: manifestIn
             ))}
           </ul>
         </div>
-        <div className="mods-project-actions">
-          <div className="mods-project-buttons">
-            <InstallButtons modId={modId} selection={selection} side={side} layout="header" />
-            <a className="mc-btn mc-btn-lg mods-github-btn" href={repository} target="_blank" rel="noopener noreferrer" aria-label={t.viewOnGitHub} title={t.viewOnGitHub}>
-              <BrandIcon name="github" size={18} />
-            </a>
-          </div>
-          {/* what the buttons install; it is changed in the install panel, one place for the whole page */}
-          <button
-            type="button"
-            className="kit-badge kit-badge-grass mods-project-version"
-            aria-label={t.changeVersion(selection.variant ? `${selection.variant} · ${selection.version}` : selection.version)}
-            onClick={() => {
-              const picker = document.getElementById("mods-install-title")?.closest("section");
-              picker?.scrollIntoView({ block: "start", behavior: "smooth" });
-              picker?.querySelector<HTMLElement>("select, [role=radio][aria-checked=true]")?.focus({ preventScroll: true });
-            }}
-          >
-            {selection.variant ? `${selection.variant} · ` : ""}
-            {selection.version}
-            <PixelIcon name="chevronDown" />
-          </button>
-        </div>
+        <InstallActions modId={modId} repository={repository} selection={selection} side={side} />
       </header>
+
+      {/* an older version is said once, where everything below is read, with the way back and the way to another */}
+      {!isLatest && latest ? (
+        <p className="mods-old-version" role="status">
+          <PixelIcon name="history" />
+          <span>{t.notLatest(selection.version)}</span>
+          <RouterLink href={buildModUrl(modId, mod, { variant: selection.variant, version: latest }, tab)} preventScrollReset>
+            {t.backToLatest(latest)}
+          </RouterLink>
+          {tab !== "versions" ? <RouterLink href={buildModUrl(modId, mod, selection, "versions")}>{t.allVersions(formatNumber(getAllVersions(mod).length, locale))}</RouterLink> : null}
+        </p>
+      ) : null}
 
       <nav className="mods-tabs-nav" aria-label={t.tabsLabel}>
         <div className="hotbar mods-tabs">
@@ -183,10 +207,6 @@ export function ModDetail({ data, selection, tab: requestedTab, info: manifestIn
               {tb.label}
             </RouterLink>
           ))}
-          <a href={`${repository}/releases`} target="_blank" rel="noopener noreferrer">
-            {t.tabReleases}
-            <PixelIcon name="external" />
-          </a>
         </div>
       </nav>
 
@@ -236,7 +256,6 @@ export function ModDetail({ data, selection, tab: requestedTab, info: manifestIn
               <VersionsTable
                 modId={modId}
                 mod={mod}
-                repository={repository}
                 selection={selection}
                 releases={releases}
                 targets={data.targets}
@@ -259,11 +278,8 @@ export function ModDetail({ data, selection, tab: requestedTab, info: manifestIn
           <ProjectSidebar
             modId={modId}
             entry={entry}
-            mod={mod}
             repository={repository}
             selection={selection}
-            tab={tab}
-            onSelect={select}
             targets={data.targets}
             lipToml={data.lipToml}
             releases={releases}

@@ -4,10 +4,9 @@ import { LICENSE_FAMILY_BY_ID, licenseFamily, licenseOf } from "../data/licenses
 import { SIDE_BY_ID } from "../data/sides";
 import { useI18n } from "../i18n";
 import { DEFAULT_STATE, serializeQuery, type QueryState } from "../lib/catalog-query";
-import { getManifestUrl, ownerAvatar, ownerUrl, type ModSelection, type ModTab } from "../lib/mods";
-import type { CatalogEntry, RawModEntry, ReleaseInfo, VersionTarget } from "../types";
+import { getManifestUrl, getReleaseUrl, ownerAvatar, ownerUrl, type ModSelection } from "../lib/mods";
+import type { CatalogEntry, ReleaseInfo, VersionTarget } from "../types";
 import { CopyButton } from "./copy-button";
-import { InstallPanel } from "./install-actions";
 import { LocalDate } from "./local-date";
 import { RouterLink } from "./router-link";
 import { MaskIcon, Sprite } from "./sprite";
@@ -38,12 +37,8 @@ function ExternalLink({ href, children }: { href: string; children: ReactNode })
 interface ProjectSidebarProps {
   modId: string;
   entry: CatalogEntry;
-  mod: RawModEntry;
   repository: string;
   selection: ModSelection;
-  tab: ModTab;
-  /** Makes another variant or version the page's selection. */
-  onSelect: (selection: ModSelection) => void;
   /** What each version runs on, per variant. */
   targets: Record<string, Record<string, VersionTarget>>;
   /** The versions read from a `lip.toml`. */
@@ -52,11 +47,15 @@ interface ProjectSidebarProps {
   hasIssues: boolean;
 }
 
-/** Install (the page's selection), compatibility, links, creators, details and tags, like Modrinth's right column. */
-export function ProjectSidebar({ modId, entry, mod, repository, selection, tab, onSelect, targets, lipToml, releases, hasIssues }: ProjectSidebarProps) {
+/**
+ * What there is to know about the selection and the project, and nothing to do: compatibility, details, links,
+ * creators and tags. The selection is changed and installed in the header.
+ */
+export function ProjectSidebar({ modId, entry, repository, selection, targets, lipToml, releases, hasIssues }: ProjectSidebarProps) {
   const { t, locale } = useI18n();
   // the selection's sides and platforms (the mod's latest, when the build did not read that version)
-  const target = targets[selection.variant]?.[selection.version] ?? { side: entry.side, platform: entry.platform };
+  const target: VersionTarget = targets[selection.variant]?.[selection.version] ?? { side: entry.side, platform: entry.platform };
+  const release = releases[selection.version];
   const firstRelease = Object.values(releases).reduce<string | undefined>((min, r) => (!min || r.date < min ? r.date : min), undefined);
   const license = licenseOf(entry);
   const family = LICENSE_FAMILY_BY_ID.get(licenseFamily(license))!;
@@ -64,17 +63,6 @@ export function ProjectSidebar({ modId, entry, mod, repository, selection, tab, 
   const plain = plainTagsOf(entry.tags);
   return (
     <>
-      <InstallPanel
-        modId={modId}
-        mod={mod}
-        repository={repository}
-        selection={selection}
-        tab={tab}
-        releases={releases}
-        targets={targets}
-        onSelect={onSelect}
-      />
-
       <Panel id="mods-side-compat" title={t.compatibility}>
         <dl className="mods-facts">
           {target.side.length ? (
@@ -105,44 +93,18 @@ export function ProjectSidebar({ modId, entry, mod, repository, selection, tab, 
               </dd>
             </div>
           ) : null}
+          {target.leviLamina ? (
+            <div>
+              <dt>{t.colLeviLamina}</dt>
+              <dd>
+                <code className="mods-fact-range">{target.leviLamina}</code>
+              </dd>
+            </div>
+          ) : null}
         </dl>
       </Panel>
 
-      <Panel id="mods-side-links" title={t.links}>
-        <ul className="mods-side-links">
-          <li>
-            <ExternalLink href={repository}>{t.sourceCode}</ExternalLink>
-          </li>
-          {hasIssues ? (
-            <li>
-              <ExternalLink href={`${repository}/issues`}>{t.issues}</ExternalLink>
-            </li>
-          ) : null}
-          <li>
-            <ExternalLink href={`${repository}/releases`}>{t.releases}</ExternalLink>
-          </li>
-          <li>
-            <ExternalLink href={getManifestUrl(repository, selection.version, lipToml.includes(selection.version) ? "lip.toml" : "tooth.json")}>
-              {t.manifest}
-            </ExternalLink>
-          </li>
-        </ul>
-      </Panel>
-
-      <Panel id="mods-side-creators" title={t.creators}>
-        <a className="mods-creator" href={ownerUrl(entry.owner)} target="_blank" rel="noopener noreferrer">
-          <img className="mods-creator-avatar" src={ownerAvatar(entry.owner, 64)} alt="" width={32} height={32} loading="lazy" referrerPolicy="no-referrer" />
-          <span className="mods-creator-text">
-            <span className="mods-creator-name">{entry.owner}</span>
-            <span className="mods-creator-role">{t.author}</span>
-          </span>
-        </a>
-        <RouterLink href={listing({ author: [entry.owner] })} className="mods-side-link mods-side-all">
-          {t.moreByOwner(entry.owner)}
-        </RouterLink>
-      </Panel>
-
-      {/* the panel keeps the id of the old page's (#mods-meta-title); #mods-variants-title and #mods-versions-title are in the install panel */}
+      {/* the panel keeps the id of the old page's (#mods-meta-title) */}
       <Panel id="mods-meta-title" title={t.details}>
         <dl className="mods-meta">
           {license ? (
@@ -176,6 +138,40 @@ export function ProjectSidebar({ modId, entry, mod, repository, selection, tab, 
             </dd>
           </div>
         </dl>
+      </Panel>
+
+      <Panel id="mods-side-links" title={t.links}>
+        <ul className="mods-side-links">
+          <li>
+            <ExternalLink href={repository}>{t.sourceCode}</ExternalLink>
+          </li>
+          {hasIssues ? (
+            <li>
+              <ExternalLink href={`${repository}/issues`}>{t.issues}</ExternalLink>
+            </li>
+          ) : null}
+          <li>
+            <ExternalLink href={getReleaseUrl(repository, release)}>{release ? t.releaseOnGitHub(selection.version) : t.releases}</ExternalLink>
+          </li>
+          <li>
+            <ExternalLink href={getManifestUrl(repository, selection.version, lipToml.includes(selection.version) ? "lip.toml" : "tooth.json")}>
+              {t.manifest}
+            </ExternalLink>
+          </li>
+        </ul>
+      </Panel>
+
+      <Panel id="mods-side-creators" title={t.creators}>
+        <a className="mods-creator" href={ownerUrl(entry.owner)} target="_blank" rel="noopener noreferrer">
+          <img className="mods-creator-avatar" src={ownerAvatar(entry.owner, 64)} alt="" width={32} height={32} loading="lazy" referrerPolicy="no-referrer" />
+          <span className="mods-creator-text">
+            <span className="mods-creator-name">{entry.owner}</span>
+            <span className="mods-creator-role">{t.author}</span>
+          </span>
+        </a>
+        <RouterLink href={listing({ author: [entry.owner] })} className="mods-side-link mods-side-all">
+          {t.moreByOwner(entry.owner)}
+        </RouterLink>
       </Panel>
 
       {featured.length || plain.length ? (

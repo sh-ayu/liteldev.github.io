@@ -51,30 +51,25 @@ interface OptionProps {
   nested?: boolean;
   count: number;
   included: boolean;
+  /** Left out by the URL (`?tags=-x`): struck through; checking it includes it instead. */
   excluded?: boolean;
   onInclude: () => void;
-  /** Absent: the group has no exclusions. */
-  onExclude?: () => void;
-  /** Options under this one, shown or not (a license family's SPDX ids): a toggle in the exclude column. */
+  /** Options under this one, shown or not (a license family's SPDX ids). */
   expand?: { open: boolean; label: string; onToggle: () => void };
 }
 
-function Option({ label, icon, raw, mono, nested, count, included, excluded, onInclude, onExclude, expand }: OptionProps) {
-  const { t, locale } = useI18n();
+/** A filter option: a checkbox — checked, the listing is filtered by it. */
+function Option({ label, icon, raw, mono, nested, count, included, excluded, onInclude, expand }: OptionProps) {
+  const { locale } = useI18n();
   const dimmed = count === 0 && !included && !excluded;
   const className = ["mods-opt", excluded && "is-excluded", dimmed && "is-dimmed", nested && "is-nested"].filter(Boolean).join(" ");
   return (
     <li className={className}>
-      <button
-        type="button"
-        className="mods-opt-btn"
-        aria-pressed={included}
-        aria-disabled={dimmed || undefined}
-        onClick={dimmed ? undefined : onInclude}
-      >
-        <span className="mods-opt-mark" aria-hidden="true">
-          {included ? <MaskIcon name="check" /> : icon ? <Sprite name={icon} /> : null}
+      <button type="button" role="checkbox" className="mods-opt-btn" aria-checked={included} aria-disabled={dimmed || undefined} onClick={dimmed ? undefined : onInclude}>
+        <span className="mods-checkbox" aria-hidden="true">
+          {included ? <MaskIcon name="check" /> : null}
         </span>
+        {icon ? <Sprite name={icon} /> : null}
         <span className={mono ? "mods-opt-label mods-opt-mono" : "mods-opt-label"}>
           {label}
           {raw ? <span className="mods-raw-tag">{raw}</span> : null}
@@ -82,30 +77,10 @@ function Option({ label, icon, raw, mono, nested, count, included, excluded, onI
         <span className="mods-opt-count">{formatNumber(count, locale)}</span>
       </button>
       {expand ? (
-        <button
-          type="button"
-          className="mc-icon-btn mods-opt-expand"
-          aria-label={expand.label}
-          aria-expanded={expand.open}
-          onClick={expand.onToggle}
-        >
+        <button type="button" className="mc-icon-btn mods-opt-expand" aria-label={expand.label} aria-expanded={expand.open} onClick={expand.onToggle}>
           <MaskIcon name="chevronDown" />
         </button>
-      ) : onExclude ? (
-        <button
-          type="button"
-          className="mc-icon-btn mods-opt-exclude"
-          aria-label={t.exclude(label)}
-          aria-pressed={!!excluded}
-          aria-disabled={dimmed || undefined}
-          onClick={dimmed ? undefined : onExclude}
-        >
-          <MaskIcon name="close" />
-        </button>
-      ) : (
-        // keeps the exclude column, so every group's options end at the same edge
-        <span className="mods-opt-exclude-spacer" aria-hidden="true" />
-      )}
+      ) : null}
     </li>
   );
 }
@@ -141,8 +116,8 @@ function Group({ title, collapsed, onToggle, children, footer, list = true }: Gr
 }
 
 const toggleIn = (list: string[], id: string) => (list.includes(id) ? list.filter((x) => x !== id) : [...list, id]);
+/** Checks or unchecks a tag (one the URL left out is included instead). */
 const include = (f: Facet, id: string): Facet => ({ inc: toggleIn(f.inc, id), exc: f.exc.filter((x) => x !== id) });
-const exclude = (f: Facet, id: string): Facet => ({ inc: f.inc.filter((x) => x !== id), exc: toggleIn(f.exc, id) });
 
 interface LongOption {
   id: string;
@@ -164,14 +139,11 @@ function LongOptions({
   counts,
   placeholder,
   onToggle,
-  onExclude,
 }: {
   options: LongOption[];
   counts: Record<string, number>;
   placeholder: string;
   onToggle: (id: string) => void;
-  /** Absent: the group has no exclusions. */
-  onExclude?: (id: string) => void;
 }) {
   const { t } = useI18n();
   const [query, setQuery] = useState("");
@@ -209,7 +181,6 @@ function LongOptions({
             included={o.selected}
             excluded={o.excluded}
             onInclude={() => onToggle(o.id)}
-            onExclude={onExclude ? () => onExclude(o.id) : undefined}
           />
         ))}
       </ul>
@@ -370,7 +341,6 @@ export function FilterGroups({ state, counts, options, names, features, apply, f
                     included={state.tags.inc.includes(tag)}
                     excluded={state.tags.exc.includes(tag)}
                     onInclude={() => set({ tags: include(state.tags, tag) })}
-                    onExclude={() => set({ tags: exclude(state.tags, tag) })}
                   />
                 );
               })}
@@ -389,7 +359,6 @@ export function FilterGroups({ state, counts, options, names, features, apply, f
                 counts={counts.tags}
                 placeholder={t.searchTags}
                 onToggle={(tag) => set({ tags: include(state.tags, tag) })}
-                onExclude={(tag) => set({ tags: exclude(state.tags, tag) })}
               />
             </>
           ) : null}

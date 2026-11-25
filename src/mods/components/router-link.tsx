@@ -33,6 +33,8 @@ type RouterLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
   state?: unknown;
   /** Replace the current history entry instead of adding one. */
   replace?: boolean;
+  /** Keep the scroll position (a link that changes the page in place). */
+  preventScrollReset?: boolean;
   /** `href` is in the language it should be already (the language menu): do not put it in the page's. */
   exact?: boolean;
 };

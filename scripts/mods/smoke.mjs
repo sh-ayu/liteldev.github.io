@@ -9,7 +9,7 @@
 // their counts, exclusions, sort, page size, pagination, empty state, view mode, keyboard, the phone
 // drawer), the density targets (results above the fold), the listing URLs (and the old keys that
 // still work or are dropped), mod pages
-// (README, tabs, install buttons and panel, variant/version switching, back to the listing), the 404 page, the shared theme/language preferences, phone
+// (README, tabs, the Install menu, picking a version in the Versions tab, variant/version switching, back to the listing), the 404 page, the shared theme/language preferences, phone
 // layouts without sideways scroll, layout shift, and that every mod page hydrates without
 // errors. Only the site itself is loaded: third-party requests (README images, avatars, fonts) are
 // blocked. Exit code 1 on any failure.
@@ -270,7 +270,7 @@ await check("featured tag Economy: ?tags=economy, a chip, its aliases match too"
   const expected = catalog.filter((e) => tagged(e, "economy")).map((e) => e.id);
   assert(ids.length === Math.min(20, expected.length) && ids.every((id) => expected.includes(id)), `${ids} for ${expected}`);
   assert((await home.locator(".mods-active .mods-chip-active", { hasText: "Economy" }).count()) === 1, "no chip");
-  assert((await option().getAttribute("aria-pressed")) === "true", "option not pressed");
+  assert((await option().getAttribute("aria-checked")) === "true", "option not checked");
   // an alias selects the whole group
   await home.goto(`${root}?tags=money`, { waitUntil: "networkidle" });
   await settled(home);
@@ -490,15 +490,18 @@ await check("mod page: header, README, sidebar; no errors", async () => {
   return await mod.locator(".mods-project-version").innerText();
 });
 
-await check("install: the header's deep link and the panel's command are the selection's; a followed link shows where to get the app", async () => {
+await check("install: the Install menu's deep link and command are the selection's; a followed link shows where to get the app; the sidebar installs nothing", async () => {
   const latest = (await mod.locator(".mods-project-version").innerText()).trim();
-  const lip = mod.locator('.mods-project-actions a.mods-install-btn[data-app="lip"]');
+  const lip = mod.locator('.mods-project-actions a.mods-install-app[data-app="lip"]');
   const href = await lip.getAttribute("href");
   assert(href === `lip://install/github.com/LiteLDev/LeviLamina?version=${latest}`, `deep link ${href}`);
-  const command = (await mod.locator(".mods-install-panel .mods-install-command").innerText()).replace(/\s+/g, " ").trim();
+  const command = ((await mod.locator(".mods-project-actions .mods-install-command").textContent()) ?? "").replace(/\s+/g, " ").trim();
   assert(command === `lip install github.com/LiteLDev/LeviLamina@${latest}`, `command "${command}"`);
-  await mod.click(".mods-install-panel .mods-copy");
-  await mod.waitForSelector(".mods-install-panel .mods-copy[data-copied]");
+  // one Install button: its menu has an entry per side the version runs on, and the server's command
+  await mod.click("summary.mods-install-btn");
+  await mod.waitForSelector(".mods-install[open] .mods-install-app");
+  await mod.click(".mods-project-actions .mods-copy");
+  await mod.waitForSelector(".mods-project-actions .mods-copy[data-copied]");
   const clip = await mod.evaluate(() => navigator.clipboard.readText());
   assert(clip === command, `clipboard: ${clip}`);
   // no protocol handler in the test browser: the link is not followed, the page still reacts to the click
@@ -508,35 +511,38 @@ await check("install: the header's deep link and the panel's command are the sel
   await hint.waitFor();
   assert(/\/lip\/#install-lip$/.test((await hint.getAttribute("href")) ?? ""), `hint ${await hint.getAttribute("href")}`);
   assert(!(await mod.locator("dialog[open]").count()), "a dialog opened");
+  assert(await mod.locator(".mods-install[open]").count(), "the menu closed before the hint was read");
+  await mod.keyboard.press("Escape");
+  await mod.waitForFunction(() => !document.querySelector(".mods-install[open]"));
+  assert(!(await mod.locator(".mods-detail-side :is(select, button.mc-btn, a.mc-btn, .mods-install-btn)").count()), "the sidebar has a control");
   return href;
 });
 
-await check("install panel: picking a version makes it the page's selection (URL, header, deep links)", async () => {
-  const select = mod.locator(".mods-install-panel select");
-  const values = await select.locator("option").evaluateAll((options) => options.map((o) => /** @type {HTMLOptionElement} */ (o).value));
-  const older = values[2];
-  assert(older, "fewer than 3 versions");
-  await select.selectOption(older);
-  await mod.waitForURL((u) => new URL(u).searchParams.get("version") === older);
-  await mod.waitForFunction((v) => document.querySelector(".mods-project-version")?.textContent?.includes(v), older);
-  const href = await mod.locator('.mods-project-actions a.mods-install-btn[data-app="lip"]').getAttribute("href");
-  assert(href?.endsWith(`?version=${older}`), `deep link ${href}`);
-  await mod.goBack();
-  await mod.waitForURL((u) => !new URL(u).searchParams.get("version"));
-  return older;
-});
-
-await check("tabs: versions table marks the current version, Select changes it in place; dependencies list LeviLamina's", async () => {
+await check("tabs: the Versions tab is where the version is picked — anywhere on a row, in place (URL, header, Install menu), with the way back to the latest; dependencies list LeviLamina's", async () => {
+  assert(await mod.evaluate(() => !document.querySelector(".mods-project-version")?.closest("button, summary, a, select")), "the header's version is a control");
+  assert(!(await mod.locator(".mods-old-version").count()), "the latest version is called old");
   await mod.locator(".mods-tabs a", { hasText: "Versions" }).click();
   await mod.waitForURL((u) => new URL(u).searchParams.get("tab") === "versions");
   await mod.waitForSelector(".mods-versions-table");
   assert((await mod.locator('.mods-versions-table tr[aria-current="true"]').count()) === 1, "no current version row");
   const row = mod.locator(".mods-versions-table tbody tr:not([aria-current])").nth(1);
   const picked = (await row.locator(".mods-vt-version a").innerText()).trim();
-  assert((await row.locator(".mods-vt-install").count()) > 0, "no install link in the row");
-  await row.locator(".mods-vt-select").click();
+  assert(!(await row.locator("button, details, a:not(.mods-vt-version a)").count()), "a row has controls of its own");
+  // not on the link: the row itself
+  await row.locator(".mods-vt-sides").click({ position: { x: 2, y: 2 } });
   await mod.waitForURL((u) => new URL(u).searchParams.get("version") === picked && new URL(u).searchParams.get("tab") === "versions");
   await mod.waitForFunction((v) => document.querySelector('.mods-versions-table tr[aria-current="true"] .mods-vt-version a')?.textContent === v, picked);
+  await mod.waitForFunction((v) => document.querySelector(".mods-project-version")?.textContent === v, picked);
+  const href = await mod.locator('.mods-project-actions a.mods-install-app[data-app="lip"]').getAttribute("href");
+  assert(href?.endsWith(`?version=${picked}`), `deep link ${href}`);
+  const command = ((await mod.locator(".mods-project-actions .mods-install-command").textContent()) ?? "").replace(/\s+/g, " ").trim();
+  assert(command.endsWith(`@${picked}`), `command "${command}"`);
+  // an older version says so, with the way back (still in the tab)
+  await mod.locator(".mods-old-version a").first().click();
+  await mod.waitForURL((u) => !new URL(u).searchParams.get("version") && new URL(u).searchParams.get("tab") === "versions");
+  await mod.waitForFunction(() => !document.querySelector(".mods-old-version"));
+  await mod.goBack();
+  await mod.waitForURL((u) => new URL(u).searchParams.get("version") === picked);
   await mod.goBack();
   await mod.waitForURL((u) => !new URL(u).searchParams.get("version"));
   await mod.locator(".mods-tabs a", { hasText: "Dependencies" }).click();
@@ -555,11 +561,19 @@ await check("another variant and version load in the browser", async () => {
   await markLoad(mod);
   await mod.goto(`${root}${PLAND}?tab=versions`, { waitUntil: "networkidle" });
   await markLoad(mod);
-  await mod.locator('.mods-versions-tab [role="radio"]', { hasText: /^headless$/ }).click();
+  // the variant is picked beside the name, the version in the tab
+  assert(!(await mod.locator('.mods-versions-tab [role="radio"]').count()), "the Versions tab has a variant switch");
+  await mod.click(".mods-variant-trigger");
+  await mod.locator('.mods-variant-menu[open] [role="menuitemradio"]', { hasText: /^headless$/ }).click();
+  await mod.waitForFunction(() => !document.querySelector(".mods-variant-menu[open]"));
+  await mod.waitForURL((u) => new URL(u).searchParams.get("variant") === "headless" && new URL(u).searchParams.get("tab") === "versions");
   const older = mod.locator(".mods-vt-version a:not([aria-current])").nth(2);
   const version = (await older.innerText()).trim();
   await older.click();
   await mod.waitForURL((u) => new URL(u).searchParams.get("version") === version && new URL(u).searchParams.get("variant") === "headless");
+  // selected in place, on the Versions tab; its README is on the Description tab
+  await mod.waitForFunction((v) => document.querySelector(".mods-project-version")?.textContent === v, version);
+  await mod.locator(".mods-tabs a", { hasText: "Description" }).click();
   await mod.waitForFunction(
     (v) => document.querySelector(".mods-project-version")?.textContent?.includes(v) && !!document.querySelector("[data-doc-content], .mods-readme-empty"),
     version,
