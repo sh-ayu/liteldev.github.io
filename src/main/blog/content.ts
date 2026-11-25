@@ -11,8 +11,8 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, basename } from 'node:path';
 import { parse as parseYaml } from 'yaml';
-import { renderMarkdown, splitFrontmatter } from '../kit/docs/node/markdown/render.ts';
-import { TokenStyles } from '../kit/docs/node/markdown/shiki.ts';
+import { renderMarkdown, splitFrontmatter } from '../../kit/docs/node/markdown/render.ts';
+import { TokenStyles } from '../../kit/docs/node/markdown/shiki.ts';
 import type { BlogData, BlogDoc, BlogPost, BlogTerm, BlogArchiveYear } from './types.ts';
 
 export const BLOG_BASE = '/blog/';

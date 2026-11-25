@@ -3,7 +3,7 @@
 // English at /tutorials/, Simplified Chinese at /zh-Hans/tutorials/ (sources in content/zh-Hans/), Traditional
 // Chinese at /zh-Hant/tutorials/, converted from it: levimc.org's one scheme, the language first (2026-11-16). The
 // URLs before (/tutorials/zh-Hans/…) redirect. Writing rules: CONTRIBUTING.md at the repository root, "Tutorials".
-import { defineDocsConfig, type NavEntry } from './kit/docs/node/config.ts';
+import { defineDocsConfig, type NavEntry } from '../../src/kit/docs/node/config.ts';
 
 const repo = 'https://github.com/LiteLDev/liteldev.github.io';
 
@@ -106,9 +106,9 @@ export default defineDocsConfig({
   description: 'Step-by-step tutorials for LeviMC: run a modded Minecraft Bedrock server, play with mods, write your first mod, automate the game.',
   project: 'tutorials',
   logo: { src: 'https://levimc.org/logos/LeviLamina.webp', alt: 'LeviMC' },
-  contentDir: 'content',
+  contentDir: 'pages',
   repo,
-  editLink: `${repo}/edit/main/tutorials/content/:path`,
+  editLink: `${repo}/edit/main/content/tutorials/pages/:path`,
   hostname: 'https://levimc.org',
   sitemap: { hostname: 'https://levimc.org' },
   i18n: {

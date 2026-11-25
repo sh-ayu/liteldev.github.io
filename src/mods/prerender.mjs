@@ -4,14 +4,16 @@
 // dist/ is the site's /mods/ folder, dist-locales/<lang>/ its /<lang>/mods/ folder (the pages in that language; the
 // files they load stay under /mods/) and dist-api/ its /api/ folder: the levimc.org build copies them there.
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { dirname } from "node:path";
-import { prerenderRoutes } from "./kit/ssg/prerender.mjs";
+import { dirname, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
+import { prerenderRoutes } from "../kit/ssg/prerender.mjs";
 
 const ORIGIN = "https://levimc.org";
 const BASE = "/mods/";
 const LOCALES_DIR = "dist-locales";
 
-const ssr = await import("./.kit/ssr/entry-server.js");
+// the working directory is the build folder (.build/mods/, see scripts/build.mjs): dist/, .kit/ssr/ are in it
+const ssr = await import(pathToFileURL(resolve(".kit/ssr/entry-server.js")).href);
 const started = Date.now();
 const routes = await ssr.listRoutes();
 

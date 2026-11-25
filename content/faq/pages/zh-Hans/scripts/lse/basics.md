@@ -369,7 +369,7 @@ mc.listen("onJoin", (player) => {
 
 ## LSE 有 Markdown 格式的文档吗（比如想喂给 AI）？
 
-有。LSE 文档站由 Markdown 源码生成，源码在 GitHub 仓库 LiteLDev/liteldev.github.io 的 `docs/LegacyScriptEngine/content` 目录下（中文为 `*.zh.md`，英文为 `*.md`，API 文档在 `apis/` 子目录）。另外 LiteLDev/legacy-script-engine-api 仓库提供插件开发的 API 类型提示，也可作为参考。
+有。LSE 文档站由 Markdown 源码生成，源码在 GitHub 仓库 LiteLDev/liteldev.github.io 的 `content/LegacyScriptEngine/pages` 目录下（中文为 `*.zh.md`，英文为 `*.md`，API 文档在 `apis/` 子目录）。另外 LiteLDev/legacy-script-engine-api 仓库提供插件开发的 API 类型提示，也可作为参考。
 
 ## LSE 的 Python 引擎插件一直报错，有什么替代方案？
 

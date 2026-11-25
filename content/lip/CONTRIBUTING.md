@@ -1,24 +1,23 @@
 # Writing the documentation
 
 This page is for whoever writes the documentation of lip. It is not a page of the site (the pages are in
-`content/`). The pictures of the interface are made by lip's tests:
+`pages/`). The pictures of the interface are made by lip's tests:
 [tests/Lip.Cli.Tests/Tui/Screenshots/README.md](https://github.com/LiteLDev/lip/blob/main/tests/Lip.Cli.Tests/Tui/Screenshots/README.md)
-in LiteLDev/lip says how. They write into `docs/lip/public/screenshots/` of a checkout of this repository named
+in LiteLDev/lip says how. They write into `content/lip/public/screenshots/` of a checkout of this repository named
 `liteldev.github.io` next to the lip checkout (or into `LIP_SCREENSHOTS_DIR`).
 
 ## Building the site
 
 Since 2026-11-16 the documentation is built here, by levimc.org's deploy, with the docs of the other LeviMC
-projects ([docs/README.md](../README.md)). The site is built by levimc-kit, which `npm ci` copies from this
-repository's `kit/` into `docs/lip/kit/`. From `docs/lip/`:
+projects ([content/README.md](../README.md)). It is one of the docs sites of levimc.org's one package, built by the
+docs engine in `src/kit/docs/`. From the repository root:
 
 ```
 npm ci
-npm run typecheck   # docs.config.ts
-npm test            # the converter of scripts/zh-hant.mjs (scripts/zh-hant.test.mjs)
-npm run build       # runs the test and writes content/zh-Hant/ first (prebuild), then dist/
-npm run linkcheck   # every link, anchor and picture of dist/
-npm run dev         # the site on a local server, rebuilt as you edit (writes content/zh-Hant/ first)
+npm run typecheck                          # docs.config.ts (and the rest of the site)
+node scripts/docs-sites.mjs build lip      # scripts/prebuild.mjs (the converter's test, then pages/zh-Hant/), the
+                                           # build (.build/docs/lip/dist/) and every link, anchor and picture of it
+node scripts/docs-sites.mjs dev lip        # the site on a local server, rebuilt as you edit (prebuild first)
 ```
 
 `docs.config.ts` holds what is not a page: the tabs and their sidebars, the labels in each language, and the
@@ -26,7 +25,7 @@ redirects of the pages that moved. A new page needs an entry in `nav` there; a p
 
 The site has no tutorials: the introduction is the home page, and the rest are guides, concepts and reference. The
 tutorials (your first server, a server from the command line, publishing a package) are at
-[levimc.org/tutorials](https://levimc.org/tutorials/), written in this repository (`tutorials/content/`). Link to
+[levimc.org/tutorials](https://levimc.org/tutorials/), written in this repository (`content/tutorials/pages/`). Link to
 them with their full URL, in the language of the page: `https://levimc.org/tutorials/…` from an English page,
 `https://levimc.org/zh-Hans/tutorials/…` from a Simplified Chinese one.
 
@@ -34,22 +33,22 @@ them with their full URL, in the language of the page: `https://levimc.org/tutor
 
 | Language | Pages | URLs | Pictures |
 |---|---|---|---|
-| English | `content/**/*.md` | `/lip/…` | `/screenshots/en/` |
-| Simplified Chinese | `content/zh/**/*.md` | `/zh-Hans/lip/…` (formerly `/lip/zh-Hans/…` and `/lip/zh/…`, which redirect) | `/screenshots/zh-Hans/` |
-| Traditional Chinese | `content/zh-Hant/**/*.md`, **written by a script** | `/zh-Hant/lip/…` (formerly `/lip/zh-Hant/…`, which redirects) | `/screenshots/zh-Hant/` |
+| English | `pages/**/*.md` | `/lip/…` | `/screenshots/en/` |
+| Simplified Chinese | `pages/zh/**/*.md` | `/zh-Hans/lip/…` (formerly `/lip/zh-Hans/…` and `/lip/zh/…`, which redirect) | `/screenshots/zh-Hans/` |
+| Traditional Chinese | `pages/zh-Hant/**/*.md`, **written by a script** | `/zh-Hant/lip/…` (formerly `/lip/zh-Hant/…`, which redirects) | `/screenshots/zh-Hant/` |
 
 English and Simplified Chinese are written by hand, together: the same pages, the same headings in the same
 order, the same pictures in their language.
 
 ### Traditional Chinese is generated
 
-`scripts/zh-hant.mjs` writes `content/zh-Hant/` from `content/zh/`. `npm run build` and `npm run dev` run it first,
-and `npm run zh-hant` runs it alone. **Do not edit `content/zh-Hant/`, and do not commit it**: it is in
-`.gitignore`, and the script deletes what it did not write. The "Edit this page" link of a Traditional Chinese page
+`scripts/zh-hant.mjs` writes `pages/zh-Hant/` from `pages/zh/`. The build and the dev server run it first
+(`scripts/prebuild.mjs`), and `node content/lip/scripts/zh-hant.mjs` runs it alone. **Do not edit `pages/zh-Hant/`,
+and do not commit it**: it is in the repository's `.gitignore`, and the script deletes what it did not write. The "Edit this page" link of a Traditional Chinese page
 opens the Simplified page it was made from. A Traditional page has no "Last updated" date, since git does not know
 it.
 
-While `npm run dev` runs, run `npm run zh-hant` in another terminal after you changed a Simplified page, to see its
+While the dev server runs, run `node content/lip/scripts/zh-hant.mjs` in another terminal after you changed a Simplified page, to see its
 Traditional page change.
 
 The script exists because the interface of lip does not say in Traditional Chinese what a conversion of characters
@@ -60,7 +59,7 @@ page, outside its code, its link targets and its URLs, the script does three thi
    of the interface in Simplified Chinese becomes the text that the interface shows in Traditional Chinese
    (`**建立伺服器…**`, `「首頁」`, `「套用」`: the quotation marks “ ” become 「 」 everywhere). The pairs are those of
    `scripts/interface-texts.json`, read from the `L.T(en, zhHans, zhHant)` calls of lip's `src/Lip.Cli/Tui/` by
-   `npm run interface-texts [<lip checkout>]` (by default a `lip` checkout next to this repository's). Run it again,
+   `node content/lip/scripts/interface-texts.mjs [<lip checkout>]` (by default a `lip` checkout next to this repository's). Run it again,
    and commit the file, when the interface changes its texts.
 2. **Terms.** The words of `scripts/zh-hant-terms.mjs` become their words of Taiwan, the longest match first.
 3. **Characters.** OpenCC (`cn` → `tw`) converts the rest, as the kit does for a page that has no file of its own.

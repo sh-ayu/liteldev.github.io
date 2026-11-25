@@ -1,5 +1,5 @@
-# LeviMC Mods: finds mod repositories mods/repos.txt does not name yet and opens a pull request for each (see
-# mods/scripts/discover.mjs). Merging one lists the repository at the next deploy; closing one keeps it out for good.
+# LeviMC Mods: finds mod repositories content/mods/repos.txt does not name yet and opens a pull request for each (see
+# scripts/mods/discover.mjs). Merging one lists the repository at the next deploy; closing one keeps it out for good.
 # Needs "Allow GitHub Actions to create and approve pull requests" (Settings → Actions → General). Pull requests the
 # workflow token opens start no workflows of their own.
 name: LeviMC Mods discovery
@@ -25,26 +25,18 @@ concurrency:
 jobs:
   discover:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: mods
     steps:
       - uses: actions/checkout@v7
-
-      - uses: pnpm/action-setup@v5
-        with:
-          package_json_file: mods/package.json
 
       - uses: actions/setup-node@v7
         with:
           node-version: 24
-          cache: pnpm
-          cache-dependency-path: mods/pnpm-lock.yaml
+          cache: npm
 
-      # discover.mjs reads lip.toml files with the site's own parser (src/lib/lipfile.ts, which needs smol-toml).
-      - run: pnpm install --frozen-lockfile
+      # discover.mjs reads lip.toml files with the site's own parser (src/mods/lib/lipfile.ts, which needs smol-toml).
+      - run: npm ci
 
-      - run: node scripts/discover.mjs ${{ inputs.dry-run && '--dry-run' || '' }}
+      - run: node scripts/mods/discover.mjs ${{ inputs.dry-run && '--dry-run' || '' }}
         env:
           GH_TOKEN: ${{ github.token }}
           # Optional: a personal token (no scopes needed, public code search only). The workflow token's code search

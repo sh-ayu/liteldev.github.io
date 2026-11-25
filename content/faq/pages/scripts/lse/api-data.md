@@ -68,7 +68,7 @@ SNBT is not JSON, so you cannot parse the result of `nbt.toSNBT()` with `JSON.pa
 
 The APIs still exist; the documentation site was only migrated. The file-related APIs are documented at <https://levimc.org/LegacyScriptEngine/apis/SystemAPI/File/>. `File.readFrom(path[,isBinary])` still works (the `isBinary` parameter is supported since 0.19.1).
 
-If you find something missing from the documentation, you can submit a PR to the LiteLDev/liteldev.github.io repository (`docs/LegacyScriptEngine/content`).
+If you find something missing from the documentation, you can submit a PR to the LiteLDev/liteldev.github.io repository (`content/LegacyScriptEngine/pages`).
 
 ## Does LSE have a unified configuration file interface? Does LeviLamina provide a default configuration directory?
 

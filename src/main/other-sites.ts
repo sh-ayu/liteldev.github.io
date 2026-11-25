@@ -3,9 +3,9 @@ import { DOCS_PROJECTS, NETWORK_LANGUAGE_SEGMENTS } from '../kit/components/proj
 
 /** levimc.org/mods/: LeviMC Mods, a separate app (mods/). */
 export const MODS_PATH = '/mods/';
-/** levimc.org/tutorials/: the tutorials, a separate docs build of this repository (tutorials/). */
+/** levimc.org/tutorials/: the tutorials, a separate docs build of this repository (content/tutorials/). */
 export const TUTORIALS_PATH = '/tutorials/';
-/** levimc.org/faq/: questions and answers for every project, a separate docs build of this repository (faq/). */
+/** levimc.org/faq/: questions and answers for every project, a separate docs build of this repository (content/faq/). */
 export const FAQ_PATH = '/faq/';
 
 /** Paths of this origin that other builds serve: LeviMC Mods, the tutorials, the FAQ and each project's docs

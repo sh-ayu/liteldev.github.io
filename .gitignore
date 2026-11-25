@@ -1,25 +1,23 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+node_modules/
 
-node_modules
-dist
-dist-ssr
-.kit
-*.local
+# build output: the site (dist/), the parts built on their own (.build/mods/, .build/docs/<Site>/), intermediate
+# files of the main build (.kit/) and what builds keep between runs (.cache/: the mods registry, Doxygen's inputs)
+dist/
+.build/
+.kit/
+.cache/
+
+# generated before a docs build (content/<Site>/scripts/prebuild.mjs)
+/content/lip/pages/zh-Hant/
+/content/BeDD/public/bedd.asyncapi.yaml
+
+# Logs
+*.log
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
+*.local
 *.sw?

@@ -1,6 +1,6 @@
 // Demo docs site for levimc-kit: MkDocs-style site (suffix i18n, directory URLs, pymdownx slugs,
 // Python-Markdown compat) built from real LeviLamina / LegacyScriptEngine / lip / LeviLauncher fixtures.
-import { defineDocsConfig } from './kit/docs/node/config.ts';
+import { defineDocsConfig } from '../docs/node/config.ts';
 
 export default defineDocsConfig({
   base: '/Demo/',

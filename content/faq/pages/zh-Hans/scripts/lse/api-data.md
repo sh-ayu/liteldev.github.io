@@ -68,7 +68,7 @@ SNBT 不等于 JSON，不能用 `JSON.parse` 解析 `nbt.toSNBT()` 的结果。�
 
 API 仍然存在，只是文档站迁移过。文件相关 API 见 <https://levimc.org/zh-Hans/LegacyScriptEngine/apis/SystemAPI/File/>。`File.readFrom(path[,isBinary])` 仍可用（0.19.1 起支持 `isBinary` 参数）。
 
-发现文档遗漏可向 LiteLDev/liteldev.github.io 仓库（`docs/LegacyScriptEngine/content`）提交 PR。
+发现文档遗漏可向 LiteLDev/liteldev.github.io 仓库（`content/LegacyScriptEngine/pages`）提交 PR。
 
 ## LSE 有没有统一的配置文件接口？LeviLamina 提供默认的配置目录吗？
 

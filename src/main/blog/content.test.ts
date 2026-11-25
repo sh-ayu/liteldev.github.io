@@ -26,7 +26,7 @@ test('hardBreaks: newlines in paragraphs become line breaks, code fences are unt
 });
 
 test('the blog builds: Hexo permalinks, terms, archives, pages, rendered markdown', async () => {
-  const root = fileURLToPath(new URL('..', import.meta.url));
+  const root = fileURLToPath(new URL('../../..', import.meta.url));
   const b = await buildBlog(root);
   assert.deepEqual(b.warnings, []);
   assert.deepEqual(

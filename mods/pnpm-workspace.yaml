@@ -1,4 +1,0 @@
-allowBuilds:
-  esbuild: false
-  # prebuilt binaries come from its optional @img/sharp-<platform> packages; its install script only checks them
-  sharp: false

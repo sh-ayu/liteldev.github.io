@@ -18,14 +18,21 @@ the painting concentrated in two big moments (hero, footer) rather than sprinkle
 Docs sites are compiled at build time (unified/remark/rehype + Shiki) and statically prerendered — one real
 HTML file per URL for GitHub Pages — then hydrated into a SPA.
 
-Version: see `VERSION` (2.21.0) and the [Changelog](#changelog) (with migration notes for every site).
+Version: see `VERSION` and the [Changelog](#changelog).
+
+**Where it lives (2.31).** The kit is a source folder of levimc.org, `src/kit/`, in the site's one package: nothing
+copies, fetches or publishes it. levimc.org (`src/main/`) and LeviMC Mods (`src/mods/`) import it by relative path;
+every docs site is a folder `content/<Site>/` (a `docs.config.ts`, `pages/`, `public/`) built by this engine through
+`scripts/docs-sites.mjs`; the Doxygen parts are in `doxygen/`. Sections below that speak of a site's own `kit/`
+folder, `package.json`, `vite.config.ts` or `fetch-kit` describe how the sites were built while each had its own
+repository (before 2026-11-16) and are kept for the reasoning behind the engine's options.
 
 ---
 
 ## Contents
 
 1. [Layout](#layout)
-2. [Distribution: fetched from levimc.org](#distribution-fetched-from-levimcorg)
+2. [Part of levimc.org](#part-of-levimcorg)
 3. [Dependencies](#dependencies)
 4. [Docs site: app structure & commands](#docs-site-app-structure--commands)
 5. [Site config API (`defineDocsConfig`)](#site-config-api-definedocsconfig)
@@ -46,8 +53,8 @@ Version: see `VERSION` (2.21.0) and the [Changelog](#changelog) (with migration 
 ## Layout
 
 ```
-levimc-kit/
-├── README.md  VERSION  package.template.json  tsconfig.template.json
+src/kit/
+├── README.md  VERSION
 ├── theme/                 Tailwind v4 CSS-first theme
 │   ├── tailwind.css         one-line entry: @import "tailwindcss" + index.css + @source for the kit
 │   ├── index.css            imports everything below except hero.css (use after your own @import "tailwindcss")
@@ -97,56 +104,39 @@ levimc-kit/
 │   ├── kit.js (built from kit.src.js)  theme-init.js  theme-init-static.js  theme-init-doxygen.js
 │   ├── globalbar.html  footer.html  i18n/{globalbar,footer}.<locale>.html
 │   ├── pages/index.html  pages/404.html     former docs.levimc.org root redirect + themed 404
-│   ├── doxygen/header.html footer.html doxygen-kit.css gen-header.mjs header-parts.json patch-navtree.mjs
 │   └── icons/  grass.svg  levimc.svg  nojs-dark.mjs  snippets.tsx  build-static.mjs
-├── scripts/               publish-kit · fetch-kit · chrome-parity · serve-pages · linkcheck · url-parity · text-parity · smoke · shot · vendor · mkdocs-nav
+├── scripts/               chrome-parity · serve-pages · linkcheck · url-parity · text-parity · smoke · shot · mkdocs-nav
 ├── tests/                 prefs.test.mjs (node --test: cookies, locale mapping, inline scripts) ·
 │                          static.test.mjs (no-JS dark CSS, kit.js: footer year, chrome-only translation) ·
 │                          render.test.mjs (rendering budget of the CSS, backdrop tiles, hero files) ·
 │                          cross-site.e2e.mjs (Playwright: preferences shared by levimc.org and a docs site at levimc.org/<base>/)
-├── demo/                  demo sites (not published): docs (suffix/directory/pymdownx), lip (folder/html/vitepress),
-│                          single (the docs as a single-locale site), app/ (plain Vite + React app, the
-│                          levimc.org / levimc.org/mods shape); pinned package-lock.json
-└── screens/               review screenshots (not published)
+└── demo/                  the engine's test sites (not published): docs.config.ts (suffix/directory/pymdownx),
+                           lip.config.ts (folder/html/vitepress), single.config.ts (the docs as a single-locale site)
+
+doxygen/                   (repository root) the Doxygen chrome build-static.mjs writes — header.html, footer.html,
+                           header-parts.json — with doxygen-kit.css, gen-header.mjs and patch-navtree.mjs, beside the
+                           Doxyfile they serve
 ```
 
-## Distribution: fetched from levimc.org
+## Part of levimc.org
 
-The kit lives in **LiteLDev/levimc.org** (`kit/`, with its `demo/` and CI in `.github/workflows/ci.yml`); it is the
-one source of the LeviMC chrome — bar, footer, theme, docs engine, Doxygen header/footer — for every LeviMC site.
-Each levimc.org deploy publishes it next to the site (`scripts/publish-kit.mjs`):
+The kit is the one source of the LeviMC chrome — bar, footer, theme, docs engine, Doxygen header/footer — and since
+2.31 every LeviMC site is built from this repository, in one package (`package.json` at the root; `npm ci` once):
 
-| URL | Content |
-|---|---|
-| `https://levimc.org/kit/v2/manifest.json` | `{ version, build, sha256, files, bytes }` — `build` is a content hash of the kit |
-| `https://levimc.org/kit/v2/kit.json` | every file of the kit (minus `demo/`, `screens/`, …) in one JSON document |
+| Site | Source | Built by |
+|---|---|---|
+| levimc.org (home, about, community, support, blog) | `src/main/` | `node scripts/build.mjs main` |
+| LeviMC Mods (`/mods/`) | `src/mods/`, `content/mods/repos.txt` | `node scripts/build.mjs mods` (`scripts/mods/run.mjs`) |
+| tutorials, FAQ, every project's docs | `content/<Site>/` | `node scripts/build.mjs docs` (`scripts/docs-sites.mjs`) |
+| LeviLamina's API reference (`/LeviLamina/api/`) | `doxygen/` | `doxygen/build.sh`, after the build |
 
-Sites follow one major version (`v2/`); a breaking kit 3 is published next to it and adopted site by site.
-`publish-kit.mjs` stamps `build` into `components/version.ts` (`KIT_BUILD`) of the published copy and of levimc.org's
-own build, so every page carries `<meta name="generator" content="levimc-kit 2.0.0+<build>">` and
-`curl -s <url> | grep generator` shows which kit a deployment runs.
+`npm run build` makes them all into `dist/`. A change to the kit reaches every site with that build: there is no
+copy to refresh and no version to publish (until 2.30 levimc.org published the kit at `levimc.org/kit/v2/` and each
+site fetched it into a git-ignored `kit/` folder with `scripts/fetch-kit.mjs`; `vendor.mjs` copied it locally).
+`<meta name="generator" content="levimc-kit <version>">` is on every page the kit renders.
 
-**In a site** — copy `scripts/fetch-kit.mjs` into the app as `scripts/fetch-kit.mjs`, git-ignore `kit/`, and run it
-from the package install:
-
-```jsonc
-// package.json
-"scripts": { "postinstall": "node scripts/fetch-kit.mjs", "kit": "node scripts/fetch-kit.mjs", … }
-```
-
-`fetch-kit.mjs` downloads `manifest.json`, leaves an up-to-date `kit/` alone, otherwise downloads `kit.json`, checks
-its sha256 and replaces `kit/` (writing `kit/.vendored`). `LEVIMC_KIT_SOURCE=<levimc.org checkout>/kit npm run kit`
-installs a local kit checkout instead — to try kit changes in a site before they are published. Offline, an installed
-kit is kept with a warning (in CI, `$CI`, it fails). Never edit `kit/` in a site.
-
-**Keeping sites current** — since 2026-11-16 the docs sites are built in levimc.org's repository (`docs/<Project>/`)
-with its kit, by every deploy (levimc.org's `sync` job, which ran the sites' own workflows, is gone). A site still
-built elsewhere runs its workflow hourly: its `kit` job compares the published `manifest.json` with the
-generator meta of the live site and builds only when they differ. `node kit/scripts/chrome-parity.mjs` fetches one
-page of every LeviMC site and checks that they show the same bar and footer (local previews:
-`http://127.0.0.1:4173/=https://levimc.org`).
-
-`scripts/vendor.mjs` still copies a kit checkout into a folder (the demo uses it: `cd demo && npm run vendor`).
+`node src/kit/scripts/chrome-parity.mjs` fetches one page of every LeviMC site and checks that they show the same
+bar and footer (local previews: `http://127.0.0.1:4173/=https://levimc.org`).
 
 ## Dependencies
 
@@ -184,18 +174,26 @@ includes `kit/components` (and `kit/ssg`), not `kit/**` (the docs engine needs t
 
 ## Docs site: app structure & commands
 
-A docs site is the repository's existing markdown plus four small files:
+A docs site is a folder of `content/` (see `content/README.md`):
 
 ```
-<repo>/
-├── kit/                     levimc-kit (fetched; git-ignored)
+content/<Site>/
 ├── docs.config.ts           defineDocsConfig({...})            (replaces mkdocs.yml / .vitepress/config.mts)
-├── vite.config.ts           plugins: [kitDocs(docs)]
-├── tsconfig.json            from tsconfig.template.json
-├── package.json             from package.template.json
-├── .gitignore               node_modules/ dist/ .kit/
-└── docs/… (contentDir)      unchanged markdown, images, logo.svg …
+├── pages/ (contentDir)      the markdown, images, logo.svg …
+├── public/                  static files served at the site root (optional)
+└── scripts/prebuild.mjs     run before every build and dev server (optional: generated pages, downloads)
 ```
+
+```sh
+node scripts/docs-sites.mjs build <Site>     # → .build/docs/<Site>/dist/, then its link check
+node scripts/docs-sites.mjs dev <Site>       # dev server, rebuilt as you edit
+```
+
+`scripts/docs-sites.mjs` loads the config and runs Vite with the repository as its root (the engine's own app,
+`src/kit/docs/app/`, must be inside Vite's root), `kitDocs(config, { configRoot, workDir })`: `configRoot` is the
+site's folder (the config's relative paths resolve against it), `workDir` where the SSR bundle and
+`client-pages.json` go (`.build/docs/<Site>/.kit/`). The rest of this section describes a site as a package of its
+own with the kit in its `kit/` folder, as each was before 2.31.
 
 ### Where the app lives
 
@@ -266,7 +264,7 @@ GitHub Actions (Pages):
 - uses: actions/setup-node@v4
   with: { node-version: 24 }
 - run: npm ci && npm run build
-- run: node kit/scripts/linkcheck.mjs dist --base /<Project>/ --site-origin https://levimc.org
+- run: node src/kit/scripts/linkcheck.mjs dist --base /<Project>/ --site-origin https://levimc.org
 - uses: actions/upload-pages-artifact@v5
   with: { path: dist }
 ```
@@ -443,7 +441,7 @@ Docusaurus (`groupId` tabs), Microsoft Learn (zone pivots) and most multi-platfo
 `bookQuill`, `torch`, …) or an emoji. Links in frontmatter are resolved like markdown links.
 
 Generate a starting config from an existing `mkdocs.yml`:
-`node kit/scripts/mkdocs-nav.mjs path/to/mkdocs.yml > docs.config.generated.json`.
+`node src/kit/scripts/mkdocs-nav.mjs path/to/mkdocs.yml > docs.config.generated.json`.
 
 ### Header (kit 2.22: the LeviMC bar only)
 
@@ -724,36 +722,37 @@ YouTube `https://www.youtube.com/@LeviLamina`, `mailto:contact@levimc.org`. lip'
   `/levimc-kit/` (copy `kit.css`, `kit.js`, `kit-nojs-dark.css`, `icons/`, `levimc.svg` there; levimc.org's
   `legacy/build.mjs` builds its legacy redirect pages from `pages/404.html` and copies exactly what they reference).
 
-### LeviLamina Doxygen (`docs/api/`)
+### LeviLamina Doxygen (`doxygen/`)
 
 The API reference carries the docs pages' header, generated from the docs build's navigation, so the two never
-drift:
+drift. Its sources are in `doxygen/` at the repository root: the `Doxyfile`, `DoxygenLayout.xml`, `mainpage.md`,
+`logo.svg`, and the kit's parts — `doxygen-kit.css`, `gen-header.mjs`, `patch-navtree.mjs`, and `header-parts.json`,
+`header.html`, `footer.html`, which `static/build-static.mjs` writes there. `doxygen/build.sh` runs it all from the
+repository root after `npm run build`:
 
 ```sh
-# after the docs build (it writes dist/_kit/nav.json); without --nav: the kit's copy of LeviLamina's sections
-node docs/main/kit/static/doxygen/gen-header.mjs --nav docs/main/dist/_kit/nav.json --out docs/api/header.html \
-  --chrome-out docs/api/kit-dox-chrome.js \
-  --footer docs/main/kit/static/doxygen/footer.html --footer-out docs/api/footer.html
-doxygen docs/api/Doxyfile
-node docs/main/kit/static/doxygen/patch-navtree.mjs site/api
+# the docs build wrote dist/LeviLamina/_kit/nav.json; without --nav: the kit's copy of LeviLamina's sections
+node doxygen/gen-header.mjs --nav dist/LeviLamina/_kit/nav.json --out .cache/doxygen/header.html \
+  --chrome-out .cache/doxygen/kit-dox-chrome.js --footer doxygen/footer.html --footer-out .cache/doxygen/footer.html
+doxygen doxygen/Doxyfile                                  # → dist/LeviLamina/api/
+node doxygen/patch-navtree.mjs dist/LeviLamina/api
 ```
 
 ```
-HTML_HEADER            = docs/api/header.html                        (generated, git-ignored)
-HTML_FOOTER            = docs/api/footer.html                        (generated, git-ignored)
-HTML_EXTRA_STYLESHEET  = docs/api/doxygen-awesome-css/doxygen-awesome.css docs/main/kit/static/kit-chrome.css docs/main/kit/static/doxygen/doxygen-kit.css
-HTML_EXTRA_FILES       = docs/main/kit/static/kit.js docs/api/kit-dox-chrome.js   (the second generated, git-ignored)
-PROJECT_ICON           = docs/main/contents/favicon.ico              (the docs' favicon)
-USE_MDFILE_AS_MAINPAGE = docs/api/mainpage.md                        (also listed in INPUT)
+INPUT                  = .cache/doxygen/LeviLamina/src/…  doxygen/mainpage.md   (LiteLDev/LeviLamina, checked out there)
+HTML_HEADER            = .cache/doxygen/header.html                  (generated)
+HTML_FOOTER            = .cache/doxygen/footer.html                  (generated)
+HTML_EXTRA_STYLESHEET  = .cache/doxygen/doxygen-awesome-css/doxygen-awesome.css src/kit/static/kit-chrome.css doxygen/doxygen-kit.css
+HTML_EXTRA_FILES       = src/kit/static/kit.js .cache/doxygen/kit-dox-chrome.js   (the second generated)
+USE_MDFILE_AS_MAINPAGE = doxygen/mainpage.md                         (also listed in INPUT)
 HTML_COLORSTYLE_HUE    = 135   SAT = 40   GAMMA = 90                 (Doxygen's own images in the kit green)
 ```
 
-In CI (LeviLamina `.github/workflows/build-docs.yml`) `build-doxygen` runs after `build-docs`, takes `_kit/nav.json`
-from its artifact, generates the header, runs Doxygen and the navtree patch; `merge` puts the output under
-`dist/api/` as before. `static/doxygen/header-parts.json` holds the React-rendered parts gen-header needs (bar,
-LeviMC links, sprites, chrome strings, the nav-fit script) — gen-header itself has no dependencies.
-`static/doxygen/header.html` is the same header rendered from the fallback nav (`build-static.mjs`). Drop
-`doxygen-awesome-darkmode-toggle.js` (kit.js owns the theme and keeps `html.dark-mode` / `html.light-mode` in sync).
+Everything fetched or generated goes to `.cache/doxygen/` (git-ignored). `doxygen/header-parts.json` holds the
+React-rendered parts gen-header needs (bar, LeviMC links, sprites, chrome strings, the nav-fit script) — gen-header
+itself has no dependencies. `doxygen/header.html` is the same header rendered from the fallback nav
+(`build-static.mjs`). Drop `doxygen-awesome-darkmode-toggle.js` (kit.js owns the theme and keeps `html.dark-mode` /
+`html.light-mode` in sync).
 
 **Header.** `<title>`: `$title - LeviLamina API`. The LeviMC bar (its language menu lists the docs' locales — the
 API is one English reference for all of them; a choice relabels the bar, footer and the site column in place and
@@ -799,30 +798,30 @@ All are Node ESM with no dependencies beyond Playwright (where noted).
 ```sh
 # GitHub Pages emulation: file → 200, /x → x.html, /x → 301 /x/ for any directory, repeated slashes collapsed
 # (//about/ serves about/index.html), else 404.html (404)
-node kit/scripts/serve-pages.mjs dist --base /LeviLamina/ --port 4173
+node src/kit/scripts/serve-pages.mjs dist --base /LeviLamina/ --port 4173
 
 # internal links (+ redirects + #anchors); --external checks every external URL with curl
-node kit/scripts/linkcheck.mjs dist --base /LeviLamina/ --site-origin https://levimc.org \
+node src/kit/scripts/linkcheck.mjs dist --base /LeviLamina/ --site-origin https://levimc.org \
      [--external] [--allow-redirect-hosts aka.ms,discord.gg,qm.qq.com] [--ignore-paths /LeviLamina/api/] [--json out.json]
 
 # every live URL (sitemap.xml, else crawl) must answer 200 with 0 redirects locally;
 # --anchors also requires every live heading id (old #deep-links) to exist on the local page
-node kit/scripts/url-parity.mjs --live https://levimc.org/LeviLamina/ --local http://127.0.0.1:4173/LeviLamina/ --anchors
+node src/kit/scripts/url-parity.mjs --live https://levimc.org/LeviLamina/ --local http://127.0.0.1:4173/LeviLamina/ --anchors
 
 # word-level text diff of the main content, live vs local (Playwright)
-node kit/scripts/text-parity.mjs --live https://levimc.org/LeviLamina/ --local http://127.0.0.1:4173/LeviLamina/ \
+node src/kit/scripts/text-parity.mjs --live https://levimc.org/LeviLamina/ --local http://127.0.0.1:4173/LeviLamina/ \
      [--paths a/,b/ | --paths-file f] [--live-selector 'article.md-content__inner' | '.vp-doc'] [--json out.json]
      # a path may differ per side: --paths 'daemon/overview.html=>daemon/overview/'
 
 # browser smoke test (Playwright): docs mode, or app mode for plain Vite apps
-node kit/scripts/smoke.mjs --url http://127.0.0.1:4173/LeviLamina/ [--search-term hook] [--pages a/,b/,c/] [--redirect-lang zh]
-node kit/scripts/smoke.mjs --app --url http://127.0.0.1:4173/ [--pages about/,projects/] [--current home] [--not-found missing/]
+node src/kit/scripts/smoke.mjs --url http://127.0.0.1:4173/LeviLamina/ [--search-term hook] [--pages a/,b/,c/] [--redirect-lang zh]
+node src/kit/scripts/smoke.mjs --app --url http://127.0.0.1:4173/ [--pages about/,projects/] [--current home] [--not-found missing/]
 
 # kit unit tests (cookies, locale mapping, pre-paint script, docs root redirect) and the cross-site e2e
 node --test "kit/tests/*.test.mjs"
-node kit/tests/cross-site.e2e.mjs --app <app dist> --docs <docs dist> --docs-base /Demo/
+node src/kit/tests/cross-site.e2e.mjs --app <app dist> --docs <docs dist> --docs-base /Demo/
 
-node kit/scripts/shot.mjs <url> <out.png> [light|dark] [w] [h] [--full]
+node src/kit/scripts/shot.mjs <url> <out.png> [light|dark] [w] [h] [--full]
 ```
 
 Both smoke modes check the unified chrome: the GlobalBar's canonical tabs (in order, with their canonical
@@ -894,7 +893,7 @@ External link verdicts: `ok`, `ok-redirect` (`/releases/latest` and allow-listed
 ## Porting checklist: MkDocs sites (LeviLamina, LegacyScriptEngine)
 
 1. Vendor the kit; add `package.json` (template), `tsconfig.json`, `vite.config.ts`, `.gitignore`.
-2. `node kit/scripts/mkdocs-nav.mjs mkdocs.yml` → paste into `docs.config.ts`. Keep `urlStyle: 'directory'`,
+2. `node src/kit/scripts/mkdocs-nav.mjs mkdocs.yml` → paste into `docs.config.ts`. Keep `urlStyle: 'directory'`,
    `i18n.mode: 'suffix'` (locales `en` default + `zh`, `lang: 'zh'` like the live site), `slug: 'pymdownx'`,
    `markdown.compat: 'python-markdown'`, `sidebar: 'tabs'`, `hostname`/`sitemap: { hostname: 'https://levimc.org' }`.
 3. `exclude: ['overrides/**']` (theme overrides are not content). Delete `mkdocs.yml`, `requirements.txt`,
@@ -964,28 +963,43 @@ External link verdicts: `ok`, `ok-redirect` (`/releases/latest` and allow-listed
 
 ## Maintaining the kit
 
-* Sprites: edit `assets/sprites.mjs`, then `node assets/build-assets.mjs` (regenerates `assets/icons/`,
+Commands run from the repository root, with the site's dependencies installed (`npm ci`).
+
+* Sprites: edit `assets/sprites.mjs`, then `npm run kit:assets` (regenerates `assets/icons/`,
   `components/pixel-icons.ts`, `theme/generated.css` — including the painted backdrop scenes from
   `components/paint.ts` — and `theme/hero.css`).
-* Static chrome: from an app with the dependencies installed (e.g. `demo/`):
-  `node kit/static/build-static.mjs --out ../static` (snippets, `kit.js` from `kit.src.js`, `kit.css`,
-  `kit-chrome.css`, `kit-nojs-dark.css`, pages, Doxygen templates). Rebuild it after any change to the
+* Static chrome: `npm run kit:static` (snippets, `kit.js` from `kit.src.js`, `kit.css`, `kit-chrome.css`,
+  `kit-nojs-dark.css`, pages, and the Doxygen templates in `doxygen/`). Rebuild it after any change to the
   components, the theme CSS, `prefs.ts` or `i18n.ts`.
-* Demo: `cd demo && npm ci && npm run vendor && npm run typecheck && npm test && npm run build && npm run preview`,
-  then `npm run linkcheck`, `npm run smoke`; the folder-mode lip demo: `npm run build:lip && npm run preview:lip`;
-  the single-locale docs: `npm run build:single && npm run preview:single && npm run smoke:single`; the plain app:
-  `npm run build:app && npm run preview:app && npm run smoke:app`; cross-site:
-  `node kit/tests/cross-site.e2e.mjs --app app/dist --docs dist`. `demo/package-lock.json` pins the dependency
-  set the kit is verified with; the demo's `kit/` is a copy (`npm run vendor`, git-ignored).
-* Every merge to levimc.org's `main` publishes the kit (see [Distribution](#distribution-fetched-from-levimcorg));
-  sites rebuild with it on their own. Bump `VERSION` and `components/version.ts` together for a release (the tests
-  and build-static check they agree) and add a [Changelog](#changelog) entry with migration notes; a change that
-  breaks sites gets a new major, published at `kit/v<major>/`.
-* The kit's CI (the `kit` job of `.github/workflows/ci.yml` in levimc.org) runs the unit tests and builds, type-checks and
-  link-checks every demo; `screens/` is not published. Before merging a chrome change, preview it in the sites with
-  `LEVIMC_KIT_SOURCE=<checkout>/kit` and run `scripts/chrome-parity.mjs` against the previews.
+* Test sites: `node scripts/docs-sites.mjs build src/kit/demo src/kit/demo/lip.config.ts src/kit/demo/single.config.ts`
+  builds and link-checks the three (→ `.build/docs/demo/`, `demo-lip/`, `demo-single/`); serve one with
+  `node src/kit/scripts/serve-pages.mjs .build/docs/demo/dist --base / --port 4173`, then
+  `node src/kit/scripts/smoke.mjs --url http://127.0.0.1:4173/Demo/`. Cross-site:
+  `node src/kit/tests/cross-site.e2e.mjs --app dist --docs .build/docs/demo/dist`.
+* Bump `VERSION` and `components/version.ts` together for a release (the tests and build-static check they agree)
+  and add a [Changelog](#changelog) entry.
+* CI (`.github/workflows/ci.yml`) type-checks, tests and builds the whole site and the test sites on every pull
+  request. Before merging a chrome change, run `scripts/chrome-parity.mjs` against a preview.
 
 ## Changelog
+
+### 2.31.0
+
+The kit is a source folder of levimc.org (`src/kit/`), in the site's one package: no copy in each site, nothing
+fetched, nothing published.
+
+* **Removed:** `scripts/vendor.mjs`, `scripts/fetch-kit.mjs`, `scripts/publish-kit.mjs`, `package.template.json`,
+  `tsconfig.template.json`, the demo's plain app and its own package; `levimc.org/kit/v2/` is no longer published.
+  `KIT_BUILD` is `'dev'`: the generator meta is `levimc-kit <version>`.
+* **Docs engine:** `kitDocs(config, { configRoot, workDir })` — the config's relative paths resolve against
+  `configRoot` (default: Vite's root) and the intermediate files go to `workDir` (default `<root>/.kit`), so a site
+  can be a folder of content (`content/<Site>/`) built with the repository as Vite's root; `prerenderDocs({ workDir })`
+  and `prerender.mjs --work-dir`. `docs/app/styles.css` scans only the kit's own markup for utility classes
+  (`source(none)`), not whatever is under Vite's root.
+* **"Last updated"** follows a page through renames: a commit that only moved a page does not count as an update
+  (`docs/node/git.ts`, one `git log --name-status -M` over the repository).
+* **Doxygen:** `static/doxygen/` moved to `doxygen/` at the repository root, beside the Doxyfile; `build-static.mjs`
+  writes `header.html`, `footer.html` and `header-parts.json` there.
 
 ### 2.30.0
 

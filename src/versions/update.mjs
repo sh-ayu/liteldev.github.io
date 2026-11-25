@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-// Minecraft's release versions behind /api/v4/mc/versions/ (versions/versions.json, published as
+// Minecraft's release versions behind /api/v4/mc/versions/ (src/versions/versions.json, published as
 // /api/v4/mc/versions/index.json by deploy.yml). Mojang's download API names only the latest release of each download,
 // so the history is this file: every run adds the version Mojang names now, if it is new.
 //
-//   node versions/update.mjs            # fetch, merge, write versions/versions.json when it changed
-//   node versions/update.mjs --dry-run  # fetch and merge, print what would change
+//   node src/versions/update.mjs            # fetch, merge, write src/versions/versions.json when it changed
+//   node src/versions/update.mjs --dry-run  # fetch and merge, print what would change
 //
 // Keys are lip's `<side>/<platform>` (platform: a .NET RID); each value lists the release versions, newest first,
 // exactly as Mojang spells them (`1.16.1.02` keeps its zero: it is part of the download's file name). Previews and

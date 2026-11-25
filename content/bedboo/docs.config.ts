@@ -2,7 +2,7 @@
 // LiteLDev/bedboo's docs/). The language first, as every levimc.org URL: English at /bedboo/, Simplified Chinese at
 // /zh-Hans/bedboo/ (sources in content/zh/), Traditional Chinese at /zh-Hant/bedboo/, converted from it. The URLs
 // before (/bedboo/zh-Hans/…, /bedboo/zh/…, /bedboo/zh-Hant/…) redirect.
-import { defineDocsConfig, type NavEntry } from './kit/docs/node/config.ts';
+import { defineDocsConfig, type NavEntry } from '../../src/kit/docs/node/config.ts';
 
 const repo = 'https://github.com/LiteLDev/bedboo';
 const site = 'https://github.com/LiteLDev/liteldev.github.io';
@@ -165,10 +165,10 @@ export default defineDocsConfig({
   project: 'bedboo',
   logo: { src: '/logo.png', alt: 'bedboo' },
   favicon: '/logo.png',
-  contentDir: 'content',
+  contentDir: 'pages',
   repo,
   // the sources live here now
-  editLink: `${site}/edit/main/docs/bedboo/content/:path`,
+  editLink: `${site}/edit/main/content/bedboo/pages/:path`,
   hostname: 'https://levimc.org',
   sitemap: { hostname: 'https://levimc.org' },
   i18n: {

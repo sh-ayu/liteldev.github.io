@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 // Prerender every route of a levimc-kit docs site into static HTML (run after the client + SSR builds).
-// Usage: node kit/docs/prerender.mjs [--root <appDir>]
+// Usage: node src/kit/docs/prerender.mjs [--root <appDir>] [--work-dir <dir>]   (the build's workDir, default <root>/.kit)
 import { existsSync, mkdirSync, readFileSync, rmdirSync, rmSync, writeFileSync, realpathSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 
-export async function prerenderDocs({ root = process.cwd(), outDir } = {}) {
-  const ssrEntry = join(root, '.kit/ssr/entry-server.js');
-  const manifestPath = join(root, '.kit/client-pages.json');
+export async function prerenderDocs({ root = process.cwd(), outDir, workDir = join(root, '.kit') } = {}) {
+  const ssrEntry = join(workDir, 'ssr/entry-server.js');
+  const manifestPath = join(workDir, 'client-pages.json');
   if (!existsSync(ssrEntry)) throw new Error(`SSR bundle not found at ${ssrEntry} — run the SSR build first.`);
   const mod = await import(pathToFileURL(ssrEntry).href);
   const { site, routes, render, pageUrl } = mod;
@@ -59,6 +59,7 @@ if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.me
   const args = process.argv.slice(2);
   const root = args.includes('--root') ? resolve(args[args.indexOf('--root') + 1]) : process.cwd();
   const t0 = Date.now();
-  const { count } = await prerenderDocs({ root });
+  const workDir = args.includes('--work-dir') ? resolve(args[args.indexOf('--work-dir') + 1]) : undefined;
+  const { count } = await prerenderDocs({ root, workDir });
   console.log(`[kit-docs] prerendered ${count} pages + 404.html in ${Date.now() - t0} ms`);
 }

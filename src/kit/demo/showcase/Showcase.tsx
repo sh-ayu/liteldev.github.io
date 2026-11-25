@@ -1,16 +1,16 @@
 // Demo-only custom layout (config.layouts.showcase): a gallery of every levimc-kit component.
 import './showcase.css';
 import { useRef, useState, type ReactNode } from 'react';
-import type { CustomLayoutProps } from '../kit/docs/app/layout-api';
-import { KitLink, useContentEnhancements, href } from '../kit/docs/app/layout-api';
-import { PaintedHero } from '../kit/components/PaintedHero';
-import { PixelButton } from '../kit/components/PixelButton';
-import { Badge } from '../kit/components/Badge';
-import { Tooltip } from '../kit/components/Tooltip';
-import { Card } from '../kit/components/Card';
-import { HotbarTabs, Pagination } from '../kit/components/Hotbar';
-import { PixelIcon, BrandIcon } from '../kit/components/PixelIcon';
-import { PIXEL_ICONS, type PixelIconName } from '../kit/components/pixel-icons';
+import type { CustomLayoutProps } from '../../docs/app/layout-api';
+import { KitLink, useContentEnhancements, href } from '../../docs/app/layout-api';
+import { PaintedHero } from '../../components/PaintedHero';
+import { PixelButton } from '../../components/PixelButton';
+import { Badge } from '../../components/Badge';
+import { Tooltip } from '../../components/Tooltip';
+import { Card } from '../../components/Card';
+import { HotbarTabs, Pagination } from '../../components/Hotbar';
+import { PixelIcon, BrandIcon } from '../../components/PixelIcon';
+import { PIXEL_ICONS, type PixelIconName } from '../../components/pixel-icons';
 
 const SWATCHES: [string, string][] = [
   ['canvas', '--color-canvas'],

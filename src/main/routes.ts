@@ -30,10 +30,10 @@ export const ROUTES: readonly { id: RouteId; path: string }[] = [
  * manifest), so prerender.mjs can modulepreload the chunk of the page each file shows. Keep in step with App.tsx.
  */
 export const ROUTE_MODULES: Partial<Record<RouteId, string>> = {
-  community: 'src/pages/Community.tsx',
-  about: 'src/pages/About.tsx',
-  support: 'src/pages/Support.tsx',
-  blog: 'src/blog/Blog.tsx',
+  community: 'pages/Community.tsx',
+  about: 'pages/About.tsx',
+  support: 'pages/Support.tsx',
+  blog: 'blog/Blog.tsx',
 };
 
 /** A blog post or one of the blog's pages: written in one language, at one URL (never prefixed with a locale). */

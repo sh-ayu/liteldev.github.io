@@ -4,11 +4,11 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
-import { renderDoxygenChrome, renderDoxygenHeader } from '../static/doxygen/gen-header.mjs';
+import { renderDoxygenChrome, renderDoxygenHeader } from '../../../doxygen/gen-header.mjs';
 
 const read = (p) => readFileSync(new URL(p, import.meta.url), 'utf8').replace(/\r\n/g, '\n');
-const parts = JSON.parse(read('../static/doxygen/header-parts.json'));
-const footerSrc = read('../static/doxygen/footer.html');
+const parts = JSON.parse(read('../../../doxygen/header-parts.json'));
+const footerSrc = read('../../../doxygen/footer.html');
 const source = 'the kit fallback nav (build-static.mjs)';
 const LOGO_TOKEN = '$relpath^$projectlogo';
 
@@ -41,7 +41,7 @@ function loadScript(script) {
 }
 
 test('renderDoxygenHeader: the inline header is the one build-static wrote (static/doxygen/header.html)', () => {
-  assert.equal(renderDoxygenHeader(parts.fallbackNav, parts, { source }), read('../static/doxygen/header.html'));
+  assert.equal(renderDoxygenHeader(parts.fallbackNav, parts, { source }), read('../../../doxygen/header.html'));
 });
 
 for (const logo of ['../../logo.svg', '']) {

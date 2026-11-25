@@ -1,6 +1,6 @@
 # Pictures of the apps
 
-This page is for whoever writes the tutorials. It is not a page of the site (it is not under `content/`).
+This page is for whoever writes the tutorials. It is not a page of the site (it is not under `pages/`).
 
 The pictures of the launchers and the other apps with a window are not screenshots of somebody's desktop. Each is an
 SVG file drawn from a capture of the **real interface** of the app, made by a script that starts the app with **fake
@@ -9,21 +9,21 @@ The annotations are drawn above the capture as vectors, in the visual language o
 interface (lip: `docs/SCREENSHOTS.md`), so that every tutorial of the site points at things the same way.
 
 ```
-tutorials/scripts/shots/
+content/tutorials/scripts/shots/
   annotate.mjs        the annotator: a spec and a capture → one SVG per language (CLI and module)
-  annotate.test.mjs   its tests: npm run shots:test
+  annotate.test.mjs   its tests (part of npm test)
   demo/               capture.mjs (an example capture script, on mock pages), shots.json, captures/, out/
   <app>/              the capture script of each app, with its specs (added with the tutorials of the app)
   levilauncher-android/   LeviLauncher for Android on an emulator (adb, uiautomator): see its README.md
   levilauncher-windows/   LeviLauncher for Windows, for play/play-with-mods (its README.md says how to run it)
-tutorials/content/<section>/images/<lang>/<name>.svg     the pictures: en, zh-Hans, zh-Hant
+content/tutorials/pages/<section>/images/<lang>/<name>.svg     the pictures: en, zh-Hans, zh-Hant
 ```
 
 ## Making the pictures
 
 ```sh
-cd tutorials
-npm run shots:annotate -- scripts/shots/<app>/shots.json --out content/<section>/images
+cd content/tutorials
+node scripts/shots/annotate.mjs scripts/shots/<app>/shots.json --out pages/<section>/images
 ```
 
 `node scripts/shots/annotate.mjs <spec.json>... [--out <dir>]` writes `<dir>/<lang>/<name>.svg` for every spec and
@@ -38,7 +38,7 @@ A capture script (`scripts/shots/<app>/`) imports the module instead:
 import { assertDesensitized, writeShots } from '../annotate.mjs';
 
 assertDesensitized(await page.evaluate(() => document.body.innerText)); // before every capture
-await writeShots(spec, 'content/play/images', { baseDir: here });      // or renderShot(spec, lang) → string
+await writeShots(spec, 'pages/play/images', { baseDir: here });      // or renderShot(spec, lang) → string
 ```
 
 | Export | |
@@ -134,14 +134,14 @@ read on a light and on a dark interface, and on the light and the dark theme of 
 
 - A picture is named `<topic>-<nn>-<what>`: `play-with-mods-05-install`, `android-launcher-04-import`. The
   topic is the tutorial, `nn` the order within it from `01`. A name is used once in the tutorials.
-- The pictures of a page are in `tutorials/content/<section>/images/<lang>/<name>.svg`, next to the English page.
-- A page refers to them relatively. From `content/play/play-with-mods.md`:
+- The pictures of a page are in `content/tutorials/pages/<section>/images/<lang>/<name>.svg`, next to the English page.
+- A page refers to them relatively. From `pages/play/play-with-mods.md`:
 
   ```markdown
   ![The "Launch" page of LeviLauncher: the "Current Instance" is "Survival", with LeviLamina, and "Launch" starts it.](./images/en/play-with-mods-06-launch.svg)
   ```
 
-  and from `content/zh-Hans/play/play-with-mods.md`:
+  and from `pages/zh-Hans/play/play-with-mods.md`:
 
   ```markdown
   ![LeviLauncher 的“启动”页面：“当前实例”为“Survival”，装有 LeviLamina，“启动”按钮启动它。](../../play/images/zh-Hans/play-with-mods-06-launch.svg)

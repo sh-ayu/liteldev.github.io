@@ -117,11 +117,11 @@ git push
 
 ## 7. 上架 LeviMC 模组
 
-[LeviMC 模组](https://levimc.org/zh-Hans/mods/)是 `lip` 的「市场」页和 LeviLauncher 显示的目录。它由一份仓库列表构建，即 levimc.org 仓库中的 [`mods/repos.txt`](https://github.com/LiteLDev/liteldev.github.io/blob/main/mods/repos.txt)。
+[LeviMC 模组](https://levimc.org/zh-Hans/mods/)是 `lip` 的「市场」页和 LeviLauncher 显示的目录。它由一份仓库列表构建，即 levimc.org 仓库中的 [`content/mods/repos.txt`](https://github.com/LiteLDev/liteldev.github.io/blob/main/mods/repos.txt)。
 
 通常你什么都不用做：每两小时会有一个机器人在 GitHub 上搜索带有 `lip.toml` 和 `lip` 能读取的版本标签的仓库，并发起拉取请求把它们加入列表。维护者合并后，模组会在下一次每小时构建中出现。
 
-想更快上架，可以自己发起这个拉取请求：在 GitHub 上编辑 [`mods/repos.txt`](https://github.com/LiteLDev/liteldev.github.io/blob/main/mods/repos.txt)，添加一行 `<you>/my-mod`。
+想更快上架，可以自己发起这个拉取请求：在 GitHub 上编辑 [`content/mods/repos.txt`](https://github.com/LiteLDev/liteldev.github.io/blob/main/mods/repos.txt)，添加一行 `<you>/my-mod`。
 
 目录收录一个包的条件是：
 

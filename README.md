@@ -4,9 +4,22 @@
 
 Source of the LeviMC website at [levimc.org](https://levimc.org/), including LeviMC Mods and the project docs.
 
+It is one static site, built by one package into `dist/`:
+
+| Folder | What |
+| --- | --- |
+| `src/main/` | levimc.org itself: home, about, community, support and the blog |
+| `src/mods/` | LeviMC Mods (`/mods/`) |
+| `src/kit/` | the shared design system and the docs engine ([README](src/kit/README.md)) |
+| `src/legacy/`, `src/versions/` | redirect pages of retired sites and the 404 page; Minecraft's release versions (`/api/v4/mc/versions/`) |
+| `content/` | what the site says: the blog, the list of mods, the tutorials, the FAQ and every project's docs ([README](content/README.md)) |
+| `public/` | static files of levimc.org itself |
+| `doxygen/` | LeviLamina's API reference (`/LeviLamina/api/`), made by Doxygen after the build |
+| `scripts/` | the build and its checks |
+
 ## Install
 
-This project needs Node.js 22.12 or later.
+This project needs Node.js 22.22 or later.
 
 ```sh
 npm ci
@@ -15,15 +28,24 @@ npm ci
 ## Usage
 
 ```sh
-# Start the development server
-npm run dev
+# Start a development server
+npm run dev                  # levimc.org itself
+npm run dev:mods             # LeviMC Mods
+npm run dev:docs -- lip      # one docs site (node scripts/docs-sites.mjs list)
 
-# Build the static site into dist/
+# Build the whole static site into dist/
 npm run build
+
+# Check it
+npm run typecheck && npm run lint && npm test
+npm run linkcheck
 
 # Serve dist/ at http://127.0.0.1:4173/
 npm run preview
 ```
+
+`npm run build -- main docs` builds only those parts (`main`, `mods`, `docs`, `search`). The Mods build reads each
+repository from GitHub: set `GITHUB_TOKEN` to avoid its rate limits.
 
 ## Contributing
 

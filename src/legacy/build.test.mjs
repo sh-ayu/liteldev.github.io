@@ -25,8 +25,8 @@ import {
 } from './build.mjs';
 import { MOVED_SITES, ORIGIN, PROJECT_SITES } from './redirects.mjs';
 
-const repo = join(dirname(fileURLToPath(import.meta.url)), '..');
-// as before any project's docs are built here (docs/<Project>/): the deterministic table of the tests
+const repo = join(dirname(fileURLToPath(import.meta.url)), '../..');
+// as before any project's docs are built here (content/<Project>/): the deterministic table of the tests
 const D = forwardTable({ built: ['mods', 'tutorials'] });
 const fwd = (path, hash = '', search = '') => legacyForward(path, search, hash, D);
 const files = generate();
@@ -307,13 +307,13 @@ test('every page: the kit chrome — skip link, no-JS dark theme, generator, foo
 
 test('kit.js (from kit/static) runs the menus, the cross-site preferences and the footer year', () => {
   const js = files.get('_kit/kit.js').toString();
-  assert.equal(js, readFileSync(join(repo, 'kit/static/kit.js'), 'utf8'));
+  assert.equal(js, readFileSync(join(repo, 'src/kit/static/kit.js'), 'utf8'));
   for (const needle of ['levimc_theme', 'levimc_lang', 'Domain=levimc.org', '[data-kit-year]', '[data-kit-theme-value]', '[data-kit-lang-value]']) assert.ok(js.includes(needle), needle);
 });
 
 test('kit-nojs-dark.css is the kit\'s (kit.css\'s .dark rules as :root rules)', () => {
   const css = files.get(`_kit/${NOJS_DARK_CSS}`);
-  assert.equal(css.toString(), readFileSync(join(repo, 'kit/static', NOJS_DARK_CSS), 'utf8'));
+  assert.equal(css.toString(), readFileSync(join(repo, 'src/kit/static', NOJS_DARK_CSS), 'utf8'));
   assert.ok(css.toString().includes('--color-canvas:#0f1b26'), 'dark tokens');
   assert.ok(!/\.dark(?![\w-])/.test(css.toString().replace(/^\/\*[^\n]*\*\/\n/, '')), 'no .dark selector left');
 });
@@ -329,7 +329,7 @@ test('kit assets: every /_kit/ reference is published, nothing else', () => {
 });
 
 test('static GlobalBar reproduces the kit rendering for the Projects tab', () => {
-  const kit404 = readFileSync(join(repo, 'kit/static/pages/404.html'), 'utf8');
+  const kit404 = readFileSync(join(repo, 'src/kit/static/pages/404.html'), 'utf8');
   assert.ok(kit404.includes(globalBar('en')), 'en GlobalBar with aria-current on Projects matches kit/static/pages/404.html');
   const zh = globalBar('zh-CN', 'LeviLauncher');
   // Projects in the bar and in the phone menu + LeviLauncher in both Projects lists
@@ -337,7 +337,7 @@ test('static GlobalBar reproduces the kit rendering for the Projects tab', () =>
 });
 
 test('CLI rejects a missing <dist>', () => {
-  assert.throws(() => execFileSync(process.execPath, [join(repo, 'legacy/build.mjs')], { stdio: 'pipe' }), (e) => e.status === 2);
+  assert.throws(() => execFileSync(process.execPath, [join(repo, 'src/legacy/build.mjs')], { stdio: 'pipe' }), (e) => e.status === 2);
 });
 
 test('live: every redirect target answers 200 with no redirect and has every mapped heading id', { skip: !process.argv.includes('--live') && !process.env.LIVE }, () => {

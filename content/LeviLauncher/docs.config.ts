@@ -6,7 +6,7 @@
 // by task like mainstream multi-platform docs: where the platforms differ, a page shows `=== "Windows"` /
 // `=== "Android"` tabs (one site-wide choice: the visitor's device, their last pick or ?platform=), sections that
 // apply to one platform carry a <Badge platform="…" />, and whole pages a `platforms:` frontmatter.
-import { defineDocsConfig, type LocaleConfig, type NavEntry } from './kit/docs/node/config.ts';
+import { defineDocsConfig, type LocaleConfig, type NavEntry } from '../../src/kit/docs/node/config.ts';
 
 const repo = 'https://github.com/LiteLDev/LeviLauncher';
 
@@ -426,10 +426,10 @@ export default defineDocsConfig({
   logo: { src: '/logo.webp', dark: '/logo-dark.webp', alt: 'LeviLauncher' },
   favicon: '/logo.webp',
   ogImage: '/appicon.png',
-  contentDir: 'content',
+  contentDir: 'pages',
   repo,
   // the sources live here now
-  editLink: 'https://github.com/LiteLDev/liteldev.github.io/edit/main/docs/LeviLauncher/content/:path',
+  editLink: 'https://github.com/LiteLDev/liteldev.github.io/edit/main/content/LeviLauncher/pages/:path',
   // fallback: a locale without its own page (the Android privacy policy) shows the English one at its own URLs
   i18n: { mode: 'folder', defaultLocale: 'en-US', localeFirst: true, locales: LOCALES, fallback: true },
   urlStyle: 'html',

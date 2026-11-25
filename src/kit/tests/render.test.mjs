@@ -15,7 +15,7 @@ const SOURCES = [
     .filter((f) => f.endsWith('.css'))
     .map((f) => `../theme/${f}`),
   '../docs/app/docs.css',
-  '../static/doxygen/doxygen-kit.css',
+  '../../../doxygen/doxygen-kit.css',
 ].filter((f) => existsSync(url(f)));
 // The prebuilt chrome is checked once it is built from kit ≥ 2.19 sources (the painted backdrop's tiles are a marker
 // of that); an older build is reported as skipped: run `node kit/static/build-static.mjs`.

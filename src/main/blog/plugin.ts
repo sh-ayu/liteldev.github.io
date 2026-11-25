@@ -18,7 +18,8 @@ const R_DOC = '\0levimc-blog-doc:';
 const R_TOKENS = '/__levimc-blog-tokens.css';
 
 export function levimcBlog(): Plugin {
-  let root = process.cwd();
+  // the repository root (content/blog, .kit/), where every build runs; Vite's root is src/main
+  const root = process.cwd();
   let isSsr = false;
   let isBuild = false;
   let built: Promise<BuiltBlog> | null = null;
@@ -28,7 +29,6 @@ export function levimcBlog(): Plugin {
     name: 'levimc-blog',
     enforce: 'pre',
     config(vc, env) {
-      root = vc.root ? resolve(vc.root) : process.cwd();
       isSsr = !!env.isSsrBuild;
       isBuild = env.command === 'build';
       return {

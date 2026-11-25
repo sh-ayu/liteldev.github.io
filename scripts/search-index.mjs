@@ -30,8 +30,8 @@ import { pathToFileURL } from 'node:url';
 import MiniSearch from 'minisearch';
 import { fromHtml } from 'hast-util-from-html';
 import { toString } from 'hast-util-to-string';
-import { searchOptions, SNIPPET_STORE_CHARS } from '../kit/docs/shared/search.ts';
-import { NETWORK_LANGUAGE_SEGMENTS } from '../kit/components/projects.ts';
+import { searchOptions, SNIPPET_STORE_CHARS } from '../src/kit/docs/shared/search.ts';
+import { NETWORK_LANGUAGE_SEGMENTS } from '../src/kit/components/projects.ts';
 
 export const SEARCH_DIR = '_search';
 const TEXT_CHARS = 4000;

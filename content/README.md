@@ -1,54 +1,73 @@
-# docs/: every project's documentation
+# content/: what the site says
 
-Since 2026-11-16 the documentation of every LeviMC project is built here, by levimc.org's deploy, instead of in
-each project's repository (see [MIGRATION.md](../MIGRATION.md)). Each project is one **docs root**:
-`docs/<Project>/`, a levimc-kit docs site with its own `package.json` — the same shape as `tutorials/`. The folder
-name is the project's id in the kit (`PROJECTS` in `kit/components/projects.ts`: `LeviLamina`, `LegacyScriptEngine`,
-`lip`, `LeviLauncher`, `BeDD`, `bedboo`) and its base: `docs/lip/` is published at `levimc.org/lip/`.
+Everything levimc.org publishes that is written rather than programmed:
 
-The language is the first segment of every levimc.org URL: English at `/<Project>/…`, Simplified Chinese at
-`/zh-Hans/<Project>/…`, Traditional Chinese at `/zh-Hant/<Project>/…` (LeviLauncher also `/es/`, `/ru/`, `/de/`,
-`/ja/`, `/ko/`, `/fr/`). A docs root says so with `i18n.localeFirst: true`; its `dist/` then mirrors the host root
-(`dist/<Project>/…`, `dist/zh-Hans/<Project>/…`, `dist/404.html`) and is merged into levimc.org's `dist/` as it is.
-The URLs the project published before (`/<Project>/zh-Hans/…`, `/<Project>/zh/…`, `/lip/zh/x.html`,
-`/LeviLauncher/ja-JP/…`) keep working: list them in each locale's `formerPrefixes` and the build writes a redirect
-page at each old URL (query and #hash kept).
+| Folder | Published at | What |
+| --- | --- | --- |
+| `blog/` | `/blog/` | posts, pages and authors of the blog (rendered by `src/main/blog/`) |
+| `mods/repos.txt` | `/mods/` | the repositories LeviMC Mods lists (read by `src/mods/`) |
+| `tutorials/` | `/tutorials/` | step-by-step tutorials from a clean PC — a docs site |
+| `faq/` | `/faq/` | questions and answers — a docs site |
+| `LeviLamina/`, `LegacyScriptEngine/`, `lip/`, `LeviLauncher/`, `BeDD/`, `bedboo/` | `/<Project>/` | each project's documentation — a docs site |
 
-## How a docs root is built
+## Docs sites
 
-`scripts/docs-sites.mjs` (used by `.github/workflows/deploy.yml` and `ci.yml`) finds every `docs/*/package.json`
-— no list to edit — and, for the tutorials, the FAQ (`faq/`) and each of them:
+A **docs site** is a folder here with a `docs.config.ts`:
 
-1. `npm ci` (its `postinstall` vendors this checkout's `kit/` into the root's `kit/`),
-2. `npm run typecheck`,
-3. `npm run build` — npm runs the root's `prebuild` and `postbuild` scripts around it when they exist (generated
-   content, screenshots …),
-4. `npm run linkcheck`;
-
-then `merge` copies each root's `dist/` into levimc.org's `dist/`, without its `404.html` and `.nojekyll` (the site's
-root `404.html` serves every missing path and forwards old URLs, `legacy/build.mjs`); a file two builds publish
-fails the deploy. Locally:
-
-```sh
-npm ci && npm run build                     # levimc.org (dist/)
-node scripts/docs-sites.mjs build           # every docs root (or: … build docs/lip)
-node scripts/docs-sites.mjs merge dist
-npm run linkcheck && npm run preview        # http://127.0.0.1:4173/
+```
+content/<Site>/
+├── docs.config.ts        the site: base, title, languages, navigation (defineDocsConfig, src/kit/docs/node/config.ts)
+├── pages/                the markdown (and the images beside it)
+├── public/               static files served at the site's root (optional)
+└── scripts/              the site's own tools (optional); scripts/prebuild.mjs runs before every build and dev server
 ```
 
-While a project's docs are not here yet, its own repository publishes them: levimc.org's link check treats that
-project's paths (under every language) as another site's (`node scripts/docs-sites.mjs other-sites`), and the 404
-page forwards its language-first URLs (`/zh-Hans/lip/x.html`) to where the repository publishes them
-(`/lip/zh-Hans/x.html`; `LANGUAGE_SEGMENTS` in `legacy/redirects.mjs` for LeviLauncher's `ja-JP` …). Adding
-`docs/<Project>/package.json` turns both off for it: nothing else to edit. Once its docs are built here, an old URL
-without a redirect page (`/<Project>/zh/missing`) is forwarded language first.
+The folder name of a project's docs is the project's id in the kit (`PROJECTS` in `src/kit/components/projects.ts`)
+and its base: `content/lip/` is published at `levimc.org/lip/`. Nothing lists the sites: adding a folder with a
+`docs.config.ts` adds one. They share the site's one `package.json`, the docs engine (`src/kit/docs/`) and the
+type-check (`npm run typecheck` covers every `docs.config.ts`).
 
-## The shape of a project's docs
+```sh
+node scripts/docs-sites.mjs list             # the sites
+node scripts/docs-sites.mjs dev lip          # one site on a local server, rebuilt as you edit
+node scripts/docs-sites.mjs build lip        # → .build/docs/lip/dist/, then its link check
+npm run build                                # the whole of levimc.org, every docs site merged in (dist/)
+npm run linkcheck && npm run preview         # http://127.0.0.1:4173/
+```
 
-Every project's docs have the same four sections in the site column, in this order and no others (kit 2.26,
-"Navigation model" in `kit/README.md`):
+`build` runs, per site: its `scripts/prebuild.mjs` when it has one (lip writes its Traditional Chinese pages, BeDD
+downloads the protocol's AsyncAPI document), the build, and the link check of its own pages. `npm run build` then
+copies each site's build into `dist/`, without its `404.html` and `.nojekyll` (the site's root `404.html` serves
+every missing path and forwards old URLs, `src/legacy/build.mjs`); a file two builds publish fails the build.
 
-1. **Overview** (概览) — the home page, `content/index.md` of each locale: a plain doc page (`# <Project>`, a lead,
+A project without a folder here is taken to publish its docs from its own repository: levimc.org's link check
+treats that project's paths (under every language) as another site's (`node scripts/docs-sites.mjs other-sites`), and
+the 404 page forwards its language-first URLs (`/zh-Hans/<Project>/x`) to where the repository publishes them
+(`/<Project>/zh-Hans/x`; `LANGUAGE_SEGMENTS` in `src/legacy/redirects.mjs`). Adding `content/<Project>/docs.config.ts`
+turns both off for it. All six projects are here now.
+
+### URLs
+
+The language is the first segment of every levimc.org URL: English at `/<Site>/…`, Simplified Chinese at
+`/zh-Hans/<Site>/…`, Traditional Chinese at `/zh-Hant/<Site>/…` (LeviLauncher also `/es/`, `/ru/`, `/de/`, `/ja/`,
+`/ko/`, `/fr/`). A site says so with `i18n.localeFirst: true`; its build then mirrors the host root
+(`<Site>/…`, `zh-Hans/<Site>/…`, `404.html`) and is merged into levimc.org's `dist/` as it is. The URLs a project
+published before (`/<Project>/zh-Hans/…`, `/<Project>/zh/…`, `/lip/zh/x.html`, `/LeviLauncher/ja-JP/…`) keep working:
+they are listed in each locale's `formerPrefixes` and the build writes a redirect page at each old URL (query and
+#hash kept).
+
+### "Last updated"
+
+Each page shows the date of the last commit that changed its text (the deploy checks out the full history). A
+commit that only moves a page does not count, and a page's history is followed through moves — so reorganising
+`pages/` keeps the dates (`src/kit/docs/node/git.ts`).
+
+### The shape of a project's docs
+
+Every project's docs have the same four sections in the site column, in this order and no others ("Navigation
+model" in `src/kit/README.md`):
+
+1. **Overview** (概览) — the home page, `pages/index.md` of each locale: a plain doc page (`# <Project>`, a lead,
    the introduction and a short demo — no `layout: home` banner) and a section with no pages of its own:
    `{ text: 'Overview', link: '/' }` (the locale's home) first in `nav`.
 2. **Guides** (指南) — how to do one thing with one feature, step by step; troubleshooting last, in a `Help` group.
@@ -58,56 +77,21 @@ Every project's docs have the same four sections in the site column, in this ord
 
 Step-by-step tutorials from a clean PC are at levimc.org/tutorials/, questions and answers at levimc.org/faq/.
 
-## Importing a project
+### Adding a project's docs
 
-1. Copy the docs sources (markdown, `public/`, layouts) into `docs/<Project>/`; keep the git history if you can.
-2. Add the files below, adapted from the template; `npm ci && npm run typecheck && npm run build && npm run
-   linkcheck` in `docs/<Project>/`, and the whole-site check above.
+1. Put the markdown in `content/<Project>/pages/` and the static files in `content/<Project>/public/`; keep the git
+   history if you can.
+2. Add `content/<Project>/docs.config.ts` (below); `node scripts/docs-sites.mjs build <Project>`, then the
+   whole-site check above.
 3. `formerPrefixes`: every prefix the project published a locale under, relative to the base — its current one too
    (`['zh-Hans/', 'zh/']`, LeviLauncher `['es-ES/']` …). Keep `folder` / `suffix` as they were: the sources need not
    move. The project's `redirects` stay as they are (relative to the base).
 4. Links into the other sites use language-first URLs (`https://levimc.org/zh-Hans/tutorials/…`).
-5. Cutover, in this order: merge the import here (the deploy publishes it); then, in the project's repository,
-   turn GitHub Pages off and delete its docs workflow (the build, the hourly kit check). Until Pages is off there,
-   GitHub serves `/<Project>/` from the project's repository and the copy here only answers the language-first URLs.
-
-## Template
-
-From `tutorials/` (the reference docs root). `docs/<Project>/package.json` — the dependencies are the kit's
-(`kit/package.template.json`, the versions `tutorials/package-lock.json` pins):
-
-```json
-{
-  "name": "levimc-docs-<project>",
-  "private": true,
-  "version": "0.0.0",
-  "description": "levimc.org/<Project>/: the <Project> documentation",
-  "type": "module",
-  "engines": { "node": ">=22.12" },
-  "scripts": {
-    "postinstall": "node ../../kit/scripts/vendor.mjs .",
-    "kit": "node ../../kit/scripts/vendor.mjs .",
-    "dev": "vite",
-    "build": "node kit/docs/build.mjs",
-    "preview": "node kit/scripts/serve-pages.mjs dist --base / --port 4178",
-    "typecheck": "tsc --noEmit",
-    "linkcheck": "node kit/scripts/linkcheck.mjs dist --base /<Project>/ --locale-first zh-Hans,zh-Hant --site-origin https://levimc.org",
-    "smoke": "node kit/scripts/smoke.mjs --url http://127.0.0.1:4178/<Project>/"
-  },
-  "dependencies": { "…": "as tutorials/package.json" },
-  "devDependencies": { "…": "as tutorials/package.json" }
-}
-```
-
-`--locale-first` lists the locale prefixes (LeviLauncher: `zh-Hans,zh-Hant,es,ru,de,ja,ko,fr`): the root's pages are
-under `/<Project>/` and `/<prefix>/<Project>/`, every other levimc.org path is another site's. LeviLamina adds
-`--ignore-paths /LeviLamina/api/` (the API reference is made after the docs build, below). Commit
-`package-lock.json` (`npm install` once).
-
-`docs/<Project>/docs.config.ts`:
+5. In the project's repository, turn GitHub Pages off and delete its docs workflow: while Pages is on there, GitHub
+   serves `/<Project>/` from that repository and the pages here only answer the language-first URLs.
 
 ```ts
-import { defineDocsConfig } from './kit/docs/node/config.ts';
+import { defineDocsConfig } from '../../src/kit/docs/node/config.ts';
 
 const repo = 'https://github.com/LiteLDev/<Project>';
 
@@ -116,10 +100,9 @@ export default defineDocsConfig({
   title: '<Project>',
   description: '…',
   logo: { src: 'https://levimc.org/logos/<Project>.webp', alt: '<Project>' },
-  contentDir: 'content',
+  contentDir: 'pages',
   repo,
-  // the sources live here now
-  editLink: 'https://github.com/LiteLDev/liteldev.github.io/edit/main/docs/<Project>/content/:path',
+  editLink: 'https://github.com/LiteLDev/liteldev.github.io/edit/main/content/<Project>/pages/:path',
   hostname: 'https://levimc.org',
   sitemap: { hostname: 'https://levimc.org' },
   i18n: {
@@ -141,69 +124,12 @@ export default defineDocsConfig({
 LeviLauncher's other languages: `{ code: 'ja-JP', label: '日本語', lang: 'ja', prefix: 'ja/', folder: 'ja-JP',
 formerPrefixes: ['ja-JP/'] }` and so on (the prefixes are the kit's `docsLocales`: `es`, `ru`, `de`, `ja`, `ko`, `fr`).
 
-`docs/<Project>/vite.config.ts`:
-
-```ts
-import { defineConfig } from 'vite';
-import { kitDocs } from './kit/docs/node/vite.ts';
-import docs from './docs.config.ts';
-
-export default defineConfig({
-  plugins: [kitDocs(docs)],
-});
-```
-
-`docs/<Project>/tsconfig.json`: as `tutorials/tsconfig.json` (`"include": ["kit/**/*.ts", "kit/**/*.tsx", "*.ts"]`).
-
-`docs/<Project>/.gitignore`:
-
-```gitignore
-node_modules/
-dist/
-.kit/
-# levimc-kit, copied from ../../kit by the package install (npm run kit)
-/kit/
-vite.config.ts.timestamp-*
-```
+The site's link check is derived from the config: its base, the prefixes of its locales, and for LeviLamina
+`--ignore-paths /LeviLamina/api/` (the API reference is made after the docs build, see `doxygen/`).
 
 ## LeviLamina API reference
 
-`/LeviLamina/api/` is Doxygen output over LeviLamina's headers, without languages (`docsUnlocalized` in the kit). The
-deploy makes it when `docs/LeviLamina/api/Doxyfile` exists, after the docs build and before the merge
-(`.github/workflows/deploy.yml`, as LeviLamina's own `build-docs.yml` did):
-
-* `LiteLDev/LeviLamina` (its default branch) is checked out at `docs/LeviLamina/.levilamina/` (git-ignore it);
-* `docs/LeviLamina/api/header.html` is generated from the docs build's `dist/LeviLamina/_kit/nav.json` by
-  `kit/static/doxygen/gen-header.mjs` (the docs' sections, resources and languages, language-first), with
-  `--chrome-out api/kit-dox-chrome.js --footer kit/static/doxygen/footer.html --footer-out api/footer.html`: the
-  bar, drawer, site column and footer go into that one script, which every page writes in place, instead of ~45 KB of
-  markup into each of the ~68,000 pages;
-* doxygen-awesome-css v2.4.1 is cloned to `docs/LeviLamina/api/doxygen-awesome-css/`;
-* Doxygen 1.16.1 runs `doxygen api/Doxyfile` with the working directory `docs/LeviLamina/`;
-* `kit/static/doxygen/patch-navtree.mjs dist/LeviLamina/api` runs on the output.
-
-So the Doxyfile is LeviLamina's `docs/api/Doxyfile` with its paths relative to `docs/LeviLamina/`:
-
-```
-PROJECT_LOGO           = api/logo.svg
-OUTPUT_DIRECTORY       = dist/LeviLamina/api
-HTML_OUTPUT            = .
-LAYOUT_FILE            = api/DoxygenLayout.xml
-INPUT                  = .levilamina/src/ll/api …
-STRIP_FROM_PATH        = .levilamina .
-USE_MDFILE_AS_MAINPAGE = api/mainpage.md
-HTML_HEADER            = api/header.html
-HTML_FOOTER            = api/footer.html
-HTML_EXTRA_STYLESHEET  = api/doxygen-awesome-css/doxygen-awesome.css …
-HTML_EXTRA_FILES       = kit/static/kit.js api/kit-dox-chrome.js
-VERBATIM_HEADERS       = NO
-INLINE_INHERITED_MEMB  = NO
-```
-
-(`DoxygenLayout.xml`, `logo.svg` and `mainpage.md` move to `docs/LeviLamina/api/` with it; git-ignore
-`api/header.html`, `api/footer.html`, `api/kit-dox-chrome.js` and `api/doxygen-awesome-css/`.) Locally, the same
-commands from `docs/LeviLamina/` after its build, with Doxygen installed.
-
-The last two keep the output small: a copy of every header as a page of its own (`VERBATIM_HEADERS`, 26,000 pages,
-1.5 GB) and every inherited member repeated in each class page (`INLINE_INHERITED_MEMB`) made the site 4.6 GB
-(760 MB to upload), most of it this reference. The class pages still list the inherited members by base class.
+`/LeviLamina/api/` is Doxygen output over LeviLamina's headers, without languages (`docsUnlocalized` in the kit). It
+is not content of this folder: its Doxyfile, layout, main page and the kit's chrome for it are in `doxygen/` at the
+repository root, and `doxygen/build.sh` makes it into `dist/LeviLamina/api/` after `npm run build` (the deploy does;
+see "LeviLamina Doxygen" in `src/kit/README.md`).

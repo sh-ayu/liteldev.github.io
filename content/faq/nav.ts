@@ -1,5 +1,5 @@
 // The sections of levimc.org/faq/ and the tree of each: one entry per page of content/ (and content/zh-Hans/).
-import type { NavEntry } from './kit/docs/node/config.ts';
+import type { NavEntry } from '../../src/kit/docs/node/config.ts';
 
 export const NAV: Record<'en' | 'zh-Hans', NavEntry[]> = {
   en: [

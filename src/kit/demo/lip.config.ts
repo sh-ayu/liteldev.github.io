@@ -1,6 +1,6 @@
 // Second demo: VitePress-style site (folder i18n, .html URLs, VitePress slugs, CommonMark) built from the
 // real lip docs. This is what a VitePress → levimc-kit port looks like (compare lip/docs/.vitepress/config.mts).
-import { defineDocsConfig, type NavEntry } from './kit/docs/node/config.ts';
+import { defineDocsConfig, type NavEntry } from '../docs/node/config.ts';
 
 const en = (p: string) => p;
 const zh = (p: string) => '/zh' + p;
@@ -92,7 +92,6 @@ export default defineDocsConfig({
   description: 'A general package installer',
   project: 'lip',
   contentDir: 'lip-content',
-  outDir: 'dist-lip',
   repo: 'https://github.com/LiteLDev/lip',
   editLink: 'https://github.com/LiteLDev/lip/edit/main/docs/:path',
   hostname: 'https://levimc.org',

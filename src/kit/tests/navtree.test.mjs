@@ -6,7 +6,7 @@ import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'n
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import vm from 'node:vm';
-import { patchNavtree, splitTreeData } from '../static/doxygen/patch-navtree.mjs';
+import { patchNavtree, splitTreeData } from '../../../doxygen/patch-navtree.mjs';
 
 // a Class List like Doxygen's: [text, link, children] where children is null, a script name or a list
 const entry = (name, depth) => [

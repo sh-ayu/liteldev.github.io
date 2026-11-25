@@ -3,7 +3,7 @@
 // Traditional Chinese at /zh-Hant/BeDD/, converted from it: levimc.org's one scheme, the language first. The URLs
 // before (/BeDD/zh-Hans/…, /BeDD/zh/…, /BeDD/zh-Hant/…) redirect. The WebSocket API's AsyncAPI document is BeDD's
 // spec/bedd.asyncapi.yaml, downloaded into public/ before every build (scripts/fetch-spec.mjs).
-import { defineDocsConfig, type NavEntry } from './kit/docs/node/config.ts';
+import { defineDocsConfig, type NavEntry } from '../../src/kit/docs/node/config.ts';
 
 const repo = 'https://github.com/LiteLDev/BeDD';
 
@@ -138,12 +138,12 @@ export default defineDocsConfig({
   project: 'BeDD',
   logo: { src: '/logo.png', alt: 'Be.D.D.' },
   favicon: '/logo.png',
-  contentDir: 'content',
+  contentDir: 'pages',
   // logo.png and showcase/ stay at /BeDD/logo.png and /BeDD/showcase/… (BeDD's README links them)
   publicDir: 'public',
   repo,
   // the sources live here now
-  editLink: 'https://github.com/LiteLDev/liteldev.github.io/edit/main/docs/BeDD/content/:path',
+  editLink: 'https://github.com/LiteLDev/liteldev.github.io/edit/main/content/BeDD/pages/:path',
   hostname: 'https://levimc.org',
   sitemap: { hostname: 'https://levimc.org' },
   i18n: {

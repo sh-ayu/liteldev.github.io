@@ -1,11 +1,13 @@
 // Writes one real HTML file per route (dist/about/index.html, dist/blog/…/index.html, …), 404.html,
-// sitemap.xml and robots.txt. Runs after `vite build` (client) and `vite build --ssr src/entry-server.tsx
-// --outDir .kit/ssr`. The blog's feeds (dist/blog/rss.xml, atom.xml, feed.json) come from the client build.
+// sitemap.xml and robots.txt. Runs from the repository root after `vite build src/main` (client) and
+// `vite build src/main --ssr entry-server.tsx --outDir ../../.kit/ssr`. The blog's feeds (dist/blog/rss.xml, atom.xml, feed.json) come from the client build.
 import { existsSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { prerenderRoutes } from './kit/ssg/prerender.mjs';
+import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { prerenderRoutes } from '../kit/ssg/prerender.mjs';
 
 const { ROUTE_PATHS, NOT_FOUND_PATH, SITE_ORIGIN, MODS_PATH, ROUTE_MODULES, routeIdOf, localeAlternates, LOCALES, DEFAULT_LOCALE, DOCS_PROJECTS } = await import(
-  './.kit/ssr/entry-server.js'
+  pathToFileURL(resolve('.kit/ssr/entry-server.js')).href
 );
 
 const { files } = await prerenderRoutes({ routes: ROUTE_PATHS, notFound: NOT_FOUND_PATH });
@@ -86,7 +88,7 @@ writeFileSync(
 // LeviMC Mods writes its own sitemap (every mod page); its listing's query URLs (/mods/?cat=…) are all one page. Each
 // project's docs (levimc.org/<Project>/, published by its repository) write theirs too: robots.txt exists only here.
 const sitemaps = [`${SITE_ORIGIN}/sitemap.xml`, `${SITE_ORIGIN}${MODS_PATH}sitemap.xml`, ...DOCS_PROJECTS.map((p) => `${p.url}sitemap.xml`)];
-// the tutorials (tutorials/) and every docs build of this repository keep their sitemap under their base (it lists
+// the tutorials (content/tutorials/) and every docs build of this repository keep their sitemap under their base (it lists
 // their language-first URLs too: /zh-Hans/tutorials/…, allowed for a sitemap named in robots.txt)
 sitemaps.push(`${SITE_ORIGIN}/tutorials/sitemap.xml`);
 // the listing's query URLs in every language too (the language first: /zh-Hans/mods/?cat=…)

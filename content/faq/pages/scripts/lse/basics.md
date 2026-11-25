@@ -369,7 +369,7 @@ Commands registered as fake commands (the old interfaces such as `mc.regPlayerCm
 
 ## Does LSE have documentation in Markdown format (for example, to feed to an AI)?
 
-Yes. The LSE documentation site is generated from Markdown sources, located in the `docs/LegacyScriptEngine/content` directory of the GitHub repository LiteLDev/liteldev.github.io (Chinese files are `*.zh.md`, English files are `*.md`, and the API documentation is in the `apis/` subdirectory). The LiteLDev/legacy-script-engine-api repository also provides API type hints for plugin development and can serve as a reference.
+Yes. The LSE documentation site is generated from Markdown sources, located in the `content/LegacyScriptEngine/pages` directory of the GitHub repository LiteLDev/liteldev.github.io (Chinese files are `*.zh.md`, English files are `*.md`, and the API documentation is in the `apis/` subdirectory). The LiteLDev/legacy-script-engine-api repository also provides API type hints for plugin development and can serve as a reference.
 
 ## The LSE Python engine plugins keep raising errors. Is there an alternative?
 

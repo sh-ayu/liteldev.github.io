@@ -1,6 +1,6 @@
 // Supporters listed on /support/. The list lives in public/donors.csv (still served at /donors.csv) and is
 // read at build time, so the page is prerendered with every supporter instead of fetching the CSV later.
-import donorsCsv from '../../public/donors.csv?raw';
+import donorsCsv from '../../../public/donors.csv?raw';
 
 export interface DonorEntry {
   name: string;

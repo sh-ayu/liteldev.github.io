@@ -70,13 +70,13 @@ LeviLamina intercepts the console's Ctrl+C/close events through `SetConsoleCtrlH
 
 ## Can the LeviLamina documentation be downloaded for offline use?
 
-Yes. The LeviLamina documentation sources now live in the `docs/LeviLamina/` directory of the `LiteLDev/liteldev.github.io` repository (Markdown, in both Chinese and English). Clone that repository to read it offline, or run `npm ci && npm run build` in that directory to build the site locally. The `docs/` directory of the main LeviLamina repository now contains only `contributing` (build and code-style guides). The online documentation is at <https://levimc.org/LeviLamina/>.
+Yes. The LeviLamina documentation sources now live in the `content/LeviLamina/` directory of the `LiteLDev/liteldev.github.io` repository (Markdown, in both Chinese and English). Clone that repository to read it offline, or run `npm ci && node scripts/docs-sites.mjs build LeviLamina` in the repository to build the site locally. The `docs/` directory of the main LeviLamina repository now contains only `contributing` (build and code-style guides). The online documentation is at <https://levimc.org/LeviLamina/>.
 
 *Applies to: current version (docs moved to liteldev.github.io on 2026-11-16)*
 
 ## I want to open a PR to fix errors in the LeviLamina developer docs or tutorials. Where are the documentation sources?
 
-The documentation sources are in the `docs/LeviLamina/` directory of the `LiteLDev/liteldev.github.io` repository; submit your PR to that repository. Tutorials are in the `tutorials/` directory of the same repository. The documentation site is <https://levimc.org/LeviLamina/>. The `docs/contributing/` directory of the main LeviLamina repository holds only the guides for developing LeviLamina itself (building, code style).
+The documentation sources are in the `content/LeviLamina/` directory of the `LiteLDev/liteldev.github.io` repository; submit your PR to that repository. Tutorials are in the `content/tutorials/` directory of the same repository. The documentation site is <https://levimc.org/LeviLamina/>. The `docs/contributing/` directory of the main LeviLamina repository holds only the guides for developing LeviLamina itself (building, code style).
 
 *Applies to: current version (since 2026-11-16)*
 

@@ -10,7 +10,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const TYPES_URL = 'https://raw.githubusercontent.com/LiteLDev/bedboo/main/packages/bedboo/types/bedrock.d.ts';
-const API_DOCS = ['content/reference/api.md', 'content/zh/reference/api.md'];
+const API_DOCS = ['pages/reference/api.md', 'pages/zh/reference/api.md'];
 
 async function bedrockTypes() {
   const local = process.env.BEDBOO_TYPES;

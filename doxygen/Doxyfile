@@ -61,13 +61,13 @@ PROJECT_BRIEF          =
 # pixels and the maximum width should not exceed 200 pixels. Doxygen will copy
 # the logo to the output directory.
 
-PROJECT_LOGO           = api/logo.svg
+PROJECT_LOGO           = doxygen/logo.svg
 
 # With the PROJECT_ICON tag one can specify an icon that is included in the tabs
 # when the HTML document is shown. Doxygen will copy the logo to the output
 # directory.
 
-PROJECT_ICON           = contents/favicon.ico
+PROJECT_ICON           = content/LeviLamina/pages/favicon.ico
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) path
 # into which the generated documentation will be written. If a relative path is
@@ -190,7 +190,7 @@ FULL_PATH_NAMES        = YES
 # will be relative from the directory where Doxygen is started.
 # This tag requires that the tag FULL_PATH_NAMES is set to YES.
 
-STRIP_FROM_PATH        = .levilamina \
+STRIP_FROM_PATH        = .cache/doxygen/LeviLamina \
                          .
 
 # The STRIP_FROM_INC_PATH tag can be used to strip a user-defined part of the
@@ -822,7 +822,7 @@ FILE_VERSION_FILTER    =
 # DoxygenLayout.xml, Doxygen will parse it automatically even if the LAYOUT_FILE
 # tag is left empty.
 
-LAYOUT_FILE            = api/DoxygenLayout.xml
+LAYOUT_FILE            = doxygen/DoxygenLayout.xml
 
 # The CITE_BIB_FILES tag can be used to specify one or more bib files containing
 # the reference definitions. This must be a list of .bib files. The .bib
@@ -966,13 +966,13 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = .levilamina/src/ll/api \
-                         .levilamina/src/mc \
-                         .levilamina/src-server/ll/api \
-                         .levilamina/src-server/mc \
-                         .levilamina/src-client/ll/api \
-                         .levilamina/src-client/mc \
-                         api/mainpage.md
+INPUT                  = .cache/doxygen/LeviLamina/src/ll/api \
+                         .cache/doxygen/LeviLamina/src/mc \
+                         .cache/doxygen/LeviLamina/src-server/ll/api \
+                         .cache/doxygen/LeviLamina/src-server/mc \
+                         .cache/doxygen/LeviLamina/src-client/ll/api \
+                         .cache/doxygen/LeviLamina/src-client/mc \
+                         doxygen/mainpage.md
 
 # This tag can be used to specify the character encoding of the source files
 # that Doxygen parses. Internally Doxygen uses the UTF-8 encoding. Doxygen uses
@@ -1138,7 +1138,7 @@ FILTER_SOURCE_PATTERNS =
 # (index.html). This can be useful if you have a project on for instance GitHub
 # and want to reuse the introduction page also for the Doxygen output.
 
-USE_MDFILE_AS_MAINPAGE = api/mainpage.md
+USE_MDFILE_AS_MAINPAGE = doxygen/mainpage.md
 
 # The Fortran standard specifies that for fixed formatted Fortran code all
 # characters from position 72 are to be considered as comment. A common
@@ -1298,7 +1298,7 @@ HTML_FILE_EXTENSION    = .html
 # of the possible markers and block names see the documentation.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_HEADER            = api/header.html
+HTML_HEADER            = .cache/doxygen/header.html
 
 # The HTML_FOOTER tag can be used to specify a user-defined HTML footer for each
 # generated HTML page. If the tag is left blank Doxygen will generate a standard
@@ -1308,7 +1308,7 @@ HTML_HEADER            = api/header.html
 # that Doxygen normally uses.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_FOOTER            = api/footer.html
+HTML_FOOTER            = .cache/doxygen/footer.html
 
 # The HTML_STYLESHEET tag can be used to specify a user-defined cascading style
 # sheet that is used by each HTML page. It can be used to fine-tune the look of
@@ -1338,9 +1338,9 @@ HTML_STYLESHEET        =
 # documentation.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_STYLESHEET  = api/doxygen-awesome-css/doxygen-awesome.css \
-                         kit/static/kit-chrome.css \
-                         kit/static/doxygen/doxygen-kit.css
+HTML_EXTRA_STYLESHEET  = .cache/doxygen/doxygen-awesome-css/doxygen-awesome.css \
+                         src/kit/static/kit-chrome.css \
+                         doxygen/doxygen-kit.css
 
 # The HTML_EXTRA_FILES tag can be used to specify one or more extra images or
 # other source files which should be copied to the HTML output directory. Note
@@ -1350,8 +1350,8 @@ HTML_EXTRA_STYLESHEET  = api/doxygen-awesome-css/doxygen-awesome.css \
 # files will be copied as-is; there are no commands or markers available.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_FILES       = kit/static/kit.js \
-                         api/kit-dox-chrome.js
+HTML_EXTRA_FILES       = src/kit/static/kit.js \
+                         .cache/doxygen/kit-dox-chrome.js
 
 # The HTML_COLORSTYLE tag can be used to specify if the generated HTML output
 # should be rendered with a dark or light theme.

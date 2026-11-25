@@ -14,7 +14,7 @@ import { createRequire } from 'node:module';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { lilyPond, sceneToSvg } from '../kit/components/paint.ts';
+import { lilyPond, sceneToSvg } from '../src/kit/components/paint.ts';
 
 const require = createRequire(process.env.LEVIMC_PW_DIR ? process.env.LEVIMC_PW_DIR + '/' : import.meta.url);
 const { chromium } = require('playwright-core');

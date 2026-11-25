@@ -5,7 +5,7 @@
 // Content lives in contents/ (x.md = English, x.zh.md = Chinese). Register new pages in `nav` below
 // and their Chinese nav labels in `navTranslations.zh`. See kit/README.md for every option.
 // The C++ reference (/LeviLamina/api/) is Doxygen over LeviLamina's headers, made by the deploy from api/Doxyfile.
-import { defineDocsConfig } from './kit/docs/node/config.ts';
+import { defineDocsConfig } from '../../src/kit/docs/node/config.ts';
 
 // Pages that left this site keep answering at every URL they had: English, zh-Hans/, the former zh/ and zh-Hant/
 // (the localized ones also at /zh-Hans/LeviLamina/… and /zh-Hant/LeviLamina/…).
@@ -41,8 +41,8 @@ export default defineDocsConfig({
   project: 'LeviLamina',
   repo: 'https://github.com/LiteLDev/LeviLamina',
   // the sources live here now
-  editLink: 'https://github.com/LiteLDev/liteldev.github.io/edit/main/docs/LeviLamina/contents/:path',
-  contentDir: 'contents',
+  editLink: 'https://github.com/LiteLDev/liteldev.github.io/edit/main/content/LeviLamina/pages/:path',
+  contentDir: 'pages',
   hostname: 'https://levimc.org',
   sitemap: { hostname: 'https://levimc.org' },
   i18n: {

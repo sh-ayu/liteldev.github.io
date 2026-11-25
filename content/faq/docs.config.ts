@@ -4,7 +4,7 @@
 // content/zh-Hans/), Traditional Chinese at /zh-Hant/faq/, converted from it: levimc.org's one scheme, the language
 // first. The sections follow the tutorials': run a server, play, make mods, script plugins. The pages and their
 // order are in nav.ts.
-import { defineDocsConfig } from './kit/docs/node/config.ts';
+import { defineDocsConfig } from '../../src/kit/docs/node/config.ts';
 import { NAV } from './nav.ts';
 
 const repo = 'https://github.com/LiteLDev/liteldev.github.io';
@@ -17,9 +17,9 @@ export default defineDocsConfig({
   // marks the FAQ tab of the LeviMC bar (kit 2.25)
   project: 'faq',
   logo: { src: 'https://levimc.org/logos/LeviLamina.webp', alt: 'LeviMC' },
-  contentDir: 'content',
+  contentDir: 'pages',
   repo,
-  editLink: `${repo}/edit/main/faq/content/:path`,
+  editLink: `${repo}/edit/main/content/faq/pages/:path`,
   hostname: 'https://levimc.org',
   sitemap: { hostname: 'https://levimc.org' },
   i18n: {

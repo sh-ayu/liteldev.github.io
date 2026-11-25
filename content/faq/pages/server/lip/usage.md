@@ -134,10 +134,10 @@ The LiteLDev forum has been closed for a long time, and `lippkg.com`, `bedrinth`
 
 ### I published a LeviLamina mod on GitHub. How do I get it listed in lip's mod directory (LeviMC Mods / LeviLauncher)? Why can't it be found?
 
-The current directory is LeviMC Mods (<https://levimc.org/mods/>). The "Marketplace" page of lip and LeviLauncher both read it, and it replaces the former lipr / bedrinth. It is built from the repository list in `mods/repos.txt` in the `LiteLDev/liteldev.github.io` repository:
+The current directory is LeviMC Mods (<https://levimc.org/mods/>). The "Marketplace" page of lip and LeviLauncher both read it, and it replaces the former lipr / bedrinth. It is built from the repository list in `content/mods/repos.txt` in the `LiteLDev/liteldev.github.io` repository:
 
 1. Automatic discovery: every two hours a bot uses GitHub code search to find repositories that have a `lip.toml` (or the old `tooth.json`) in the root and a version tag lip can read, and then opens a PR adding the repository to `repos.txt`. After the maintainers merge it, the mod appears in the next hourly build. Forked repositories are not discovered. Because this relies on GitHub code search (whose quota is often exhausted, so some runs are skipped), a new repository may not be found until GitHub has built its code index. In that case, opening a PR yourself (step 2) is the fastest way.
-2. To get listed faster: open a PR that edits `mods/repos.txt` and adds a line `<author>/<repo>`.
+2. To get listed faster: open a PR that edits `content/mods/repos.txt` and adds a line `<author>/<repo>`.
 3. Requirements: the version tag must be `v` plus a full semantic version (such as `v1.0.0`, not `1.0.0` or `v1.0`), and the `version` in `lip.toml` at that tag must match it; the latest version must depend on LeviLamina (directly or indirectly); put the files in `mods/` (or `plugins/` and so on); the repository must not be a GitHub template, and its name must not end with `-template`, `-example`, `-demo`, `-sample` or `-test`.
 4. Self-check: on a test server, `lip install github.com/<author>/<repo>@<version> --dry-run` should find your version without changing any file.
 

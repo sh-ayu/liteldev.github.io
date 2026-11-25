@@ -1,3 +1,30 @@
+# One package (2026-11-25)
+
+The repository is one site built by one package: one `package.json` and lockfile at the root, one `npm ci`, one
+`npm run build` into `dist/`. The kit is no longer copied into each site or published (`levimc.org/kit/v2/` is gone).
+No URL of the site changed. What moved:
+
+| Before | Now |
+| --- | --- |
+| `src/`, `index.html`, `vite.config.ts`, `prerender.mjs`, `blog/` | `src/main/` (the blog's code in `src/main/blog/`) |
+| `kit/` | `src/kit/` |
+| `mods/src/`, `mods/index.html`, `mods/vite.config.ts`, `mods/prerender.mjs` | `src/mods/` |
+| `mods/repos.txt` | `content/mods/repos.txt` |
+| `mods/scripts/` | `scripts/mods/` |
+| `legacy/`, `versions/` | `src/legacy/`, `src/versions/` |
+| `tutorials/`, `faq/`, `docs/<Project>/` | `content/tutorials/`, `content/faq/`, `content/<Project>/` |
+| `<site>/content/` (LeviLamina: `contents/`) | `content/<Site>/pages/` |
+| `docs/README.md` | `content/README.md` |
+| `docs/LeviLamina/api/`, `kit/static/doxygen/` | `doxygen/` |
+| each site's `package.json`, lockfile, `tsconfig.json`, `vite.config.ts`, `.gitignore`; `mods/pnpm-lock.yaml` | the root's |
+
+Commands: `npm run dev` / `dev:mods` / `dev:docs -- <Site>`, `npm run build` (`-- main|mods|docs|search` for a part),
+`npm run typecheck`, `npm run lint`, `npm test`, `npm run linkcheck`; `doxygen/build.sh` for the API reference. Builds
+write to `dist/`, `.build/` (Mods, each docs site), `.kit/` and `.cache/` — all git-ignored.
+
+A branch from before this change is rebased as usual: git follows the renames. The sections below are from before it
+and name the paths of their time.
+
 # The language first, and every docs site built here (2026-11-16)
 
 Every levimc.org URL starts with its language; English has none:

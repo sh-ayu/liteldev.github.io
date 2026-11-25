@@ -4,9 +4,9 @@ import { join } from 'node:path';
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
-import { FONT_HEAD_HTML } from './kit/components/fonts.ts';
-import { noJsDarkCss } from './kit/static/nojs-dark.mjs';
-import { PREPAINT_SCRIPT, ROOT_REDIRECT_SCRIPT } from './src/prepaint.ts';
+import { FONT_HEAD_HTML } from '../kit/components/fonts.ts';
+import { noJsDarkCss } from '../kit/static/nojs-dark.mjs';
+import { PREPAINT_SCRIPT, ROOT_REDIRECT_SCRIPT } from './prepaint.ts';
 import { levimcBlog } from './blog/plugin.ts';
 
 /**
@@ -43,14 +43,23 @@ function levimcHead(): Plugin {
   };
 }
 
+// Vite's root is this folder (src/main); every command runs from the repository root, where public/, dist/ and
+// .kit/ are: `vite build src/main`, `vite build src/main --ssr entry-server.tsx --outDir ../../.kit/ssr`.
+const repo = process.cwd();
+
 export default defineConfig({
+  publicDir: join(repo, 'public'),
   server: {
     port: 3000,
     host: '0.0.0.0',
+    // the kit and the other apps' shared modules are beside this folder
+    fs: { allow: [repo] },
   },
   // levimcBlog: content/blog → the /blog/ pages' data (virtual modules) and feeds
   plugins: [levimcBlog(), react(), tailwindcss(), levimcHead()],
   build: {
+    outDir: join(repo, 'dist'),
+    emptyOutDir: true,
     // read by prerender.mjs to modulepreload each page's chunk; it deletes dist/.vite afterwards
     manifest: true,
   },

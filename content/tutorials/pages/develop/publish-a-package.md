@@ -117,11 +117,11 @@ Players install the client build of the same package with LeviLauncher, once the
 
 ## 7. Get listed on LeviMC Mods
 
-[LeviMC Mods](https://levimc.org/mods/) is the catalog that `lip`'s **Marketplace** page and LeviLauncher show. It is built from a list of repositories, [`mods/repos.txt`](https://github.com/LiteLDev/liteldev.github.io/blob/main/mods/repos.txt) in the levimc.org repository.
+[LeviMC Mods](https://levimc.org/mods/) is the catalog that `lip`'s **Marketplace** page and LeviLauncher show. It is built from a list of repositories, [`content/mods/repos.txt`](https://github.com/LiteLDev/liteldev.github.io/blob/main/mods/repos.txt) in the levimc.org repository.
 
 You usually do not need to do anything: every two hours a bot searches GitHub for repositories with a `lip.toml` and a version tag that `lip` can read, and opens a pull request that adds them to the list. Once a maintainer merges it, the mod appears at the next hourly build.
 
-To be listed sooner, open that pull request yourself: edit [`mods/repos.txt`](https://github.com/LiteLDev/liteldev.github.io/blob/main/mods/repos.txt) on GitHub and add a line `<you>/my-mod`.
+To be listed sooner, open that pull request yourself: edit [`content/mods/repos.txt`](https://github.com/LiteLDev/liteldev.github.io/blob/main/mods/repos.txt) on GitHub and add a line `<you>/my-mod`.
 
 The catalog lists a package when:
 

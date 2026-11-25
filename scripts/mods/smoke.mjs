@@ -13,9 +13,9 @@
 // errors. Only the site itself is loaded: third-party requests (README images, avatars, fonts) are
 // blocked. Exit code 1 on any failure.
 import { createRequire } from "node:module";
-import { tagKeys } from "../src/data/featured-tags.ts";
-import { licenseFamily, licenseOf } from "../src/data/licenses.ts";
-import { LOCALES } from "../src/locales.ts";
+import { tagKeys } from "../../src/mods/data/featured-tags.ts";
+import { licenseFamily, licenseOf } from "../../src/mods/data/licenses.ts";
+import { LOCALES } from "../../src/mods/locales.ts";
 
 const args = process.argv.slice(2);
 const opt = (name, fallback) => (args.includes(name) ? args[args.indexOf(name) + 1] : fallback);

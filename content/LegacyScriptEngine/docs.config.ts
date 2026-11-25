@@ -4,7 +4,7 @@
 // /zh-Hans/LegacyScriptEngine/ (sources stay x.zh.md), Traditional Chinese at /zh-Hant/LegacyScriptEngine/, converted
 // from it: levimc.org's one scheme, the language first (2026-11-16). The URLs before
 // (/LegacyScriptEngine/zh-Hans/…, /LegacyScriptEngine/zh/…, /LegacyScriptEngine/zh-Hant/…) redirect.
-import { defineDocsConfig } from './kit/docs/node/config.ts';
+import { defineDocsConfig } from '../../src/kit/docs/node/config.ts';
 
 export default defineDocsConfig({
   base: '/LegacyScriptEngine/',
@@ -14,8 +14,8 @@ export default defineDocsConfig({
   project: 'LegacyScriptEngine',
   repo: 'https://github.com/LiteLDev/LegacyScriptEngine',
   // the sources live here now
-  editLink: 'https://github.com/LiteLDev/liteldev.github.io/edit/main/docs/LegacyScriptEngine/content/:path',
-  contentDir: 'content',
+  editLink: 'https://github.com/LiteLDev/liteldev.github.io/edit/main/content/LegacyScriptEngine/pages/:path',
+  contentDir: 'pages',
   hostname: 'https://levimc.org',
   sitemap: { hostname: 'https://levimc.org' },
   lastUpdated: true,

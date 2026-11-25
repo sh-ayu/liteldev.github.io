@@ -1,11 +1,11 @@
-// Tests for scripts/docs-sites.mjs (part of `npm test`): which docs roots the deploy builds, what levimc.org's link
+// Tests for scripts/docs-sites.mjs (part of `npm test`): which docs sites the build finds, what levimc.org's link
 // check treats as another site's, and the merge of each docs build into levimc.org's dist/.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
-import { docsRoots, externalProjects, mergeDist, otherSites } from './docs-sites.mjs';
+import { docsRoots, externalProjects, mergeDist, otherSites, siteOf } from './docs-sites.mjs';
 
 function tree(files) {
   const dir = mkdtempSync(join(tmpdir(), 'docs-sites-'));
@@ -16,23 +16,45 @@ function tree(files) {
   return dir;
 }
 
-test('docs roots: the tutorials, the FAQ, then every docs/<name>/ with a package.json', () => {
-  const repo = tree({ 'tutorials/package.json': '{}', 'faq/package.json': '{}', 'docs/lip/package.json': '{}', 'docs/LeviLamina/package.json': '{}', 'docs/README.md': '', 'docs/notes/x.md': '' });
+test('docs sites: the tutorials, the FAQ, then every other content/<name>/ with a docs.config.ts', () => {
+  const repo = tree({
+    'content/tutorials/docs.config.ts': '',
+    'content/faq/docs.config.ts': '',
+    'content/lip/docs.config.ts': '',
+    'content/LeviLamina/docs.config.ts': '',
+    'content/README.md': '',
+    'content/blog/posts/x.md': '',
+    'content/mods/repos.txt': '',
+  });
   try {
-    assert.deepEqual(docsRoots(repo), ['tutorials', 'faq', 'docs/LeviLamina', 'docs/lip']);
+    assert.deepEqual(docsRoots(repo), ['content/tutorials', 'content/faq', 'content/LeviLamina', 'content/lip']);
     assert.deepEqual(externalProjects(repo), ['LegacyScriptEngine', 'LeviLauncher', 'BeDD', 'bedboo']);
     const other = otherSites(repo);
     assert.ok(other.includes('/LeviLauncher/') && other.includes('/ja/LeviLauncher/') && other.includes('/zh-Hant/bedboo/'));
     assert.ok(!other.some((p) => p.includes('/lip/') || p.includes('/LeviLamina/')), 'built here: checked as internal');
+    assert.equal(siteOf('lip', repo).config, join(repo, 'content', 'lip', 'docs.config.ts'));
+    assert.equal(siteOf('content/lip', repo).id, 'lip');
+    assert.throws(() => siteOf('blog', repo), /no docs\.config\.ts/);
   } finally {
     rmSync(repo, { recursive: true, force: true });
   }
-  const empty = tree({ 'tutorials/package.json': '{}' });
+  const empty = tree({ 'content/tutorials/docs.config.ts': '' });
   try {
-    assert.deepEqual(docsRoots(empty), ['tutorials'], 'no docs/ folder: the tutorials only');
+    assert.deepEqual(docsRoots(empty), ['content/tutorials'], 'no project docs: the tutorials only');
     assert.equal(otherSites(empty).length, 6 * 9);
   } finally {
     rmSync(empty, { recursive: true, force: true });
+  }
+});
+
+test('a site named by a config file: the test sites of the kit', () => {
+  const repo = tree({ 'src/kit/demo/docs.config.ts': '', 'src/kit/demo/lip.config.ts': '' });
+  try {
+    assert.equal(siteOf('src/kit/demo', repo).id, 'demo');
+    const lip = siteOf('src/kit/demo/lip.config.ts', repo);
+    assert.deepEqual([lip.id, lip.dir, lip.config], ['demo-lip', join(repo, 'src', 'kit', 'demo'), join(repo, 'src', 'kit', 'demo', 'lip.config.ts')]);
+  } finally {
+    rmSync(repo, { recursive: true, force: true });
   }
 });
 

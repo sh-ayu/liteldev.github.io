@@ -1,5 +1,5 @@
-// Based on kit/tsconfig.template.json. levimc.org is a plain Vite app, so only the kit's React
-// components (and the few kit modules the app imports) are type-checked — not the docs engine.
+// One program for the whole site: the kit (design system and docs engine), levimc.org itself, LeviMC Mods, the docs
+// sites' configs and the build scripts' TypeScript.
 {
   "compilerOptions": {
     "target": "ES2022",
@@ -17,6 +17,6 @@
     "allowImportingTsExtensions": true,
     "types": ["node", "vite/client"]
   },
-  "include": ["kit/components", "src", "blog", "*.ts"],
-  "exclude": ["node_modules", "dist", ".kit"]
+  "include": ["src", "content/*/*.ts"],
+  "exclude": ["node_modules", "dist", ".kit", ".build", ".cache"]
 }

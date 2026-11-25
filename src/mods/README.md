@@ -6,10 +6,10 @@ mod in it can be installed with [lip](https://github.com/LiteLDev/lip), and Levi
 browses the same catalogue.
 
 It is a static site built from the mods' own repositories — the ones
-[`repos.txt`](repos.txt) names, see [Registry](#registry) — with the LeviMC web stack — [Vite](https://vite.dev), React 19,
+[`content/mods/repos.txt`](../../content/mods/repos.txt) names, see [Registry](#registry) — with the LeviMC web stack — [Vite](https://vite.dev), React 19,
 [React Router](https://reactrouter.com) 7, TypeScript and Tailwind CSS v4 — and
-the shared LeviMC design system, levimc-kit, which `pnpm install` copies from
-`../kit` into `kit/` (git-ignored; see [Design system](#design-system)). It is
+the shared LeviMC design system, levimc-kit, beside it in `src/kit/` (see
+[Design system](#design-system)). It is
 built with Vite `base: '/mods/'`: every page and file is under `/mods/`.
 
 - **The listing** (`/mods/`) has the whole catalogue baked in: search as you type,
@@ -141,18 +141,18 @@ repositories of every package lipr had.
   template's `my-mod`, another repository's) is the repository's address as `repos.txt` spells it. A `lip.toml` whose
   `id` is another package's is not read. The files are otherwise taken as the repositories have them, so a
   dependency on a host that no longer exists stays.
-- **Cache.** What was read is kept in `.cache/registry.json` (git-ignored; the deploy keeps it in the Actions
+- **Cache.** What was read is kept in `.cache/mods/registry.json` (git-ignored; the deploy keeps it in the Actions
   cache, saved when it changed): a tag whose commit is unchanged is not read again, so an hourly build reads only
   new tags. Where GitHub serves each address a manifest names is looked up on every build (a repository can move
   again); the cached answer is used only when the lookup fails. It is only a cache: without it every tag is read
   anew (about a minute). `MODS_REGISTRY_CACHE` moves it.
-- **Discovery.** `scripts/discover.mjs` (`.github/workflows/mods-discover.yml`, every two hours) searches GitHub's
+- **Discovery.** `scripts/mods/discover.mjs` (`.github/workflows/mods-discover.yml`, every two hours) searches GitHub's
   code for a top-level `lip.toml` or `tooth.json` (lipr searched for the latter) and opens a pull request adding each
   repository that is not in `repos.txt` (under its name or a former one), not a fork and has a version tag whose
   package file lip can read (its `lip.toml`, else its `tooth.json`). Whether it is a LeviLamina mod is left to the
   build (see the listing rules below). Merging lists it at the next deploy; closing it keeps it out, since a repository that ever had a pull request
   (branch `mods/add/<owner>/<repo>`) is not proposed again. To take a mod off, close its pull request or delete its line.
-  `node scripts/discover.mjs --dry-run` shows what it would propose (needs `GH_TOKEN`). The workflow token's code
+  `node scripts/mods/discover.mjs --dry-run` shows what it would propose (needs `GH_TOKEN`). The workflow token's code
   search limit is shared and often exhausted (HTTP 429): the script waits as GitHub asks for up to ten minutes, then
   skips the run with a warning. A `MODS_SEARCH_TOKEN` secret (a personal token, no scopes) gives it a limit of its own.
 
@@ -292,63 +292,65 @@ listed. The build log prints every package left out and why (`listing: …`).
 
 ## Development
 
-Requires Node.js 22.18 or later (the unit tests run TypeScript directly) and
-pnpm (`corepack enable`). Set `GITHUB_TOKEN` for `pnpm build` to get the GitHub
-data, as CI does.
+It is part of levimc.org's one package: `npm ci` at the repository root (Node.js 22.22 or later), and every command
+from there. Set `GITHUB_TOKEN` for the build to get the GitHub data, as CI does.
 
 ```bash
-pnpm install
-pnpm dev        # http://localhost:5173/mods/, every page rendered on request
+npm run dev:mods     # http://localhost:5173/mods/, every page rendered on request
 ```
 
-| Command          | What it does                                                              |
-| ---------------- | ------------------------------------------------------------------------- |
-| `pnpm build`     | client build, SSR build, then `prerender.mjs` writes every page, the JSON from before version 4, the hero paintings and `sitemap.xml` to `dist/` (the site's `/mods/`), the pages in the other languages to `dist-locales/<lang>/` (the site's `/<lang>/mods/`; the files they load stay under `/mods/`), and the JSON to `dist-api/` (the site's `/api/`) |
-| `pnpm preview`   | serves `dist/` at `/mods/`, `dist-locales/<lang>/` at `/<lang>/mods/` and `dist-api/` at `/api/` the way GitHub Pages does, on <http://127.0.0.1:4173/mods/> |
-| `pnpm lint`      | ESLint (typescript-eslint, React hooks)                                    |
-| `pnpm typecheck` | `tsc --noEmit`                                                             |
-| `pnpm test`      | unit tests (`node:test`): package files (against lip's golden data), query parsing and filters, tags, licenses, search, URLs, README rendering, prerendering |
-| `pnpm budget`    | checks the size budgets of the built home page, JavaScript and CSS         |
-| `pnpm linkcheck` | checks every internal link and anchor in `dist/` and `dist-locales/` (add `--external` for the rest) |
-| `pnpm smoke`     | browser test of the built site against `pnpm preview` (needs Playwright), every mod page included |
+The app writes its build into its working directory, so `scripts/mods/run.mjs` runs it in `.build/mods/` (Vite's
+root is `src/mods/`), with `MODS_REPOS_FILE` naming `content/mods/repos.txt` and the registry cache in
+`.cache/mods/registry.json`.
+
+| Command | What it does |
+| --- | --- |
+| `node scripts/mods/run.mjs build` | client build, SSR build, then `prerender.mjs` writes every page, the JSON from before version 4, the hero paintings and `sitemap.xml` to `.build/mods/dist/` (the site's `/mods/`), the pages in the other languages to `dist-locales/<lang>/` (the site's `/<lang>/mods/`; the files they load stay under `/mods/`), and the JSON to `dist-api/` (the site's `/api/`). `npm run build -- mods` does this and copies them into the site's `dist/` |
+| `node scripts/mods/run.mjs preview` | serves that build the way GitHub Pages does, on <http://127.0.0.1:4173/mods/> |
+| `npm run lint` | ESLint (typescript-eslint, React hooks) |
+| `npm run typecheck` | `tsc --noEmit` (the whole site) |
+| `npm test` | unit tests (`node:test`; the whole site's): package files (against lip's golden data), query parsing and filters, tags, licenses, search, URLs, README rendering, prerendering |
+| `node scripts/mods/run.mjs budget` | checks the size budgets of the built home page, JavaScript and CSS |
+| `node scripts/mods/run.mjs linkcheck` | checks every internal link and anchor in the build |
+| `npm run smoke:mods` | browser test of the built site against the preview (needs Playwright), every mod page included |
 
 ## Layout
 
 ```
-index.html          page template (the kit's pre-paint script and fonts, the listing's view/pending script)
-prerender.mjs       renders /mods/, /mods/<id>/ and 404.html into dist/ (and /<lang>/mods/… into dist-locales/<lang>/), plus the JSON
-                    (dist-api/), the hero paintings, sitemap.xml and the redirect pages of the old URLs (/mods/<lang>/…)
-repos.txt           the repositories the catalogue is built from (see Registry)
-scripts/discover.mjs  proposes new repositories in pull requests
-src/
-  entry-client.tsx  hydrates a prerendered page
-  entry-server.tsx  renders one page (prerender and dev server)
-  App.tsx           shell: LeviMC bar, page, footer
-  base-path.ts      BASE, the site's path on levimc.org (`/mods/`)
-  i18n.ts           interface strings (en, zh-CN, zh-Hant); locales.ts lists the languages and their URL segments
-  kit-ui.ts         the kit components the site uses
-  data/             featured tags (with their groups), license families, sides, sprite names
-  pages/            home, mod and 404 pages
-  components/       listing (search, toolbar, filters, rows), mod page (header, tabs, versions,
-                    dependencies, sidebar, install dialog), README renderer
-  lib/              catalogue query (parse/serialize/run), search, package files (lip.toml, tooth.json), URLs, markdown helpers
-  server/           build-time data: registry, catalogue, GitHub, JSON, icons, galleries, hero paintings
-kit/                levimc-kit, copied from ../kit by `pnpm install` (git-ignored; never edit it)
-public/             icon.png
+src/mods/
+  index.html          page template (the kit's pre-paint script and fonts, the listing's view/pending script)
+  vite.config.ts      base /mods/, the head scripts, the dev server that renders every page like the build
+  prerender.mjs       renders /mods/, /mods/<id>/ and 404.html into dist/ (and /<lang>/mods/… into dist-locales/<lang>/), plus the JSON
+                      (dist-api/), the hero paintings, sitemap.xml and the redirect pages of the old URLs (/mods/<lang>/…)
+  entry-client.tsx    hydrates a prerendered page
+  entry-server.tsx    renders one page (prerender and dev server)
+  App.tsx             shell: LeviMC bar, page, footer
+  base-path.ts        BASE, the site's path on levimc.org (`/mods/`)
+  i18n.ts             interface strings (en, zh-CN, zh-Hant); locales.ts lists the languages and their URL segments
+  kit-ui.ts           the kit components the site uses
+  data/               featured tags (with their groups), license families, sides, sprite names
+  pages/              home, mod and 404 pages
+  components/         listing (search, toolbar, filters, rows), mod page (header, tabs, versions,
+                      dependencies, sidebar, install dialog), README renderer
+  lib/                catalogue query (parse/serialize/run), search, package files (lip.toml, tooth.json), URLs, markdown helpers
+  server/             build-time data: registry, catalogue, GitHub, JSON, icons, galleries, hero paintings
+  public/             icon.png
+content/mods/repos.txt  the repositories the catalogue is built from (see Registry)
+scripts/mods/           run.mjs (dev, build, preview, checks), discover.mjs (proposes new repositories in pull requests),
+                        preview.mjs, smoke.mjs, budget.mjs
 ```
 
 ## Design system
 
 Colours, fonts, components and the whole LeviMC chrome (the bar on top, the footer) come from levimc-kit,
-which lives next to this app in [`../kit`](../kit/README.md). `pnpm install` runs `scripts/fetch-kit.mjs --source
-../kit`, which copies it into `kit/`; `pnpm kit` refreshes the copy after a kit change. The bar and footer links
-into the rest of levimc.org (Home, Blog, …) are ordinary links (`isAppPath`): only `/mods/` and `/<lang>/mods/` are
-this app.
+which is beside this app in [`src/kit`](../kit/README.md) and imported by relative path (`../kit/components/…`). The
+bar and footer links into the rest of levimc.org (Home, Blog, …) are ordinary links (`isAppPath`): only `/mods/` and
+`/<lang>/mods/` are this app.
 
 ## Deployment
 
-levimc.org's `.github/workflows/deploy.yml` builds this app after the site and
-deploys `dist/` as levimc.org's `/mods/` and each `dist-locales/<lang>/` as its `/<lang>/mods/` on every push to `main` (a merged
-discovery pull request among them). It also rebuilds every hour, so the site
-picks up new versions.
-The `mods` job of `.github/workflows/ci.yml` lints, tests and builds it when a change touches `mods/` or `kit/`.
+levimc.org's build (`npm run build`, `scripts/build.mjs`) builds this app after the site itself and copies its
+`dist/` to the site's `/mods/`, each `dist-locales/<lang>/` to `/<lang>/mods/` and `dist-api/` to `/api/`;
+`.github/workflows/deploy.yml` runs it on every push to `main` (a merged discovery pull request among them) and
+every hour, so the site picks up new versions. `.github/workflows/ci.yml` lints, tests and builds it with the rest
+of the site on every pull request.

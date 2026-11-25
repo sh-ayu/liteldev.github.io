@@ -35,10 +35,10 @@ export interface PageRoute {
 }
 
 const ALWAYS_EXCLUDE = ['**/node_modules/**', '**/.*/**', '**/.*', '.vitepress/**', 'public/**'];
-/** The vendored kit folder (…/kit), wherever it is. */
+/** The kit folder (src/kit), wherever it is. */
 const KIT_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 
-/** Folders inside contentDir that are never content: the vendored kit and the build output. */
+/** Folders inside contentDir that are never content: the kit and the build output. */
 function implicitExcludes(cfg: ResolvedConfig): string[] {
   const out: string[] = [];
   for (const dir of [KIT_ROOT, cfg.outRoot, join(cfg.root, '.kit')]) {

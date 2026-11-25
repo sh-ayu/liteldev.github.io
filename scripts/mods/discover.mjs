@@ -19,9 +19,9 @@
 // up before the first request, while a personal token has its own.
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { parseLipToml } from "../src/lib/lipfile.ts";
-import { migrateManifest } from "../src/lib/manifest.ts";
-import { addRepo, parseRepoList } from "../src/lib/repo-list.ts";
+import { parseLipToml } from "../../src/mods/lib/lipfile.ts";
+import { migrateManifest } from "../../src/mods/lib/manifest.ts";
+import { addRepo, parseRepoList } from "../../src/mods/lib/repo-list.ts";
 
 const args = process.argv.slice(2);
 const dryRun = args.includes("--dry-run");
@@ -29,7 +29,7 @@ const max = Number(args.includes("--max") ? args[args.indexOf("--max") + 1] : 20
 const token = process.env.GH_TOKEN ?? process.env.GITHUB_TOKEN;
 const searchToken = process.env.SEARCH_TOKEN || token;
 const target = process.env.GITHUB_REPOSITORY ?? "LiteLDev/levimc.org";
-const REPOS_PATH = "mods/repos.txt";
+const REPOS_PATH = "content/mods/repos.txt";
 /** Package files at the top of a repository: lip.toml (lip v0.40), and tooth.json (lip before it). */
 const SEARCHES = ["format path:/ filename:lip.toml", "format_version path:/ filename:tooth.json"];
 const SEMVER = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/;
@@ -201,7 +201,7 @@ async function propose(repository, tag, count, manifest) {
   console.log(`${title}: ${pull.html_url}`);
 }
 
-const listed = parseRepoList(readFileSync("repos.txt", "utf8"));
+const listed = parseRepoList(readFileSync(REPOS_PATH, "utf8"));
 const known = new Set(listed.map((r) => r.toLowerCase()));
 
 /** Where GitHub serves `owner/repo` now (it follows renames and transfers), lower case; `null`: nowhere. Throws when GitHub cannot say. */

@@ -5,7 +5,7 @@
 // The LeviMC navigation model: every top-level nav entry is a tab with its own sidebar tree.
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { defineDocsConfig, type NavEntry } from './kit/docs/node/config.ts';
+import { defineDocsConfig, type NavEntry } from '../../src/kit/docs/node/config.ts';
 
 const repo = 'https://github.com/LiteLDev/lip';
 /** Where the pages are written: levimc.org's repository. */
@@ -270,7 +270,7 @@ const MOVED: Record<string, Target> = {
 // redirect too (the kit redirects the old URL of each page that still exists, `formerPrefixes`; these are the pages
 // that do not). A target in zh-Hans/ or zh-Hant/ is that locale's page, language first (/zh-Hans/lip/…), and the
 // kit also writes the redirect at the language-first URL of an old page of a locale (/zh-Hans/lip/<old>.html).
-const isPage = (folder: string, page: string) => existsSync(fileURLToPath(new URL(`./content/${folder}${page}.md`, import.meta.url)));
+const isPage = (folder: string, page: string) => existsSync(fileURLToPath(new URL(`./pages/${folder}${page}.md`, import.meta.url)));
 const redirects = Object.fromEntries(
   (
     [
@@ -297,7 +297,7 @@ export default defineDocsConfig({
   favicon: '/logo.webp',
   project: 'lip',
   // the pages; CONTRIBUTING.md, next to it, is for writers
-  contentDir: 'content',
+  contentDir: 'pages',
   // public/ next to content/: lip's screenshot generator (tests/Lip.Cli.Tests/Tui/Screenshots in LiteLDev/lip) writes
   // the pictures into docs/lip/public/screenshots/ of a checkout of this repository named liteldev.github.io next to
   // lip's (or into LIP_SCREENSHOTS_DIR).
@@ -305,7 +305,7 @@ export default defineDocsConfig({
   repo,
   // The sources live in levimc.org's repository now. The Traditional Chinese pages are made from the Simplified ones
   // (scripts/zh-hant.mjs): those are the ones to edit.
-  editLink: { pattern: (source) => `${SOURCES}/edit/main/docs/lip/content/${source.replace(/^zh-Hant\//, 'zh/')}` },
+  editLink: { pattern: (source) => `${SOURCES}/edit/main/content/lip/pages/${source.replace(/^zh-Hant\//, 'zh/')}` },
   hostname: 'https://levimc.org',
   sitemap: { hostname: 'https://levimc.org' },
   i18n: {

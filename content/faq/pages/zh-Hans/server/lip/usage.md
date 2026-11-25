@@ -134,10 +134,10 @@ LiteLDev 论坛早已关闭，`lippkg.com`、`bedrinth`、`pkg.levimc.org` 也�
 
 ### 自己在 GitHub 发布了 LeviLamina 模组，怎样才能被 lip 的模组目录（LeviMC 模组 / LeviLauncher）收录？为什么一直搜不到？
 
-现在的目录是 LeviMC 模组（<https://levimc.org/zh-Hans/mods/>），lip 的「市场」页和 LeviLauncher 都读它，原来的 lipr / bedrinth 已被替代。它由 `LiteLDev/liteldev.github.io` 仓库里的 `mods/repos.txt` 仓库列表构建：
+现在的目录是 LeviMC 模组（<https://levimc.org/zh-Hans/mods/>），lip 的「市场」页和 LeviLauncher 都读它，原来的 lipr / bedrinth 已被替代。它由 `LiteLDev/liteldev.github.io` 仓库里的 `content/mods/repos.txt` 仓库列表构建：
 
 1. 自动发现：每两小时有机器人用 GitHub 代码搜索查找根目录带 `lip.toml`（或旧的 `tooth.json`）、且有 lip 能读取的版本标签的仓库，然后发 PR 把它加入 `repos.txt`；维护者合并后，在下一次每小时构建中出现。fork 仓库不会被发现。因为依赖 GitHub 代码搜索（其配额也常被用尽而跳过某次运行），新仓库在 GitHub 建好代码索引之前可能搜不到，这时直接走第 2 步自己发 PR 最快。
-2. 想更快上架：自己发 PR 编辑 `mods/repos.txt`，加一行 `<作者>/<仓库>`。
+2. 想更快上架：自己发 PR 编辑 `content/mods/repos.txt`，加一行 `<作者>/<仓库>`。
 3. 收录条件：版本标签必须是 `v` 加完整语义化版本（如 `v1.0.0`，不能是 `1.0.0` 或 `v1.0`），且标签处 `lip.toml` 的 `version` 与之一致；最新版本依赖 LeviLamina（直接或间接）；把文件放到 `mods/`（或 `plugins/` 等）；仓库不是 GitHub 模板，名字不以 `-template`、`-example`、`-demo`、`-sample`、`-test` 结尾。
 4. 自查：在测试服务器上执行 `lip install github.com/<作者>/<仓库>@<版本> --dry-run`，应能找到你的版本，且不改动任何文件。
 

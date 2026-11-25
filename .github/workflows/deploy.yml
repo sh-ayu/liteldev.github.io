@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  # LeviMC Mods (/mods/) is a snapshot of its repositories' tags (mods/repos.txt), so rebuild to pick up new
+  # LeviMC Mods (/mods/) is a snapshot of its repositories' tags (content/mods/repos.txt), so rebuild to pick up new
   # versions.
   schedule:
     - cron: "17 * * * *"
@@ -25,122 +25,58 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          # full history for the docs' "Last updated" dates (tutorials/, faq/, docs/<Project>/)
+          # full history for the docs' "Last updated" dates (content/<Site>/pages/)
           fetch-depth: 0
 
       - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: npm
-          cache-dependency-path: |
-            package-lock.json
-            tutorials/package-lock.json
-            faq/package-lock.json
-            docs/*/package-lock.json
 
       - run: npm ci
 
-      # levimc-kit lives here (kit/) and is published with the site at https://levimc.org/kit/v2/ (for sites built
-      # elsewhere; every LeviMC docs site is built below, with this checkout's kit). --stamp puts the kit's build hash
-      # into this site's pages too.
-      - run: node kit/scripts/publish-kit.mjs .kit/publish --stamp
-
       - run: npm run typecheck
 
-      # Blog content (Hexo permalinks, slugs, rendering) and the kit's preference tests.
+      - run: npm run lint
+
       - run: npm test
 
-      # Client build, SSR build and prerender: one static HTML file per route
-      # (projects/index.html, …) plus 404.html, sitemap.xml and robots.txt.
-      - run: npm run build
-
-      - run: cp -r .kit/publish dist/kit
-
-      # LeviMC Mods: its own app in mods/ (pnpm), built with this kit and deployed at /mods/. The token lets its build
-      # read each package repository from GitHub's GraphQL API (renamed repositories, stars, release dates, license).
-      - uses: pnpm/action-setup@v5
-        with:
-          package_json_file: mods/package.json
-
-      # What earlier builds read from the mods' repositories (mods/.cache, see mods/src/server/registry.ts), so this one
-      # reads only new tags. Without it, everything is read again (about a minute).
+      # What earlier builds read from the mods' repositories (.cache/mods/registry.json, see
+      # src/mods/server/registry.ts), so this one reads only new tags. Without it, everything is read again (about a
+      # minute).
       - uses: actions/cache/restore@v6
         with:
-          path: mods/.cache
-          key: mods-registry-${{ github.run_id }}
-          restore-keys: mods-registry-
+          path: .cache/mods
+          key: mods-registry-v2-${{ github.run_id }}
+          restore-keys: mods-registry-v2-
 
-      - working-directory: mods
-        run: |
-          pnpm install --frozen-lockfile
-          pnpm build
+      # The whole site into dist/ (scripts/build.mjs): levimc.org itself, LeviMC Mods, every docs site (each with its
+      # own link check) and the site-wide search index. The token lets the Mods build read each package repository
+      # from GitHub's GraphQL API (renamed repositories, stars, release dates, license).
+      - run: npm run build
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
       # Saved only when it changed (the key is its hash).
       - uses: actions/cache/save@v6
         with:
-          path: mods/.cache
-          key: mods-registry-${{ hashFiles('mods/.cache/registry.json') }}
+          path: .cache/mods
+          key: mods-registry-v2-${{ hashFiles('.cache/mods/registry.json') }}
 
-      # The pages and the JSON from before version 4 at /mods/, the pages in the other languages at /<lang>/mods/
-      # (next to levimc.org's own /<lang>/ pages, which they must not replace), the JSON (version 4) at /api/v4/mods/,
-      # and the release versions (versions/versions.json, kept by versions.yml) at /api/v4/mc/versions/.
-      - run: |
-          cp -r mods/dist dist/mods
-          for dir in mods/dist-locales/*/; do
-            lang=$(basename "$dir")
-            test ! -e "dist/$lang/mods"
-            mkdir -p "dist/$lang"
-            cp -r "$dir" "dist/$lang/mods"
-          done
-          test ! -e dist/api
-          cp -r mods/dist-api dist/api
-          test ! -e dist/api/v4/mc/versions
-          mkdir -p dist/api/v4/mc/versions
-          cp versions/versions.json dist/api/v4/mc/versions/index.json
-
-      # The docs (docs/README.md): the tutorials (tutorials/), the FAQ (faq/) and every project's docs root (docs/<Project>/), each a
-      # docs build with this checkout's kit (its install vendors it). Per root: npm ci, typecheck, build (with the
-      # root's prebuild / postbuild scripts), linkcheck.
-      - run: node scripts/docs-sites.mjs build
-
-      # LeviLamina's API reference (/LeviLamina/api/), once docs/LeviLamina/ has its Doxyfile: Doxygen over the
-      # headers of LiteLDev/LeviLamina (checked out into docs/LeviLamina/.levilamina/), run in docs/LeviLamina/ and
-      # written into its dist/LeviLamina/api/, with the docs' header (sections, resources, languages: from the build's
-      # dist/LeviLamina/_kit/nav.json) and the kit's footer. The chrome (bar, drawer, site column, footer) goes into one
-      # shared script (api/kit-dox-chrome.js) that every page writes in place, not into each of its ~68,000 pages.
-      # See docs/README.md, "LeviLamina API reference".
-      - if: hashFiles('docs/LeviLamina/api/Doxyfile') != ''
-        uses: actions/checkout@v7
+      # LeviLamina's API reference (/LeviLamina/api/): Doxygen over the headers of LiteLDev/LeviLamina, written into
+      # dist/LeviLamina/api/ with the docs' chrome (doxygen/build.sh).
+      - uses: actions/checkout@v7
         with:
           repository: LiteLDev/LeviLamina
-          path: docs/LeviLamina/.levilamina
+          path: .cache/doxygen/LeviLamina
 
-      - if: hashFiles('docs/LeviLamina/api/Doxyfile') != ''
-        working-directory: docs/LeviLamina
-        run: |
-          node kit/static/doxygen/gen-header.mjs --nav dist/LeviLamina/_kit/nav.json --out api/header.html \
-            --chrome-out api/kit-dox-chrome.js --footer kit/static/doxygen/footer.html --footer-out api/footer.html
-          git clone --depth 1 --branch v2.4.1 https://github.com/jothepro/doxygen-awesome-css.git api/doxygen-awesome-css
+      - run: |
           wget -qO "$RUNNER_TEMP/doxygen.tar.gz" https://www.doxygen.nl/files/doxygen-1.16.1.linux.bin.tar.gz
           tar -xzf "$RUNNER_TEMP/doxygen.tar.gz" -C "$RUNNER_TEMP"
           sudo cp -r "$RUNNER_TEMP"/doxygen-*/bin/* /usr/local/bin/
-          doxygen --version
-          mkdir -p dist/LeviLamina/api
-          doxygen api/Doxyfile
-          # the tree renders a window of its long lists (the Class List) and leaves the page layout to the kit
-          node kit/static/doxygen/patch-navtree.mjs dist/LeviLamina/api
+          bash doxygen/build.sh
 
-      # Each docs build mirrors the host root (dist/tutorials/, dist/zh-Hans/tutorials/ …): merged into the site as it
-      # is, without its 404.html (the site's own forwards and shows the 404); a file both publish fails the build.
-      - run: node scripts/docs-sites.mjs merge dist
-
-      # The site-wide search: one index per language over every page above (levimc.org, the blog, Mods, the
-      # tutorials, the FAQ, every project's docs) → dist/_search/, which the search of every LeviMC site loads.
-      - run: node scripts/search-index.mjs dist
-
-      # Internal links, redirect-needing links and #anchors (GitHub Pages semantics).
+      # Internal links, redirect-needing links and #anchors of the whole site (GitHub Pages semantics).
       - run: npm run linkcheck
 
       - uses: actions/configure-pages@v6

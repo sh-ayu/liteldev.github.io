@@ -42,6 +42,14 @@ export interface KitDocsPluginOptions {
   react?: boolean;
   /** Include @tailwindcss/vite (default true). */
   tailwind?: boolean;
+  /**
+   * The folder the config's relative paths (contentDir, publicDir, layouts, outDir) are resolved against. Default:
+   * Vite's root. levimc.org builds every site with the repository as Vite's root (the kit must be inside it) and
+   * the site's folder (content/<Site>/) here.
+   */
+  configRoot?: string;
+  /** Where the build keeps its intermediate files (the SSR bundle, client-pages.json, warnings.txt). Default: <root>/.kit. */
+  workDir?: string;
 }
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -112,6 +120,7 @@ function hash8(s: string) {
 
 export function kitDocs(userConfig: DocsConfig, options: KitDocsPluginOptions = {}): PluginOption[] {
   let root = process.cwd();
+  let workDir = join(root, '.kit');
   let cfg: ResolvedConfig;
   let built: BuiltSite | null = null;
   let building: Promise<BuiltSite> | null = null;
@@ -149,7 +158,8 @@ export function kitDocs(userConfig: DocsConfig, options: KitDocsPluginOptions = 
     enforce: 'pre',
     config(vc, env) {
       root = vc.root ? resolve(vc.root) : process.cwd();
-      cfg = resolveConfig(userConfig, root);
+      workDir = options.workDir ? resolve(options.workDir) : join(root, '.kit');
+      cfg = resolveConfig(userConfig, options.configRoot ? resolve(options.configRoot) : root);
       isSsr = !!env.isSsrBuild;
       isBuild = env.command === 'build';
       return {
@@ -160,7 +170,7 @@ export function kitDocs(userConfig: DocsConfig, options: KitDocsPluginOptions = 
         server: { fs: { allow: [root, cfg.contentRoot, KIT_DOCS_APP_DIR, resolve(KIT_DOCS_APP_DIR, '../..')] } },
         build: isSsr
           ? {
-              outDir: join(root, '.kit/ssr'),
+              outDir: join(workDir, 'ssr'),
               emptyOutDir: true,
               ssr: entryServer,
               copyPublicDir: false,
@@ -195,8 +205,8 @@ export function kitDocs(userConfig: DocsConfig, options: KitDocsPluginOptions = 
       const b = await rebuild();
       if (isBuild && !isSsr) {
         reportWarnings(b, (m) => this.warn(m));
-        mkdirSync(join(root, '.kit'), { recursive: true });
-        writeFileSync(join(root, '.kit/warnings.txt'), b.warnings.join('\n') + '\n');
+        mkdirSync(workDir, { recursive: true });
+        writeFileSync(join(workDir, 'warnings.txt'), b.warnings.join('\n') + '\n');
       }
     },
     resolveId(id) {
@@ -406,12 +416,12 @@ export function kitDocs(userConfig: DocsConfig, options: KitDocsPluginOptions = 
           pages[out.facadeModuleId.slice(R_PAGE.length)] = [out.fileName, ...out.imports];
         }
       }
-      mkdirSync(join(root, '.kit'), { recursive: true });
+      mkdirSync(workDir, { recursive: true });
       // outDir: where the prerender writes the pages (the host root with localeFirst); template: the client build's
       // index.html (in base's folder)
       const template = relative(cfg.outRoot, join(cfg.baseOutRoot, relative(root, appHtml))).split('\\').join('/');
       writeFileSync(
-        join(root, '.kit/client-pages.json'),
+        join(workDir, 'client-pages.json'),
         JSON.stringify({ pages, appHtml: relative(root, appHtml).split('\\').join('/'), outDir: cfg.outRoot, template }, null, 2),
       );
       // sitemap

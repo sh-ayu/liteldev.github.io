@@ -37,8 +37,8 @@ import { TEXTS_FILE } from './interface-texts.mjs';
 import { TERMS } from './zh-hant-terms.mjs';
 
 const docs = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const from = join(docs, 'content', 'zh');
-const to = join(docs, 'content', 'zh-Hant');
+const from = join(docs, 'pages', 'zh');
+const to = join(docs, 'pages', 'zh-Hant');
 const quiet = process.argv.includes('--quiet');
 
 const OpenCC = await import('opencc-js/cn2t');

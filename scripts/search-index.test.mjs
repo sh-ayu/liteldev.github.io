@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import MiniSearch from 'minisearch';
 import { buildSearch, byLanguage, htmlSections, languageOfPath, languageOfTag, siteOfPath } from './search-index.mjs';
-import { searchOptions, tokenizeQuery } from '../kit/docs/shared/search.ts';
+import { searchOptions, tokenizeQuery } from '../src/kit/docs/shared/search.ts';
 
 test('languages and sites of URLs', () => {
   assert.equal(languageOfPath('/zh-Hans/LeviLamina/x/'), 'zh-Hans');

@@ -3,7 +3,7 @@
 //   node scripts/preview.mjs [--port 4173] [--host 127.0.0.1]
 import { createServer } from "node:http";
 import { existsSync, readdirSync } from "node:fs";
-import { createPagesServer, resolvePagesPath } from "../kit/scripts/serve-pages.mjs";
+import { createPagesServer, resolvePagesPath } from "../../src/kit/scripts/serve-pages.mjs";
 
 const args = process.argv.slice(2);
 const opt = (name, fallback) => (args.includes(name) ? args[args.indexOf(name) + 1] : fallback);

@@ -5,15 +5,15 @@ import { join } from "node:path";
 import { defineConfig, type Connect, type Plugin, type ViteDevServer } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
-import { createThemeInitScript } from "./kit/components/theme.ts";
-import { FONT_HEAD_HTML } from "./kit/components/fonts.ts";
-import { UI_LOCALES } from "./kit/components/i18n.ts";
-import { PREFS_CORE_JS } from "./kit/components/prefs.ts";
-import { noJsDarkCss } from "./kit/static/nojs-dark.mjs";
-import { BASE } from "./src/base-path.ts";
-import { LISTING_KEYS } from "./src/lib/catalog-query.ts";
-import { STORAGE_KEYS } from "./src/lib/storage.ts";
-import { isSitePath, legacyLocale, LOCALES, localeBase, withLocale } from "./src/locales.ts";
+import { createThemeInitScript } from "../kit/components/theme.ts";
+import { FONT_HEAD_HTML } from "../kit/components/fonts.ts";
+import { UI_LOCALES } from "../kit/components/i18n.ts";
+import { PREFS_CORE_JS } from "../kit/components/prefs.ts";
+import { noJsDarkCss } from "../kit/static/nojs-dark.mjs";
+import { BASE } from "./base-path.ts";
+import { LISTING_KEYS } from "./lib/catalog-query.ts";
+import { STORAGE_KEYS } from "./lib/storage.ts";
+import { isSitePath, legacyLocale, LOCALES, localeBase, withLocale } from "./locales.ts";
 
 /**
  * The kit's pre-paint script: the cross-site theme preference (cookie on
@@ -131,8 +131,8 @@ function devServerRender(): Plugin {
           return;
         }
         try {
-          const template = await server.transformIndexHtml(url, readFileSync("index.html", "utf8"));
-          const entry = await server.ssrLoadModule("/src/entry-server.tsx");
+          const template = await server.transformIndexHtml(url, readFileSync(join(server.config.root, "index.html"), "utf8"));
+          const entry = await server.ssrLoadModule("/entry-server.tsx");
           const page = await entry.render(url);
           // Functions, so `$&` and friends in a README stay as written.
           const html = template
@@ -166,7 +166,7 @@ function devServerRender(): Plugin {
         }
         const json = /^\/(api\/v4\/)?mods\/(?:(.+)\/)?index\.json$/.exec(url.split("?")[0] ?? "");
         if (json) {
-          const entry = await server.ssrLoadModule("/src/entry-server.tsx");
+          const entry = await server.ssrLoadModule("/entry-server.tsx");
           const id = json[2] ? decodeURIComponent(json[2]) : undefined;
           const body = json[1]
             ? id
@@ -191,7 +191,7 @@ function devServerRender(): Plugin {
           // The hero paintings are written by prerender.mjs; drawn on request here.
           const hero = /^\/mods\/(hero-(?:light|dark)\.svg)$/.exec(url.split("?")[0] ?? "");
           if (hero) {
-            const entry = await server.ssrLoadModule("/src/entry-server.tsx");
+            const entry = await server.ssrLoadModule("/entry-server.tsx");
             res.setHeader("Content-Type", "image/svg+xml");
             res.end(entry.heroSvg(hero[1]));
             return;
@@ -199,7 +199,7 @@ function devServerRender(): Plugin {
           // Scaled icons are written by prerender.mjs; served from the build data here.
           const icon = /^\/mods\/(icons\/[0-9a-f]+-\d+\.webp)$/.exec(url.split("?")[0] ?? "");
           if (icon) {
-            const entry = await server.ssrLoadModule("/src/entry-server.tsx");
+            const entry = await server.ssrLoadModule("/entry-server.tsx");
             await entry.listRoutes();
             const body = entry.iconFiles().get(icon[1]);
             if (!body) {
@@ -213,7 +213,7 @@ function devServerRender(): Plugin {
           // Gallery files are written by prerender.mjs; served from the pages' build data here.
           const shot = /^\/mods\/(showcase\/.+)$/.exec(url.split("?")[0] ?? "");
           if (shot) {
-            const entry = await server.ssrLoadModule("/src/entry-server.tsx");
+            const entry = await server.ssrLoadModule("/entry-server.tsx");
             const file = entry.showcaseFiles().get(decodeURIComponent(shot[1] ?? ""));
             if (!file) {
               next();
@@ -233,16 +233,22 @@ function devServerRender(): Plugin {
 export default defineConfig({
   // The site is levimc.org/mods/: the levimc.org build copies dist/ there.
   base: BASE,
+  // the kit is beside this folder (src/kit)
+  server: { fs: { allow: [join(import.meta.dirname, "../..")] } },
   // HTML is rendered by `devServerRender` in dev and by prerender.mjs at build.
   appType: "custom",
   plugins: [react(), tailwindcss(), kitHead(), noJsDark(), devServerRender()],
   build: {
+    // Vite's root is this folder; the build runs in its own folder (.build/mods/, see scripts/build.mjs), where
+    // dist/, dist-api/, dist-locales/ and .kit/ are written.
+    outDir: join(process.cwd(), "dist"),
+    emptyOutDir: true,
     // Read by the prerender to preload the README renderer on mod pages;
     // prerender.mjs deletes it afterwards.
     manifest: true,
   },
   optimizeDeps: {
-    // Only the app's own entry: the vendored kit has HTML entries of its own
+    // Only the app's own entry: the kit has HTML entries of its own
     // (docs engine, static pages) that are not part of this site.
     entries: ["index.html"],
   },

@@ -8,7 +8,7 @@
 //
 // All targets are canonical, redirect-free URLs (answer 200 directly); `node legacy/build.test.mjs --live`
 // verifies them, and every mapped heading id, against the live site. Since 2026-11-16 the targets are the
-// language-first URLs (/zh-Hans/LeviLamina/…, MIGRATION.md): until a project's docs are built here (docs/<Project>/),
+// language-first URLs (/zh-Hans/LeviLamina/…, MIGRATION.md): until a project's docs are built here (content/<Project>/),
 // the 404 forwards its language-first URLs to where its own repository still publishes them (LANGUAGE_SEGMENTS).
 
 import { existsSync } from 'node:fs';
@@ -268,8 +268,8 @@ export const LANGUAGE_SEGMENTS = {
 
 /**
  * The sites whose pages this repository builds (levimc.org's dist): /mods/, /tutorials/, /faq/ and every project with a
- * docs root (docs/<Project>/package.json, see docs/README.md). The others are still their repositories' Pages.
+ * docs site (content/<Project>/docs.config.ts, see content/README.md). The others are their repositories' Pages.
  */
 export function builtSites(repoRoot) {
-  return ['mods', 'tutorials', 'faq', ...PROJECT_SITES.filter((p) => existsSync(join(repoRoot, 'docs', p, 'package.json')))];
+  return ['mods', 'tutorials', 'faq', ...PROJECT_SITES.filter((p) => existsSync(join(repoRoot, 'content', p, 'docs.config.ts')))];
 }

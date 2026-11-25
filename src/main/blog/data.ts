@@ -2,7 +2,7 @@
 // markdown of each post/page as its own lazily loaded chunk.
 import { useEffect, useState } from 'react';
 import * as virtualBlog from 'virtual:levimc-blog';
-import type { BlogData, BlogDoc, BlogPost, BlogTerm } from '../../blog/types.ts';
+import type { BlogData, BlogDoc, BlogPost, BlogTerm } from './types.ts';
 
 export const blog = virtualBlog.blog as BlogData;
 const blogRoutes = virtualBlog.routes;

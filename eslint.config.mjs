@@ -4,13 +4,10 @@ import tseslint from "typescript-eslint";
 import reactHooks from "eslint-plugin-react-hooks";
 import globals from "globals";
 
+// Linted so far: LeviMC Mods (src/mods/) and its scripts (scripts/mods/). The rest of the site is type-checked and
+// tested only.
 const eslintConfig = defineConfig([
-  globalIgnores([
-    "dist/**",
-    ".kit/**",
-    // The vendored levimc-kit is linted where it is maintained.
-    "kit/**",
-  ]),
+  globalIgnores(["**/*", "!src/", "!src/mods/", "!src/mods/**", "!scripts/", "!scripts/mods/", "!scripts/mods/**"]),
   {
     files: ["**/*.{ts,tsx}"],
     extends: [
@@ -31,7 +28,7 @@ const eslintConfig = defineConfig([
     },
   },
   {
-    files: ["**/*.mjs", "vite.config.ts"],
+    files: ["**/*.mjs", "**/vite.config.ts"],
     extends: [js.configs.recommended],
     languageOptions: {
       globals: globals.node,
