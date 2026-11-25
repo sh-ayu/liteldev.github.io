@@ -174,7 +174,10 @@ deploy makes it when `docs/LeviLamina/api/Doxyfile` exists, after the docs build
 
 * `LiteLDev/LeviLamina` (its default branch) is checked out at `docs/LeviLamina/.levilamina/` (git-ignore it);
 * `docs/LeviLamina/api/header.html` is generated from the docs build's `dist/LeviLamina/_kit/nav.json` by
-  `kit/static/doxygen/gen-header.mjs` (the docs' sections, resources and languages, language-first);
+  `kit/static/doxygen/gen-header.mjs` (the docs' sections, resources and languages, language-first), with
+  `--chrome-out api/kit-dox-chrome.js --footer kit/static/doxygen/footer.html --footer-out api/footer.html`: the
+  bar, drawer, site column and footer go into that one script, which every page writes in place, instead of ~45 KB of
+  markup into each of the ~68,000 pages;
 * doxygen-awesome-css v2.4.1 is cloned to `docs/LeviLamina/api/doxygen-awesome-css/`;
 * Doxygen 1.16.1 runs `doxygen api/Doxyfile` with the working directory `docs/LeviLamina/`;
 * `kit/static/doxygen/patch-navtree.mjs dist/LeviLamina/api` runs on the output.
@@ -190,11 +193,17 @@ INPUT                  = .levilamina/src/ll/api …
 STRIP_FROM_PATH        = .levilamina .
 USE_MDFILE_AS_MAINPAGE = api/mainpage.md
 HTML_HEADER            = api/header.html
-HTML_FOOTER            = kit/static/doxygen/footer.html
+HTML_FOOTER            = api/footer.html
 HTML_EXTRA_STYLESHEET  = api/doxygen-awesome-css/doxygen-awesome.css …
-HTML_EXTRA_FILES       = kit/static/kit.js
+HTML_EXTRA_FILES       = kit/static/kit.js api/kit-dox-chrome.js
+VERBATIM_HEADERS       = NO
+INLINE_INHERITED_MEMB  = NO
 ```
 
 (`DoxygenLayout.xml`, `logo.svg` and `mainpage.md` move to `docs/LeviLamina/api/` with it; git-ignore
-`api/header.html` and `api/doxygen-awesome-css/`.) Locally, the same commands from `docs/LeviLamina/` after its
-build, with Doxygen installed.
+`api/header.html`, `api/footer.html`, `api/kit-dox-chrome.js` and `api/doxygen-awesome-css/`.) Locally, the same
+commands from `docs/LeviLamina/` after its build, with Doxygen installed.
+
+The last two keep the output small: a copy of every header as a page of its own (`VERBATIM_HEADERS`, 26,000 pages,
+1.5 GB) and every inherited member repeated in each class page (`INLINE_INHERITED_MEMB`) made the site 4.6 GB
+(760 MB to upload), most of it this reference. The class pages still list the inherited members by base class.

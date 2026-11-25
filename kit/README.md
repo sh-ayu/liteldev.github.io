@@ -731,16 +731,18 @@ drift:
 
 ```sh
 # after the docs build (it writes dist/_kit/nav.json); without --nav: the kit's copy of LeviLamina's sections
-node docs/main/kit/static/doxygen/gen-header.mjs --nav docs/main/dist/_kit/nav.json --out docs/api/header.html
+node docs/main/kit/static/doxygen/gen-header.mjs --nav docs/main/dist/_kit/nav.json --out docs/api/header.html \
+  --chrome-out docs/api/kit-dox-chrome.js \
+  --footer docs/main/kit/static/doxygen/footer.html --footer-out docs/api/footer.html
 doxygen docs/api/Doxyfile
 node docs/main/kit/static/doxygen/patch-navtree.mjs site/api
 ```
 
 ```
 HTML_HEADER            = docs/api/header.html                        (generated, git-ignored)
-HTML_FOOTER            = docs/main/kit/static/doxygen/footer.html
+HTML_FOOTER            = docs/api/footer.html                        (generated, git-ignored)
 HTML_EXTRA_STYLESHEET  = docs/api/doxygen-awesome-css/doxygen-awesome.css docs/main/kit/static/kit-chrome.css docs/main/kit/static/doxygen/doxygen-kit.css
-HTML_EXTRA_FILES       = docs/main/kit/static/kit.js
+HTML_EXTRA_FILES       = docs/main/kit/static/kit.js docs/api/kit-dox-chrome.js   (the second generated, git-ignored)
 PROJECT_ICON           = docs/main/contents/favicon.ico              (the docs' favicon)
 USE_MDFILE_AS_MAINPAGE = docs/api/mainpage.md                        (also listed in INPUT)
 HTML_COLORSTYLE_HUE    = 135   SAT = 40   GAMMA = 90                 (Doxygen's own images in the kit green)
@@ -984,6 +986,18 @@ External link verdicts: `ok`, `ok-redirect` (`/releases/latest` and allow-listed
   `LEVIMC_KIT_SOURCE=<checkout>/kit` and run `scripts/chrome-parity.mjs` against the previews.
 
 ## Changelog
+
+### 2.30.0
+
+**The Doxygen chrome in one shared script.** `gen-header.mjs --chrome-out <dir>/kit-dox-chrome.js` writes the LeviMC
+bar, the drawer and site column and (with `--footer <kit>/static/doxygen/footer.html --footer-out <dir>/footer.html`)
+the LeviMC footer into one script instead of into every page. The script loads blocking in the head where the theme
+init was (and runs it); each page calls `kitDoxChrome(part)` where the chrome goes, which writes the same markup in
+place, so the parser and kit.js see exactly what the inline header gave them. A page is ~45 KB smaller: LeviLamina's
+API reference (~68,000 pages) shrinks by about 3 GB. Without `--chrome-out` the header is the inline one, as before
+(`renderDoxygenChrome` next to `renderDoxygenHeader`).
+* **Migration**: optional. To switch, add the three options, list the script in `HTML_EXTRA_FILES`, use the generated
+  footer as `HTML_FOOTER` and git-ignore both. Readers without JavaScript then get the API pages without the chrome.
 
 ### 2.29.0
 

@@ -108,7 +108,9 @@ jobs:
       # LeviLamina's API reference (/LeviLamina/api/), once docs/LeviLamina/ has its Doxyfile: Doxygen over the
       # headers of LiteLDev/LeviLamina (checked out into docs/LeviLamina/.levilamina/), run in docs/LeviLamina/ and
       # written into its dist/LeviLamina/api/, with the docs' header (sections, resources, languages: from the build's
-      # dist/LeviLamina/_kit/nav.json) and the kit's footer. See docs/README.md, "LeviLamina API reference".
+      # dist/LeviLamina/_kit/nav.json) and the kit's footer. The chrome (bar, drawer, site column, footer) goes into one
+      # shared script (api/kit-dox-chrome.js) that every page writes in place, not into each of its ~68,000 pages.
+      # See docs/README.md, "LeviLamina API reference".
       - if: hashFiles('docs/LeviLamina/api/Doxyfile') != ''
         uses: actions/checkout@v7
         with:
@@ -118,7 +120,8 @@ jobs:
       - if: hashFiles('docs/LeviLamina/api/Doxyfile') != ''
         working-directory: docs/LeviLamina
         run: |
-          node kit/static/doxygen/gen-header.mjs --nav dist/LeviLamina/_kit/nav.json --out api/header.html
+          node kit/static/doxygen/gen-header.mjs --nav dist/LeviLamina/_kit/nav.json --out api/header.html \
+            --chrome-out api/kit-dox-chrome.js --footer kit/static/doxygen/footer.html --footer-out api/footer.html
           git clone --depth 1 --branch v2.4.1 https://github.com/jothepro/doxygen-awesome-css.git api/doxygen-awesome-css
           wget -qO "$RUNNER_TEMP/doxygen.tar.gz" https://www.doxygen.nl/files/doxygen-1.16.1.linux.bin.tar.gz
           tar -xzf "$RUNNER_TEMP/doxygen.tar.gz" -C "$RUNNER_TEMP"

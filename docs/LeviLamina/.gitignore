@@ -5,7 +5,10 @@ dist/
 /kit/
 vite.config.ts.timestamp-*
 # the API reference (/LeviLamina/api/), made after the docs build: LiteLDev/LeviLamina checked out for its headers,
-# the header generated from the build's nav and doxygen-awesome-css (docs/README.md, "LeviLamina API reference")
+# the header, footer and chrome script generated from the build's nav, and doxygen-awesome-css (docs/README.md,
+# "LeviLamina API reference")
 /.levilamina/
 /api/header.html
+/api/footer.html
+/api/kit-dox-chrome.js
 /api/doxygen-awesome-css/
