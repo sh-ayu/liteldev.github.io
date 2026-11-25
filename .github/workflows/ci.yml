@@ -1,29 +1,20 @@
-# Every check of the repository, on each pull request and each push to main: type-check (TypeScript and JavaScript),
-# lint, the unit tests, the whole build with every docs site's link check (as deploy.yml builds it), the kit's test
-# sites, the link check of the whole site, the size budgets of LeviMC Mods and the browser checks.
-# LeviLamina's API reference (Doxygen) is made in the deploy only; the deploy does not wait for this workflow.
-# Pull requests the discovery workflow opens (mods-discover.yml) start no workflows of their own.
+# The checks of a pull request: lint, the unit tests and the whole build (each docs site link-checked as it is built).
+# Everything else (typecheck, linkcheck, budget, smoke, the kit's test sites) is run by hand; see README.md.
 name: CI
 
 on:
   pull_request:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  cancel-in-progress: true
 
 jobs:
   site:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-        with:
-          # full history for the docs' "Last updated" dates
-          fetch-depth: 0
 
       - uses: actions/setup-node@v7
         with:
@@ -32,16 +23,11 @@ jobs:
 
       - run: npm ci
 
-      - run: npm run typecheck
-
       - run: npm run lint
 
       - run: npm test
 
-      # bedboo's API pages name every member bedboo's types declare (read from LiteLDev/bedboo's default branch).
-      - run: npm run test:bedboo
-
-      # The registry cache the Pages deploy saves (see deploy.yml); read only here.
+      # The registry cache the deploy saves (deploy.yml); read only here.
       - uses: actions/cache/restore@v6
         with:
           path: .cache/mods
@@ -51,18 +37,3 @@ jobs:
       - run: npm run build
         env:
           GITHUB_TOKEN: ${{ github.token }}
-
-      # The docs engine's test sites (src/kit/demo/): MkDocs-style with suffix locales, VitePress-style with folder
-      # locales, and a single-locale site; each built and link-checked.
-      - run: node scripts/docs-sites.mjs build src/kit/demo src/kit/demo/lip.config.ts src/kit/demo/single.config.ts
-
-      - run: npm run linkcheck
-
-      # LeviMC Mods: the sizes of its home page, embedded catalogue, entry script and stylesheet.
-      - run: npm run budget
-
-      # The browser checks (scripts/smoke-all.mjs), in Chromium: levimc.org's pages, the LeviMC bar and footer, every
-      # docs site, LeviMC Mods, and the preferences shared between the sites.
-      - run: npx playwright install --with-deps chromium
-
-      - run: npm run smoke

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Finds mod repositories content/mods/repos.txt does not name yet and proposes each one in a pull request that adds it
-// (.github/workflows/mods-discover.yml runs it every two hours):
+// (.github/workflows/discover.yml runs it every hour):
 //
 //   node scripts/mods/discover.mjs [--dry-run] [--max 20]
 //
@@ -168,7 +168,7 @@ function body(repository, tag, count, manifest) {
     "",
     "Merge it to list the repository's versions on LeviMC Mods at the next deploy. Close it to keep the repository out: the discovery never proposes a repository twice.",
     "",
-    "_Opened by `scripts/mods/discover.mjs` (`.github/workflows/mods-discover.yml`)._",
+    "_Opened by `scripts/mods/discover.mjs` (`.github/workflows/discover.yml`)._",
   ].join("\n");
 }
 

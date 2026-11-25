@@ -9,7 +9,7 @@ import { labelReadmes, type Readme } from "./readme-language.ts";
 
 /**
  * `fetch` that retries network errors and 5xx/429 answers a few times. A
- * single flaky request during the hourly rebuild would otherwise ship a page
+ * single flaky request during a rebuild would otherwise ship a page
  * without its README until the next one.
  */
 export async function fetchWithRetry(url: string, init?: RequestInit, attempts = 3): Promise<Response> {

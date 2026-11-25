@@ -741,8 +741,8 @@ scroll-spy binary-searches cached targets and touches classes only when the sect
 
 ## Verification scripts
 
-The checks of the whole repository, the kit included. CI (`.github/workflows/ci.yml`) runs them all on every pull
-request and every push to `main`:
+The checks of the whole repository, the kit included. CI (`.github/workflows/ci.yml`) runs `npm run lint`,
+`npm test` and `npm run build` on every pull request; the rest are run by hand:
 
 | Command | Checks |
 |---|---|
@@ -969,7 +969,7 @@ Commands run from the repository root, with the site's dependencies installed (`
   `node src/kit/scripts/smoke.mjs --url http://127.0.0.1:4173/Demo/`.
 * Before a pull request: `npm run typecheck && npm run lint && npm test`, then `npm run build`,
   `npm run linkcheck` and `npm run smoke` ([Verification scripts](#verification-scripts)). CI
-  (`.github/workflows/ci.yml`) runs the same, and the test sites' build, on every pull request and every push to `main`.
+  (`.github/workflows/ci.yml`) runs only the lint, the unit tests and the build.
 * Bump `VERSION` and `components/version.ts` together for a release (`tests/prefs.test.mjs` and build-static check
   they agree) and add a [Changelog](#changelog) entry.
 * Before merging a chrome change, run `node src/kit/scripts/chrome-parity.mjs` against a preview.

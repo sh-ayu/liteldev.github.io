@@ -146,7 +146,7 @@ const fromLegacy = ({ sha, manifest, seen }: LegacyTag): CachedTag =>
   manifest ? { sha, kind: "tooth", v3: manifest, v4: toothToV4(manifest), seen } : { sha, v4: null, seen };
 
 /** The repository's version tags (`v1.2.0` → its commit), `null` when it is gone; throws when GitHub cannot be reached. */
-async function listTags(repo: string): Promise<Map<string, string> | null> {
+export async function listTags(repo: string): Promise<Map<string, string> | null> {
   try {
     // no credential helper: a missing repository must fail, not ask for a login
     const { stdout } = await run("git", ["-c", "credential.helper=", "ls-remote", "--tags", "--refs", `https://github.com/${repo}.git`], {
@@ -273,7 +273,7 @@ function githubPath(tooth: string): string | null {
 /** Where GitHub serves `owner/repo` now (it follows renames and transfers), lower case; `null`: nowhere; `undefined`: GitHub could not be reached. */
 export type RepoResolver = (path: string) => Promise<string | null | undefined>;
 
-async function resolveRepo(path: string): Promise<string | null | undefined> {
+export async function resolveRepo(path: string): Promise<string | null | undefined> {
   const token = process.env.GITHUB_TOKEN;
   try {
     const res = await fetchWithRetry(`https://api.github.com/repos/${path}`, {

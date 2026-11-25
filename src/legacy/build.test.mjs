@@ -1,6 +1,6 @@
 // Tests for src/legacy/build.mjs (part of `npm test`).
 // Add --live (node src/legacy/build.test.mjs --live), or set LIVE=1, to also check every redirect target on the live
-// site: deploy.yml does, after each deploy.
+// site (run it by hand after a deploy that changes them).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';

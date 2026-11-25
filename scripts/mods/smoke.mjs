@@ -857,7 +857,7 @@ await check("no layout shift on load (CLS ≤ 0.05)", async () => {
 });
 
 // Every mod page, as prerendered, must hydrate without a mismatch: their
-// READMEs are third-party text and change with every hourly build.
+// READMEs are third-party text and change with every build.
 if (!args.includes("--skip-all-pages")) {
   await check("every mod page hydrates without errors", async () => {
     const ids = catalog.map((e) => e.id);

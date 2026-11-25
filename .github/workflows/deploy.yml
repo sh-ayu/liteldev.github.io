@@ -1,13 +1,12 @@
+# Builds levimc.org and publishes it to GitHub Pages: on each push to main, and when discover.yml finds something new
+# outside this repository (a mod's version tag, LeviLamina's or BeDD's commit) or commits to main. The checks are
+# ci.yml's, on pull requests.
 name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
       - main
-  # LeviMC Mods (/mods/) is a snapshot of its repositories' tags (content/mods/repos.txt), so rebuild to pick up new
-  # versions.
-  schedule:
-    - cron: "17 * * * *"
   workflow_dispatch:
 
 permissions:
@@ -35,12 +34,6 @@ jobs:
 
       - run: npm ci
 
-      - run: npm run typecheck
-
-      - run: npm run lint
-
-      - run: npm test
-
       # What earlier builds read from the mods' repositories (.cache/mods/registry.json, see
       # src/mods/server/registry.ts), so this one reads only new tags. Without it, everything is read again (about a
       # minute).
@@ -50,9 +43,8 @@ jobs:
           key: mods-registry-v2-${{ github.run_id }}
           restore-keys: mods-registry-v2-
 
-      # The whole site into dist/ (scripts/build.mjs): levimc.org itself, LeviMC Mods, every docs site (each with its
-      # own link check) and the site-wide search index. The token lets the Mods build read each package repository
-      # from GitHub's GraphQL API (renamed repositories, stars, release dates, license).
+      # The whole site into dist/ (scripts/build.mjs). The token lets the Mods build read each package repository from
+      # GitHub's GraphQL API (renamed repositories, stars, release dates, license).
       - run: npm run build
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -76,11 +68,6 @@ jobs:
           sudo cp -r "$RUNNER_TEMP"/doxygen-*/bin/* /usr/local/bin/
           bash doxygen/build.sh
 
-      # Internal links, redirect-needing links and #anchors of the whole site (GitHub Pages semantics).
-      - run: npm run linkcheck
-
-      - uses: actions/configure-pages@v6
-
       - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
@@ -94,22 +81,3 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v5
-
-  # After the deploy: every page the retired sites' addresses are sent to answers on levimc.org, without a further
-  # redirect and with the headings their old #anchors map to (src/legacy/build.test.mjs).
-  live:
-    needs: deploy
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          cache: npm
-
-      - run: npm ci
-
-      - run: node --test src/legacy/build.test.mjs
-        env:
-          LIVE: 1

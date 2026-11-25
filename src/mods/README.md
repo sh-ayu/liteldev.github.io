@@ -160,16 +160,18 @@ repositories of every package lipr had.
   `id` is another package's is not read. The files are otherwise taken as the repositories have them, so a
   dependency on a host that no longer exists stays.
 - **Cache.** What was read is kept in `.cache/mods/registry.json` (git-ignored; the deploy keeps it in the Actions
-  cache, saved when it changed): a tag whose commit is unchanged is not read again, so an hourly build reads only
+  cache, saved when it changed): a tag whose commit is unchanged is not read again, so a build reads only
   new tags. Where GitHub serves each address a manifest names is looked up on every build (a repository can move
   again); the cached answer is used only when the lookup fails. It is only a cache: without it every tag is read
   anew (about a minute). `MODS_REGISTRY_CACHE` moves it.
-- **Discovery.** `scripts/mods/discover.mjs` (`.github/workflows/mods-discover.yml`, every two hours) searches GitHub's
+- **Discovery.** `scripts/mods/discover.mjs` (`.github/workflows/discover.yml`, every hour) searches GitHub's
   code for a top-level `lip.toml` or `tooth.json` (lipr searched for the latter) and opens a pull request adding each
   repository that is not in `repos.txt` (under its name or a former one), not a fork and has a version tag whose
   package file lip can read (its `lip.toml`, else its `tooth.json`). Whether it is a LeviLamina mod is left to the
   build (see the listing rules below). Merging lists it at the next deploy; closing it keeps it out, since a repository that ever had a pull request
   (branch `mods/add/<owner>/<repo>`) is not proposed again. To take a mod off, close its pull request or delete its line.
+  A repository GitHub no longer serves (deleted, or made private) is taken out of `repos.txt` by the same workflow
+  (`scripts/sources.mjs`); a renamed or transferred one stays.
   `node scripts/mods/discover.mjs --dry-run` shows what it would propose (needs `GH_TOKEN`). The workflow token's code
   search limit is shared and often exhausted (HTTP 429): the script waits as GitHub asks for up to ten minutes, then
   skips the run with a warning. A `MODS_SEARCH_TOKEN` secret (a personal token, no scopes; the script reads it as
@@ -214,7 +216,8 @@ text: the name is next to the logo wherever it is shown.
 ### Galleries
 
 A mod gets a Gallery tab by committing `docs/showcase/showcase.json` and the files it lists to its
-repository's default branch. The gallery is not tied to a version; the next build (hourly) picks it up.
+repository's default branch. The gallery is not tied to a version; the next build picks it up (one starts with any push to this repository or
+when a listed repository's version tags change).
 
 ```json
 {
@@ -377,5 +380,6 @@ footer links into the rest of levimc.org (Home, Blog, …) load in full (`KitRou
 levimc.org's build (`npm run build`, `scripts/build.mjs`) builds this app after the site itself and copies its
 `dist/` to the site's `/mods/`, each `dist-locales/<lang>/` to `/<lang>/mods/` and `dist-api/` to `/api/`;
 `.github/workflows/deploy.yml` runs it on every push to `main` (a merged discovery pull request among them) and
-every hour, so the site picks up new versions. `.github/workflows/ci.yml` type-checks, lints, tests and builds it
-with the rest of the site on every pull request and every push to `main`, then checks the links, the size budgets and the pages in a browser.
+whenever `.github/workflows/discover.yml` (hourly) sees a repository in `repos.txt` gain, lose or move a version tag,
+so the site picks up new versions. `.github/workflows/ci.yml` lints, tests and builds it with the rest of the site on
+every pull request.

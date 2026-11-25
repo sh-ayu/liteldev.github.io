@@ -1,5 +1,5 @@
 // Unit tests for the language-first URLs of the docs engine (kit 2.23, `i18n.localeFirst`): route path ↔ URL
-// (docs/shared/routing.ts) and the resolved config. The built test sites (src/kit/demo, built by ci.yml) check the output.
+// (docs/shared/routing.ts) and the resolved config. The built test sites (src/kit/demo, see src/kit/README.md) check the output.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { localeFromPath, localeRoot, pathUrl, siteRoots, sitePath } from '../docs/shared/routing.ts';

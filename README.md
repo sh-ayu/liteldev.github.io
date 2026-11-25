@@ -56,9 +56,15 @@ checks (`main`, `chrome`, `docs`, `mods`, `prefs`).
 
 LeviLamina's API reference is made after the build, when Doxygen is installed: `bash doxygen/build.sh`.
 
-CI (`.github/workflows/ci.yml`) runs all of these checks on every pull request and every push to `main`;
-`deploy.yml` builds and publishes the site on every push to `main` and every hour, then checks the retired sites'
-redirects on the live site.
+Workflows (`.github/workflows/`):
+
+- `ci.yml`, on every pull request: lint, the unit tests and the build. The other checks above are run by hand before
+  a pull request.
+- `deploy.yml`, on every push to `main` and when `discover.yml` starts it: builds the site and publishes it.
+- `discover.yml`, every hour: adds the new Minecraft release to `src/versions/versions.json`, takes the mod
+  repositories GitHub no longer serves out of `content/mods/repos.txt` and commits both; starts a deploy when it
+  committed or when a mod's version tags, LeviLamina or BeDD changed (`scripts/sources.mjs`); proposes newly found
+  mod repositories in pull requests (`scripts/mods/discover.mjs`).
 
 ## Contributing
 

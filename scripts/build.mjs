@@ -48,7 +48,7 @@ const steps = {
     place(join(MODS_BUILD, 'dist'), 'mods');
     for (const lang of readdirSync(join(MODS_BUILD, 'dist-locales'))) place(join(MODS_BUILD, 'dist-locales', lang), `${lang}/mods`);
     place(join(MODS_BUILD, 'dist-api'), 'api');
-    // the release versions (kept by .github/workflows/versions.yml)
+    // the release versions (kept by .github/workflows/discover.yml)
     place(join(REPO, 'src/versions/versions.json'), 'api/v4/mc/versions/index.json');
   },
   docs() {
