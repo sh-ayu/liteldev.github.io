@@ -318,10 +318,11 @@
     e.preventDefault();
     items[next].focus();
   });
-  // tabbing out of an open menu closes it
+  // tabbing out of an open menu closes it; a press inside the menu is not tabbing out (WebKit focuses a pressed
+  // button's nearest focusable ancestor, not the button, and closing on that would hide the item before its click)
   document.addEventListener('focusout', function (e) {
     var to = e.relatedTarget;
-    if (!to) return;
+    if (!to || pointerOpen) return;
     each('details.kit-menu[open]', function (d) {
       if (d.contains(e.target) && !d.contains(to)) d.open = false;
     });

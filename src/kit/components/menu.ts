@@ -75,9 +75,12 @@ export function useDismissableDetails(ref: RefObject<HTMLDetailsElement | null>)
       }
     };
     // Tabbing out of an open menu closes it (focus moving nowhere, e.g. a window switch, keeps it open).
+    // A press inside the menu is not tabbing out: WebKit (Safari, every iOS browser) does not focus a pressed
+    // button but its nearest focusable ancestor (a page's <main tabindex="-1">), and closing the menu on that
+    // would hide the item before its click.
     const onFocusOut = (e: FocusEvent) => {
       const to = e.relatedTarget as Node | null;
-      if (el.open && to && !el.contains(to)) el.open = false;
+      if (el.open && !pointer && to && !el.contains(to)) el.open = false;
     };
     const onToggle = () => {
       if (!el.open) return;
