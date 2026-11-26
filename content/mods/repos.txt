@@ -6,7 +6,10 @@ carefly/RLXMoney
 carefly/RLXTeleport
 ch1-k-mc/BetterF3-Bedrock
 ch1-k-mc/InventoryUtils-Bedrock
+ch1-k-mc/Jade-Bedrock
+ch1-k-mc/JustEnoughItems-Bedrock
 ch1-k-mc/PickUpNotifier-Bedrock
+ch1-k-mc/SoundPhysics-Bedrock
 cngege/AutoFishing
 cngege/DispenserDestroyBlock
 cngege/DispenserGetLavaFromCauldron
