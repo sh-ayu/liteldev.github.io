@@ -40,7 +40,7 @@ LeviLauncher only supports the licensed Minecraft installed from the Google Play
 
 ## Updating LeviLauncher on Android from inside the launcher fails, or it says "signature mismatch" and cannot install. What should I do?
 
-The in-launcher update fetches the latest Release through the GitHub API, downloads the APK and hands it to the system to install, so it fails when your network cannot reach GitHub. In that case, download the new APK yourself from GitHub Releases (<https://github.com/LiteLDev/LeviLauncher-Android/releases/latest>) or from a working mirror and install it over the existing app. If it says "signature mismatch", the installed app is not an official build (for example, it was repackaged and re-signed by someone else), and the system does not allow overwriting it with the officially signed APK. Back up your data first (export your worlds, etc.), uninstall, and then install the APK from the official Release.
+The in-launcher update fetches the latest Release through the GitHub API, downloads the APK and hands it to the system to install, so it fails when your network cannot reach GitHub. In that case, download the new APK yourself from GitHub Releases (<https://github.com/LiteLDev/LeviLauncher-Android/releases/latest>) and install it over the existing app. If it says "signature mismatch", the installed app is not an official build (for example, it was repackaged and re-signed by someone else), and the system does not allow overwriting it with the officially signed APK. Back up your data first (export your worlds, etc.), uninstall, and then install the APK from the official Release.
 
 *Applies to: LeviLauncher-Android all current versions*
 

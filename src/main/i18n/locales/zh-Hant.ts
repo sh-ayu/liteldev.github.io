@@ -41,7 +41,7 @@ const zhHant: typeof en = {
     reqWindows: "Windows 10 或 11 · 來自 Microsoft Store 的 Minecraft",
     reqAndroid: "Android 9 及以上（ARM64）· 來自 Google Play 的 Minecraft 1.21.80 及以上",
     noVersionHere: "LeviLauncher 支援 Windows 和 Android。",
-    allDownloads: "全部下載與鏡像",
+    allDownloads: "全部下載",
     browseMods: "瀏覽模組",
     hostDesc:
       "在 Windows、Linux 或 macOS 上用 LeviLamina 執行基岩版專用伺服器。lip 的介面帶你一步步架設伺服器、安裝模組和外掛、啟動伺服器。",

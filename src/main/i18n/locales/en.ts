@@ -41,7 +41,7 @@ const en = {
     reqWindows: "Windows 10 or 11 · Minecraft from the Microsoft Store",
     reqAndroid: "Android 9 or later (ARM64) · Minecraft 1.21.80 or later from Google Play",
     noVersionHere: "LeviLauncher runs on Windows and Android.",
-    allDownloads: "All downloads & mirrors",
+    allDownloads: "All downloads",
     browseMods: "Browse mods",
     hostDesc:
       "Run Bedrock Dedicated Server with LeviLamina on Windows, Linux or macOS. lip's interface walks you through setting up the server, adding mods and plugins, and starting it.",

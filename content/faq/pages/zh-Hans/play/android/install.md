@@ -40,7 +40,7 @@ LeviLauncher 只支持 Google Play 商店安装的正版 Minecraft，会校验�
 
 ## LeviLauncher 安卓版在启动器内更新失败，或提示“签名不一致”无法安装，怎么办？
 
-启动器内更新是通过 GitHub API 获取最新 Release 并下载 APK 后交给系统安装，因此网络无法访问 GitHub 时会失败，此时可自行到 GitHub Release（<https://github.com/LiteLDev/LeviLauncher-Android/releases/latest>）或可用的镜像下载新版 APK 手动覆盖安装。若提示“签名不一致”，说明当前安装的不是官方构建（例如被他人改包后重新签名），系统不允许用官方签名的 APK 覆盖；需先备份数据（导出世界等），卸载后再安装官方 Release 的 APK。
+启动器内更新是通过 GitHub API 获取最新 Release 并下载 APK 后交给系统安装，因此网络无法访问 GitHub 时会失败，此时可自行到 GitHub Release（<https://github.com/LiteLDev/LeviLauncher-Android/releases/latest>）下载新版 APK 手动覆盖安装。若提示“签名不一致”，说明当前安装的不是官方构建（例如被他人改包后重新签名），系统不允许用官方签名的 APK 覆盖；需先备份数据（导出世界等），卸载后再安装官方 Release 的 APK。
 
 *适用版本：LeviLauncher-Android 当前所有版本*
 
