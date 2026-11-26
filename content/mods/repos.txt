@@ -153,6 +153,7 @@ ShangguanXi/Advancements-ll-release
 ShangguanXi/FarmersDelight-ll-release
 ShrBox/BackupHelper
 ShrBox/ResourcePackEncryption
+Shulker-Studio/Shop
 Shulker-Studio/InventoryBackup
 Shulker-Studio/STweaks
 SkyEye-FAST/offer-flowers-faster-bedrock
