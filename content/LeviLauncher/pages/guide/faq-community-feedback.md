@@ -11,7 +11,6 @@ Questions about LeviLauncher, with short answers, are in the [LeviMC FAQ](https:
 ## Download links
 
 - **GitHub Releases (LeviLauncher downloads):** [LiteLDev/LeviLauncher Releases](https://github.com/LiteLDev/LeviLauncher/releases)
-- **Lanzou mirror:** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — password: `levi`
 
 - **Android version (APK):** [LiteLDev/LeviLauncher-Android Releases](https://github.com/LiteLDev/LeviLauncher-Android/releases/latest)
 

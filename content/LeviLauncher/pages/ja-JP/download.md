@@ -7,7 +7,6 @@ LeviLauncher には Windows 版と Android 版があります。お使いのデ�
     **必要なもの：** Windows 10 または 11、および Microsoft Store で入手した正規ライセンスの Minecraft 統合版（GDK / UWP）。
 
     - [GitHub Releases からインストーラーをダウンロード](https://github.com/LiteLDev/LeviLauncher/releases/latest)
-    - [Lanzou ミラー](https://levimc.lanzoue.com/b016ke39hc) — パスワード `levi`。GitHub が遅い地域で使用してください
 
     次へ：[Play with mods on Windows](https://levimc.org/tutorials/play/play-with-mods/) · [バージョン管理](/ja-JP/guide/version-management?platform=windows)
 

@@ -11,7 +11,6 @@
 ## 下载入口
 
 - **GitHub Releases（LeviLauncher 下载）：** [LiteLDev/LeviLauncher Releases](https://github.com/LiteLDev/LeviLauncher/releases)
-- **蓝奏云镜像：** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — 密码：`levi`
 
 - **Android 版（APK）：** [LiteLDev/LeviLauncher-Android Releases](https://github.com/LiteLDev/LeviLauncher-Android/releases/latest)
 

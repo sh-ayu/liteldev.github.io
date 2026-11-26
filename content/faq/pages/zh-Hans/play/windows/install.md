@@ -20,13 +20,13 @@
 
 ## LeviLauncher 1.1.0-beta.3 等旧版本自动更新时无法下载更新包，是电脑问题还是启动器问题？
 
-是启动器的问题：旧版启动器使用的更新地址（GoProxy 模块镜像）上没有新版更新包。请直接去 GitHub Releases（或蓝奏云镜像 <https://levimc.lanzoue.com/b016ke39hc>，密码 `levi`）手动下载最新版安装。新版启动器改为从 GitHub Release 的 `LeviLauncher.zip` 自更新（开启镜像源时先尝试 `gh-proxy.org` 镜像），之后自动更新可以正常工作。
+是启动器的问题：旧版启动器使用的更新地址（GoProxy 模块镜像）上没有新版更新包。请直接去 GitHub Releases 手动下载最新版安装。新版启动器改为从 GitHub Release 的 `LeviLauncher.zip` 自更新（开启镜像源时先尝试 `gh-proxy.org` 镜像），之后自动更新可以正常工作。
 
 *适用版本：LeviLauncher v1.1.0-beta.4 之前的版本需手动更新；v1.1.0 正式版起自更新正常*
 
-## LeviLauncher PC 版 GitHub Release 里有好几个文件，有什么区别、该下载哪个？下载慢怎么办？
+## LeviLauncher PC 版 GitHub Release 里有好几个文件，有什么区别、该下载哪个？
 
-推荐下载 `LeviLauncher-amd64-installer.exe`（安装版），运行后按安装界面安装，路径建议选不含中文的独立目录（不要放进 Minecraft 游戏目录）。`LeviLauncher.exe` 是便携版，单独放进一个新建的英文路径文件夹即可直接运行；`LeviLauncher.zip` 是启动器自更新使用的更新包，一般不需要手动下载。GitHub 下载慢时可以使用官方蓝奏云镜像 <https://levimc.lanzoue.com/b016ke39hc>（密码 `levi`）。
+推荐下载 `LeviLauncher-amd64-installer.exe`（安装版），运行后按安装界面安装，路径建议选不含中文的独立目录（不要放进 Minecraft 游戏目录）。`LeviLauncher.exe` 是便携版，单独放进一个新建的英文路径文件夹即可直接运行；`LeviLauncher.zip` 是启动器自更新使用的更新包，一般不需要手动下载。
 
 *适用版本：LeviLauncher（Windows）v1.1.0*
 
@@ -79,7 +79,7 @@ PC 版（Windows）LeviLauncher 使用的模组格式是 `.mcmod` 模组包，�
 
 不是。levilauncher.com 与 LeviMC 无关，是 AI 生成的仿冒钓鱼网站，其提供的下载文件含病毒。LeviMC 唯一官方网站是 <https://levimc.org>（LeviLauncher 文档：<https://levimc.org/zh-Hans/LeviLauncher/>）。
 
-LeviLauncher 只应从 GitHub Releases（Windows：<https://github.com/LiteLDev/LeviLauncher/releases>，安卓：<https://github.com/LiteLDev/LeviLauncher-Android/releases>）或官方文档下载页列出的蓝奏云镜像下载。
+LeviLauncher 只应从 GitHub Releases（Windows：<https://github.com/LiteLDev/LeviLauncher/releases>，安卓：<https://github.com/LiteLDev/LeviLauncher-Android/releases>）下载。
 
 *未能从源码或文档中直接证实，仅供参考。*
 
@@ -93,7 +93,7 @@ LeviLauncher 只应从 GitHub Releases（Windows：<https://github.com/LiteLDev/
 
 ## 安装 LeviLauncher 时弹出 Windows 管理员权限（UAC）提示，要允许吗？
 
-要。LeviLauncher 安装程序需要管理员权限（默认安装到 `Program Files`），不允许就装不上。前提是安装包来自官方渠道（GitHub Releases 或官方文档列出的蓝奏云镜像）。
+要。LeviLauncher 安装程序需要管理员权限（默认安装到 `Program Files`），不允许就装不上。前提是安装包来自官方渠道（GitHub Releases）。
 
 此外，启动器自更新（安装目录不可写时）以及 `doctor --fix` 安装 VC 运行库、GameInput 等组件时也可能请求管理员权限，确认可信后允许即可。
 
@@ -114,10 +114,6 @@ LeviLauncher 自带历史版本库：在“下载”页面即可选择正式版/
 也可用命令行 `LeviLauncher.exe install <版本>`，或对本地文件 `LeviLauncher.exe install D:\xxx.msixvc`（支持 `.msixvc`/`.appx`/`.msix`/`.appxbundle`/`.msixbundle`）。`LeviLauncher.exe installer list` 可查看已下载的安装包。获取版本列表需要能访问 GitHub，国内可开启“使用镜像源”。
 
 *适用版本：LeviLauncher（Windows）1.x*
-
-## LeviLauncher 蓝奏云下载链接的密码是什么？
-
-密码是 `levi`。官方蓝奏云镜像地址：<https://levimc.lanzoue.com/b016ke39hc>（GitHub 下载较慢时使用），也可直接从 GitHub Releases 下载。
 
 ## LeviLauncher 安装游戏报错、模组管理点击无效或下载完无法启动，路径或文件名中带中文，怎么解决？
 

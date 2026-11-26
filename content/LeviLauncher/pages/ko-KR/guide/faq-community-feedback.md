@@ -51,7 +51,6 @@ ARM64 기기의 Android 9.0 이상과 Google Play에서 설치한 Minecraft Bedr
 ## 다운로드 진입점
 
 - **GitHub 릴리스(LeviLauncher 다운로드):** [LiteLDev/LeviLauncher Releases](https://github.com/LiteLDev/LeviLauncher/releases)
-- **란조우(Lanzou) 클라우드 미러:** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — 비밀번호: `levi`
 
 - **Android 버전(APK):** [LiteLDev/LeviLauncher-Android Releases](https://github.com/LiteLDev/LeviLauncher-Android/releases/latest)
 

@@ -51,7 +51,6 @@ ARM64 デバイス上の Android 9.0 以降と、Google Play からインスト�
 ## ダウンロード
 
 - **GitHub Releases（LeviLauncher ダウンロード）：** [LiteLDev/LeviLauncher Releases](https://github.com/LiteLDev/LeviLauncher/releases)
-- **LanZou Cloud ミラー：** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — パスワード：`levi`
 
 - **Android 版（APK）:** [LiteLDev/LeviLauncher-Android Releases](https://github.com/LiteLDev/LeviLauncher-Android/releases/latest)
 

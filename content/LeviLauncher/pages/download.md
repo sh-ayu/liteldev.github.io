@@ -7,7 +7,6 @@ LeviLauncher comes in a Windows version and an Android version. The tab for your
     **Requires:** Windows 10 or 11 and a licensed copy of Minecraft Bedrock Edition (GDK / UWP) from Microsoft Store.
 
     - [Download the installer from GitHub Releases](https://github.com/LiteLDev/LeviLauncher/releases/latest)
-    - [Lanzou mirror](https://levimc.lanzoue.com/b016ke39hc) — password `levi`; use it if GitHub is slow in your region
 
     Next: [Play with mods on Windows](https://levimc.org/tutorials/play/play-with-mods/) · [Version Management](/guide/version-management?platform=windows)
 

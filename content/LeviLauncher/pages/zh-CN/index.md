@@ -47,7 +47,6 @@ LeviLauncher.exe play
 ## 下载渠道
 
 - **GitHub Releases（LeviLauncher 下载）：** [LiteLDev/LeviLauncher Releases](https://github.com/LiteLDev/LeviLauncher/releases)
-- **蓝奏云镜像：** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — 密码：`levi`
 - **Android 版：** [LiteLDev/LeviLauncher-Android Releases](https://github.com/LiteLDev/LeviLauncher-Android/releases)
 
 ## 社区与反馈

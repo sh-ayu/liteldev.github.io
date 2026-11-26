@@ -7,7 +7,6 @@ LeviLauncher 提供 Windows 版和 Android 版，下方已自动选中适合你�
     **要求：** Windows 10 或 11，以及从 Microsoft Store 获得的正版 Minecraft 基岩版（GDK / UWP）。
 
     - [从 GitHub Releases 下载安装程序](https://github.com/LiteLDev/LeviLauncher/releases/latest)
-    - [蓝奏云镜像](https://levimc.lanzoue.com/b016ke39hc) — 密码 `levi`；GitHub 下载较慢时使用
 
     下一步：[在 Windows 上玩模组](https://levimc.org/zh-Hans/tutorials/play/play-with-mods/) · [版本管理](/zh-Hans/guide/version-management?platform=windows)
 

@@ -47,7 +47,6 @@ GDK 版をインストールするには、Minecraft を所有する Microsoft �
 ## ダウンロードチャンネル
 
 - **GitHub Releases (LeviLauncherダウンロード):** [LiteLDev/LeviLauncher Releases](https://github.com/LiteLDev/LeviLauncher/releases)
-- **LanZou Cloudミラーサイト:** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — パスワード: `levi`
 - **Android 版:** [LiteLDev/LeviLauncher-Android Releases](https://github.com/LiteLDev/LeviLauncher-Android/releases)
 
 ## コミュニティとフィードバック

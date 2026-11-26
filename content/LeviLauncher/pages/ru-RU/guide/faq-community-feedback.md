@@ -51,7 +51,6 @@ Android 9.0 или новее на устройстве ARM64 и Minecraft Bedro
 ## Ссылки для загрузки
 
 - **Релизы GitHub (загрузки LeviLauncher):** [LiteLDev/LeviLauncher Releases](https://github.com/LiteLDev/LeviLauncher/releases)
-- **Зеркало Lanzou:** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — пароль: `levi`
 
 - **Версия для Android (APK):** [LiteLDev/LeviLauncher-Android Releases](https://github.com/LiteLDev/LeviLauncher-Android/releases/latest)
 

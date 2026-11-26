@@ -51,7 +51,6 @@ Ja. Importiere offizielle Minecraft-APKs, um andere Versionen im Launcher zu sta
 ## Download-Quellen
 
 - **GitHub Releases (offizieller Download):** [LiteLDev/LeviLauncher Releases](https://github.com/LiteLDev/LeviLauncher/releases)  
-- **Lanzou Cloud Mirror:** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — Passwort: `levi`
 
 - **Android-Version (APK):** [LiteLDev/LeviLauncher-Android Releases](https://github.com/LiteLDev/LeviLauncher-Android/releases/latest)
 

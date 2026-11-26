@@ -47,7 +47,6 @@ A good reading order for newcomers: the tutorial [Play with mods on Windows](htt
 ## Download channels
 
 - **GitHub Releases (LeviLauncher downloads):** [LiteLDev/LeviLauncher Releases](https://github.com/LiteLDev/LeviLauncher/releases)
-- **Lanzou mirror:** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — password: `levi`
 - **Android version:** [LiteLDev/LeviLauncher-Android Releases](https://github.com/LiteLDev/LeviLauncher-Android/releases)
 
 ## Community and feedback

@@ -10,7 +10,7 @@ At the end of this tutorial you play Minecraft Bedrock Edition on Windows with L
 
 ## 1. Install LeviLauncher
 
-1. Open the [latest release of LeviLauncher](https://github.com/LiteLDev/LeviLauncher/releases/latest) and download `LeviLauncher-amd64-installer.exe`. If GitHub is slow where you are, use the [Lanzou mirror](https://levimc.lanzoue.com/b016ke39hc) with the password `levi`.
+1. Open the [latest release of LeviLauncher](https://github.com/LiteLDev/LeviLauncher/releases/latest) and download `LeviLauncher-amd64-installer.exe`.
 2. Run the installer and finish the setup wizard. If it asks to install WebView2 or another component, let it continue.
 3. Start LeviLauncher. You should see its window, with a column of icons at the left: **Launch**, **Download**, **Instances**, **About** and **Settings** (point at an icon to see its name). The first time, it opens on the **First Launch Setup**.
 

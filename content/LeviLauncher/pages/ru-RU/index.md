@@ -47,7 +47,6 @@ LeviLauncher.exe play
 ## Каналы загрузки
 
 - **Релизы GitHub (загрузка LeviLauncher):** [LiteLDev/LeviLauncher Releases](https://github.com/LiteLDev/LeviLauncher/releases)
-- **Зеркало Lanzou:** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — пароль: `levi`
 - **Версия для Android:** [LiteLDev/LeviLauncher-Android Releases](https://github.com/LiteLDev/LeviLauncher-Android/releases)
 
 ## Сообщество и обратная связь

@@ -7,7 +7,6 @@ LeviLauncher는 Windows 버전과 Android 버전이 있습니다. 사용 중인 
     **요구 사항:** Windows 10 또는 11, Microsoft Store에서 구매한 정품 Minecraft Bedrock Edition(GDK / UWP).
 
     - [GitHub Releases에서 설치 프로그램 다운로드](https://github.com/LiteLDev/LeviLauncher/releases/latest)
-    - [Lanzou 미러](https://levimc.lanzoue.com/b016ke39hc) — 비밀번호 `levi`. GitHub 속도가 느린 지역에서 사용하세요
 
     다음: [Play with mods on Windows](https://levimc.org/tutorials/play/play-with-mods/) · [버전 관리](/ko-KR/guide/version-management?platform=windows)
 

@@ -51,7 +51,6 @@ Sí. Importa APK oficiales de Minecraft para ejecutar otras versiones dentro del
 ## Enlaces de descarga
 
 - **GitHub Releases (Descargas de LeviLauncher):** [Versiones de LiteLDev/LeviLauncher](https://github.com/LiteLDev/LeviLauncher/releases)
-- **Mirror en Lanzou:** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — contraseña: `levi`
 
 - **Versión para Android (APK):** [LiteLDev/LeviLauncher-Android Releases](https://github.com/LiteLDev/LeviLauncher-Android/releases/latest)
 

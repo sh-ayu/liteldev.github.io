@@ -47,7 +47,6 @@ Ordre de lecture recommandé : le tutoriel [Play with mods on Windows](https://l
 ## Sources de téléchargement
 
 - **GitHub Releases (Téléchargements de LeviLauncher) :** [LiteLDev/LeviLauncher Releases](https://github.com/LiteLDev/LeviLauncher/releases)
-- **Miroir Lanzou Cloud :** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — Mot de passe : `levi`
 - **Version Android :** [LiteLDev/LeviLauncher-Android Releases](https://github.com/LiteLDev/LeviLauncher-Android/releases)
 
 ## Communauté et retour

@@ -10,7 +10,7 @@
 
 ## 1. 安装 LeviLauncher
 
-1. 打开 [LeviLauncher 的最新发行版](https://github.com/LiteLDev/LeviLauncher/releases/latest)，下载 `LeviLauncher-amd64-installer.exe`。如果你那里访问 GitHub 很慢，可以用[蓝奏云镜像](https://levimc.lanzoue.com/b016ke39hc)，密码为 `levi`。
+1. 打开 [LeviLauncher 的最新发行版](https://github.com/LiteLDev/LeviLauncher/releases/latest)，下载 `LeviLauncher-amd64-installer.exe`。
 2. 运行安装程序，完成安装向导。如果它提示需要安装 WebView2 或其他组件，请允许它继续。
 3. 启动 LeviLauncher。你应该看到它的窗口，左边有一列图标：**启动**、**下载**、**实例列表**、**关于**和**设置**（把鼠标指向图标就能看到名称）。第一次启动时，它打开的是**首次启动引导**。
 

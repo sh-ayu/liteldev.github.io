@@ -20,13 +20,13 @@ First turn off automatic updates in the Microsoft Store, then use LeviLauncher t
 
 ## Older versions such as LeviLauncher 1.1.0-beta.3 cannot download the update package when updating automatically. Is it my computer or the launcher?
 
-It is a launcher problem: the update address used by old launchers (the GoProxy module mirror) does not have the new update package. Go to GitHub Releases (or the Lanzou mirror <https://levimc.lanzoue.com/b016ke39hc>, password `levi`) and download and install the latest version manually. The new launcher self-updates from `LeviLauncher.zip` in the GitHub Release (trying the `gh-proxy.org` mirror first when the mirror source is on), after which automatic updates work normally.
+It is a launcher problem: the update address used by old launchers (the GoProxy module mirror) does not have the new update package. Go to GitHub Releases and download and install the latest version manually. The new launcher self-updates from `LeviLauncher.zip` in the GitHub Release (trying the `gh-proxy.org` mirror first when the mirror source is on), after which automatic updates work normally.
 
 *Applies to: LeviLauncher versions before v1.1.0-beta.4 must be updated manually; self-update works from the v1.1.0 stable release*
 
-## The GitHub Release of LeviLauncher for PC has several files. What are the differences and which should I download? What if the download is slow?
+## The GitHub Release of LeviLauncher for PC has several files. What are the differences and which should I download?
 
-Download `LeviLauncher-amd64-installer.exe` (the installer) and follow the installer; choose a separate directory without Chinese characters (do not put it inside the Minecraft game directory). `LeviLauncher.exe` is the portable version: put it alone in a newly created folder with an English path and run it directly. `LeviLauncher.zip` is the update package used by the launcher's self-update and normally does not need to be downloaded manually. If the GitHub download is slow, use the official Lanzou mirror <https://levimc.lanzoue.com/b016ke39hc> (password `levi`).
+Download `LeviLauncher-amd64-installer.exe` (the installer) and follow the installer; choose a separate directory without Chinese characters (do not put it inside the Minecraft game directory). `LeviLauncher.exe` is the portable version: put it alone in a newly created folder with an English path and run it directly. `LeviLauncher.zip` is the update package used by the launcher's self-update and normally does not need to be downloaded manually.
 
 *Applies to: LeviLauncher (Windows) v1.1.0*
 
@@ -79,7 +79,7 @@ The PC (Windows) LeviLauncher uses `.mcmod` mod packs. It is also compatible wit
 
 No. levilauncher.com is unrelated to LeviMC. It is an AI-generated phishing imitation, and the files it offers contain viruses. The only official LeviMC website is <https://levimc.org> (LeviLauncher documentation: <https://levimc.org/LeviLauncher/>).
 
-Download LeviLauncher only from GitHub Releases (Windows: <https://github.com/LiteLDev/LeviLauncher/releases>, Android: <https://github.com/LiteLDev/LeviLauncher-Android/releases>) or from the Lanzou mirror listed on the official documentation's download page.
+Download LeviLauncher only from GitHub Releases (Windows: <https://github.com/LiteLDev/LeviLauncher/releases>, Android: <https://github.com/LiteLDev/LeviLauncher-Android/releases>).
 
 *Not confirmed against the source code or the documentation: treat it as a pointer.*
 
@@ -93,7 +93,7 @@ You can copy existing game data (worlds and settings) during installation, or af
 
 ## A Windows administrator (UAC) prompt appears when installing LeviLauncher. Should I allow it?
 
-Yes. The LeviLauncher installer needs administrator rights (it installs to `Program Files` by default) and cannot install without them. This assumes the installer comes from an official source (GitHub Releases or the Lanzou mirror listed in the official documentation).
+Yes. The LeviLauncher installer needs administrator rights (it installs to `Program Files` by default) and cannot install without them. This assumes the installer comes from an official source (GitHub Releases).
 
 The launcher may also request administrator rights for self-update (when the install directory is not writable) and when `doctor --fix` installs components such as the VC runtime and GameInput. Allow it once you have confirmed it is trustworthy.
 
@@ -114,10 +114,6 @@ Do not install the msixvc manually (methods such as `Add-AppxPackage` do not app
 You can also use the command line: `LeviLauncher.exe install <version>`, or for a local file `LeviLauncher.exe install D:\xxx.msixvc` (supports `.msixvc`/`.appx`/`.msix`/`.appxbundle`/`.msixbundle`). `LeviLauncher.exe installer list` shows the installer packages already downloaded. Fetching the version list requires access to GitHub; in mainland China you can turn on "Use mirror".
 
 *Applies to: LeviLauncher (Windows) 1.x*
-
-## What is the password for the LeviLauncher Lanzou download link?
-
-The password is `levi`. The official Lanzou mirror is <https://levimc.lanzoue.com/b016ke39hc> (use it when GitHub downloads are slow); you can also download directly from GitHub Releases.
 
 ## LeviLauncher fails to install the game, mod management clicks do nothing, or the game will not start after downloading, and a path or file name contains Chinese characters. How do I fix it?
 

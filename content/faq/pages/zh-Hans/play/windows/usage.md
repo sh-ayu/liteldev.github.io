@@ -235,7 +235,7 @@ LeviLauncher（Windows）自带原生加载器 `LeviLauncher.dll`：安装/启�
 
 ## LeviLauncher 被 Windows Defender、卡巴斯基、360 等杀毒软件报毒，是病毒吗？
 
-是误报。LeviLauncher 后端用 Go（Wails 框架）编写，没有代码签名。Go 这类静态编译的程序常被杀软的启发式扫描误判，同一份代码 GitHub Actions 编译的可能报毒、本地编译的却不报，加 UPX 壳反而报得更多。启动器自带的 vcruntime 相关 DLL（用于加载模组）从早期版本起就一直存在，删掉它照样报毒，所以报毒不是它引起的。维护者已多次向微软提交误报，并调整过编译参数来减少误报。请只从官方渠道下载（GitHub Releases 或官方蓝奏云镜像），被拦截时可以把启动器目录加入杀软排除项。
+是误报。LeviLauncher 后端用 Go（Wails 框架）编写，没有代码签名。Go 这类静态编译的程序常被杀软的启发式扫描误判，同一份代码 GitHub Actions 编译的可能报毒、本地编译的却不报，加 UPX 壳反而报得更多。启动器自带的 vcruntime 相关 DLL（用于加载模组）从早期版本起就一直存在，删掉它照样报毒，所以报毒不是它引起的。维护者已多次向微软提交误报，并调整过编译参数来减少误报。请只从官方渠道下载（GitHub Releases），被拦截时可以把启动器目录加入杀软排除项。
 
 *适用版本：当前所有版本（Windows 版）*
 

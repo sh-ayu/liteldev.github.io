@@ -47,7 +47,6 @@ GDK 빌드를 설치하려면 Minecraft를 소유한 Microsoft 계정으로 로�
 ## 다운로드 채널
 
 - **GitHub 릴리스(LeviLauncher 다운로드):** [LiteLDev/LeviLauncher Releases](https://github.com/LiteLDev/LeviLauncher/releases)
-- **란조우(Lanzou) 클라우드 미러:** [levimc.lanzoue.com/b016ke39hc](https://levimc.lanzoue.com/b016ke39hc) — 비밀번호: `levi`
 - **Android 버전:** [LiteLDev/LeviLauncher-Android Releases](https://github.com/LiteLDev/LeviLauncher-Android/releases)
 
 ## 커뮤니티 및 피드백
