@@ -1,7 +1,7 @@
 # 🌏 Web Interface API
 
-The following APIs provide the basic network interface for scripts.
-If there are more complex needs, the network library of the respective language platform can be used to complete the task.
+The following APIs provide a basic network interface for scripts.
+For more complex needs, use the network library of the respective language platform.
 
 ## Contents
 - 🔌 [WebSocket Client Object API](#-websocket-client-object-api)
@@ -15,22 +15,22 @@ If there are more complex needs, the network library of the respective language 
 
 - Parameters:
   - url : `String`  
-    The target address of the request (including the parameters attached to the Get request).
+    The target address of the request (including any parameters attached to the GET request).
   - header : `Object`  
     (Optional) Request headers.
   - callback : `Function`  
-    The callback function to execute when the request returns, to return the HTTP(s) response result.
-- Return value: Whether the request was successfully sent.
+    The callback function executed when the request returns, receiving the HTTP(s) response result.
+- Return value: Whether the request was sent successfully.
 - Return value type: `Boolean`
 
-Note: The prototype of the callback function of the parameter callback: `function(status,result)`  
+Note: The prototype of the callback parameter is `function(status,result)`  
 
 - status : `Integer`    
-  The returned HTTP(s) response code, such as 200 means the request was successful.
+  The returned HTTP(s) response code (for example, 200 means the request succeeded).
 - result : `String`  
   The returned data.
 
-If the request fails, the status value will be `-1`. 
+If the request fails, the status value is `-1`. 
 
 
 
@@ -44,22 +44,22 @@ If the request fails, the status value will be `-1`.
   - header : `Object`  
     (Optional) Request headers.
   - data : `String`  
-    The data being sent.
+    The data to send.
   - type : `String`  
-    The Post data type sent, in the form of `text/plain` `application/x-www-form-urlencoded`.
+    The MIME type of the POST data, such as `text/plain` or `application/x-www-form-urlencoded`.
   - callback : `Function`  
-    The callback function to execute when the request returns, to return the HTTP(s) response result.
-- Return value: Whether the request was successfully sent.
+    The callback function executed when the request returns, receiving the HTTP(s) response result.
+- Return value: Whether the request was sent successfully.
 - Return value type: `Boolean`
 
-Note: The prototype of the callback function of the parameter callback: `function(status,result)`  
+Note: The prototype of the callback parameter is `function(status,result)`  
 
 - status : `Integer`    
-  The returned HTTP(s) response code, such as 200 means the request was successful.
+  The returned HTTP(s) response code (for example, 200 means the request succeeded).
 - result : `String`  
   The returned data.
 
-If the request fails, the status value will be `-1`.
+If the request fails, the status value is `-1`.
 
 
 
@@ -69,7 +69,7 @@ If the request fails, the status value will be `-1`.
 
 - Parameters:
   - url : `String`  
-    The target address of the request (including the parameters attached to the Get request).
+    The target address of the request (including any parameters attached to the GET request).
 - Return value: The response, an object with the following members:
   - status : `Integer`  
     The returned HTTP(s) response code.
@@ -83,7 +83,7 @@ This function blocks until the request returns, so prefer `network.httpGet` wher
 
 ## 🔌 WebSocket Client Object API
 
-In LSE, use "WebSocket objects" to manipulate the connection and work of a WebSocket client.
+In LSE, use "WebSocket objects" to manage the connection and operations of a WebSocket client.
 
 ### Create a New WebSocket Client Object 
 
@@ -97,17 +97,17 @@ In LSE, use "WebSocket objects" to manipulate the connection and work of a WebSo
 
 ### WebSocket Client Object - Properties
 
-Every WS client object contains some fixed object properties. for a specific client object `wsc`, has the following properties:
+Every WS client object has a fixed set of properties. A client object `wsc` has the following properties:
 
 | Attributes | Meaning                   | Data Type |
 | ---------- | ------------------------- | --------- |
 | wsc.status | Current Connection Status | `Enum`    |
 
-These object properties are read-only and cannot be modified.
+These properties are read-only and cannot be modified.
 
-Among them, the wsc.status enumeration has the following situations:
+The wsc.status enumeration has the following values:
 
-`WSClient.Open` - In normal connection.  
+`WSClient.Open` - Connected normally.  
 `WSClient.Closing` - Disconnecting.  
 `WSClient.Closed` - Not connected.
 
@@ -115,7 +115,7 @@ Among them, the wsc.status enumeration has the following situations:
 
 ### WebSocket Client Object - Function
 
-Every WS client object contains some member functions (member methods) that can be executed. for a specific client object `wsc`, you can perform some operations on this client through the following functions.
+Every WS client object has member functions (methods) that you can call. For a client object `wsc`, you can perform operations on the client through the following functions.
 
 #### Create a Connection
 
@@ -123,8 +123,8 @@ Every WS client object contains some member functions (member methods) that can 
 
 - Parameter: 
   - target : `String`  
-    The destination address to connect to, in the form of `ws://hostname[:port][/path/path][?query=value]`
-- Return value: Whether the connection is successful.
+    The destination address to connect to, in the form `ws://hostname[:port][/path/path][?query=value]`.
+- Return value: Whether the connection succeeded.
 - Return value type: `Boolean` 
 
 
@@ -135,16 +135,16 @@ Every WS client object contains some member functions (member methods) that can 
 
 - Parameters: 
   - target : `String`  
-    The destination address to connect to, in the form of `ws://hostname[:port][/path/path][?query=value]`
+    The destination address to connect to, in the form `ws://hostname[:port][/path/path][?query=value]`.
   - callback : `Function`
-    A callback function to execute when the connection succeeds or fails.
-- Return value: Whether the connection attempt was started successfully or not.
+    The callback function executed when the connection succeeds or fails.
+- Return value: Whether the connection attempt was started successfully.
 - Return value type: `Boolean` 
 
-Note: The prototype of the callback function of the parameter callback: `function(success)`  
+Note: The prototype of the callback parameter is `function(success)`  
 
 - success : `Boolean`    
-  Whether the WebSocket connection is successful 
+  Whether the WebSocket connection succeeded.
 
 
 
@@ -154,29 +154,29 @@ Note: The prototype of the callback function of the parameter callback: `functio
 
 - Parameter: 
   - msg : `String` / `ByteBuffer`  
-    Text/Binary data to send.
-- Return value: Whether it was sent successfully.
+    The text or binary data to send.
+- Return value: Whether the message was sent successfully.
 - Return value type: `Boolean` 
 
-If the parameter type passed in is `String`, will be sent as text, if it is `ByteBuffer` will be sent as binary data.
+If the parameter type is `String`, the message is sent as text; if it is `ByteBuffer`, it is sent as binary data.
 
 
 
 #### Listen for WebSocket Events 
 
-In the process of WS working, when a message is received or an error occurs, the relevant information needs to be processed. Here is the interface for listening to events.
+While a WebSocket connection is active, incoming messages and errors need to be handled. Use the following interface to listen for events.
 
 `wsc.listen(event,callback)`
 
 - Parameters: 
 
   - event : `String`  
-    The name of the event to listen for (see the list of listening events below).
+    The name of the event to listen for (see the list of events below).
 
   - callback : `Function`  
-    Registered listener function (see below for function-related parameters)
-    When the specified event occurs, LSE will call the listener function you gave and pass in the corresponding parameters.
-- Return value: Whether the event was successfully monitored.
+    The listener function to register (see below for its parameters).
+    When the specified event occurs, LSE calls this function and passes the corresponding parameters.
+- Return value: Whether the event listener was successfully registered.
 - Return value type: `Boolean` 
 
 
@@ -189,7 +189,7 @@ In the process of WS working, when a message is received or an error occurs, the
   `function(msg)`
 - Parameter: 
   - msg : `String`  
-    Received string message.
+    The received string message.
 
 **`"onBinaryReceived"` - Listen for binary messages.**
 
@@ -197,7 +197,7 @@ In the process of WS working, when a message is received or an error occurs, the
   `function(data)`
 - Parameter: 
   - data : `ByteBuffer`  
-    Received binary message.
+    The received binary message.
 
 **`"onError"` - Listen for errors.**
 
@@ -205,7 +205,7 @@ In the process of WS working, when a message is received or an error occurs, the
   `function(msg)`
 - Parameter: 
   - msg : `String`  
-    Error message.
+    The error message.
 
 **`"onLostConnection"` - Listen for lost connections.**
 
@@ -213,7 +213,7 @@ In the process of WS working, when a message is received or an error occurs, the
   `function(code)`
 - Parameter: 
   - code : `Integer`  
-    Error code.
+    The error code.
 
 
 
@@ -224,7 +224,7 @@ In the process of WS working, when a message is received or an error occurs, the
 - Return value: Whether the connection was successfully closed.
 - Return value type: `Boolean` 
 
-Do not continue to use this client object while it is closed!
+Do not use this client object while the connection is closed!
 
 
 
@@ -235,7 +235,7 @@ Do not continue to use this client object while it is closed!
 - Return value: Whether the connection was successfully disconnected.
 - Return value type: `Boolean` 
 
-Do not continue to use this client object while it is disconnected!
+Do not use this client object while it is disconnected!
 
 
 
@@ -243,15 +243,15 @@ Do not continue to use this client object while it is disconnected!
 
 `wsc.errorCode()`
 
-- Return value: The error code generated by the last error.
+- Return value: The error code from the last error.
 - Return value type: `Integer`
 
-If you encounter a failure in the use of the above interface, you can get the last error code from here.
+If any of the interfaces above fail, call this method to get the last error code.
 
 ## 📡 Http Server Object API
 
-LSE provides a simple Http server, which can be used for web services with **a small amount of data transfer**, such as webhooks.  
-If you want to build a website, it is better to use well-established web server software such as Apache or Nginx.
+LSE provides a simple HTTP server suitable for web services with **a small amount of data transfer**, such as webhooks.  
+To build a full website, use established web server software such as Apache or Nginx instead.
 
 ### Create a New Server Object
 
@@ -269,10 +269,10 @@ If you want to build a website, it is better to use well-established web server 
 
 - Parameters:
   - path : `String`  
-    The request path. It starts with `/` and can contain regular expressions, such as `/test/(.+)`
+    The request path. Starts with `/` and can include regular expressions, such as `/test/(.+)`.
   - callback : `Function<(HttpRequest, HttpResponse)>`  
-    Callback function, called when a GET request matching path is received.
-- Return value: The processed server object (for chaining other operations).
+    The callback function invoked when a GET request matching the path is received.
+- Return value: The server object (for method chaining).
 - Return value type: `HttpServer`
 
 
@@ -283,10 +283,10 @@ If you want to build a website, it is better to use well-established web server 
 
 - Parameters:
   - path : `String`  
-    The request path. It starts with `/` and can contain regular expressions, such as `/test/(.+)`
+    The request path. Starts with `/` and can include regular expressions, such as `/test/(.+)`.
   - callback : `Function<(HttpRequest, HttpResponse)>`  
-    Callback function, called when a PUT request matching path is received.
-- Return value: The processed server object (for chaining other operations).
+    The callback function invoked when a PUT request matching the path is received.
+- Return value: The server object (for method chaining).
 - Return value type: `HttpServer`
 
 
@@ -297,10 +297,10 @@ If you want to build a website, it is better to use well-established web server 
 
 - Parameters:
   - path : `String`  
-    The request path. It starts with `/` and can contain regular expressions, such as `/test/(.+)`
+    The request path. Starts with `/` and can include regular expressions, such as `/test/(.+)`.
   - callback : `Function<(HttpRequest, HttpResponse)>`  
-    Callback function, called when a POST request matching path is received.
-- Return value: The processed server object (for chaining other operations).
+    The callback function invoked when a POST request matching the path is received.
+- Return value: The server object (for method chaining).
 - Return value type: `HttpServer`
 
 
@@ -311,10 +311,10 @@ If you want to build a website, it is better to use well-established web server 
 
 - Parameters:
   - path : `String`  
-    The request path. It starts with `/` and can contain regular expressions, such as `/test/(.+)`
+    The request path. Starts with `/` and can include regular expressions, such as `/test/(.+)`.
   - callback : `Function<(HttpRequest, HttpResponse)>`  
-    Callback function, called when a PATCH request matching path is received.
-- Return value: The processed server object (for chaining other operations).
+    The callback function invoked when a PATCH request matching the path is received.
+- Return value: The server object (for method chaining).
 - Return value type: `HttpServer`
 
 
@@ -325,10 +325,10 @@ If you want to build a website, it is better to use well-established web server 
 
 - Parameters:
   - path : `String`  
-    The request path. It starts with `/` and can contain regular expressions, such as `/test/(.+)`
+    The request path. Starts with `/` and can include regular expressions, such as `/test/(.+)`.
   - callback : `Function<(HttpRequest, HttpResponse)>`  
-    Callback function, called when a DELETE request matching path is received.
-- Return value: The processed server object (for chaining other operations).
+    The callback function invoked when a DELETE request matching the path is received.
+- Return value: The server object (for method chaining).
 - Return value type: `HttpServer`
 
 
@@ -339,18 +339,18 @@ If you want to build a website, it is better to use well-established web server 
 
 - Parameters:
   - path : `String`  
-    The request path. It starts with `/` and can contain regular expressions, such as `/test/(.+)`
+    The request path. Starts with `/` and can include regular expressions, such as `/test/(.+)`.
   - callback : `Function<(HttpRequest, HttpResponse)>`  
-    Callback function, called when an OPTIONS request matching path is received.
-- Return value: The processed server object (for chaining other operations).
+    The callback function invoked when an OPTIONS request matching the path is received.
+- Return value: The server object (for method chaining).
 - Return value type: `HttpServer`
 
 
 
 ### Listening for Requests - Notes
 
-Please note that request listeners have priorities.  
-If several paths match the regular expression at the same time, the path that was defined first is chosen.  
+Note that request listeners have priorities.  
+If multiple paths match the regular expression at the same time, the one defined first is chosen.  
 For example:  
 ```js
 svr.onGet('/test/123', (req, res) => {
@@ -369,8 +369,8 @@ svr.onGet('/test/123', (req, res) => {
 
 - Parameters:
   - callback : `Function<bool(HttpRequest, HttpResponse)>`  
-    Callback function, called when a request is received. The response can be modified in the callback. If it returns `false`, the request will not be routed to the callback of the corresponding path (but the PostRouting event is still triggered).
-- Return value: The processed server object (for chaining other operations).
+    Callback function called when a request is received. You can modify the response inside the callback. If it returns `false`, the request will not be routed to the callback for the corresponding path (though the PostRouting event is still triggered).
+- Return value: The server object (for chaining other operations).
 - Return value type: `HttpServer`
 
 
@@ -381,8 +381,8 @@ svr.onGet('/test/123', (req, res) => {
 
 - Parameters:
   - callback : `Function<(HttpRequest, HttpResponse)>`  
-    Callback function, called after the callback of the corresponding path (or the PreRouting event) has finished. The response can be modified in the callback.
-- Return value: The processed server object (for chaining other operations).
+    Callback function called after the callback for the corresponding path (or the PreRouting event) finishes. You can modify the response inside the callback.
+- Return value: The server object (for chaining other operations).
 - Return value type: `HttpServer`
 
 
@@ -393,8 +393,8 @@ svr.onGet('/test/123', (req, res) => {
 
 - Parameters:
   - callback : `Function<(HttpRequest, HttpResponse)>`  
-    Callback function, called on errors (status code >= 400).
-- Return value: The processed server object (for chaining other operations).
+    Callback function called on errors (status code >= 400).
+- Return value: The server object (for chaining other operations).
 - Return value type: `HttpServer`
 
 
@@ -405,8 +405,8 @@ svr.onGet('/test/123', (req, res) => {
 
 - Parameters:
   - callback : `Function<(HttpRequest, HttpResponse, String)>`  
-    Callback function, called when an exception is thrown in a handler. The third parameter is the exception message.
-- Return value: The processed server object (for chaining other operations).
+    Callback function called when an exception is thrown in a handler. The third parameter is the exception message.
+- Return value: The server object (for chaining other operations).
 - Return value type: `HttpServer`
 
 
@@ -418,10 +418,10 @@ svr.onGet('/test/123', (req, res) => {
 
 - Parameters:
   - addr : `String`  
-    (Optional) The address to listen on. It can be an IP address or a domain name. The default is `127.0.0.1`.
+    (Optional) The address to listen on. Can be an IP address or a domain name. Defaults to `127.0.0.1`.
   - port : `Integer`  
     The port to listen on.
-- Return value: The processed server object (for chaining other operations).
+- Return value: The server object (for chaining other operations).
 - Return value type: `HttpServer`
 
 
@@ -479,7 +479,7 @@ These object properties are read-only and cannot be modified. They can only be u
 - Parameters:
   - name : `String`  
     The name of the request header.
-- Return value: The array of values of the request header (an empty array `[]` if the request has no such header).
+- Return value: An array of values for the request header (or an empty array `[]` if the request does not have this header).
 - Return value type: `Array<String>`
 
 
@@ -495,7 +495,7 @@ These object properties are read-only and cannot be modified. They can only be u
 | `res.version` | Response version     | `String`  | `'HTTP/1.1'`                |
 | `res.reason`  | Reason phrase        | `String`  | `'OK'`                      |
 
-These properties can and should be modified, but changes only take effect inside the callback.
+These properties can and should be modified, but changes take effect only inside the callback.
 
 
 
@@ -506,7 +506,7 @@ These properties can and should be modified, but changes only take effect inside
 - Parameters:
   - name : `String`  
     The name of the response header.
-- Return value: The array of values of the response header (an empty array `[]` if the response has no such header).
+- Return value: An array of values for the response header (or an empty array `[]` if the header does not exist).
 - Return value type: `Array<String>`
 
 
@@ -520,7 +520,7 @@ These properties can and should be modified, but changes only take effect inside
     The name of the response header.
   - value : `Any type`  
     The value of the response header.
-- Return value: The processed response object.
+- Return value: The modified response object.
 - Return value type: `HttpResponse`
 
 
@@ -532,9 +532,9 @@ These properties can and should be modified, but changes only take effect inside
 - Parameters:
   - content : `Any type`  
     Response content.
-- Return value: The processed response object.
+- Return value: The modified response object.
 - Return value type: `HttpResponse`
-- Note: This function is currently equivalent to `res.body += content1 + content2 + ...`
+- Note: This function is currently equivalent to `res.body += content1 + content2 + ...`.
 
 
 

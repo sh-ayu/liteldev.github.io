@@ -1,8 +1,8 @@
 # 🧰 Other Data Processing APIs
 
-Provides some other common data processing interfaces. You can use and expand by yourself.
+Provides common data processing interfaces that you can use and extend on your own.
 
-Note that data is an empty class and the functions are all static functions.
+Note that data is an empty class, and all its functions are static.
 
 ### Convert Variable to JSON String
 
@@ -10,16 +10,16 @@ Note that data is an empty class and the functions are all static functions.
 
 - Parameters: 
   - var : `Any type`  
-    Variable to convert to JSON string. The allowed data types for conversion are:   
+    Variable to convert to a JSON string. The allowed data types are:   
     `Integer` `Float` `String` `Boolean` `Array` `Object `  
-    The above elements can only be nested inside an `Array` or `Object`.
+    These elements can only be nested inside an `Array` or `Object`.
   - space : `Integer`  
-    (Optional parameter) If you want to format the output string, pass this parameter.  
-    Represents the number of spaces in each indent, so that the output JSON string is more human-readable.  
-    This parameter defaults to 0, that is, the output string is not formatted
-- Return value: Converted JSON string.
+    (Optional) Pass this parameter to format the output string.  
+    Specifies the number of spaces per indentation level to make the output JSON string more readable.  
+    Defaults to 0, meaning the output string is not formatted.
+- Return value: The converted JSON string.
 - Return value type: `String`
-  - If the return value is `Null`, it means that the conversion failed.
+  - A return value of `Null` indicates that the conversion failed.
 
 
 
@@ -29,10 +29,10 @@ Note that data is an empty class and the functions are all static functions.
 
 - Parameters: 
   - json : `String`  
-    JSON string to convert to variable.
+    The JSON string to convert to a variable.
 - Return value: The converted variable.
-- Return value type: `Any type`, depending on the data type contained in JSON.
-  - If the return value is `Null`, it means that the conversion failed .
+- Return value type: `Any type`, depending on the data type in the JSON.
+  - A return value of `Null` indicates that the conversion failed.
 
 
 
@@ -42,8 +42,8 @@ Note that data is an empty class and the functions are all static functions.
 
 - Parameters: 
   - str : `String` / `ByteBuffer`  
-    String/byte array from which to calculate MD5.
-- Return value: MD5 digest string of original data.
+    The string or byte array from which to calculate the MD5 hash.
+- Return value: The MD5 digest string of the original data.
 - Return value type: `String`
 
 
@@ -54,8 +54,8 @@ Note that data is an empty class and the functions are all static functions.
 
 - Parameters: 
   - str : `String` / `ByteBuffer`  
-    String/byte array to calculate SHA1.
-- Return value: SHA1 digest string of original data.
+    The string or byte array from which to calculate the SHA1 hash.
+- Return value: The SHA1 digest string of the original data.
 - Return value type: `String`
 
 
@@ -66,8 +66,8 @@ Note that data is an empty class and the functions are all static functions.
 
 - Parameter: 
   - str : `String` / `ByteBuffer`  
-    String/byte array to convert to Base64.
-- Return value: Base64 result.
+    The string or byte array to convert to Base64.
+- Return value: The Base64 result.
 - Return value type: `String`
 
 
@@ -78,10 +78,10 @@ Note that data is an empty class and the functions are all static functions.
 
 - Parameters: 
   - base64 : `String`  
-    The base64 string to decode.
+    The Base64 string to decode.
   - isBinary : `Boolean`  
-    Returns whether the data type is binary data, the default is false.
-- Return value: Decoded data.
+    Whether to return the decoded data as binary data. Defaults to false.
+- Return value: The decoded data.
 - Return value type: `String` or `ByteBuffer`
 
 

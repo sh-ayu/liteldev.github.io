@@ -2,27 +2,27 @@
 
 > Here are a variety of options for working with **large amounts of data**
 
-In the process of plugin work, it is inevitable to encounter scenarios that need to deal with configuration and a large amount of game-related data.
-LSE provides a lot of `infrastructure`, including configuration files, databases, economic systems, and more.
-It is convenient for developers to focus on business code implementation, rather than entangled in the technical details of these aspects.
+When developing plugins, you will inevitably need to handle configuration and large amounts of game-related data.
+LSE provides extensive `infrastructure`, including configuration files, databases, economic systems, and more.
+This lets developers focus on implementing business logic rather than getting bogged down in technical details.
 
 ## 🔨 Profile API
 
-The configuration file is generally used to separate some settings of the plug-in that can be modified by the user into a file, so as to facilitate the modification of some settings.
-Therefore, the content and format of the configuration file generally need to be readable. 
-LSE provides the ConfigFile configuration file interface to accomplish this task. 
-Of course, you can also manually read and write files to assist in the operation of related configuration files.
+Configuration files are generally used to store user-modifiable plugin settings in a separate file, making them easy to adjust.
+Therefore, a configuration file's content and format should generally be human-readable.
+LSE provides the ConfigFile interface for this purpose.
+Of course, you can also read and write files manually to help manage your configuration files.
 
 
 
 ### Description: Selection of Configuration File Type
 
-The choice of configuration file format will affect the type of configuration data you can store.
+Your choice of configuration file format determines the types of data you can store.
 
-- `JSON` format can store **most** types of data, including arrays, objects, etc., and the representation logic is relatively rich.
-- `ini` format is relatively `simple and intuitive`, and it is very easy for others to modify it, but the type of data stored is subject to certain restrictions.
+- The `JSON` format can store **most** data types, including arrays and objects, and offers rich data representation.
+- The `ini` format is relatively `simple and intuitive` and very easy for others to edit, but it restricts the types of data you can store.
 
-Please make your choice as needed.
+Choose the format that best fits your needs.
 
 
 
@@ -35,21 +35,21 @@ Please make your choice as needed.
 
 - Parameters: 
   - path : `String`  
-    The path where the configuration file is located, based on the BDS root directory.  
-    LSE will automatically create a directory in the configuration file path if it does not already exist.
+    The path to the configuration file, relative to the BDS root directory.  
+    LSE automatically creates any missing directories in the path.
   - default : `String`  
-    (Optional parameter) Default content of the configuration file.  
-    If during initialization it **does not exist**, the engine will create a new configuration file and write the default content here.  
-    If this parameter is not passed in, the new configuration file will be empty.
-- Return value: Open/created profile object.
+    (Optional) The default content of the configuration file.  
+    If the file **does not exist** during initialization, the engine creates a new configuration file and writes this default content to it.  
+    If you omit this parameter, the new configuration file will be empty.
+- Return value: The opened or newly created configuration file object.
 - Return value type: `JsonConfigFile`
-  - Throws exception if create/open fails.
+  - Throws an exception if creating or opening the file fails.
 
-We recommend that you create a directory named `BDS_Root_Directory/plugins/plugin_name/` with a config file named `config.json` to keep the configuration of each plugin uniform.
+To keep plugin configurations consistent, we recommend creating a `BDS_Root_Directory/plugins/plugin_name/` directory and naming the configuration file `config.json`.
 
 
 
-For a JSON profile object `conf`, you have these read and write interfaces available.
+A JSON configuration file object `conf` provides the following read and write interfaces.
 
 #### Initialize Configuration Items (Convenience Function
 
@@ -57,16 +57,16 @@ For a JSON profile object `conf`, you have these read and write interfaces avail
 
 - Parameters: 
   - name : `String`  
-    Configuration item name
+    The name of the configuration item.
   - default : `Any type`  
-    The value written when the configuration item is initialized.
-- Return value: The data of the specified configuration item.
-- Return value type: `Any type`, subject to the specific type of data stored.
+    The initial value written to the configuration item.
+- Return value: The value of the specified configuration item.
+- Return value type: `Any type`, depending on the specific type of data stored.
 
-Here is an easy way to initialize the configuration file, avoiding the trouble of handwriting the contents of the default configuration file:
+This method provides an easy way to initialize a configuration file without having to write the default content by hand:
 
-If the accessed configuration item does not exist, then the engine will automatically create the item `init` in the configuration file and write the given default value.
-If the accessed configuration item `init` already exists, the engine will read and return the existing value in the configuration file.
+If the specified configuration item does not exist, the engine automatically creates it via `init` in the configuration file and writes the given default value.
+If the configuration item accessed by `init` already exists, the engine reads and returns its existing value from the configuration file.
 
 
 #### Write Configuration Item
@@ -75,13 +75,13 @@ If the accessed configuration item `init` already exists, the engine will read a
 
 - Parameters: 
   - name : `String`  
-    Configuration item name
+    The name of the configuration item.
   - data : `Any type`  
-    Configuration data to write. The allowed data types are:    
+    The configuration data to write. Allowed data types are:    
     `Integer` `Float` `String` `Boolean` `Array` `Object`  
-    The above elements can only be nested inside `Array` and `Object`.
+    Only these types may be nested inside an `Array` or `Object`.
 
-- Return value: Whether the write is successful.
+- Return value: Whether the write succeeded.
 
 - Return value type: `Boolean`
 
@@ -93,12 +93,12 @@ If the accessed configuration item `init` already exists, the engine will read a
 
 - Parameters: 
   - name : `String`  
-    Configuration item name
+    The name of the configuration item.
   - default : `Any type`  
-    (optional) The default value to return when the read fails.  
-    The default is `Null`
-- Return value: The data of the specified configuration item.
-- Return value type: `Any type`, subject to the specific type of data stored.
+    (Optional) The default value to return if the read fails.  
+    Defaults to `Null`.
+- Return value: The value of the specified configuration item.
+- Return value type: `Any type`, depending on the specific type of data stored.
 
 
 
@@ -108,11 +108,11 @@ If the accessed configuration item `init` already exists, the engine will read a
 
 - Parameter:
   - name : `String`  
-    Configuration item name
-- Return value: Whether the deletion is successful.
+    The name of the configuration item.
+- Return value: Whether the deletion succeeded.
 - Return value type: `Boolean`
 
-If you don't need this configuration item, in order to avoid confusion when others modify the configuration file, you can choose to delete it.
+If you no longer need a configuration item, you can delete it to avoid confusing users who edit the configuration file.
 
 
 
@@ -125,21 +125,21 @@ If you don't need this configuration item, in order to avoid confusion when othe
 
 - Parameters: 
   - path : `String`  
-    The path where the configuration file is located, based on the BDS root directory.  
-    LSE will automatically create a directory in the configuration file path if it does not already exist.
+    The path to the configuration file, relative to the BDS root directory.  
+    LSE automatically creates any missing directories in the path.
   - default : `String`  
-    (Optional parameter) Default content of the configuration file.  
-    If during initialization it **does not exist**, the engine will create a new configuration file and write the default content here.  
-    If this parameter is not passed in, the new configuration file will be empty.
-- Return value: Open/created profile object.
+    (Optional) Default content of the configuration file.  
+    If the file **does not exist** during initialization, the engine creates it and writes this default content to it.  
+    If this parameter is omitted, the new configuration file is empty.
+- Return value: The opened or created profile object.
 - Return value type: `IniConfigFile`
-  - Throws exception if create/open fails.
+  - Throws an exception if creating or opening the file fails.
 
-We recommend that you create a directory named `BDS_Root_Directory/plugins/plugin_name/` with a config file named `config.ini` to keep the configuration of each plugin uniform.
+To keep plugin configurations consistent, we recommend placing a `config.ini` file in `BDS_Root_Directory/plugins/plugin_name/`.
 
 
 
-For an ini profile object `conf`, you have these read and write interfaces available:
+An ini profile object `conf` provides the following read and write interfaces:
 
 #### Initialize Configuration Items (Convenience Function)
 
@@ -151,15 +151,15 @@ For an ini profile object `conf`, you have these read and write interfaces avail
   - name : `String`  
     Configuration item name
   - default : `Any type`  
-    The value written when the configuration item is initialized. The allowed data types are:
+    The value written when the configuration item is initialized. Allowed data types:
     `Integer` `Float` `String` `Boolean`
 - Return value: The data of the specified configuration item.
-- Return value type: `Any type`, subject to the specific type of data stored.
+- Return value type: `Any type`, depending on the stored data type.
 
-Here is an easy way to initialize the configuration file, avoiding the trouble of handwriting the contents of the default configuration file.
+This method provides a convenient way to initialize the configuration file without writing the default contents by hand.
 
-If the accessed configuration item does not exist, then the engine will automatically create the item `init` in the configuration file and write the given default value.
-If the accessed configuration item `init` already exists, the engine will read and return the existing value in the configuration file.
+If the configuration item accessed by `init` does not exist, the engine creates it in the configuration file and writes the given default value.
+If the configuration item accessed by `init` already exists, the engine reads and returns its existing value from the configuration file.
 
 
 
@@ -173,14 +173,14 @@ If the accessed configuration item `init` already exists, the engine will read a
   - name : `String`  
     Configuration item name
   - data : `Any type`  
-    Configuration data to write. The allowed data types are:    
+    Configuration data to write. Allowed data types:    
     `Integer` `Float` `String` `Boolean`
 
-- Return value: Whether the write is successful.
+- Return value: Whether the write succeeded.
 
 - Return value type: `Boolean`
 
-If the configuration item does not exist, the interface will be created automatically.
+If the configuration item does not exist, this interface creates it automatically.
 
 
 
@@ -197,8 +197,8 @@ Read boolean `conf.getBool(section,name[,default])`
   - name : `String`  
     Configuration item name
   - default :  `String`/ `Integer`/ `Float`/ `Boolean`  
-    (optional) The default value to return when the read fails.  
-    The default is `0`
+    (Optional) The default value returned if the read fails.  
+    Defaults to `0`.
 - Return value: The data of the specified configuration item.
 - Return value type: `String`/ `Integer`/ `Float`/ `Boolean`
 
@@ -213,24 +213,24 @@ Read boolean `conf.getBool(section,name[,default])`
     Configuration item key name
   - name : `String`  
     Configuration item name
-- Return value: Whether the deletion is successful.
+- Return value: Whether the deletion succeeded.
 - Return value type: `Boolean`
 
-If you don't need this configuration item, in order to avoid confusion when others modify the configuration file, you can choose to delete it.
+If a configuration item is no longer needed, you can delete it to avoid confusing users who edit the configuration file.
 
 
 
 ### 💼 Other Common Interface Functions
 
-For a profile object `conf`, you can use these generic interfaces for auxiliary purposes:
+A profile object `conf` also provides these utility interfaces:
 
 #### Reload the Configuration Items in the File
 
 `conf.reload()`
 
-- Return value: Whether the load was successful.
+- Return value: Whether the reload succeeded.
 
-For performance reasons, the configuration file interface caches read operations, each read operation is read from direct memory, and writes are written directly to disk files. Considering that the configuration file may be modified by the user, after you confirm that the user has modified the configuration file, you need to use this function to refresh the memory cache data of the configuration file.
+For performance reasons, the configuration file interface caches reads in memory while writing changes directly to disk. If a user modifies the configuration file on disk, call this function to refresh the in-memory cache.
 
 
 
@@ -238,9 +238,9 @@ For performance reasons, the configuration file interface caches read operations
 
 `conf.close()`
 
-- Return value: Whether closing the file was successful.
+- Return value: Whether closing the file succeeded.
 
-After the profile is closed, do not continue to use it!
+Do not continue to use the profile after closing it!
 
 
 
@@ -257,7 +257,7 @@ After the profile is closed, do not continue to use it!
 
 `conf.read()`
 
-- Return value: All contents of the current configuration file.
+- Return value: The entire contents of the current configuration file.
 - Return value type: `String`
 
 
@@ -268,7 +268,7 @@ After the profile is closed, do not continue to use it!
 
 - Parameter: 
   - content : `String`  
-    The string that will be written to the configuration file.
-- Return value: Whether the write is successful.
+    The string to write to the configuration file.
+- Return value: Whether the write succeeded.
 - Return value type: `Boolean`
 

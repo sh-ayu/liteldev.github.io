@@ -3,9 +3,9 @@ platforms: [android]
 ---
 # 快速启动 URI
 
-Android 版的 **快速启动** 用一个 `minecraft://` URI 启动 Minecraft，告诉游戏先打开什么。快速启动界面上的每个操作都会生成下面的某个 URI；**自定义 URI** 接受任何以 `minecraft://` 开头的 URI。游戏如何处理 URI 由 Minecraft 决定。
+Android 版的 **快速启动** 通过 `minecraft://` URI 启动 Minecraft，并指定游戏启动后首先打开的界面。快速启动界面上的每项操作都会生成下表中的某个 URI；**自定义 URI** 则接受任意以 `minecraft://` 开头的 URI。URI 的具体处理方式由 Minecraft 决定。
 
-LeviLauncher 也能打开其他应用中的 `minecraft://` 链接：Android 会把它列为可以打开这类链接的应用之一。
+LeviLauncher 也能打开其他应用中的 `minecraft://` 链接，Android 会将其列为可打开此类链接的应用之一。
 
 ## 操作
 
@@ -28,7 +28,7 @@ LeviLauncher 也能打开其他应用中的 `minecraft://` 链接：Android 会�
 
 ## 示例
 
-要加入 `play.example.org` 上端口为 `19132` 的服务器，选择 **连接到服务器**，或在设备上打开这个链接：
+要加入 `play.example.org` 上端口为 `19132` 的服务器，请选择 **连接到服务器**，或在设备上打开以下链接：
 
 ```text
 minecraft://connect/?serverUrl=play.example.org&serverPort=19132

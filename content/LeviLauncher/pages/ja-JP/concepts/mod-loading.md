@@ -1,48 +1,48 @@
 # Mod の読み込み
 
-Minecraft Bedrock 自体には Mod の仕組みがありません。Mod はネイティブコードで、ゲームの起動時にローダーがゲームのプロセスへ読み込みます。このページでは、LeviLauncher が使うローダー、Mod の置き場所、そして Mod を追加するいくつかの方法の関係を説明します。
+Minecraft Bedrock 自体には Mod の仕組みがありません。Mod はネイティブコードであり、ゲームの起動時にローダーによってゲームのプロセスへ読み込まれます。このページでは、LeviLauncher が使うローダー、Mod の配置場所、および Mod を追加する各方法の関係を説明します。
 
 ## Mod の置き場所 <Badge platform="windows" />
 
-どのインスタンスにも `mods\` フォルダーがあります（[フォルダーとファイル](../reference/files)を参照）。各 Mod はその中の 1 つのフォルダーで、Mod を説明する `manifest.json` を持ちます。
+どのインスタンスにも `mods\` フォルダーがあります（[フォルダーとファイル](../reference/files)を参照）。各 Mod はその中の 1 つのフォルダーとして配置され、Mod の情報を記した `manifest.json` を含みます。
 
 | フィールド | 意味 |
 | --- | --- |
 | `name` | Mod の名前。 |
 | `entry` | ローダーが読み込むファイル。Mod のフォルダーからの相対パス（`.dll`）。 |
 | `version` | Mod のバージョン。 |
-| `type` | どのローダーが読み込むか。`preload-native` は LeviLauncher のネイティブローダー用、LeviLamina 用の Mod には独自の種類があります。 |
+| `type` | どのローダーが読み込むか。`preload-native` は LeviLauncher のネイティブローダー用で、LeviLamina 用の Mod には独自の種類があります。 |
 | `author` | 作者（省略可）。 |
 
-Mod は 1 つのインスタンスに属します。ゲームデータだけに関わる[隔離](./isolation)の影響は受けません。
+Mod は 1 つのインスタンスに属します。[隔離](./isolation)はゲームデータのみを対象とするため、Mod には影響しません。
 
-**Mod をオフにする**（**Mod管理** で、または `LeviLauncher.exe mod disable`）と、その `manifest.json` の名前が `manifest.json.close` に変わり、オンにすると元に戻ります。Mod のファイルはそのまま残り、`manifest.json` を探すローダーからはその Mod が見えなくなります。
+**Mod管理** または `LeviLauncher.exe mod disable` で **Mod をオフにする** と、`manifest.json` の名前が `manifest.json.close` に変更され、オンにすると元に戻ります。Mod のファイル自体はそのまま残りますが、`manifest.json` を探すローダーからは認識されなくなります。
 
 ## 2 つのローダー <Badge platform="windows" />
 
 ### LeviLauncher のネイティブローダー
 
-LeviLauncher はインスタンスをインストールまたは準備するとき、自身のローダー `LeviLauncher.dll` をゲームの実行ファイルの横に置き、実行ファイルのインポートに追加して、Windows がゲームと一緒に読み込むようにします。これは x64 ビルドで、GDK でも UWP でも同じように働きます。[隔離](./isolation)もこの仕組みで動いています。
+インスタンスのインストール時または準備時に、LeviLauncher は自身のローダー `LeviLauncher.dll` をゲームの実行ファイルと同じ場所に配置し、実行ファイルのインポートに追加します。これにより、Windows がゲームと一緒にローダーを読み込むようになります。これは x64 ビルドで、GDK でも UWP でも同じように動作します。[隔離](./isolation)もこの仕組みを利用しています。
 
-ゲームが起動すると、ネイティブローダーは `mods\` 内のフォルダーを名前順に調べ、`type` が `preload-native` の各 Mod の `entry` を読み込みます。`manifest.json` のないフォルダーとほかの種類の Mod は飛ばします。インスタンスに別のプリローダー（ゲームの横の `preloader.dll`）がある場合、ネイティブローダーは Mod の読み込みをすべてそちらに任せます。ネイティブローダーには Visual C++ ランタイム（x64）が必要で、LeviLauncher がその有無を確認してインストールを提案します。
+ゲームが起動すると、ネイティブローダーは `mods\` 内のフォルダーを名前順に調べ、`type` が `preload-native` である各 Mod の `entry` を読み込みます。`manifest.json` のないフォルダーや、ほかの種類の Mod はスキップします。インスタンスに別のプリローダー（ゲームの実行ファイルと同じ場所にある `preloader.dll`）が存在する場合、ネイティブローダーは Mod の読み込みをすべてそちらに委ねます。ネイティブローダーの動作には Visual C++ ランタイム（x64）が必要です。LeviLauncher はその有無を確認し、インストールを提案します。
 
 ### LeviLamina
 
-[LeviLamina](https://levimc.org/LeviLamina/) は LeviMC の Mod ローダーです。[LeviMC Mods](https://levimc.org/mods/) の Mod の多くは LeviLamina の Mod で、インスタンスのゲームバージョンに対応したバージョンの LeviLamina が必要です。LeviLauncher は、対応バージョンの GDK インスタンスに LeviLamina を内蔵パッケージマネージャーのパッケージとしてインストールします（バージョンのインストール時の **LeviLamina をインストール** スイッチ、または **インスタンス設定** の **ローダー** タブ）。
+[LeviLamina](https://levimc.org/LeviLamina/) は LeviMC の Mod ローダーです。[LeviMC Mods](https://levimc.org/mods/) で公開されている Mod の多くは LeviLamina 用であり、インスタンスのゲームバージョンに対応したバージョンの LeviLamina が必要です。LeviLauncher は、対応バージョンの GDK インスタンスに対し、内蔵パッケージマネージャーを使って LeviLamina をパッケージとしてインストールします（バージョンのインストール時の **LeviLamina をインストール** スイッチ、または **インスタンス設定** の **ローダー** タブ）。
 
 ## Mod を追加する 3 つの方法 <Badge platform="windows" />
 
 | 追加するもの | LeviLauncher の動作 |
 | --- | --- |
-| **LeviMC Mods** の Mod（または `mod install owner/repo`） | [lip](https://github.com/LiteLDev/lip) 互換の内蔵パッケージマネージャーでパッケージとしてインストールします。このプラットフォーム向けのリリースをダウンロードし、依存するパッケージをインストールし、インスタンスの `.lip\state.json` に記録します。Mod が LeviLamina を必要とし、インストール済みのものが合わない（または未インストールの）場合は、先に互換性のある LeviLamina をインストールします。こうして入れた Mod はパッケージとして更新・削除できます。 |
-| `.mcmod` パッケージ（または `.zip`） | `mods\` 内の新しいフォルダーに展開します。アーカイブには `manifest.json` が必要です。 |
-| 単体の `.dll` | `mods\` 内の新しいフォルダーに置き、`manifest.json` を書きます。既定では、ファイル名を名前に、`preload-native` を種類に、`0.0.0` をバージョンにします。 |
+| **LeviMC Mods** の Mod（または `mod install owner/repo`） | [lip](https://github.com/LiteLDev/lip) 互換の内蔵パッケージマネージャーを使い、パッケージとしてインストールします。対象プラットフォーム向けのリリースをダウンロードして依存パッケージをインストールし、インスタンスの `.lip\state.json` に記録します。Mod が LeviLamina を必要としており、未インストールまたはインストール済みのものが合わない場合は、互換性のある LeviLamina を先にインストールします。この方法で追加した Mod は、パッケージとして更新・削除できます。 |
+| `.mcmod` パッケージ（または `.zip`） | `mods\` 内の新しいフォルダーに展開します。アーカイブには `manifest.json` が含まれている必要があります。 |
+| 単体の `.dll` | `mods\` 内の新しいフォルダーに配置し、`manifest.json` を生成します。既定では、名前にファイル名、種類に `preload-native`、バージョンに `0.0.0` が設定されます。 |
 
-パッケージは、`lip.toml` と `.lip\state.json` の中で `side`（`client` または `server`）と `platform`（`win-x64` など）によって動作する場所を示します。クライアントには、LeviLauncher は Mod に `client` バリアントがあればそれを、なければ既定のバリアントをインストールします。古いパッケージの移行を含む詳細は[Mod と統合](../guide/mods-integrations)を参照してください。
+パッケージは、`lip.toml` と `.lip\state.json` 内の `side`（`client` または `server`）および `platform`（`win-x64` など）で動作環境を指定します。クライアントには、LeviLauncher は Mod に `client` バリアントがあればそれをインストールし、なければ既定のバリアントをインストールします。古いパッケージの移行など、詳細は[Mod と統合](../guide/mods-integrations)を参照してください。
 
 ## Android <Badge platform="android" />
 
-Android 版はネイティブ Mod、つまりゲームのプロセスで動く `.so` ライブラリを読み込みます。Mod を入れた環境は隔離したバージョンにまとめ、信頼できる入手元の Mod だけをインストールしてください。自分で作る場合は、LeviLamina のドキュメントの [Android native mods](https://levimc.org/LeviLamina/developer_guides/android/) に従ってください。
+Android 版はネイティブ Mod、つまりゲームのプロセス内で動作する `.so` ライブラリを読み込みます。Mod を導入した環境は隔離したバージョンにまとめ、信頼できる入手元の Mod のみをインストールしてください。自作する場合は、LeviLamina のドキュメントの [Android native mods](https://levimc.org/LeviLamina/developer_guides/android/) に従ってください。
 
 ## 関連ページ
 

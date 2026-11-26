@@ -1,39 +1,39 @@
 #  📱 Device Information Object API
 
-In LSE, the "device information object" is used to manipulate and obtain information about the game device used by a player.
+In LSE, the "device information object" is used to access and manipulate information about a player's game device.
 
 ### Get a Device Info Object
 
 #### Acquired by the Player
 
-Get the **device information object** corresponding to a player through the `.getDevice` member function of the player object
-See [Player Object API](Player.md)      
+Use the player object's `.getDevice` member function to get the **device information object** for that player.
+See [Player Object API](Player.md).
 
-> Note: Do not save a device information object **long-term.**
-> When the player corresponding to the device exits the game, the corresponding object will become invalid. Therefore, if there is a need to operate an object for a long time, please obtain the real-time device information object through the above methods.
+> Note: Do not store a device information object **long-term.**
+> When the player leaves the game, the corresponding object becomes invalid. If you need to work with an object over a long period, retrieve the current device information object using the method above.
 
 
 
 
 ### Device Information Object - Properties
 
-Each device information object contains some fixed object properties. for a specific entity object `dv`, has the following properties:
+Every device information object has a fixed set of properties. A specific entity object `dv` has the following properties:
 
-| Attributes        | Meaning                                       | Data Types |
+| Property          | Description                                   | Data Type  |
 | ----------------- | --------------------------------------------- | ---------- |
-| dv.ip             | The IP address of the player's device         | `String`   |
-| dv.avgPing        | Average network latency for players (ms)      | `Integer`  |
+| dv.ip             | IP address of the player's device             | `String`   |
+| dv.avgPing        | Player's average network latency (ms)         | `Integer`  |
 | dv.avgPacketLoss  | Player's average network packet loss rate (%) | `Float`    |
-| dv.lastPing       | Network latency for players (ms)              | `Integer`  |
+| dv.lastPing       | Player's network latency (ms)                 | `Integer`  |
 | dv.lastPacketLoss | Player's network packet loss rate (%)         | `Float`    |
-| dv.os             | The OS type of the player's device            | `String`   |
+| dv.os             | OS type of the player's device                | `String`   |
 | dv.inputMode      | Player's input mode                           | `Integer`  |
-| dv.serverAddress  | The player's connection address               | `String`   |
+| dv.serverAddress  | Player's connection address                   | `String`   |
 | dv.clientId       | ID of the player client                       | `String`   |
 
-These object properties are read-only and cannot be modified 
+These object properties are read-only and cannot be modified.
 
-Among them, the operating system type attribute returns a string that records the operating system of the player's device. The possible return values ​​are as follows:
+The operating system type property returns a string identifying the operating system of the player's device. The possible return values are:
 
 | dv.os                    | Device Operating System                       |
 | ------------------------ | --------------------------------------------- |

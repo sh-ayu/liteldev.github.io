@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Signature API resolves symbols or byte patterns inside a loaded module.
+The Signature API resolves symbols or byte patterns inside a loaded module.
 
 ## Header
 
@@ -21,7 +21,7 @@ resolveSignatures(std::span<const std::string> signatures,
                   std::string_view moduleName);
 ```
 
-The functions return `0` for signatures that cannot be resolved.
+These functions return `0` for signatures that cannot be resolved.
 
 ## Pattern Format
 
@@ -67,4 +67,4 @@ uintptr_t resolveVtableFunction(std::string_view typeInfoName, size_t slot,
 
 `typeInfoName` is the Itanium typeinfo-name symbol (`"_ZTS9CameraAPI"`) or its
 stored name (`"9CameraAPI"`), and `slot` is the function's index from the vtable
-address point. It returns `0` when the function cannot be resolved.
+address point. The function returns `0` if it cannot resolve the virtual function.

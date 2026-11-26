@@ -3,15 +3,15 @@ platforms: [windows]
 ---
 # Ordner & Dateien
 
-Alle Dateien und Ordner, die die Windows-Version von LeviLauncher liest und schreibt, Stand LeviLauncher 1.1.0. Der Launcher schreibt nichts in den temporären Ordner des Systems (`%TEMP%`).
+Alle Dateien und Ordner, die die Windows-Version von LeviLauncher liest und schreibt (Stand: LeviLauncher 1.1.0). In den temporären Ordner des Systems (`%TEMP%`) schreibt der Launcher nichts.
 
 ## Überblick
 
 | Ordner | Ort | Inhalt |
 | --- | --- | --- |
 | Einstellungsordner | `%APPDATA%\LeviLauncher\` | Nur `config.json`: klein und wandert mit deinem Windows-Profil |
-| Lokaler Ordner | `%LOCALAPPDATA%\LeviLauncher\` | Protokolle, das Microsoft-Konto, die WebView2-Daten des Fensters; auch das Standard-Datenstammverzeichnis |
-| Datenstammverzeichnis | der lokale Ordner, sofern du keinen anderen wählst (**Basis-Stammverzeichnis** unter **Einstellungen → Allgemeine Einstellungen** oder `config set data-root`) | `Instances\`, `Backups\`, `Cache\` |
+| Lokaler Ordner | `%LOCALAPPDATA%\LeviLauncher\` | Protokolle, das Microsoft-Konto, die WebView2-Daten des Fensters; zugleich das Standard-Datenstammverzeichnis |
+| Datenstammverzeichnis | Der lokale Ordner, sofern du keinen anderen wählst (**Basis-Stammverzeichnis** unter **Einstellungen → Allgemeine Einstellungen** oder `config set data-root`) | `Instances\`, `Backups\`, `Cache\` |
 
 ```text
 %APPDATA%\LeviLauncher\
@@ -35,7 +35,7 @@ Alle Dateien und Ordner, die die Windows-Version von LeviLauncher liest und schr
     gamertags.json                 die Gamertags der Spielerprofile, die der Launcher gesehen hat
 ```
 
-Alles in `Cache\` kann gelöscht werden, ohne dass etwas verloren geht. `LeviLauncher.exe cache clean` löscht den Paket-Cache, die für Importe heruntergeladenen Dateien und unfertige Downloads, und `LeviLauncher.exe installer remove` löscht heruntergeladene Spiel-Installationspakete. Das Datenstammverzeichnis zu ändern, verweist den Launcher nur auf einen anderen Ordner: Vorhandene Instanzen, Downloads und Backups werden nicht verschoben.
+Alles in `Cache\` lässt sich ohne Datenverlust löschen. `LeviLauncher.exe cache clean` entfernt den Paket-Cache, für Importe heruntergeladene Dateien und unfertige Downloads; `LeviLauncher.exe installer remove` löscht heruntergeladene Spiel-Installationspakete. Wenn du das Datenstammverzeichnis änderst, verweist der Launcher lediglich auf den neuen Ordner – vorhandene Instanzen, Downloads und Backups werden nicht verschoben.
 
 ## Der Ordner einer Instanz
 
@@ -52,26 +52,26 @@ Instances\<Instanz>\
   Minecraft Bedrock\               die Spieldaten bei eingeschalteter Isolierung (Preview: Minecraft Bedrock Preview)
 ```
 
-Die Spieldatenordner von Instanzen mit und ohne Isolierung beschreibt [Instanz-Isolierung](../concepts/isolation), `mods\` beschreibt [Wie Mods geladen werden](../concepts/mod-loading).
+Die Spieldatenordner von Instanzen mit und ohne Isolierung sind unter [Instanz-Isolierung](../concepts/isolation) beschrieben, der Ordner `mods\` unter [Wie Mods geladen werden](../concepts/mod-loading).
 
 ## Außerhalb der Ordner von LeviLauncher
 
-| Pfad | Was es ist |
+| Pfad | Inhalt |
 | --- | --- |
-| `Minecraft - <Instanz>.lnk` auf deinem Desktop | Die Desktop-Verknüpfung einer Instanz (**Desktop-Verknüpfung erstellen** oder `instance shortcut`). Sie öffnet den Launcher mit `--launch=<Instanz>`. Geschrieben wird nur auf deinen eigenen Desktop, nicht auf den öffentlichen. |
-| `%APPDATA%\lip\` | Die Einstellungen von lip: `config.toml`, zum Beispiel sein `github_proxy`, den auch der integrierte Paketmanager liest. |
-| `%LOCALAPPDATA%\lip\Cache\` | Der Paket-Cache des integrierten Paketmanagers, derselbe wie der von lip. **Cache leeren** unter **Einstellungen → Paketverwaltung** leert ihn. |
+| `Minecraft - <Instanz>.lnk` auf deinem Desktop | Die Desktop-Verknüpfung einer Instanz (**Desktop-Verknüpfung erstellen** oder `instance shortcut`). Sie startet den Launcher mit `--launch=<Instanz>` und wird nur auf deinem eigenen Desktop angelegt, nicht auf dem öffentlichen. |
+| `%APPDATA%\lip\` | Die Einstellungen von lip (`config.toml`), etwa die Option `github_proxy`, die auch der integrierte Paketmanager ausliest. |
+| `%LOCALAPPDATA%\lip\Cache\` | Der Paket-Cache des integrierten Paketmanagers – derselbe, den auch lip nutzt. **Cache leeren** unter **Einstellungen → Paketverwaltung** leert ihn. |
 | `%APPDATA%\Minecraft Bedrock\`, `%APPDATA%\Minecraft Bedrock Preview\` | Die gemeinsamen Spieldaten von GDK-Instanzen ohne Isolierung. |
 | `%LOCALAPPDATA%\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\` (Preview: `Microsoft.MinecraftWindowsBeta_8wekyb3d8bbwe`) | Die gemeinsamen Spieldaten von UWP-Instanzen ohne Isolierung. |
 
 ## Wie Dateien geschrieben werden
 
-- Eine Datei wird neben ihrem endgültigen Ort als `<Name>.<Zufall>.tmp` geschrieben und dann an ihren Platz umbenannt, sodass nie eine halb geschriebene Datei zu sehen ist. Ein unfertiger Download, der fortgesetzt werden kann, wird als `<Name>.partial.tmp` aufbewahrt.
-- Namen, die du wählst (Instanzen, Welten), werden nach den Windows-Regeln bereinigt: Die Zeichen `<>:"/\|?*` sowie Punkte und Leerzeichen am Ende werden entfernt, und reservierte Namen wie `CON` oder `NUL` werden vermieden.
-- Dateien, die der Launcher erzeugt, heißen `<Name>_<yyyyMMdd-HHmmss>.<Endung>`, zum Beispiel `MyWorld_20261107-142301.mcworld`.
+- Dateien werden zunächst im Zielordner unter `<Name>.<Zufall>.tmp` angelegt und erst nach dem Schreiben in ihren endgültigen Namen umbenannt, sodass nie halb geschriebene Dateien sichtbar sind. Ein unfertiger Download, der sich fortsetzen lässt, bleibt als `<Name>.partial.tmp` erhalten.
+- Selbst gewählte Namen (etwa für Instanzen oder Welten) werden nach den Windows-Regeln bereinigt: Die Zeichen `<>:"/\|?*` sowie Punkte und Leerzeichen am Ende werden entfernt und reservierte Namen wie `CON` oder `NUL` vermieden.
+- Vom Launcher erzeugte Dateien folgen dem Schema `<Name>_<yyyyMMdd-HHmmss>.<Endung>`, zum Beispiel `MyWorld_20261107-142301.mcworld`.
 
 ## Das alte Layout
 
-LeviLauncher vor 1.1.0 legte alles in `%APPDATA%\<Programmname>\` ab (zum Beispiel `%APPDATA%\levilauncher.exe\`), mit den Ordnern `versions\`, `backups\`, `installers\`, `updates\`, `logs\` und den Dateien `config.json`, `user_gamertag_map.json` und `gdk_pending_versions.json`. Instanzen enthielten `version.json` und `LargeLogo.ico`.
+Vor Version 1.1.0 legte LeviLauncher alles unter `%APPDATA%\<Programmname>\` ab (zum Beispiel `%APPDATA%\levilauncher.exe\`) – darunter die Ordner `versions\`, `backups\`, `installers\`, `updates\` und `logs\` sowie die Dateien `config.json`, `user_gamertag_map.json` und `gdk_pending_versions.json`. Instanzordner enthielten `version.json` und `LargeLogo.ico`.
 
-Beim ersten Start zieht LeviLauncher 1.1.0 oder neuer diese Daten einmal in das obige Layout um, ohne etwas zu löschen: Daten auf demselben Laufwerk werden an ihren Platz umbenannt, Daten auf einem anderen Laufwerk werden kopiert und das Original bleibt erhalten, und die alte `config.json` wird in `config.migrated.json` umbenannt. Ein Datenstammverzeichnis, das du gewählt hattest, bleibt, wo es ist. Lässt sich etwas nicht umziehen (etwa weil das Spiel aus einer Instanz läuft), werden alle Schritte rückgängig gemacht, und der Launcher läuft bis zum nächsten Start mit dem alten Layout. `storage-migration.json` hält fest, was wohin umgezogen ist; danach werden Desktop-Verknüpfungen auf die neuen Orte aktualisiert.
+Beim ersten Start überführt LeviLauncher 1.1.0 oder neuer diese Daten einmalig in das oben beschriebene Layout, ohne etwas zu löschen: Daten auf demselben Laufwerk werden direkt an ihren neuen Platz verschoben (umbenannt), Daten auf einem anderen Laufwerk werden kopiert, wobei das Original erhalten bleibt, und die alte `config.json` wird in `config.migrated.json` umbenannt. Ein zuvor selbst gewähltes Datenstammverzeichnis bleibt an seinem Ort. Schlägt der Umzug fehl (etwa weil gerade das Spiel aus einer Instanz läuft), macht der Launcher alle Schritte rückgängig und nutzt bis zum nächsten Start weiter das alte Layout. Die Datei `storage-migration.json` protokolliert, was wohin verschoben wurde; anschließend werden vorhandene Desktop-Verknüpfungen auf die neuen Pfade angepasst.

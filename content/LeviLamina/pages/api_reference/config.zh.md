@@ -4,7 +4,7 @@
 
 ## 概述
 
-Config 模块提供了用于加载和保存模组配置文件（JSON 格式）的模板函数。它利用 [Reflection（反射）](reflection.zh.md) 模块进行自动序列化/反序列化，支持带版本号的配置及自动迁移。
+Config 模块提供模板函数，用于加载和保存 JSON 格式的模组配置文件。该模块利用 [Reflection（反射）](reflection.zh.md) 模块自动完成序列化与反序列化，并支持配置版本管理与自动迁移。
 
 ## 头文件
 
@@ -16,10 +16,10 @@ Config 模块提供了用于加载和保存模组配置文件（JSON 格式）�
 
 ### IsConfig
 
-配置类型必须满足：
+配置类型必须满足以下条件：
 
 - `ll::reflection::Reflectable<T>` — 类型必须是聚合体（用于反射）
-- 具有整数类型的 `version` 字段
+- 包含整数类型的 `version` 字段
 
 ```cpp
 namespace ll::config {
@@ -38,7 +38,7 @@ template <IsConfig T, class J = nlohmann::ordered_json>
 bool saveConfig(T const& config, std::filesystem::path const& path);
 ```
 
-将 `config` 序列化为 JSON 并写入 `path`。成功时返回 `true`。
+将 `config` 序列化为 JSON 并写入 `path`，成功时返回 `true`。
 
 ### loadConfig
 
@@ -47,12 +47,12 @@ template <IsConfig T, class J = nlohmann::ordered_json, class F = bool(T&, J&)>
 bool loadConfig(T& config, std::filesystem::path const& path, F&& updater = defaultConfigUpdater<T, J>);
 ```
 
-从 `path` 加载配置到 `config`。如果文件不存在，则保存当前 `config` 作为默认值。返回 `true` 表示无需重写（版本匹配）。
+从 `path` 将配置加载到 `config`。如果文件不存在，则将当前 `config` 保存为默认值。返回 `true` 表示版本匹配，无需重写文件。
 
 **行为：**
 
-1. 文件不存在 → 先保存默认配置，再按已有文件的流程读取（版本匹配，因此返回 `true`）
-2. 文件缺少 `version` 或版本不同 → 调用 `updater`，仅当其返回 `true` 时才反序列化；返回 `false`
+1. 文件不存在 → 先保存默认配置，再按已有文件的流程读取（因版本匹配而返回 `true`）
+2. 文件缺少 `version` 或版本不一致 → 调用 `updater`，仅当其返回 `true` 时才执行反序列化；最终返回 `false`
 3. 文件存在且版本匹配 → 直接反序列化，返回 `true`
 4. 文件为空或无法读取 → 不修改 `config`，返回 `false`
 
@@ -63,7 +63,7 @@ template <class T, class J>
 bool defaultConfigUpdater(T& config, J& data);
 ```
 
-默认更新策略：使用 `merge_patch` 将现有文件内容合并到默认配置上，在添加新字段的同时保留用户的修改。
+默认更新策略：使用 `merge_patch` 将现有文件内容合并到默认配置中，既能补充新增字段，又能保留用户的修改。
 
 ## 使用方法
 
@@ -81,7 +81,7 @@ struct MyConfig {
 ```
 
 !!! note
-    结构体必须是聚合类型（无用户定义构造函数、无私有成员、无虚函数），反射才能正常工作。
+    结构体必须是聚合类型（无用户定义的构造函数、无私有成员、无虚函数），反射才能正常工作。
 
 ### 加载和保存
 
@@ -141,7 +141,7 @@ void loadConfigV2(ll::mod::Mod& mod) {
 
 ### 生成的 JSON 示例
 
-对于上述 `MyConfig` 结构体，生成的 JSON 如下：
+上述 `MyConfig` 结构体生成的 JSON 如下：
 
 ```json
 {
@@ -154,5 +154,5 @@ void loadConfigV2(ll::mod::Mod& mod) {
 
 ## 相关模块
 
-- [Reflection（反射）](reflection.zh.md) — 提供配置使用的 `serialize`/`deserialize`
+- [Reflection（反射）](reflection.zh.md) — 提供配置所需的 `serialize`/`deserialize`
 - [Mod（模组系统）](mod.zh.md) — `Mod::getConfigDir()` 返回配置目录

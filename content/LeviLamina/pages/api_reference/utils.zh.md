@@ -4,7 +4,7 @@
 
 ## 概述
 
-Utils 模块提供了各种实用函数，包括系统信息、字符串操作、哈希、随机数生成、文件 I/O、Base64 编码和错误处理。
+Utils 模块提供系统信息、字符串操作、哈希、随机数生成、文件 I/O、Base64 编码和错误处理等实用函数。
 
 ## 头文件
 
@@ -19,7 +19,7 @@ Utils 模块提供了各种实用函数，包括系统信息、字符串操作�
 | `ll/api/utils/FontUtils.h` | 字体枚举 |
 | `ll/api/io/FileUtils.h` | 文件 I/O 工具（`ll::file_utils`，见 [IO](io.zh.md)） |
 | `ll/api/utils/Base64Utils.h` | Base64 编码/解码 |
-| `ll/api/utils/CompressUtils.h` | 压缩与解压,支持流式和一次性两种用法 |
+| `ll/api/utils/CompressUtils.h` | 压缩与解压，支持流式和一次性两种用法 |
 
 ## 核心函数
 
@@ -243,7 +243,7 @@ void compressExample() {
 }
 ```
 
-数据较大时改用流式,这样两侧都不会整块驻留内存。按需多次调用 `write` 推入数据,最后调用一次 `finish`:
+数据较大时可改用流式处理，避免输入和输出整块驻留内存。按需多次调用 `write` 推入数据，最后调用一次 `finish`：
 
 ```cpp
 #include "ll/api/utils/CompressUtils.h"
@@ -268,11 +268,10 @@ ll::Expected<> compressToSocket(std::string_view chunk1, std::string_view chunk2
 }
 ```
 
-文件到文件的场景用 `compressFile` 和 `decompressFile`,它们基于同一套机制,并且先写入临时文件再改名,
-因此中途被打断不会留下半个文件。
+文件到文件的场景请使用 `compressFile` 和 `decompressFile`。它们基于同一套机制，且会先写入临时文件再改名，因此即使中途中断也不会留下残缺文件。
 
-`decompress` 默认不限制输出大小，只有传入 `maxSize` 时才会限制。数据来源不可信时请传入它，因为很小的输入也可能解压出极大的数据。
+`decompress` 默认不限制输出大小，传入 `maxSize` 后才会限制。很小的输入也可能解压出极大的数据，处理不可信的数据源时请务必传入该参数。
 
 ## 相关模块
 
-- [IO & Logger（输入输出与日志）](io.zh.md) — 文件工具补充日志文件输出
+- [IO & Logger（输入输出与日志）](io.zh.md) — 文件工具与日志文件输出配合使用

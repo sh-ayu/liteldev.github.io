@@ -6,14 +6,14 @@
   `function(player,num,name,disName)`
 - Parameters: 
   - player : `Player`  
-    The player whose scoreboard values have changed.
-  - num: `Integer`  
-    The changed scoreboard value.
+    The player whose scoreboard value changed.
+  - num : `Integer`  
+    The new scoreboard value.
   - name : `String`  
-    The name of the scoreboard scoring item.
+    The name of the scoreboard objective.
   - disName : `String`  
-    The display name of the scoreboard item.
-- Intercept event: cannot be intercepted.
+    The display name of the scoreboard objective.
+- Intercept event: Cannot be intercepted.
 
 
 
@@ -23,7 +23,7 @@
   `function()`
 - Parameters: 
   - None
-- Intercept event: cannot be intercepted.
+- Intercept event: Cannot be intercepted.
 
 
 
@@ -33,7 +33,7 @@
   `function()`
 - Parameters: 
   - None
-- Intercept event: cannot be intercepted.
+- Intercept event: Cannot be intercepted.
 
 
 
@@ -45,4 +45,4 @@
   - cmd : `String`  
     The console command being executed.
 
-- Intercept events: function returns `false`
+- Intercept event: Return `false` from the listener function.

@@ -1,6 +1,6 @@
 # Version Management
 
-LeviLauncher treats each installed setup as a version you can manage independently. In the app, installed versions are called instances and are listed on the **Instances** page.
+LeviLauncher treats each installed setup as an independent version. In the app, installed versions are called instances and appear on the **Instances** page.
 
 ## What you can do
 
@@ -15,9 +15,9 @@ LeviLauncher treats each installed setup as a version you can manage independent
 
 === "Android"
 
-    - import official Minecraft APKs and run them inside the launcher, without installing each version on the system
-    - keep multiple versions and their data separated
-    - choose the version the launch screen starts
+    - import official Minecraft APKs and run them inside the launcher without installing each version on the system
+    - keep multiple versions and their data separate
+    - choose which version the launch screen starts
 
 ## Minecraft Release vs Preview <Badge platform="windows" />
 
@@ -30,7 +30,7 @@ LeviLauncher treats each installed setup as a version you can manage independent
 
 === "Windows"
 
-    Isolation is available for GDK versions and for UWP x64 versions 1.19.70.2 or later. When isolation is enabled, LeviLauncher stores the managed game data inside that version's own workspace rather than letting everything share the same default data location.
+    Isolation is available for GDK versions and for UWP x64 versions 1.19.70.2 or later. When enabled, LeviLauncher stores managed game data inside that version's own workspace instead of sharing the default data location.
 
     Isolation is useful when you want:
 
@@ -40,23 +40,23 @@ LeviLauncher treats each installed setup as a version you can manage independent
 
 === "Android"
 
-    Enable version isolation for an imported version when its worlds, packs and settings should stay separate from the installed Google Play version. Imported versions often need isolation to launch.
+    Enable version isolation for an imported version to keep its worlds, packs, and settings separate from the installed Google Play version. Imported versions often need isolation to launch.
 
 ## Common version tasks <Badge platform="windows" />
 
 ### Install a new version
 
-Use the **Download** page, then return to **Launch** after installation finishes.
+Install the version on the **Download** page, then return to **Launch** when it finishes.
 
-The **Install LeviLamina** switch on the install page starts on; turn it off to install the game without LeviLamina. It only applies to versions LeviLamina supports.
+The **Install LeviLamina** switch on the install page is on by default; turn it off to install the game without LeviLamina. This setting applies only to versions that LeviLamina supports.
 
 ### Rename a version
 
-Use **Instances** or **Instance Settings** to give the setup a name that reflects its purpose, such as `Release Survival` or `Preview Test`.
+In **Instances** or **Instance Settings**, give the setup a name that reflects its purpose, such as `Release Survival` or `Preview Test`.
 
 ### Delete a version
 
-Remove versions you no longer need, especially Minecraft Preview test installs that are no longer relevant.
+Remove versions you no longer need, such as outdated Minecraft Preview test installs.
 
 ::: warning Be careful before deleting
 Deleting a version can remove the managed environment for that setup. Back up important worlds first.
@@ -64,7 +64,7 @@ Deleting a version can remove the managed environment for that setup. Back up im
 
 ### Create a desktop shortcut
 
-Use **Create Desktop Shortcut** in the menu next to the **Launch** button to create a shortcut for a specific version so you can launch it directly.
+Select **Create Desktop Shortcut** from the menu next to the **Launch** button to create a shortcut that launches a specific version directly.
 
 ## Recommended version strategy <Badge platform="windows" />
 

@@ -2,7 +2,7 @@
 
 ## 公开头文件
 
-SDK 只安装以下头文件：
+SDK 仅安装以下头文件：
 
 ```cpp
 #include <pl/Config.hpp>
@@ -19,15 +19,11 @@ SDK 只安装以下头文件：
 #include <pl/memory/Vtable.hpp>
 ```
 
-`<pl/Platform.hpp>` 在 `pl::platform` 中提供少量 Android 辅助函数：
-`setClipboardText(text)` 设置剪贴板文本；
-`httpGet(url, timeoutMs = 5000)` 发起 HTTP GET 请求并返回
-`HttpResponse`（`status`、`body`、`retryAfter`、`ok()`）。
+`<pl/Platform.hpp>` 在 `pl::platform` 中提供了少量 Android 辅助函数：`setClipboardText(text)` 用于设置剪贴板文本；`httpGet(url, timeoutMs = 5000)` 用于发起 HTTP GET 请求并返回 `HttpResponse`（包含 `status`、`body`、`retryAfter` 和 `ok()`）。
 
 ## PL_EXPORT
 
-`PL_EXPORT` 在支持的编译器上为符号设置默认可见性。大多数模组不需要直接使用；
-只有需要给其它 native library 调用的符号才需要它。
+在受支持的编译器上，`PL_EXPORT` 会为符号设置默认可见性。大多数模组无需直接使用该宏，仅在需要向其他 native library 暴露符号时才需要使用。
 
 ```cpp
 #include <pl/Export.hpp>
@@ -37,7 +33,7 @@ PL_EXPORT void customVisibleFunction();
 
 ## PL_REGISTER_MOD
 
-`PL_REGISTER_MOD(Type, instanceExpr)` 注册生命周期对象。
+`PL_REGISTER_MOD(Type, instanceExpr)` 用于注册生命周期对象。
 
 ```cpp
 #include <pl/Mod.hpp>
@@ -52,15 +48,13 @@ public:
 PL_REGISTER_MOD(MyMod, MyMod::instance())
 ```
 
-在一个源文件中使用一次该宏。`instanceExpr` 必须返回或创建一个在进程生命周期内
-保持有效的对象。
+请在单个源文件中使用一次该宏。`instanceExpr` 创建或返回的对象必须在整个进程生命周期内保持有效。
 
-被注册类型必须提供 `bool load()`。`bool enable()`、`bool disable()` 和
-`bool unload()` 可选。
+注册的类型必须实现 `bool load()`；`bool enable()`、`bool disable()` 和 `bool unload()` 为可选实现。
 
 ## 命名
 
-公开 SDK 遵循 Lamina C++ 风格：
+公开 SDK 遵循 Lamina C++ 命名风格：
 
 | 项目 | 风格 |
 | --- | --- |

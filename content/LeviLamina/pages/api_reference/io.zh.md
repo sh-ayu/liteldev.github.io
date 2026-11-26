@@ -4,7 +4,7 @@
 
 ## 概述
 
-IO 模块提供了线程安全的格式化日志系统，支持多个输出目标、日志级别和可自定义的格式化器。还包括文件 I/O 工具和流重定向。
+IO 模块提供了一套线程安全的格式化日志系统，支持多输出目标、日志级别和自定义格式化器，同时包含文件 I/O 工具和流重定向功能。
 
 ## 头文件
 
@@ -64,8 +64,7 @@ public:
 }
 ```
 
-Logger 按名称持有各个 sink。每个 logger 初始都带有一个名为 `"ll_default_console"` 的控制台
-sink，以及一个名为 `"ll_default_file"`、写入 `logs/latest.log` 的 sink。
+Logger 按名称管理各个 sink。每个 logger 默认带有两个 sink：名为 `"ll_default_console"` 的控制台 sink，以及名为 `"ll_default_file"`、写入 `logs/latest.log` 的文件 sink。
 
 ### LogLevel
 
@@ -144,8 +143,7 @@ void addFileSink(ll::io::Logger& logger) {
 }
 ```
 
-若同名的 sink 已经存在，`setSink` 会替换它并返回被替换掉的 sink；`removeSink` 则移除一个 sink 并将其
-返回。
+如果同名 sink 已存在，`setSink` 会将其替换并返回被替换的 sink；`removeSink` 则会移除指定 sink 并将其返回。
 
 ```cpp
 #include "ll/api/io/ConsoleSink.h"
@@ -171,19 +169,13 @@ void customizeSinks(ll::io::Logger& logger) {
 }
 ```
 
-日志消息在后台线程中写入。`Logger::setFormatter` 和 `Logger::setFlushLevel` 会等待正在进行的写入，因此在
-logger 使用期间，应优先使用它们或通过 `setSink` 替换 sink，而不是直接修改 `getSink` 返回的 sink。
+日志消息在后台线程中写入。由于 `Logger::setFormatter` 和 `Logger::setFlushLevel` 会等待正在进行的写入完成，因此在 logger 运行期间，应优先调用这两个方法或通过 `setSink` 替换 sink，而不要直接修改 `getSink` 返回的 sink。
 
-`FileSink` 会使用规范化后的路径定位共享的文件状态。指向同一文件的 sink 会共享文件句柄、轮转状态和策略，
-但每个 sink 保留自己的 formatter 和刷新级别。因此，不同 logger 可以向同一个文件写入不同格式的日志，而不
-会互相覆盖 formatter。
+`FileSink` 通过规范化路径来定位共享的文件状态。指向同一文件的多个 sink 会共享文件句柄、轮转状态和策略，但各自保留独立的 formatter 和刷新级别。因此，不同的 logger 可以按不同格式向同一个文件写入日志，而不会互相覆盖 formatter。
 
 ### 轮转日志文件
 
-不传入 `RotatePolicy` 时，`FileSink` 使用 `RotatePolicy::disabled()`，只会一直追加，不做切分。
-`RotatePolicy{}` 的各项默认值本身就是一套可直接使用的配置，所以通常只要把它传进去就够了。策略中的字段在
-三个不同时机被读取：`rotateOnOpen` 只在打开文件时读取一次，`maxFileSize` 和 `interval` 在每条消息写入前
-判断，压缩与清理相关的设置则在归档产生之后异步执行。
+如果不传入 `RotatePolicy`，`FileSink` 默认使用 `RotatePolicy::disabled()`，只追加内容而不切分文件。`RotatePolicy{}` 的默认值本身就是一套可直接使用的配置，通常直接传入即可。策略中的各个字段会在三个不同时机读取：`rotateOnOpen` 仅在打开文件时读取一次，`maxFileSize` 和 `interval` 在每次写入消息前判断，而压缩与清理相关的设置则在生成归档后异步执行。
 
 | 字段 | 默认值 | 含义 |
 |------|--------|------|
@@ -231,21 +223,13 @@ void addRotatingFileSink(ll::io::Logger& logger) {
 }
 ```
 
-大小与时间两个触发条件相互独立，哪个先满足就由它触发轮转。`setPolicy` 用于替换已有 sink 的策略，
-`rotate` 会立即轮转（文件为空时什么都不做）。
+文件大小与时间这两个触发条件相互独立，先满足哪个就由哪个触发轮转。`setPolicy` 用于替换现有 sink 的策略，`rotate` 则会立即执行轮转（若文件为空则不执行任何操作）。
 
-`maxFiles`、`maxAgeDays` 和 `totalSizeCap` 各自独立生效，最终取并集删除，因此放宽其中一个不会让另外
-两个失效。清理只会处理符合归档命名规则的文件，同目录下的其他文件不受影响。由于 `totalSizeCap` 统计的是
-压缩后的体积，关闭 `compress` 会明显缩短该上限内能保留的历史长度。
+`maxFiles`、`maxAgeDays` 和 `totalSizeCap` 各自独立生效，最终删除所有满足任一条件的归档，因此放宽其中一项不会使另外两项失效。清理操作只处理符合归档命名规则的文件，不会影响同目录下的其他文件。由于 `totalSizeCap` 统计的是压缩后的体积，关闭 `compress` 会显著缩短在该上限内可保留的日志历史。
 
-归档名由 `namer` 生成，再加上当前文件的扩展名。默认的 `RotatePolicy::defaultNamer` 生成
-`2026-09-19.log`，按小时轮转时为 `2026-09-19_14.log`，同一周期内的后续轮转依次加上 `.1`、`.2`。自定义
-namer 会收到一个 `ArchiveNameInfo`：`time` 是触发轮转的时间，`index` 是本次轮转在当前周期内的序号（从
-0 开始），`interval` 是策略的轮转周期。返回值必须以四位年份加 `-` 开头，否则压缩和清理都无法识别这些
-归档。
+归档文件名由 `namer` 生成的结果加上当前文件的扩展名组成。默认的 `RotatePolicy::defaultNamer` 会生成形如 `2026-09-19.log` 的文件名，按小时轮转时则为 `2026-09-19_14.log`，同一周期内的后续轮转会依次追加 `.1`、`.2`。自定义 namer 会接收一个 `ArchiveNameInfo` 参数：其中 `time` 是触发轮转的时间，`index` 是本次轮转在当前周期内的序号（从 0 开始），`interval` 是策略的轮转周期。返回值必须以四位年份加 `-` 开头，否则压缩和清理机制将无法识别这些归档。
 
-`RotatePolicy` 继承自 `RotateConfig`，后者包含除 `namer` 以外的全部字段，因此可以反射到配置文件中。
-LeviLamina 自己的 `logs/latest.log` 使用其配置中的 `logRotate` 作为轮转策略。
+`RotatePolicy` 继承自 `RotateConfig`。后者包含除 `namer` 之外的所有字段，因此可以直接反射到配置文件中。LeviLamina 自身的 `logs/latest.log` 就使用其配置中的 `logRotate` 作为轮转策略。
 
 ### 条件日志记录
 
@@ -263,7 +247,7 @@ void expensiveLogging(ll::io::Logger& logger) {
 
 ### 格式字符串安全性
 
-日志器使用 fmt 格式字符串，具有编译期检查：
+日志器使用 fmt 格式字符串，支持编译期检查：
 
 ```cpp
 logger.info("玩家 {} 加入", playerName);           // 正确

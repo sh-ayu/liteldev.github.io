@@ -4,7 +4,7 @@
 
 ## Overview
 
-The Form module provides three types of interactive UI forms that can be sent to players: SimpleForm (button list), ModalForm (two-button dialog), and CustomForm (multi-field input form).
+The Form module provides three types of interactive UI forms you can send to players: SimpleForm (button list), ModalForm (two-button dialog), and CustomForm (multi-field input form).
 
 ## Headers
 

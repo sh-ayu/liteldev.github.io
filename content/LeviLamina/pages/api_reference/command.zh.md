@@ -4,7 +4,7 @@
 
 ## 概述
 
-Command 模块提供了在 Minecraft 基岩版中注册自定义命令的高级 API。支持类型化参数、枚举、软枚举（Soft Enum）、运行时枚举、命令别名、权限等级和重载。
+Command 模块提供了一套高级 API，用于在 Minecraft 基岩版中注册自定义命令。该模块支持类型化参数、枚举、软枚举（Soft Enum）、运行时枚举、命令别名、权限等级和命令重载。
 
 ## 头文件
 
@@ -15,9 +15,9 @@ Command 模块提供了在 Minecraft 基岩版中注册自定义命令的高级 
 | `ll/api/command/Command.h` | 命令基类模板 |
 | `ll/api/command/Overload.h` | 流式重载构建器，包含参数链 |
 | `ll/api/command/OverloadData.h` | 重载元数据存储 |
-| `ll/api/command/runtime/RuntimeOverload.h` | 动态运行时重载创建 |
-| `ll/api/command/ParamTraits.h` | 参数类型信息和解析 |
-| `ll/api/command/EnumName.h` | 命令参数的枚举到名称映射 |
+| `ll/api/command/runtime/RuntimeOverload.h` | 动态创建运行时重载 |
+| `ll/api/command/ParamTraits.h` | 参数类型信息与解析 |
+| `ll/api/command/EnumName.h` | 命令参数的枚举与名称映射 |
 | `ll/api/command/SoftEnum.h` | 软枚举包装类型 |
 | `ll/api/command/Optional.h` | 可选参数包装器 |
 
@@ -25,7 +25,7 @@ Command 模块提供了在 Minecraft 基岩版中注册自定义命令的高级 
 
 ### CommandRegistrar
 
-管理所有命令注册的单例，通过 `getInstance(bool isClientSide)`（或简写 `getServerInstance()` / `getClientInstance()`，后者仅存在于客户端构建中）获取。
+管理所有命令注册的单例。可通过 `getInstance(bool isClientSide)` 获取，也可使用简写形式 `getServerInstance()` 或 `getClientInstance()`（后者仅在客户端构建中可用）。
 
 ```cpp
 namespace ll::command {
@@ -71,7 +71,7 @@ public:
 
 ### CommandHandle
 
-由 `getOrCreateCommand()` 返回。用于添加重载和别名。
+由 `getOrCreateCommand()` 返回，用于添加重载和别名。
 
 ```cpp
 namespace ll::command {
@@ -90,7 +90,7 @@ public:
 
 ### Overload\<Params\>
 
-用于定义命令参数和执行处理器的流式构建器。
+流式构建器，用于定义命令参数和执行处理器。
 
 ```cpp
 namespace ll::command {
@@ -112,7 +112,7 @@ public:
 }
 ```
 
-执行回调 `Fn` 可以有以下签名：
+执行回调 `Fn` 支持以下签名：
 
 - `void(CommandOrigin const&, CommandOutput&, Params const&, ::Command const&)` — 完整上下文
 - `void(CommandOrigin const&, CommandOutput&, Params const&)` — 带参数
@@ -143,7 +143,7 @@ void registerMyCommand() {
 
 ### 带参数的命令
 
-定义一个结构体，其成员将成为命令参数：
+定义一个结构体，其成员变量将作为命令参数：
 
 ```cpp
 #include "ll/api/command/CommandRegistrar.h"
@@ -208,7 +208,7 @@ void registerModeCommand() {
 
 ### 软枚举
 
-软枚举允许在运行时动态添加/删除值：
+软枚举支持在运行时动态添加或删除值：
 
 ```cpp
 #include "ll/api/command/CommandRegistrar.h"
@@ -286,5 +286,5 @@ void registerMultiOverload() {
 
 ## 相关模块
 
-- [Event（事件系统）](event.zh.md) — `ExecutingCommandEvent` 用于拦截命令
+- [Event（事件系统）](event.zh.md) — 使用 `ExecutingCommandEvent` 拦截命令
 - [操作指南：命令](../developer_guides/how_to_guides/command_guide.zh.md) — 分步教程

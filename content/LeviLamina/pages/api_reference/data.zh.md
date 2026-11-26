@@ -25,7 +25,7 @@ Data 模块提供通用数据结构，包括可观察值、基于 LevelDB 的键
 
 ### Observable\<T\>
 
-`Observable<T>` 保存一个值，并在值发生变化时同步通知订阅者。它是通用 Data API，不依赖 UI；数据驱动 UI 中的类型化 Observable 均继承自这个模板。
+`Observable<T>` 保存一个值，并在值变化时同步通知订阅者。它是通用的 Data API，不依赖 UI；数据驱动 UI 中的类型化 Observable 均继承自该模板。
 
 ```cpp
 #include "ll/api/data/Observable.h"
@@ -48,11 +48,11 @@ public:
 }
 ```
 
-复制 Observable 会共享同一份数据、订阅列表和订阅 ID 序列；重新构造一个 Observable 才会得到独立状态。
+复制 Observable 会共享同一份数据、订阅列表和订阅 ID 序列；只有重新构造 Observable 才会创建独立的状态。
 
-`setData()` 会比较新值与当前值。值相同时不做任何事；值不同时先替换数据，再同步执行回调，所有回调完成后 `setData()` 才返回。回调异常不会被吞掉：异常会继续抛给调用者，并终止本轮尚未执行的通知。
+`setData()` 会比较新值与当前值。若两者相同则直接返回；若不同，则先替换数据，再同步执行回调，待所有回调执行完毕后 `setData()` 才返回。回调抛出的异常不会被吞掉，而是继续向上抛给调用方，并终止本轮尚未执行的通知。
 
-`subscribe()` 支持仅可移动回调，并返回订阅 ID。这个 ID 不是 RAII 句柄：丢弃返回值不会取消订阅。订阅会一直存在，直到 `unsubscribe(id)` 成功，或共享的 Observable 状态被销毁。传入空回调时返回 ID `0`，`unsubscribe(0)` 返回 `false`。
+`subscribe()` 支持仅可移动的回调，并返回订阅 ID。该 ID 不是 RAII 句柄，丢弃返回值并不会取消订阅。订阅会一直保持有效，直到成功调用 `unsubscribe(id)`，或共享的 Observable 状态被销毁。传入空回调会返回 ID `0`，而调用 `unsubscribe(0)` 会返回 `false`。
 
 ```cpp
 ll::data::Observable<int> count{0};
@@ -70,13 +70,13 @@ bool removed = count.unsubscribe(subscription); // true
 
 !!! warning "注意"
 
-    `Observable<T>` 内部不加锁，并发访问需要调用方自行同步。通知时会直接遍历订阅容器，因此不要在该 Observable 自己的回调里增删订阅。递归调用 `setData()` 也会立即进入下一轮通知；除非明确需要并能控制这种行为，否则应避免这样做。
+    `Observable<T>` 内部不加锁，并发访问需由调用方自行同步。通知过程会直接遍历订阅容器，因此请勿在该 Observable 自身的回调中增删订阅。在回调中递归调用 `setData()` 会立即触发下一轮通知；除非确有需要且能妥善控制，否则应避免这种做法。
 
-为了支持 `getData()`，`T` 需要可复制；为了支持 `setData()` 的同值抑制，`T` 需要可比较相等。UI 派生类型 `ObservableBoolean`、`ObservableNumber`、`ObservableString` 和 `ObservableUIRawMessage` 见[数据驱动 UI](data_driven_ui.zh.md#ui-observable)。
+`getData()` 要求 `T` 可复制，而 `setData()` 的同值抑制要求 `T` 可比较相等。有关 UI 派生类型 `ObservableBoolean`、`ObservableNumber`、`ObservableString` 和 `ObservableUIRawMessage`，请参阅[数据驱动 UI](data_driven_ui.zh.md#ui-observable)。
 
 ### KeyValueDB
 
-由 LevelDB 支持的持久化键值存储。
+基于 LevelDB 的持久化键值存储。
 
 ```cpp
 namespace ll::data {
@@ -137,8 +137,7 @@ void useDatabase(ll::mod::Mod& mod) {
 
 ### Version
 
-`Version` 严格解析 `major.minor.patch` 格式的语义版本。前置版本标识符参与优先级比较，构建元数据不参与。
-需要把构建元数据也作为身份的一部分比较时，应使用 `isIdenticalTo()`。
+`Version` 严格按 `major.minor.patch` 格式解析语义版本。前置版本标识符参与优先级比较，而构建元数据不参与。若比较时需要将构建元数据也视为版本身份的一部分，请使用 `isIdenticalTo()`。
 
 ```cpp
 #include "ll/api/data/Version.h"
@@ -153,8 +152,7 @@ bool sameIdentity = ll::data::Version{"1.3.0+first"}.isIdenticalTo(ll::data::Ver
 
 ### VersionRequirement
 
-`VersionRequirement` 表示规范化后的语义版本范围。用空白分隔的比较条件属于同一个 AND 组，`||` 分隔 OR 组。
-支持的比较符为 `=`、`>`、`>=`、`<` 和 `<=`。
+`VersionRequirement` 表示规范化后的语义版本范围。以空白分隔的比较条件属于同一个 AND 组，`||` 则用于分隔 OR 组。支持的比较运算符包括 `=`、`>`、`>=`、`<` 和 `<=`。
 
 | 语法 | 含义 |
 |------|------|
@@ -174,11 +172,9 @@ ll::data::VersionRequirement supported{"^1.2.3 || =2.0.0"};
 bool matches = supported.matches(ll::data::Version{"1.8.0"}); // true
 ```
 
-普通范围不会意外匹配前置版本。若需要匹配前置版本，同一个 AND 组中必须有比较条件显式包含与候选版本
-`major.minor.patch` 核心相同的前置版本。
+普通范围不会意外匹配前置版本。如需匹配前置版本，同一个 AND 组中必须有比较条件显式带有前置版本号，且其 `major.minor.patch` 核心版本与候选版本相同。
 
-为保持兼容，裸完整版本 `1.2.3` 当前仍表示 `>=1.2.3 <2.0.0`。从模组清单读取这种写法时会输出迁移警告。
-精确匹配请写成 `=1.2.3`，其他情况应显式写出目标范围。
+为保持兼容，不带比较符的完整版本 `1.2.3` 当前仍表示 `>=1.2.3 <2.0.0`。从模组清单读取这种写法时会输出迁移警告。如需精确匹配，请写为 `=1.2.3`；其他情况应显式写出目标范围。
 
 ## 相关模块
 

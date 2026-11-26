@@ -1,13 +1,13 @@
 # 📒 NbtCompound - Tag Type
 
-A `NbtCompound` represents a complete tag, which stores a series of key-value pairs, similar to a data structure such as an object/table.  
-pass `NbtCompound` Only the interface of the object can perform some operations unique to the NBT tag.
+An `NbtCompound` represents a complete tag that stores a series of key-value pairs, much like an object or table.  
+Only the `NbtCompound` object interface can perform certain operations unique to NBT tags.
 
 ### Get an NBT Tag Object
 
 #### Parse From an Existing NBT Object 
 
-See [NbtList - List Type](./NBTList.md) and [NbtCompound - Tag Type](./NBTCompound.md) documentation.
+See the [NbtList - List Type](./NBTList.md) and [NbtCompound - Tag Type](./NBTCompound.md) documentation.
 
 
 
@@ -18,12 +18,10 @@ See [NbtList - List Type](./NBTList.md) and [NbtCompound - Tag Type](./NBTCompou
 
 - Parameter: 
   - data: Object<string, NBT Object> (Optional parameter)  
-    Pass in an object consisting of NBT objects. Objects are allowed to
-    contain other array/object structures, but the contents must be NBT
-    objects. `Null` values are treated as `NBT.End`.
-- Return value: The generated NBT Object
+    An object consisting of NBT objects. The object may contain nested array or object structures, provided their contents are NBT objects. `Null` values are treated as `NBT.End`.
+- Return value: The generated NBT object.
 - Return value type: `NbtCompound`
-  - If the creation fails, an exception will be thrown.
+  - Throws an exception if creation fails.
 
 [JavaScript]
 ```js
@@ -58,13 +56,12 @@ local nbt = NbtCompound({
 
 - Parameter: 
   - snbt : `String`  
-    The SNBT string you want to parse.
+    The SNBT string to parse.
 - Return value: The generated NBT object.
 - Return value type: `NBT Object`
-  - If the return value is `Null` it means the parsing failed.
+  - Returns `Null` if parsing fails.
 
-> Supports script-exposed SNBT value types, including normal values, `List`,
-> and `Compound`.
+> Supports script-exposed SNBT value types, including normal values, `List`, and `Compound`.
 
 
 
@@ -74,20 +71,20 @@ local nbt = NbtCompound({
 
 - Parameter: 
   - nbt : `ByteBuffer`  
-    The binary NBT data you want to parse.
+    The binary NBT data to parse.
 - Return value: The generated NBT object.
 - Return value type: `NbtCompound`
-  - If the return value is `Null` it means the parsing failed.
+  - Returns `Null` if parsing fails.
 
->  A complete Compound must be included in the binary NBT data 
+>  The binary NBT data must contain a complete Compound.
 
-For an object `comp` of type `NbtCompound`, there are the following interfaces:
+An object `comp` of type `NbtCompound` provides the following interfaces:
 
 #### Get All Keys
 
 `comp.getKeys()`
 
-- Return value: All keys in Compound.
+- Return value: All keys in the Compound.
 - Return value type: `Array<String,String,...>`
 
 
@@ -101,9 +98,9 @@ For an object `comp` of type `NbtCompound`, there are the following interfaces:
     The name of the key to query.
 - Return value: The data type of the corresponding value.
 - Return value type: `Enum`
-  - If the NBT to read does not exist, it will return `Null`.
+  - Returns `Null` if the requested NBT does not exist.
 
-Possible return values ​​are: `NBT.End` `NBT.Byte` `NBT.Short` `NBT.Int` `NBT.Long`   
+Possible return values are: `NBT.End` `NBT.Byte` `NBT.Short` `NBT.Int` `NBT.Long`   
 `NBT.Float` `NBT.Double` `NBT.ByteArray` `NBT.String`  
 `NBT.List` `NBT.Compound`
 
@@ -117,11 +114,8 @@ Possible return values ​​are: `NBT.End` `NBT.Byte` `NBT.Short` `NBT.Int` `NB
   - key: `String`   
     The name of the key to operate on.
   - tag:  `NBT Object`  
-    NBT object to be written (it carries specific NBT data).
-    If the key already exists, the original tag will be replaced. If the key
-    does not exist, a new key-value pair will be created. Passing `Null` writes
-    `NBT.End`.
-- Return value: CompoundTag itself.
+    The NBT object to write (which carries specific NBT data). If the key already exists, the original tag is replaced. If the key does not exist, a new key-value pair is created. Passing `Null` writes `NBT.End`.
+- Return value: The CompoundTag itself.
 - Return value type: `NbtCompound`
 
 
@@ -133,9 +127,9 @@ Possible return values ​​are: `NBT.End` `NBT.Byte` `NBT.Short` `NBT.Int` `NB
 - Parameter: 
   - key: `String`   
     The name of the key to operate on.
-- Return value: NBT object corresponding to the key.
+- Return value: The NBT object corresponding to the key.
 - Return value type:  `NBT Object`
-  - If the NBT to read does not exist, it will return `Null`.
+  - Returns `Null` if the requested NBT does not exist.
 
 
 
@@ -158,15 +152,14 @@ Possible return values ​​are: `NBT.End` `NBT.Byte` `NBT.Short` `NBT.Int` `NB
 - Parameter: 
   - key: `String`  
     The name of the key to operate on. The key must already exist.
-- Return value: The processed NBT object (for other operations in the chain).
+- Return value: The modified NBT object (for chaining further operations).
 - Return value type: `NbtCompound`
 
 
 
 ## Some Convenience Functions to Assist in the Manipulation of NBT Objects
 
-Obviously, purely using NBT objects can be cumbersome and syntactically complex when modifying some of the NBT values. 
-Therefore, some convenient functions for simplifying object operations are also provided here. By directly operating the data at the specified location and avoiding transit through the NBT object, the amount of code can be reduced to a certain extent.
+Working exclusively with NBT objects can be cumbersome and verbose when modifying individual NBT values. To simplify these operations, several convenience functions are provided. They let you read and write data at a given key directly, without wrapping values in intermediate NBT objects, which keeps your code shorter.
 
 #### Set the Specific Data of the Value Corresponding to the Key
 
@@ -185,8 +178,8 @@ Therefore, some convenient functions for simplifying object operations are also 
     The name of the key to operate on.
   - data: `Above type`  
     The data to write.  
-    If the key does not exist, it will be created automatically.
-- Return value: The NBT object that has been written to. (For chaining to perform other operations)
+    If the key does not exist, it is created automatically.
+- Return value: The modified NBT object (for chaining further operations).
 - Return value type: `NbtCompound`
 
 
@@ -198,10 +191,10 @@ Therefore, some convenient functions for simplifying object operations are also 
 - Parameter: 
   - key: `String`   
     The name of the key to operate on.
-- Return value: The specific data of the value corresponding to the key.
-- Return value type: `Any type`, whichever is the type of the stored data.
-  - If the target location stores the `List` type NBT, will return a `NbtList` object; if the target location stores a `Compound` type NBT, will return a `NbtCompound` object.
-  - If the NBT to read does not exist, it will return `Null`.
+- Return value: The data stored at the specified key.
+- Return value type: `Any type`, matching the type of the stored data.
+  - Returns an `NbtList` object if the target location stores a `List` NBT, or an `NbtCompound` object if it stores a `Compound` NBT.
+  - Returns `Null` if the NBT to read does not exist.
 
 
 
@@ -209,34 +202,32 @@ Therefore, some convenient functions for simplifying object operations are also 
 
 `comp.toObject()`
 
-- Return value: The object/table form of an NBT Tag object.
+- Return value: The object/table representation of the NBT Tag object.
 - Return value type: `Object`
 
-Convert the content of Compound to LSE object, convert all data items to LSE data type and store them in the corresponding key of the object, which is convenient for reading and processing.  
-If an item of Compound stores a `List` or `Compound` type NBT, it will recursively expand at the corresponding position as `Array` or `Object`.
+Converts the contents of the Compound into an LSE object. All data items are converted to LSE data types and stored under the corresponding keys of the object, making them easy to read and process.  
+If an item in the Compound stores a `List` or `Compound` NBT, it is recursively expanded in place as an `Array` or `Object`.
 
 
 
 #### Serialize NBT Tag Object to SNBT
 `comp.toSNBT([space[,format]])`
 
-- Parameter:
+- Parameters:
   - space : `Integer`  
-     (Optional parameter) If you want to format the output string, pass this parameter.  
-    Represents the number of spaces per indent, so the resulting string is more human-readable.  
-    This parameter defaults to `-1`, i.e. the output string is not formatted.
+     (Optional) Pass this parameter to format the output string.  
+    Specifies the number of spaces per indentation level to make the resulting string more human-readable.  
+    Defaults to `-1`, which leaves the output string unformatted.
   - format : `Enum`
-    (Optional parameter) SNBT output format, using a value from the `SnbtFormat` enum.
-- Return value: The converted SNBT string.
+    (Optional) The SNBT output format, using a value from the `SnbtFormat` enum.
+- Return value: The serialized SNBT string.
 - Return value type: `String`
 
 Calling `comp.toSNBT()` uses `SnbtFormat.ForceQuote` by default.  
-Calling `comp.toSNBT(space)` with `space >= 0` uses
-`SnbtFormat.PartialLineFeed`.  
-If you need to specify another SNBT format explicitly, use
-`comp.toSNBT(space, format)`.
+Calling `comp.toSNBT(space)` with `space >= 0` uses `SnbtFormat.PartialLineFeed`.  
+To specify a different SNBT format explicitly, call `comp.toSNBT(space, format)`.
 
-> In addition to the normal binary NBT, another type of NBT that players are more familiar with is plain text, usually used in [commands](https://minecraft.wiki/w/Commands). This format is often referred to as **SNBT** (**Binary Named Tag,**, **S**tringified **NBT**)
+> Alongside standard binary NBT, there is a plain-text form that players are more familiar with, typically used in [commands](https://minecraft.wiki/w/Commands). This format is often referred to as **SNBT** (**Binary Named Tag,**, **S**tringified **NBT**).
 >
 > --- Minecraft Wiki
 
@@ -255,8 +246,8 @@ If you need to specify another SNBT format explicitly, use
 #### Destroy This NBT Tag Object
 `comp.destroy()`
 
-- Return value: Whether the cleanup was successful.
+- Return value: Whether the cleanup succeeded.
 - Return value type: `Boolean`
 
-Note that only the root Compound tag can be destroyed, and please use this function with caution, improper use will cause the server to crash.  
-Proper destruction can help with memory footprint issues. After destruction, please never use this NBT object and all its sub-objects again.
+Only the root Compound tag can be destroyed. Use this function with caution, as improper use will crash the server.  
+Destroying objects properly helps reduce memory usage. Once destroyed, never access this NBT object or any of its sub-objects again.

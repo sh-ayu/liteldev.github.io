@@ -35,7 +35,7 @@ Every file and folder that the Windows version of LeviLauncher reads and writes,
     gamertags.json                 the gamertags of player profiles the launcher has seen
 ```
 
-Everything in `Cache\` can be deleted without losing anything. `LeviLauncher.exe cache clean` deletes the package cache, the files downloaded for imports and unfinished downloads, and `LeviLauncher.exe installer remove` deletes downloaded game installers. Changing the data root only points the launcher at another folder: existing instances, downloads and backups are not moved.
+Everything in `Cache\` can be deleted without losing anything. `LeviLauncher.exe cache clean` deletes the package cache, files downloaded for imports, and unfinished downloads, while `LeviLauncher.exe installer remove` deletes downloaded game installers. Changing the data root only points the launcher at another folder: existing instances, downloads, and backups are not moved.
 
 ## An instance's folder
 
@@ -58,20 +58,20 @@ See [Instance Isolation](../concepts/isolation) for the game data folders of ins
 
 | Path | What it is |
 | --- | --- |
-| `Minecraft - <instance>.lnk` on your desktop | The desktop shortcut of an instance (**Create Desktop Shortcut**, or `instance shortcut`). It opens the launcher with `--launch=<instance>`. Only your own desktop is written, not the public one. |
-| `%APPDATA%\lip\` | lip's settings: `config.toml`, for example its `github_proxy`, which the built-in package manager also reads. |
-| `%LOCALAPPDATA%\lip\Cache\` | The package cache of the built-in package manager, the same as lip's. **Clean Cache** in **Settings → Package Management** empties it. |
+| `Minecraft - <instance>.lnk` on your desktop | The desktop shortcut for an instance (**Create Desktop Shortcut**, or `instance shortcut`). It opens the launcher with `--launch=<instance>`. It is written only to your own desktop, not the public one. |
+| `%APPDATA%\lip\` | lip's settings (`config.toml`, such as its `github_proxy`), which the built-in package manager also reads. |
+| `%LOCALAPPDATA%\lip\Cache\` | The package cache of the built-in package manager, shared with lip. **Clean Cache** in **Settings → Package Management** empties it. |
 | `%APPDATA%\Minecraft Bedrock\`, `%APPDATA%\Minecraft Bedrock Preview\` | The shared game data of GDK instances without isolation. |
 | `%LOCALAPPDATA%\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\` (Preview: `Microsoft.MinecraftWindowsBeta_8wekyb3d8bbwe`) | The shared game data of UWP instances without isolation. |
 
 ## How files are written
 
-- A file is written next to its final place as `<name>.<random>.tmp` and then renamed into place, so a file is never seen half-written. An unfinished download that can be resumed is kept as `<name>.partial.tmp`.
-- Names that you choose (instances, worlds) are cleaned with the Windows rules: the characters `<>:"/\|?*`, trailing dots and spaces are removed, and reserved names such as `CON` or `NUL` are avoided.
-- Files the launcher makes are named `<name>_<yyyyMMdd-HHmmss>.<extension>`, for example `MyWorld_20261107-142301.mcworld`.
+- Files are written next to their final destination as `<name>.<random>.tmp` and then renamed into place, so a file is never seen half-written. An unfinished download that can be resumed is kept as `<name>.partial.tmp`.
+- Names that you choose (instances, worlds) are sanitized using Windows rules: the characters `<>:"/\|?*` and trailing dots and spaces are removed, and reserved names such as `CON` or `NUL` are avoided.
+- Files created by the launcher are named `<name>_<yyyyMMdd-HHmmss>.<extension>`, for example `MyWorld_20261107-142301.mcworld`.
 
 ## The old layout
 
-LeviLauncher before 1.1.0 kept everything in `%APPDATA%\<program name>\` (for example `%APPDATA%\levilauncher.exe\`), with the folders `versions\`, `backups\`, `installers\`, `updates\`, `logs\` and the files `config.json`, `user_gamertag_map.json` and `gdk_pending_versions.json`. Instances held `version.json` and `LargeLogo.ico`.
+Before 1.1.0, LeviLauncher kept everything in `%APPDATA%\<program name>\` (for example, `%APPDATA%\levilauncher.exe\`), with the folders `versions\`, `backups\`, `installers\`, `updates\`, and `logs\`, and the files `config.json`, `user_gamertag_map.json`, and `gdk_pending_versions.json`. Instances held `version.json` and `LargeLogo.ico`.
 
-At its first start, LeviLauncher 1.1.0 or later moves this data to the layout above once, without deleting anything: data on the same drive is renamed into place, data on another drive is copied and the original kept, and the old `config.json` is renamed to `config.migrated.json`. A data root that you had chosen stays where it is. When something cannot be moved (for example because the game is running from an instance), every step is undone and the launcher runs on the old layout until the next start. `storage-migration.json` records what was moved where; desktop shortcuts are updated to the new places afterwards.
+When started for the first time, LeviLauncher 1.1.0 or later migrates this data to the new layout above without deleting anything: data on the same drive is renamed into place, data on another drive is copied while keeping the original, and the old `config.json` is renamed to `config.migrated.json`. A custom data root stays where it is. If something cannot be moved (for example, because the game is running from an instance), every step is undone and the launcher runs on the old layout until the next start. `storage-migration.json` records what was moved where, and desktop shortcuts are updated to the new locations afterwards.

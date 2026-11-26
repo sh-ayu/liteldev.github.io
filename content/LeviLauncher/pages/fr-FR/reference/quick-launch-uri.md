@@ -3,9 +3,9 @@ platforms: [android]
 ---
 # URI de lancement rapide
 
-Le **Lancement Rapide** de la version Android démarre Minecraft avec une URI `minecraft://`, qui indique au jeu ce qu'il doit ouvrir en premier. Chaque action de l'écran de Lancement Rapide construit l'une des URI ci-dessous ; **URI Personnalisée** accepte toute URI qui commence par `minecraft://`. Ce que le jeu fait d'une URI dépend de Minecraft.
+Sur Android, le **Lancement Rapide** démarre Minecraft avec une URI `minecraft://` qui indique au jeu ce qu'il doit ouvrir au démarrage. Chaque action de cet écran génère l'une des URI ci-dessous ; **URI Personnalisée** accepte toute URI commençant par `minecraft://`. Le comportement obtenu dépend ensuite de Minecraft.
 
-LeviLauncher ouvre aussi les liens `minecraft://` venant d'autres applications : Android le propose parmi les applications capables de les ouvrir.
+LeviLauncher prend aussi en charge les liens `minecraft://` ouverts depuis d'autres applications : Android le propose alors parmi les applications capables de les ouvrir.
 
 ## Actions
 
@@ -24,14 +24,14 @@ LeviLauncher ouvre aussi les liens `minecraft://` venant d'autres applications :
 | **Exécuter une Commande** | `minecraft://?slashcommand=<commande>` | Une commande à exécuter dans le jeu |
 | **URI Personnalisée** | n'importe quelle `minecraft://…` | L'URI |
 
-Le nom du serveur, le nom du monde et la commande sont encodés pour l'URL (une espace devient `%20`, `/` devient `%2F`).
+Le nom du serveur, le nom du monde et la commande sont encodés dans l'URL (une espace devient `%20`, `/` devient `%2F`).
 
 ## Exemple
 
-Pour rejoindre un serveur sur `play.example.org` au port `19132`, choisissez **Se connecter au serveur**, ou ouvrez ce lien sur l'appareil :
+Pour rejoindre le serveur `play.example.org` sur le port `19132`, choisissez **Se connecter au serveur** ou ouvrez ce lien sur l'appareil :
 
 ```text
 minecraft://connect/?serverUrl=play.example.org&serverPort=19132
 ```
 
-Voir [Comptes & Lancement rapide](../guide/accounts-quick-launch) pour les autres fonctions propres à Android.
+Consultez [Comptes & Lancement rapide](../guide/accounts-quick-launch) pour les autres fonctions propres à Android.

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Hook API installs function detours in the current process.
+The Hook API installs function detours in the current process.
 
 ## Header
 
@@ -37,14 +37,11 @@ int hook(FuncPtr target, FuncPtr detour, FuncPtr *originalFunc,
 bool unhook(FuncPtr target, FuncPtr detour);
 ```
 
-`hook()` returns `0` on success and `-1` on invalid input or install failure.
-`originalFunc` receives the function pointer that the detour should call to
-continue the chain.
+`hook()` returns `0` on success and `-1` on invalid input or installation failure. `originalFunc` receives the function pointer that the detour should call to continue the chain.
 
 ## RAII Handle
 
-Use `pl::memory::HookHandle` when a hook should be removed automatically during
-`disable()` or object destruction.
+Use `pl::memory::HookHandle` to automatically remove a hook during `disable()` or object destruction.
 
 ```cpp
 #include <pl/memory/Hook.hpp>
@@ -82,5 +79,5 @@ bool MyMod::disable() {
 
 - Passing `nullptr` for `target`, `detour`, or `originalFunc`.
 - Using a detour signature that does not exactly match the target function.
-- Calling the target address directly inside the detour, causing recursion.
-- Installing before the target module and address are available.
+- Calling the target address directly inside the detour, which causes recursion.
+- Installing a hook before the target module and address are available.

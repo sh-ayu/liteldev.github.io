@@ -1,62 +1,62 @@
 # 📦 Block Object API
 
-In LSE, use "block objects" to manipulate and obtain information about a certain type of block.
+In LSE, you use "block objects" to manipulate and inspect blocks.
 
 ### Get a Block Object
 
 #### Get From Event or API 
 
-By registering the **event listener** function, or calling some **returning a block object** function, you can get the block object related to the related event given by the BDS
-For details, see [Event listener documentation - EventAPI](../EventAPI/Listen.md)  
+You can obtain a block object from BDS by registering an **event listener** function or calling a function that **returning a block object**.
+For details, see [Event listener documentation - EventAPI](../EventAPI/Listen.md).
 
 #### Obtained by Block Coordinates
 
-Use this function to manually generate objects. Note that the block you want to get must be in the range that has been loaded, otherwise there will be problems.
+Use this function to retrieve a block object by its coordinates. Note that the target block must be in a loaded area; otherwise, errors will occur.
 
 `mc.getBlock(pos)`  
 `mc.getBlock(x,y,z,dimid)`
 
 - Parameters: 
   - pos : `IntPos` or `FloatPos`  
-    The coordinates of the block (or use x, y, z, dimid to determine the block position)
+    The coordinates of the block (or pass x, y, z, and dimid to specify the block position).
 - Return value: The generated `Block` object. 
 - Return value type: `Block`
-  - If the return value is `Null`, it means that the block acquisition failed.
+  - If the return value is `Null`, retrieving the block failed.
 
 > Note: Do not save a block object **long-term**.
-> When the block corresponding to the block object is destroyed, the corresponding block object will become invalid. Therefore, if there is a need to operate a certain block for a long time, please obtain the real-time block object through the above method.
+> When the corresponding block is destroyed, the block object becomes invalid. If you need to work with a block over a long period, retrieve a fresh block object in real time using the method above.
 
 
 
 ### Block Object - Properties
 
-Every block object contains some fixed object properties. for a specific block object `bl`, has the following properties:
+Every block object has a fixed set of properties. A specific block object `bl` has the following properties:
 
 | Attributes              | Meaning                                     | Data Type |
 | ----------------------- | ------------------------------------------- | --------- |
 | bl.name                 | The name of the block displayed in the game | `String`  |
-| bl.type                 | Block standard type name                    | `String`  |
-| bl.id                   | The in-game id of the block                 | `Integer` |
+| bl.type                 | Standard block type name                    | `String`  |
+| bl.id                   | The in-game ID of the block                 | `Integer` |
 | bl.pos                  | The coordinates of the block                | `IntPos`  |
 | bl.tileData             | The block's data value                      | `Integer` |
 | bl.variant              | The block variant                           | `Integer` |
 | bl.translucency         | The block translucency                      | `Integer` |
 | bl.thickness            | The block thickness                         | `Integer` |
 | bl.isAir                | Whether the block is air                    | `Boolean` |
-| bl.isBounceBlock        | Whether the block is bounce                 | `Boolean` |
-| bl.isButtonBlock        | Whether the block is button                 | `Boolean` |
-| bl.isCropBlock          | Whether the block is crop                   | `Boolean` |
-| bl.isDoorBlock          | Whether the block is door                   | `Boolean` |
-| bl.isFenceBlock         | Whether the block is fence                  | `Boolean` |
-| bl.isFenceGateBlock     | Whether the block is fence gate             | `Boolean` |
-| bl.isThinFenceBlock     | Whether the block is thin fence block       | `Boolean` |
+| bl.isBounceBlock        | Whether the block is a bounce block         | `Boolean` |
+| bl.isButtonBlock        | Whether the block is a button               | `Boolean` |
+| bl.isCropBlock          | Whether the block is a crop                 | `Boolean` |
+| bl.isDoorBlock          | Whether the block is a door                 | `Boolean` |
+| bl.isFenceBlock         | Whether the block is a fence                | `Boolean` |
+| bl.isFenceGateBlock     | Whether the block is a fence gate           | `Boolean` |
+| bl.isThinFenceBlock     | Whether the block is a thin fence block     | `Boolean` |
 | bl.isHeavyBlock         | Whether the block is heavy                  | `Boolean` |
-| bl.isStemBlock          | Whether the block is stem                   | `Boolean` |
-| bl.isSlabBlock          | Whether the block is slab                   | `Boolean` |
+| bl.isStemBlock          | Whether the block is a stem                 | `Boolean` |
+| bl.isSlabBlock          | Whether the block is a slab                 | `Boolean` |
 | bl.isUnbreakable        | Whether the block is unbreakable            | `Boolean` |
-| bl.isWaterBlockingBlock | Whether the block is can block water        | `Boolean` |
+| bl.isWaterBlockingBlock | Whether the block can block water           | `Boolean` |
 
-These object properties are read-only and cannot be modified.
+These properties are read-only and cannot be modified.
 
 
 
@@ -64,23 +64,23 @@ These object properties are read-only and cannot be modified.
 
 `bl.destroy(drop)`
 
-- Parameters：
+- Parameters:
   - drop : `Boolean`  
-    Whether to generate drops
-- Return value: Whether the destroy was successful or not.
+    Whether to generate drops.
+- Return value: Whether the block was successfully destroyed.
 - Return value type: `Boolean`
 
 
 
 ### Block Object - Function
 
-Each block object contains some member functions (member methods) that can be executed. for a specific block object `bl`, you can perform some operations on this block through the following functions.
+Every block object provides member functions (methods) that you can call. For a specific block object `bl`, you can call the following functions to operate on the block.
 
 #### Get the Block's NBT Object
 
 `bl.getNbt()`
 
-- Return value: NBT object of the block
+- Return value: The NBT object of the block.
 - Return value type: `NbtCompound`
 
 
@@ -91,12 +91,12 @@ Each block object contains some member functions (member methods) that can be ex
 
 - Parameters: 
   - nbt : `NbtCompound`  
-    NBT objects
-- Return value: Whether the write was successful or not.
+    The NBT object.
+- Return value: Whether the write succeeded.
 - Return value type: `Boolean`
 
-For more usage of NBT objects, please refer to [NBT Interface Documentation](../NbtAPI/NBT.md)
-Note: Use this api with caution, consider using mc.setBlock() instead.
+For more details on using NBT objects, see [NBT Interface Documentation](../NbtAPI/NBT.md).
+Note: Use this API with caution; consider using mc.setBlock() instead.
 
 
 
@@ -104,11 +104,11 @@ Note: Use this api with caution, consider using mc.setBlock() instead.
 
 `bl.getBlockState()`
 
-- Return value: The BlockState of the Block.
+- Return value: The BlockState of the block.
 - Return value type: `Object`
 
-Convenience function to help parse block BlockState and convert it to `Object` for easy reading and parsing
-Equivalent to script executing `block.getNbt().getTag("states").toObject()`
+A convenience function that parses the block's BlockState and converts it into an `Object` for easy reading and inspection.
+Equivalent to running `block.getNbt().getTag("states").toObject()` in a script.
 
 
 
@@ -116,10 +116,10 @@ Equivalent to script executing `block.getNbt().getTag("states").toObject()`
 
 `bl.hasContainer()`
 
-- Return value: whether this block has a container
+- Return value: Whether this block has a container.
 - Return value type: `Boolean`
 
-Such as boxes, buckets and other containers; they each have a container object of their own.
+Blocks such as boxes, buckets, and other containers each have their own container object.
 
 
 
@@ -127,10 +127,10 @@ Such as boxes, buckets and other containers; they each have a container object o
 
 `bl.getContainer()`
 
-- Return value: The container object owned by this block
+- Return value: The container object owned by this block.
 - Return value type: `Container`
 
-For more usage of container objects, please refer to [Container Object API Documentation](Container.md)
+For more information on using container objects, see the [Container Object API Documentation](Container.md).
 
 
 
@@ -138,7 +138,7 @@ For more usage of container objects, please refer to [Container Object API Docum
 
 `bl.hasBlockEntity()`
 
-- Return value: Whether the block has a block entity
+- Return value: Whether the block has a block entity.
 - Return value type: `Boolean`
 
 
@@ -147,7 +147,7 @@ For more usage of container objects, please refer to [Container Object API Docum
 
 `bl.getBlockEntity()`
 
-- Return value: The block entity owned by this block
+- Return value: The block entity owned by this block.
 - Return value type: `BlockEntity`
 
 
@@ -156,16 +156,16 @@ For more usage of container objects, please refer to [Container Object API Docum
 
 `bl.removeBlockEntity()`
 
-- Return value: Whether the deletion was successful
+- Return value: Whether the removal succeeded.
 - Return value type: `Boolean`
 
-For more usage of block entity object, please refer to [Block entity object API documentation](BlockEntity.md)
+For more information on using block entity objects, see the [Block entity object API documentation](BlockEntity.md).
 
 
 
 ### Other Block Function API
 
-The following APIs provide APIs for interacting with blocks at specified locations in the game:
+The following APIs interact with blocks at specified locations in the game:
 
 #### Set the Block at the Specified Location
 
@@ -176,22 +176,22 @@ The following APIs provide APIs for interacting with blocks at specified locatio
 
 - Parameters: 
   - pos : `IntPos ` or `FloatPos`  
-    Target block position (or use x, y, z, dimId to determine block position)
+    Target block position (or use x, y, z, dimId to specify the block position).
     
   - blockObject : `Block` or `NbtCompound`  
-    Either the target block object or NBT data representing the block
+    The target block object or the NBT data representing the block.
     
   - blockString: `String`  
-    The block standard type name (e.g. `minecraft:stone`)
+    The standard block type name (such as `minecraft:stone`).
   
   - tileData : `Integer`  
-    Block state value, same as tileData of vanilla /setBlock command, default is 0, only valid when placing blocks by block type name
+    Block state value, identical to the tileData parameter of the vanilla /setBlock command. Defaults to 0 and applies only when placing a block by its type name.
   
-- Return value: Whether the setting is successful or not
+- Return value: Whether the block was set successfully.
 
 - Return value type: `Boolean`
 
-Through this function, set the block corresponding to one coordinate to another, similar to the command `/setblock`
+This function replaces the block at the given coordinates with another block, similar to the `/setblock` command.
 
 
 
@@ -202,10 +202,10 @@ Through this function, set the block corresponding to one coordinate to another,
 
 - Parameters: 
   - pos : `IntPos `/ `FloatPos`  
-    Target spawn position (or use x, y, z, dimid to determine block position)
+    Target spawn position (or use x, y, z, dimid to specify the block position).
   - type : `String`  
-    The name of the particle effect to generate (check the wiki for details)
-- Return value: Whether it was successfully generated
+    The name of the particle effect to spawn (see the wiki for details).
+- Return value: Whether the particle was spawned successfully.
 - Return value type: `Boolean`
 
-Particle effect names can be found in the [Minecraft Wiki](https://minecraft.wiki/w/Particles#Types_of_particles), don't forget the namespace prefix when passing in parameters. similar to `minecraft:heart_particle`
+For particle effect names, see the [Minecraft Wiki](https://minecraft.wiki/w/Particles#Types_of_particles). Include the namespace prefix when passing this parameter, such as `minecraft:heart_particle`.

@@ -10,35 +10,35 @@ lip self-update [--check] [-h | --help]
 
 ## Description
 
-`lip self-update` finds the latest release of lip and, when it is newer than the running lip, installs it the way lip was installed.
+`lip self-update` finds the latest release of lip and, if it is newer than the running version, installs it using the same method as the current installation.
 
 ### Checking
 
-lip reads the [releases of lip](https://github.com/LiteLDev/lip/releases) from the tags of its repository, `https://github.com/LiteLDev/lip.git`, as it reads the versions of any package: each tag that is `v` followed by a SemVer version is a release. Other tags are ignored.
+lip reads the [releases of lip](https://github.com/LiteLDev/lip/releases) from the tags of its repository, `https://github.com/LiteLDev/lip.git`, the same way it reads the versions of any package: each tag consisting of `v` followed by a SemVer version is a release. Other tags are ignored.
 
 The **latest release** is the one with the highest version. Pre-releases such as `1.1.0-beta.1` count only when the running lip is itself a pre-release.
 
-When there is no release, or the latest one is not newer than the running lip, lip writes that it is up to date and changes nothing. With `--check`, lip stops here in every case.
+If there are no releases, or the latest release is not newer than the running lip, lip reports that it is up to date and changes nothing. With `--check`, lip always stops here.
 
 ### Installation kind
 
-| Kind | Is | How lip knows |
+| Kind | Meaning | How lip knows |
 | --- | --- | --- |
-| `msi` | lip was installed by the Windows installer, `lip-<version>-<platform>.msi`. | The file `install.json` beside the `lip` executable holds a JSON object whose `kind` is `"msi"`. The installer writes it. |
+| `msi` | lip was installed by the Windows installer, `lip-<version>-<platform>.msi`. | The `install.json` file beside the `lip` executable contains a JSON object whose `kind` is `"msi"`. The installer writes this file. |
 | `portable` | lip was unpacked from an archive, or installed any other way. | There is no `install.json`. |
 
-For the kind `msi`, the **installation scope** says whom the installer installed lip for: `user`, the user that ran it, or `machine`, every user. It is the member `scope` of `install.json`: `{"kind": "msi", "scope": "user"}` or `{"kind": "msi", "scope": "machine"}`. Without that member, as earlier installers wrote `{"kind": "msi"}`, the scope is `machine`.
+For the `msi` kind, the **installation scope** indicates whom the installer installed lip for: `user` (the user who ran it) or `machine` (all users). This is stored in the `scope` field of `install.json`: `{"kind": "msi", "scope": "user"}` or `{"kind": "msi", "scope": "machine"}`. Without that field—as when earlier installers wrote `{"kind": "msi"}`—the scope defaults to `machine`.
 
-When `install.json` exists and is anything other than a JSON object whose `kind` is `"msi"` and that has either no `scope` or the `scope` `"user"` or `"machine"`, `lip self-update` fails.
+If `install.json` exists and is anything other than a JSON object whose `kind` is `"msi"` and that has either no `scope` or the `scope` `"user"` or `"machine"`, `lip self-update` fails.
 
-`<platform>` is the system lip runs on: `win-`, `linux-` or `osx-`, followed by `x64` or `arm64`. On any other system `lip self-update` fails before it changes anything.
+`<platform>` is the system lip runs on: `win-`, `linux-`, or `osx-`, followed by `x64` or `arm64`. On any other system, `lip self-update` fails before changing anything.
 
 ### Updating
 
-Without `--check`, when a newer release `V` exists, lip does, in order:
+Without `--check`, when a newer release `V` exists, lip performs these steps in order:
 
-1. It reads the installation kind and scope.
-2. It picks the file of the release to install. The kind `msi` on a system other than Windows fails.
+1. Reads the installation kind and scope.
+2. Selects the release file to install. The `msi` kind fails on any system other than Windows.
 
    | Kind | File |
    | --- | --- |
@@ -46,55 +46,55 @@ Without `--check`, when a newer release `V` exists, lip does, in order:
    | `portable` on Linux | `lip-V-<platform>.tar.xz` |
    | `portable` on Windows and macOS | `lip-V-<platform>.zip` |
 
-3. It empties and creates the directory `self-update` in the [cache directory](../files.md#cache-directory).
-4. It downloads the file, from `https://github.com/LiteLDev/lip/releases/download/vV/<file>`, into `self-update`. When the download fails, for example because the release does not have the file yet, the command fails.
-5. It installs the file, by the installation kind; see below.
+3. Empties and creates the `self-update` directory in the [cache directory](../files.md#cache-directory).
+4. Downloads the file from `https://github.com/LiteLDev/lip/releases/download/vV/<file>` into `self-update`. If the download fails—for example, because the release does not have the file yet—the command fails.
+5. Installs the file according to the installation kind, as described below.
 
-A failure in steps 1 to 4 changes no file of the installation.
+A failure in steps 1 to 4 leaves the existing installation untouched.
 
-**`msi`.** lip starts `msiexec /i <file> /qn /norestart`. When the installation scope is `machine`, lip starts it as administrator; Windows asks you to allow it. When the scope is `user`, lip starts it as the user that runs lip, and Windows does not ask. When you decline, or `msiexec` does not start, the command fails. Otherwise lip writes that the installer runs and exits with code 0 at once, without waiting. The installer replaces lip in the background, silently and without restarting Windows. Close the other running `lip` processes so that it can.
+**`msi`.** lip runs `msiexec /i <file> /qn /norestart`. When the installation scope is `machine`, lip starts it as administrator, and Windows prompts you for permission. When the scope is `user`, lip starts it as the user running lip without a prompt. If you decline the prompt or `msiexec` fails to start, the command fails. Otherwise, lip reports that the installer is running and exits immediately with code 0 without waiting. The installer replaces lip silently in the background without restarting Windows. Close any other running `lip` processes so the installer can complete.
 
-**`portable`.** lip extracts the archive into `self-update`, then replaces the files of lip in its directory one by one: each existing file is renamed to `<file>.old`, and the new file is written in its place. When any step fails, lip puts every renamed file back and fails. When all files are written, lip deletes the `.old` files it can and the `self-update` directory.
+**`portable`.** lip extracts the archive into `self-update`, then replaces the files in the lip directory one by one: it renames each existing file to `<file>.old` and writes the new file in its place. If any step fails, lip restores every renamed file and fails. Once all files are written, lip deletes any `.old` files it can remove and deletes the `self-update` directory.
 
-- Files of the directory that are not in the archive are kept.
-- On Windows the running `lip.exe` cannot be deleted, so `lip.exe.old` stays. The next `lip` that starts deletes it.
-- On Linux, extracting the `.tar.xz` archive needs `tar` and `xz` on the system.
+- Files in the directory that are not in the archive are kept.
+- On Windows, the running `lip.exe` cannot be deleted, so `lip.exe.old` remains until the next `lip` process starts and deletes it.
+- On Linux, extracting the `.tar.xz` archive requires `tar` and `xz` on the system.
 
 ### After the update
 
-The [daemon](daemon.md) that carried out an update which replaced lip or started the installer exits once it is idle, so that the next command starts the new version. While it still runs a managed server, it keeps running; see [After an update](daemon.md#after-an-update).
+The [daemon](daemon.md) that performed the update—either by replacing lip or by starting the installer—exits once it becomes idle, so that the next command starts the new version. While it is still running a managed server, it stays running; see [After an update](daemon.md#after-an-update).
 
-The interface that you run keeps running the old version. When **Install update** on its [Settings](../../interface/settings.md) page installed the update, the interface says to quit lip and run it again (or, when the installer was started, to quit so that the installer can finish), with the buttons **Quit lip** and **Later**. Once the interface has ended, lip writes a line such as `lip was updated to 1.1.0. Run lip again to start it.` to standard error.
+A running interface continues to run the old version. If you installed the update using **Install update** on its [Settings](../../interface/settings.md) page, the interface prompts you to quit and restart lip (or, if the installer was started, to quit so the installer can finish), offering the buttons **Quit lip** and **Later**. Once the interface closes, lip writes a line such as `lip was updated to 1.1.0. Run lip again to start it.` to standard error.
 
 ### Network
 
-Both the tags and the update file go through [`github_proxy`](../configuration.md#github-proxy) when it is set, and to GitHub directly when the proxy fails. lip does not read `SHA256SUMS` or the GitHub API. A proxy could change what lip installs, so use one you trust.
+Both the repository tags and the update file are fetched through [`github_proxy`](../configuration.md#github-proxy) when set, falling back to GitHub directly if the proxy fails. lip does not read `SHA256SUMS` or use the GitHub API. Because a proxy could alter what lip installs, only use one you trust.
 
 ## Options
 
 | Option | Description |
 | --- | --- |
 | `--check` | Only find the latest release. Installs nothing and changes nothing. |
-| `-h`, `--help` | Write the help and exit. |
+| `-h`, `--help` | Print help and exit. |
 
 ## Output
 
-Only `lip self-update --check` has a result. When a newer release exists, standard output receives its version and a line break:
+Only `lip self-update --check` writes to standard output. If a newer release exists, it prints the version followed by a newline:
 
 ```
 1.1.0
 ```
 
-When lip is up to date, standard output receives nothing. Everything else is a message on standard error.
+If lip is up to date, it prints nothing to standard output. All other messages go to standard error.
 
-So a script tells the two cases apart by whether the output is empty, not by the exit code.
+Scripts should therefore check whether standard output is empty rather than checking the exit code.
 
 ## Exit status
 
 | Code | Meaning |
 | --- | --- |
-| `0` | lip is up to date; or `--check` finished, whether a newer release exists or not; or the update was installed; or the installer was started. |
-| not `0` | A usage error, or the check or the update failed. |
+| `0` | lip is up to date; `--check` finished (whether a newer release exists or not); the update was installed; or the installer was started. |
+| not `0` | Usage error, or the check or update failed. |
 
 ## Examples
 

@@ -12,9 +12,9 @@
     - cause : `Integer`  
       死亡原因
 
-- 拦截事件：不可以拦截
+- 拦截事件：不可拦截
 
-注意，当玩家死亡时，除了触发`onPlayerDie`事件，这个事件同样也会被触发一次
+注意：玩家死亡时，除了触发`onPlayerDie`事件，该事件也会被触发一次。
 
 #### `"onMobHurt"` - 生物受伤（包括玩家）
 
@@ -31,12 +31,12 @@
       受伤原因
 - 拦截事件：函数返回`false`
 
-ActorDamageCause 为伤害原因枚举，枚举值如下，有问号的待验证，？？？待补充
+ActorDamageCause 为伤害原因枚举，枚举值如下（带问号表示待验证，？？？表示待补充）：
 
 | `ActorDamageCause` 枚举            | 值   | 解释                                     |
 | ---------------------------------- | --- | ---------------------------------------- |
 | `ActorDamageCause.None`            | -1  | 其他                                     |
-| `ActorDamageCause.Override`        | 0 | 非正常方式（如脚本直接设置血量为0），这种方式的伤害不会被盔甲与buff吸收 |
+| `ActorDamageCause.Override`        | 0 | 非正常方式（如脚本直接将血量设为0），此类伤害不会被盔甲与buff吸收 |
 | `ActorDamageCause.Contact`         | 1 | 接触伤害（如仙人掌）                       |
 | `ActorDamageCause.EntityAttack`    | 2 | 实体攻击                                 |
 | `ActorDamageCause.Projectile`      | 3 | 抛射物攻击                               |
@@ -67,7 +67,7 @@ ActorDamageCause 为伤害原因枚举，枚举值如下，有问号的待验证
 | `ActorDamageCause.Stalactite`      | 28 | 被钟乳石砸到                              |
 | `ActorDamageCause.Stalagmite`      | 29 | 掉落到石笋上                              |
 | `ActorDamageCause.RamAttack`       | 30 | 山羊冲撞                                  |
-| `ActorDamageCause.SonicBoom`       | 31 | 坚守着音爆攻击                            |
+| `ActorDamageCause.SonicBoom`       | 31 | 监守者音爆攻击                            |
 | `ActorDamageCause.Campfire`        | 32 | 营火                                     |
 | `ActorDamageCause.SoulCampfire`    | 33 | 灵魂营火                                 |
 | `ActorDamageCause.MaceSmash`       | 34 | 下落攻击                                 |
@@ -99,7 +99,7 @@ ActorDamageCause 为伤害原因枚举，枚举值如下，有问号的待验证
   `function(typeName,pos)`
 - 参数：
     - typeName : `String`  
-      生成实体名称
+      生成的实体名称
     - pos : `FloatPos`  
       生成的坐标
 
@@ -117,7 +117,7 @@ ActorDamageCause 为伤害原因枚举，枚举值如下，有问号的待验证
 
 - 拦截事件：不可拦截
 
-此事件为实体成功生成后触发，不可直接拦截，如需拦截请使用entity.despawn()或entity.remove()
+此事件在实体成功生成后触发，不可直接拦截。如需拦截，请调用 entity.despawn() 或 entity.remove()。
 
 #### `"onPortalTrySpawnPigZombie"` - 下界传送门尝试生成僵尸猪灵
 
@@ -125,7 +125,7 @@ ActorDamageCause 为伤害原因枚举，枚举值如下，有问号的待验证
   `function(pos,axis)`
 - 参数：
     - pos : `IntPos`  
-      发生尝试生成的位置（传送门方块坐标）
+      尝试生成的位置（传送门方块坐标）
     - axis : `Integer`  
       传送门朝向枚举值（`0`=Unknown，`1`=X，`2`=Z）
 
@@ -152,15 +152,15 @@ ActorDamageCause 为伤害原因枚举，枚举值如下，有问号的待验证
 
     - AAbb: `IntPos`
 
-      凋灵将破坏的区域（长方体），对角点A坐标
+      凋灵即将破坏的长方体区域的对角点 A 坐标
 
     - aaBB: `IntPos`
 
-      凋灵将破坏的区域（长方体），对角点B坐标
+      凋灵即将破坏的长方体区域的对角点 B 坐标
 
 - 拦截事件：函数返回`false`
 
-注意，此事件不包括凋灵爆炸的破坏。
+注意：此事件不包括凋灵爆炸造成的破坏。
 
 #### `"onRide"` - 生物骑乘
 
@@ -173,7 +173,7 @@ ActorDamageCause 为伤害原因枚举，枚举值如下，有问号的待验证
       被骑乘的实体对象
 - 拦截事件：函数返回`false`
 
-注：骑乘包括坐矿车、坐船、骑马、骑猪等。
+注：骑乘包括乘坐矿车和船、骑马、骑猪等。
 
 #### `"onStepOnPressurePlate"` - 生物踩压力板
 
@@ -181,12 +181,12 @@ ActorDamageCause 为伤害原因枚举，枚举值如下，有问号的待验证
   `function(entity,pressurePlate)`
 - 参数：
     - entity : `Entity`  
-      踩压力板的实体对象
+      踩在压力板上的实体对象
     - pressurePlate : `Block`  
       被踩的压力板方块对象
 - 拦截事件：函数返回`false`
 
-注：生物踩压力板时，将会反复多次触发此事件。
+注：生物踩在压力板上时，会多次重复触发此事件。
 
 #### `"onSpawnProjectile"` - 弹射物创建
 
@@ -195,14 +195,14 @@ ActorDamageCause 为伤害原因枚举，枚举值如下，有问号的待验证
 - 参数：
 
     - shooter : `Entity`  
-      发射弹射物的的实体对象
+      发射弹射物的实体对象
 
     - type : `String`  
-      弹射物标准类型名
+      弹射物的标准类型名
 
 - 拦截事件：函数返回 `false`
 
-注：已知可拦截的弹射物有鸡蛋、末影珍珠、雪球、三叉戟、箭、钓竿（鱼钩）。
+注：已知可拦截的弹射物包括鸡蛋、末影珍珠、雪球、三叉戟、箭、钓竿（鱼钩）。
 
 #### `"onProjectileCreated"` - 弹射物创建完毕
 
@@ -211,12 +211,12 @@ ActorDamageCause 为伤害原因枚举，枚举值如下，有问号的待验证
 - 参数：
 
     - shooter : `Entity`  
-      创建此弹射物的的实体对象
+      创建此弹射物的实体对象
 
     - entity : `Entity`  
-      被创建的弹射物实体对象
+      已创建的弹射物实体对象
 
-- 拦截事件：不可以拦截
+- 拦截事件：不可拦截
 
 #### `"onNpcCmd"` - NPC执行命令
 
@@ -227,11 +227,11 @@ ActorDamageCause 为伤害原因枚举，枚举值如下，有问号的待验证
   `function(npc,pl,cmd)`
 - 参数：
     - npc : `Entity`  
-      执行命令的NPC实体对象
+      执行命令的 NPC 实体对象
     - pl : `Player`  
-      触发NPC命令执行的玩家对象
+      触发 NPC 执行命令的玩家对象
     - cmd : `String`  
-      NPC执行的命令，如果有多条命令，以`;`分隔
+      NPC 执行的命令；若有多条命令，则以`;`分隔
 - 拦截事件：函数返回`false`
 
 #### `"onChangeArmorStand"` - 操作盔甲架
@@ -260,13 +260,12 @@ ActorDamageCause 为伤害原因枚举，枚举值如下，有问号的待验证
 - 参数：
 
     - uniqueId: `String`
-      转变前的实体的唯一标识符
+      转变前实体的唯一标识符
     - entity : `Entity`
-      转换完成的实体
-- 拦截事件：不可以拦截
+      转变后的实体对象
+- 拦截事件：不可拦截
 
-注：此事件为 `Addons` 中实体的 `TransformationComponent` 激活时触发，多用于引擎与Addon交互。由于转变前的实体指针很快被销毁，因此只提供
-`UniqueId`。
+注：此事件在 `Addons` 中实体的 `TransformationComponent` 激活时触发，多用于引擎与 Addon 交互。由于转变前的实体指针会很快销毁，因此仅提供 `UniqueId`。
 
 
 #### `"onEndermanTakeBlock"` - 末影人搬运方块
@@ -278,9 +277,9 @@ ActorDamageCause 为伤害原因枚举，枚举值如下，有问号的待验证
   `function(entity, block, pos)`
 - 参数：
     - entity : `Entity`  
-      搬运方块的末影人
+      搬运方块的末影人实体对象
     - block : `Block`  
-      被搬运的方块
+      被搬运的方块对象
     - pos : `IntPos`  
-      被搬运的方块坐标
+      被搬运方块所在的坐标
 - 拦截事件：函数返回`false`

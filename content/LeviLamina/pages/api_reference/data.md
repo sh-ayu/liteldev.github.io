@@ -25,7 +25,7 @@ The Data module provides general-purpose data structures, including observable v
 
 ### Observable\<T\>
 
-`Observable<T>` stores a value and synchronously notifies subscribers when that value changes. It is a general data API; it is not tied to UI. The data-driven UI module derives its typed observables from this template.
+`Observable<T>` stores a value and synchronously notifies subscribers when that value changes. It is a general data API, not tied to UI; the data-driven UI module derives its typed observables from this template.
 
 ```cpp
 #include "ll/api/data/Observable.h"
@@ -50,9 +50,9 @@ public:
 
 Copies share the same value, subscribers, and subscription ID sequence. Constructing a separate `Observable` creates independent state.
 
-`setData()` compares the new value with the current value. An equal value is ignored; otherwise, the value is replaced and callbacks run synchronously before `setData()` returns. Callback exceptions are not swallowed: an exception propagates to the caller and stops the current notification pass.
+`setData()` compares the new value with the current value. If they are equal, the call is ignored; otherwise, the value is replaced and callbacks run synchronously before `setData()` returns. Callback exceptions are not swallowed: an exception propagates to the caller and stops the current notification pass.
 
-`subscribe()` accepts move-only callbacks and returns an ID. The ID is not an RAII handle: discarding it does not unsubscribe the callback. A subscription remains active until `unsubscribe(id)` succeeds or the shared observable state is destroyed. An empty callback returns ID `0`, and `unsubscribe(0)` returns `false`.
+`subscribe()` accepts move-only callbacks and returns an ID. This ID is not an RAII handle: discarding it does not unsubscribe the callback. A subscription remains active until `unsubscribe(id)` succeeds or the shared observable state is destroyed. Passing an empty callback returns ID `0`, and `unsubscribe(0)` returns `false`.
 
 ```cpp
 ll::data::Observable<int> count{0};
@@ -70,7 +70,7 @@ bool removed = count.unsubscribe(subscription); // true
 
 !!! warning
 
-    `Observable<T>` does not provide internal locking. Synchronize concurrent access externally. Callbacks run directly while the subscription container is being traversed, so do not add or remove subscriptions on the same observable from one of its callbacks. Recursive `setData()` calls also execute immediately; avoid them unless that behavior is deliberately controlled.
+    `Observable<T>` does not provide internal locking; synchronize concurrent access externally. Callbacks run directly while the subscription container is being traversed, so do not add or remove subscriptions on the same observable from one of its callbacks. Recursive `setData()` calls also execute immediately; avoid them unless you deliberately control that behavior.
 
 `T` must be copyable for `getData()` and equality-comparable for `setData()`. See [Data-driven UI](data_driven_ui.md#ui-observables) for `ObservableBoolean`, `ObservableNumber`, `ObservableString`, and `ObservableUIRawMessage`.
 
@@ -137,8 +137,7 @@ void useDatabase(ll::mod::Mod& mod) {
 
 ### Version
 
-`Version` parses strict `major.minor.patch` semantic versions. Prerelease identifiers affect precedence, while build
-metadata does not. Use `isIdenticalTo()` when build metadata is part of the identity you need to compare.
+`Version` parses strict `major.minor.patch` semantic versions. Prerelease identifiers affect precedence, whereas build metadata does not. Use `isIdenticalTo()` when you need to include build metadata in the comparison.
 
 ```cpp
 #include "ll/api/data/Version.h"
@@ -153,8 +152,7 @@ bool sameIdentity = ll::data::Version{"1.3.0+first"}.isIdenticalTo(ll::data::Ver
 
 ### VersionRequirement
 
-`VersionRequirement` is a normalized semantic version range. Comparators separated by whitespace form an AND group;
-`||` separates OR groups. Comparison operators are `=`, `>`, `>=`, `<`, and `<=`.
+`VersionRequirement` represents a normalized semantic version range. Whitespace-separated comparators form an AND group, and `||` separates OR groups. Supported comparison operators are `=`, `>`, `>=`, `<`, and `<=`.
 
 | Syntax | Meaning |
 |--------|---------|
@@ -174,13 +172,11 @@ ll::data::VersionRequirement supported{"^1.2.3 || =2.0.0"};
 bool matches = supported.matches(ll::data::Version{"1.8.0"}); // true
 ```
 
-A normal range does not match a prerelease unexpectedly. A comparator in the same AND group must explicitly mention a
-prerelease with the candidate's `major.minor.patch` core.
+A normal range does not accidentally match a prerelease. To match one, a comparator in the same AND group must explicitly include a prerelease tag with the candidate's `major.minor.patch` core.
 
-For compatibility, a bare full version such as `1.2.3` currently means `>=1.2.3 <2.0.0`. This form emits a migration
-warning when read from a mod manifest. Use `=1.2.3` for an exact requirement or write the intended range explicitly.
+For compatibility, a bare full version such as `1.2.3` is currently treated as `>=1.2.3 <2.0.0`. This form emits a migration warning when read from a mod manifest. Use `=1.2.3` for an exact requirement, or write the intended range explicitly.
 
 ## Related
 
-- [Config](config.md) — Uses reflection for serialization, can store config data
-- [Mod](mod.md) — `Mod::getDataDir()` for database storage location
+- [Config](config.md) — Uses reflection for serialization and can store configuration data
+- [Mod](mod.md) — `Mod::getDataDir()` provides the database storage location

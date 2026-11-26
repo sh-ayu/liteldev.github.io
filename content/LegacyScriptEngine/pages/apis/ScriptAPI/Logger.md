@@ -121,15 +121,12 @@ In addition, there are other settings to change the format of the output log
 
 - Parameter:
     - title : `String`  
-      Set custom headers
+      The custom header to set.
 - Return value: none
 
-"Header" is the text at the beginning of the log output entry, which is used to visually distinguish the output source
-of the log.
-By default, the header is the plugin's name: LSE gives each plugin a logger named after it.
+The "Header" is the text at the beginning of a log entry, used to visually distinguish the source of the log. By default, the header is the plugin's name, because LSE gives each plugin a logger named after it.
 
-For example: set a custom header as `logger.setTitle("LeviLamina")`  
-Then the following log output will become like:
+For example, if you set a custom header with `logger.setTitle("LeviLamina")`, the log output will look like this:
 
 ```log
 20:05:26 ERROR [LeviLamina] Fail to transport the player
@@ -141,8 +138,8 @@ Then the following log output will become like:
 
 - Parameter:
     - level : `Integer`  
-      Log output level
+      The log output level.
 - Return value: none
 
-Unified reset of log output levels for various output directions 
+Uniformly resets the log output level across all output destinations.
 

@@ -4,15 +4,15 @@ platforms: [android]
 
 # Cuentas e inicio rápido
 
-Estas funciones pertenecen a la versión para Android de LeviLauncher.
+Estas funciones corresponden a la versión de LeviLauncher para Android.
 
 ## Cuentas de Xbox
 
-LeviLauncher puede gestionar varias cuentas de Xbox dentro del lanzador. Selecciona la cuenta que quieras antes de iniciar Minecraft para que el juego empiece con la identidad esperada.
+LeviLauncher permite gestionar varias cuentas de Xbox desde el lanzador. Selecciona la cuenta que quieras antes de iniciar Minecraft para empezar el juego con esa identidad.
 
 ## Inicio rápido
 
-El inicio rápido (Quick Launch) usa acciones URI de Minecraft para ir directamente a flujos habituales. Según la acción, puedes:
+El inicio rápido (Quick Launch) usa acciones URI de Minecraft para acceder directamente a las funciones más habituales. Según la acción, puedes:
 
 - abrir una pantalla del juego
 - conectarte a un servidor o añadirlo

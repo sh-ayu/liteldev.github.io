@@ -1,12 +1,11 @@
 # 表单指南
 
-LeviLamina提供了一套极简的表单API，允许开发者用几行代码实现复杂的表单功能。  
-表单API的头文件被存放于`ll/api/form`中，此外由于Minecraft的表单ID在运行时是唯一的，所以我们提供了**FormIdManager**
-用于获取Minecraft的表单ID，允许开发者自己实现一套表单API。
+LeviLamina 提供了一套极简的表单 API，让开发者只需几行代码就能实现复杂的表单功能。  
+表单 API 的头文件位于 `ll/api/form` 中。此外，由于 Minecraft 的表单 ID 在运行时是唯一的，我们还提供了 **FormIdManager** 用于获取 Minecraft 的表单 ID，方便开发者自行实现表单 API。
 
 ## FormIdManager
 
-FormIdManager的头文件位于`ll/api/form/FormIdManager.h`，导出了`ll::form::FormIdManager::genFormId`方法，用于获取一个唯一的表单ID。
+FormIdManager 的头文件位于 `ll/api/form/FormIdManager.h`，导出了 `ll::form::FormIdManager::genFormId` 方法，用于获取唯一的表单 ID。
 
 ### 示例
 
@@ -18,23 +17,20 @@ void test() { uint formId = ll::form::FormIdManager::genFormId(); }
 
 ## SimpleForm
 
-SimpleForm是一个简单的表单，提供了标题、内容和按钮。   
-SimpleForm的头文件位于`ll/api/form/SimpleForm.h`。  
-此外，由于SimpleForm的方法例如`appendButton`返回SimpleForm的引用，所以可以链式调用。
+SimpleForm 是一种简单表单，包含标题、内容和按钮。  
+SimpleForm 的头文件位于 `ll/api/form/SimpleForm.h`。  
+此外，`appendButton` 等 SimpleForm 方法会返回 SimpleForm 的引用，因此支持链式调用。
 
 ### 用法
 
-1. 引用头文件`ll/api/form/SimpleForm.h`
-2. 构造一个SimpleForm对象，可以使用带参数和不带参数的构造函数，使用带参数的构造函数需要传入标题和内容，使用不带参数的构造函数需要手动调用
-   `setTitle`和`setContent`方法来设置标题和内容
-3. 通过`appendButton`方法添加按钮，通过`appendHeader`、`appendLabel`和`appendDivider`方法添加仅视觉效果元素。
-4. 使用`sendTo`方法将表单发送给玩家，需要传入`Player`对象的引用和一个回调函数，回调函数的参数为`Player`
-   对象的引用、玩家选择的按钮索引和取消原因的枚举。具体参数可以参考头文件`ll/api/form/SimpleForm.h`中`Callback`的声明。
+1. 引入头文件 `ll/api/form/SimpleForm.h`。
+2. 构造 SimpleForm 对象。你可以使用有参或无参构造函数：有参构造函数需要传入标题和内容，无参构造函数则需要手动调用 `setTitle` 和 `setContent` 方法来设置标题和内容。
+3. 调用 `appendButton` 方法添加按钮，调用 `appendHeader`、`appendLabel` 和 `appendDivider` 方法添加纯视觉元素。
+4. 调用 `sendTo` 方法将表单发送给玩家。该方法需要传入 `Player` 对象的引用和一个回调函数；回调函数的参数依次为 `Player` 对象的引用、玩家所选按钮的索引和取消原因枚举。具体参数定义可参考头文件 `ll/api/form/SimpleForm.h` 中 `Callback` 的声明。
 
 !!! tip
-    当按钮的索引为-1时代表玩家取消的表单。  
-    `FormCancelReason`的本质是`std::optional<ModalFormCancelReason>`，所以你需要先判断其是否有值才能使用，并且你需要使用
-    `ModalFormCancelReason`的枚举值来判断取消的原因。示例中使用了`magic_enum`库来获取枚举值的名称。
+    按钮索引为 -1 时，代表玩家取消了表单。  
+    `FormCancelReason` 本质上是 `std::optional<ModalFormCancelReason>`，因此在使用前需要先判断其是否有值，再通过 `ModalFormCancelReason` 的枚举值判断取消原因。示例中使用了 `magic_enum` 库来获取枚举值的名称。
 
 ### 示例
 
@@ -77,23 +73,17 @@ void sendSimpleFormToPlayer(Player& player) {
 
 ## CustomForm
 
-CustomForm是一个复杂的表单，提供了标题、标签(Label)、输入框(Input)、开关(Toggle)、下拉框(Dropdown)、滚动条(Slider)
-和分段滚动条(StepSlider)。
+CustomForm 是一种复杂表单，包含标题、标签 (Label)、输入框 (Input)、开关 (Toggle)、下拉框 (Dropdown)、滑块 (Slider) 和步进滑块 (StepSlider)。
 
 ### 用法
 
-1. 引用头文件`ll/api/form/CustomForm.h`
-2. 构造一个CustomForm对象，可以使用带参数和不带参数的构造函数，使用带参数的构造函数需要传入标题，使用不带参数的构造函数需要手动调用
-   `setTitle`方法来设置标题
-3. 通过`appendInput`、`appendToggle`、`appendDropdown`、`appendSlider`和`appendStepSlider`方法添加各种自定义表单元素，通过`appendHeader`、`appendLabel`、`appendDivider`方法添加各种仅视觉效果元素
-4. 使用`sendTo`方法将表单发送给玩家，需要传入`Player`对象的引用和一个回调函数，回调函数的参数为`Player`
-   对象的引用、表单的结果和取消原因的枚举。具体参数可以参考头文件`ll/api/form/CustomForm.h`中`Callback`的声明。
+1. 引入头文件 `ll/api/form/CustomForm.h`。
+2. 构造 CustomForm 对象。你可以使用有参或无参构造函数：有参构造函数需要传入标题，无参构造函数则需要手动调用 `setTitle` 方法来设置标题。
+3. 调用 `appendInput`、`appendToggle`、`appendDropdown`、`appendSlider` 和 `appendStepSlider` 方法添加各类自定义表单元素，调用 `appendHeader`、`appendLabel` 和 `appendDivider` 方法添加各类纯视觉元素。
+4. 调用 `sendTo` 方法将表单发送给玩家。该方法需要传入 `Player` 对象的引用和一个回调函数；回调函数的参数依次为 `Player` 对象的引用、表单结果和取消原因枚举。具体参数定义可参考头文件 `ll/api/form/CustomForm.h` 中 `Callback` 的声明。
 
 !!! tip
-    表单的结果`CustomFormResult`实际上是`std::optional<std::unordered_map<std::string, CustomFormElementResult>>`
-    ，一个存储了元素名称和结果的无序关联容器。你可以通过元素名称来获取对应的结果，结果的类型是`CustomFormElementResult`
-    ，是一个联合体(`std::variant<std::monostate, uint64, double, std::string>`)，所以你需要先使用`std::holds_alternative`
-    判断其类型通过`std::get`获取。
+    表单结果 `CustomFormResult` 实际上是 `std::optional<std::unordered_map<std::string, CustomFormElementResult>>`，即一个存储元素名称与对应结果的无序关联容器。你可以通过元素名称获取对应的结果，结果类型为 `CustomFormElementResult`，它是一个联合体 (`std::variant<std::monostate, uint64, double, std::string>`)，因此需要先使用 `std::holds_alternative` 判断其类型，再通过 `std::get` 获取值。
 
 ### 示例
 
@@ -147,19 +137,16 @@ void sendCustomFormToPlayer(Player& player) {
 
 ## ModalForm
 
-ModalForm是一个模态表单，提供了标题、内容和两个按钮，通常用于实现双项选择。
+ModalForm 是一种模态表单，包含标题、内容和两个按钮，通常用于实现二选一交互。
 
 ### 用法
 
-1. 引用头文件`ll/api/form/ModalForm.h`
-2. 构造一个ModalForm对象，可以使用带参数和不带参数的构造函数，使用带参数的构造函数需要传入标题、内容、上按钮和下按钮，使用不带参数的构造函数需要手动调用
-   `setTitle`和`setContent`方法来设置标题和内容，`setUpperButton`和`setLowerButton`方法来设置上按钮和下按钮。
-3. 使用`sendTo`方法将表单发送给玩家，需要传入`Player`对象的引用和一个回调函数，回调函数的参数为`Player`
-   对象的引用、玩家选择的按钮结果和取消原因的枚举。具体参数可以参考头文件`ll/api/form/ModalForm.h`中`Callback`的声明。
+1. 引入头文件 `ll/api/form/ModalForm.h`。
+2. 构造 ModalForm 对象。你可以使用有参或无参构造函数：有参构造函数需要传入标题、内容、上方按钮和下方按钮，无参构造函数则需要手动调用 `setTitle` 和 `setContent` 方法设置标题和内容，并调用 `setUpperButton` 和 `setLowerButton` 方法设置上方按钮和下方按钮。
+3. 调用 `sendTo` 方法将表单发送给玩家。该方法需要传入 `Player` 对象的引用和一个回调函数；回调函数的参数依次为 `Player` 对象的引用、玩家所选按钮的结果和取消原因枚举。具体参数定义可参考头文件 `ll/api/form/ModalForm.h` 中 `Callback` 的声明。
 
 !!! tip
-    `ModalFormResult`实际上是`std::optional<ModalFormSelectedButton>`的别名，而`ModalFormSelectedButton`是一个Bool枚举，有`Upper = true`和
-    `Lower = false`两个值，分别代表上按钮和下按钮。
+    `ModalFormResult` 实际上是 `std::optional<ModalFormSelectedButton>` 的别名，而 `ModalFormSelectedButton` 是一个布尔枚举，包含 `Upper = true` 和 `Lower = false` 两个值，分别代表上方按钮和下方按钮。
 
 ### 示例
 
@@ -189,7 +176,7 @@ void sendModalFormToPlayer(Player& player) {
 
 ## sendUpdate
 
-玩家处于表单打开状态时使用`SimpleForm::sendUpdate`、`CustomForm::sendUpdate`和`ModalForm::sendUpdate`可以更新表单，且不限制更新的表单内容和类型，参数同`sendTo`。这些方法需要保证玩家处于表单打开中的状态，否则无效果。
+当玩家已打开表单时，调用 `SimpleForm::sendUpdate`、`CustomForm::sendUpdate` 或 `ModalForm::sendUpdate` 即可更新当前表单。更新时不限制表单的内容和类型，参数与 `sendTo` 相同。调用这些方法时必须确保玩家的表单处于打开状态，否则不会生效。
 
 ### 示例
 

@@ -2,11 +2,9 @@
 
 ## Purpose
 
-The Mod Menu API registers runtime UI owned by native mods: menu modules,
-configuration entries, floating buttons, and HUD overlay draw commands.
+The Mod Menu API registers runtime UI owned by native mods: menu modules, configuration entries, floating buttons, and HUD overlay draw commands.
 
-Use it from lifecycle methods such as `enable()` and clean up temporary entries
-from `disable()` when the UI should not survive the enabled state.
+Call it from lifecycle methods such as `enable()`, and clean up temporary entries in `disable()` if the UI should not persist after the mod is disabled.
 
 ## Header
 
@@ -16,7 +14,7 @@ from `disable()` when the UI should not survive the enabled state.
 
 ## Module Registration
 
-Use `pl::modmenu::ModuleBuilder` or fill `pl::modmenu::ModuleInfo` directly.
+Use `pl::modmenu::ModuleBuilder` or populate `pl::modmenu::ModuleInfo` directly.
 
 ```cpp
 #include <pl/Mod.hpp>
@@ -56,17 +54,11 @@ Configuration entry kinds:
 | `ConfigType::Text` | Free text value. |
 | `ConfigType::Button` | Action button. |
 
-`ModuleBuilder::onConfigChanged()` receives `(moduleId, key, value)` when a
-configuration value changes, and `onKeybind()` receives `(moduleId, key, isDown)`
-for `Keybind` entries. For a richer settings page (categories, choices, ranges,
-conditions), build a schema with `pl::modmenu::ConfigSchemaBuilder` from
-`<pl/ModMenuConfig.hpp>` and pass its `toJson()` to
-`setConfigSchemaJson(moduleId, json)`; `clearConfigSchema(moduleId)` removes it.
+`ModuleBuilder::onConfigChanged()` receives `(moduleId, key, value)` when a configuration value changes, and `onKeybind()` receives `(moduleId, key, isDown)` for `Keybind` entries. For a richer settings page (categories, choices, ranges, conditions), build a schema with `pl::modmenu::ConfigSchemaBuilder` from `<pl/ModMenuConfig.hpp>` and pass its `toJson()` output to `setConfigSchemaJson(moduleId, json)`. Call `clearConfigSchema(moduleId)` to remove it.
 
 ## Floating Buttons
 
-Use `pl::modmenu::ButtonBuilder` for on-screen buttons. Buttons may dispatch
-click, hold, toggle, and pointer events to a C++ callback.
+Use `pl::modmenu::ButtonBuilder` to create on-screen buttons. Buttons may dispatch click, hold, toggle, and pointer events to a C++ callback.
 
 ```cpp
 bool registerQuickButton() {
@@ -86,16 +78,11 @@ bool registerQuickButton() {
 }
 ```
 
-Button icons can be supplied as PNG, WebP, or SVG data through
-`ButtonBuilder::pngIcon()`, `webpIcon()`, `svgIcon()`, or the generic
-`icon()` helper; `resourceIcon()` uses a named resource instead.
+You can supply button icons as PNG, WebP, or SVG data through `ButtonBuilder::pngIcon()`, `webpIcon()`, `svgIcon()`, or the generic `icon()` helper; `resourceIcon()` uses a named resource instead.
 
 ## Overlay Drawing
 
-Use `pl::modmenu::submitDrawCommands()` to replace a module's current HUD
-overlay commands. Text commands can use a font registered with
-`registerFont()`, while image commands use raw RGBA pixels registered with
-`registerImage()`.
+Use `pl::modmenu::submitDrawCommands()` to replace a module's current HUD overlay commands. Text commands can use a font registered with `registerFont()`, and image commands use raw RGBA pixels registered with `registerImage()`.
 
 | API | Purpose |
 | --- | --- |
@@ -105,10 +92,7 @@ overlay commands. Text commands can use a font registered with
 | `submitHudEditorElements(moduleId, elements)` | Declares the module's elements that the HUD editor can move. |
 | `getHudSurfaceSize()` | Returns the width and height of the HUD surface. |
 
-`registerImage()` expects `imageData.size()` to be exactly
-`width * height * 4`. For `DrawCommandType::Text`, set `DrawCommand::fontId`
-to the registered font id. For `DrawCommandType::Image`, set
-`DrawCommand::imageId` to the registered image id.
+`registerImage()` expects `imageData.size()` to be exactly `width * height * 4`. For `DrawCommandType::Text`, set `DrawCommand::fontId` to the registered font ID. For `DrawCommandType::Image`, set `DrawCommand::imageId` to the registered image ID.
 
 ```cpp
 std::vector<unsigned char> logoRgba = loadLogoPixels();
@@ -152,7 +136,4 @@ void submitOverlay() {
 
 ## Cleanup
 
-Call `pl::modmenu::unregisterModule()` and `unregisterButton()` during
-`disable()` when the registered UI is temporary or tied to the enabled state.
-Registered modules and buttons are also associated with `modId` ownership when
-they are registered from a native mod lifecycle.
+Call `pl::modmenu::unregisterModule()` and `unregisterButton()` in `disable()` when the registered UI is temporary or tied to the enabled state. Modules and buttons registered from a native mod lifecycle are also associated with `modId` ownership.

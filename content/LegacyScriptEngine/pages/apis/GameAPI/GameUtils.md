@@ -1,13 +1,13 @@
 # 🎮 Game Utilities API
 
-The following APIs provide some useful tool interfaces to help game content development, so that the development efficiency can be improved to a certain extent.
+The following APIs provide utility interfaces that simplify game content development and improve efficiency.
 
 ### Format Code Utility
 
-MC provides format control capabilities such as color text, style modification, etc. in the game through the **formatting code** symbol. Formatting codes are divided into two types: color codes and format codes, which respectively provide color control and style control capabilities.
+MC uses **formatting code** symbols to control in-game text formatting, such as color and style. Formatting codes fall into two categories: color codes, which control text color, and format codes, which control text style.
 
-The interface here is to help developers quickly get started with MC formatting code, without frequently looking up the table to use
-Note: The interface here will only have an effect when passed to the BDS and displayed.
+This interface helps developers use MC formatting codes quickly without having to look them up in a table.
+Note: This interface only takes effect when the text is passed to BDS and displayed in-game.
 
 #### Color Code Table
 
@@ -35,18 +35,18 @@ Note: The interface here will only have an effect when passed to the BDS and dis
 
 #### Format Code Table
 
-| Format Code Symbol     | Format Meaning                                            | In-Game String Eqivalent |
-| ---------------------- | --------------------------------------------------------- | ------------------------ |
-| `Format.Bold`          | The following text is **Bold**                            | §l                       |
-| `Format.Italics`       | The following text is *Italic*                            | §o                       |
-| `Format.Underline`     | The following text is <u>Underline</u>                    | §n                       |
-| `Format.StrikeThrough` | The following text is ~~Strikethrough~~                   | §m                       |
-| `Format.Random`        | The following text is randomly flashed garbled characters | §k                       |
-| `Format.Clear`         | The following text clears all formatting                  | §r                       |
+| Format Code Symbol     | Format Meaning                                            | In-Game String Equivalent |
+| ---------------------- | --------------------------------------------------------- | ------------------------- |
+| `Format.Bold`          | The following text is **Bold**                            | §l                        |
+| `Format.Italics`       | The following text is *Italic*                            | §o                        |
+| `Format.Underline`     | The following text is <u>Underline</u>                    | §n                        |
+| `Format.StrikeThrough` | The following text is ~~Strikethrough~~                   | §m                        |
+| `Format.Random`        | The following text is randomly flashed garbled characters | §k                        |
+| `Format.Clear`         | The following text clears all formatting                  | §r                        |
 
 
 
-The method used by the above code is a connection string, similar to:
+Use these codes by concatenating them into a string, as shown below:
 
 [JavaScript]
 ```js

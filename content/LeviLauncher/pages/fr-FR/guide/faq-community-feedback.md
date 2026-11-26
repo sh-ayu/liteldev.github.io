@@ -4,43 +4,43 @@
 
 ### Dois-je posséder une licence officielle de Minecraft Bedrock ?
 
-Oui. LeviLauncher est conçu pour être utilisé avec une **licence officielle de Minecraft Bedrock Edition (GDK / UWP)**.
+Oui. LeviLauncher nécessite une **licence officielle de Minecraft Bedrock Edition (GDK / UWP)**.
 
 ### Puis-je l'utiliser sur macOS ou Linux ?
 
-LeviLauncher existe en version **Windows** et en version **Android** ([guide Android](/fr-FR/guide/version-management?platform=android)). Il n'existe pas de version macOS ni Linux.
+LeviLauncher est disponible sur **Windows** et **Android** ([guide Android](/fr-FR/guide/version-management?platform=android)). Il n'existe pas de version pour macOS ni pour Linux.
 
 ### Existe-t-il une version iOS ?
 
-Non. Nous ne prévoyons pas de version iOS de LeviLauncher.
+Non. Aucune version iOS de LeviLauncher n'est prévue.
 
 ### Dois-je choisir Release ou Preview ?
 
-Privilégiez la build Minecraft **Version stable** (Release) pour jouer au quotidien. N'envisagez la build Minecraft **Aperçu** (Preview) que si vous souhaitez clairement tester les prochaines fonctionnalités et que vous acceptez les instabilités potentielles.
+Pour jouer au quotidien, privilégiez la build Minecraft **Version stable** (Release). Choisissez la build Minecraft **Aperçu** (Preview) uniquement si vous souhaitez tester les prochaines fonctionnalités et acceptez d'éventuelles instabilités.
 
 ### L'isolation est-elle obligatoire ?
 
-Non, elle n'est pas obligatoire, mais elle est fortement recommandée pour les environnements de test, les versions Minecraft Preview et les configurations avec Mods. L'isolation est disponible pour les versions GDK et pour les versions UWP x64 1.19.70.2 ou ultérieures.
+Non, mais elle est fortement recommandée pour les environnements de test, les versions Minecraft Preview et les configurations avec Mods. L'isolation est disponible sur les versions GDK ainsi que sur les versions UWP x64 1.19.70.2 ou ultérieures.
 
 ### Puis-je gérer mes mondes et packs de ressources dans le lanceur ?
 
-Oui. LeviLauncher fournit des vues dédiées pour les mondes, les packs de ressources, les packs de comportements, les packs de skins, les captures d'écran et les listes de serveurs.
+Oui. LeviLauncher propose des vues dédiées aux mondes, aux packs de ressources, aux packs de comportements, aux packs de skins, aux captures d'écran et aux listes de serveurs.
 
 ### Puis-je installer des Mods ?
 
-Oui, mais cela relève d'un workflow avancé. Il est conseillé de commencer avec une version isolée propre et de procéder par étapes.
+Oui, mais il s'agit d'un usage avancé. Nous vous conseillons de partir d'une version isolée propre et de procéder par étapes.
 
 ### Puis-je utiliser LeviLauncher en ligne de commande ?
 
-Oui, sous Windows. `LeviLauncher.exe` sans argument ouvre la fenêtre ; avec une commande comme `install latest`, `play`, `instance list` ou `mod install <mod>`, il s'exécute dans le terminal puis se ferme. Lancez `LeviLauncher.exe help` pour voir toutes les commandes, et `LeviLauncher.exe help <commande>` pour les options et les exemples de l'une d'elles.
+Oui, sous Windows. Lancé sans argument, `LeviLauncher.exe` ouvre l'interface graphique ; accompagné d'une commande comme `install latest`, `play`, `instance list` ou `mod install <mod>`, il s'exécute dans le terminal puis se ferme. Exécutez `LeviLauncher.exe help` pour afficher toutes les commandes, et `LeviLauncher.exe help <commande>` pour consulter les options et les exemples d'une commande précise.
 
 ### De quoi la version Android a-t-elle besoin ?
 
-Android 9.0 ou version ultérieure sur un appareil ARM64, et Minecraft Bedrock Edition 1.21.80 ou version ultérieure installé depuis Google Play. Voir [Installation](../install?platform=android).
+Elle nécessite Android 9.0 ou version ultérieure sur un appareil ARM64, ainsi que Minecraft Bedrock Edition 1.21.80 ou version ultérieure installé depuis Google Play. Consultez la page [Installation](../install?platform=android).
 
 ### Puis-je utiliser plusieurs versions de Minecraft sous Android ?
 
-Oui. Importez des APK officiels de Minecraft pour lancer d'autres versions dans le lanceur, et activez l'isolation pour garder leurs données séparées.
+Oui. Importez des APK officiels de Minecraft pour lancer d'autres versions depuis le lanceur, et activez l'isolation pour séparer leurs données.
 
 ## Liens vers la communauté
 
@@ -50,18 +50,18 @@ Oui. Importez des APK officiels de Minecraft pour lancer d'autres versions dans 
 
 ## Comment signaler un problème ou suggérer une fonctionnalité ?
 
-Veuillez utiliser [GitHub Issues](https://github.com/LiteLDev/LeviLauncher/issues) pour signaler :
+Utilisez [GitHub Issues](https://github.com/LiteLDev/LeviLauncher/issues) pour signaler :
 
 - Des bugs reproductibles
 - Des problèmes d'installation clairement liés à LeviLauncher
-- Des suggestions d'amélioration concernant la clarté de la documentation
-- Des demandes de fonctionnalités accompagnées d'un cas d'utilisation précis
+- Des suggestions pour améliorer la clarté de la documentation
+- Des demandes de fonctionnalités accompagnées d'un cas d'usage précis
 
-Les problèmes de la version Android sont à signaler dans [LiteLDev/LeviLauncher-Android Issues](https://github.com/LiteLDev/LeviLauncher-Android/issues).
+Signalez les problèmes liés à la version Android sur [LiteLDev/LeviLauncher-Android Issues](https://github.com/LiteLDev/LeviLauncher-Android/issues).
 
 ## Avant de soumettre une Issue
 
 - Mettez à jour vers la dernière version disponible
-- Effectuez un test de comparaison avec une version isolée propre
-- Désactivez temporairement les Mods ou packs de ressources récemment ajoutés
-- Notez précisément les étapes qui provoquent le problème
+- Comparez le comportement avec une version isolée propre
+- Désactivez temporairement les Mods ou packs de ressources ajoutés récemment
+- Notez précisément les étapes permettant de reproduire le problème

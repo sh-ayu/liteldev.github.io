@@ -2,11 +2,11 @@
 
 本指南介绍如何使用 `ll::ui` 构建响应式 Minecraft Bedrock 表单。完整声明、默认值、生命周期规则和底层 API 见[数据驱动 UI API 参考](../../api_reference/data_driven_ui.zh.md)。
 
-LeviLamina API 采用微软[数据驱动 UI 框架简介](https://learn.microsoft.com/zh-cn/minecraft/creator/documents/scripting/intro-to-ddui?view=minecraft-bedrock-stable)中的响应式概念，并将其适配为 C++ callback、`Expected<T>` 和 LeviLamina 协程。
+LeviLamina API 借鉴了微软[数据驱动 UI 框架简介](https://learn.microsoft.com/zh-cn/minecraft/creator/documents/scripting/intro-to-ddui?view=minecraft-bedrock-stable)中的响应式概念，并将其适配为 C++ callback、`Expected<T>` 和 LeviLamina 协程。
 
 ## 开始之前
 
-DDUI 代码应在服务器线程运行。以下示例假设 `Player&` 来自服务器线程上的事件或命令回调，并且当前有效。
+DDUI 代码应在服务器线程上运行。以下示例假设 `Player&` 来自服务器线程上的事件或命令回调，且当前有效。
 
 主要头文件为：
 
@@ -15,7 +15,7 @@ DDUI 代码应在服务器线程运行。以下示例假设 `Player&` 来自服�
 #include "ll/api/ui/form/MessageBox.h"
 ```
 
-DDUI 与旧 `ll::form` API 是两套独立接口：
+DDUI 与旧版 `ll::form` API 是两套独立的接口：
 
 | 旧 `ll::form` | DDUI `ll::ui` |
 |---------------|---------------|
@@ -26,7 +26,7 @@ DDUI 与旧 `ll::form` API 是两套独立接口：
 
 ## 构建完整 CustomForm
 
-输入控件必须使用可由客户端写入的 Observable；仅用于显示的状态应保持只读。
+输入控件必须使用可由客户端写入的 Observable；仅用于显示的状态则应保持只读。
 
 ```cpp
 #include <string>
@@ -128,13 +128,13 @@ void showSettings(Player& player) {
 }
 ```
 
-表单会复制 Observable，但所有副本共享状态。因此，即使局部 Form Wrapper 已经离开作用域，完成 callback 仍能读取最终值。
+表单会复制 Observable，但所有副本共享状态。因此，即使局部 Form Wrapper 已离开作用域，完成 callback 仍能读取最终值。
 
-显式 `unsubscribe()` 针对应用自己创建的 `name` 订阅；表单内部的 Observable 桥接会在表单完成时自动断开。
+显式调用的 `unsubscribe()` 用于取消应用自身创建的 `name` 订阅；表单内部的 Observable 桥接则会在表单完成时自动断开。
 
 ## 由服务端更新 UI
 
-用作文本或 Option 的 Observable 都能在表单打开时改变。延迟更新仍必须回到服务器线程执行。
+用作文本或 Option 的 Observable 均可在表单打开期间修改。延迟更新仍必须切回服务器线程执行。
 
 ```cpp
 #include <chrono>
@@ -172,11 +172,11 @@ void showMonitor(Player& player) {
 }
 ```
 
-更新时不需要重建或重新显示表单。`setData()` 会通过现有 Binding 写入新值；再次设置相同值会被 `Observable<T>` 抑制。
+更新时无需重建或重新显示表单。`setData()` 会通过现有 Binding 写入新值；重复设置相同的值会被 `Observable<T>` 忽略。
 
 ## 立即响应玩家输入
 
-另一个 UI 值依赖玩家输入时，订阅可由客户端写入的 Observable：
+如果某个 UI 值依赖于玩家输入，请订阅可由客户端写入的 Observable：
 
 ```cpp
 ll::ui::ObservableNumber volume{50.0, {.clientWritable = true}};
@@ -189,11 +189,11 @@ auto const subscription = volume.subscribe(
 );
 ```
 
-保存订阅 ID，并在所属状态结束时调用 `unsubscribe()`。忽略 ID 会让 callback 在共享 Observable 状态存活期间一直有效；该返回值不是 RAII Token。
+请保存订阅 ID，并在所属状态结束时调用 `unsubscribe()`。該返回值不是 RAII Token；如果忽略该 ID，callback 会在共享的 Observable 状态存活期间一直保持有效。
 
 ## 动态组件 Option
 
-Option 值可以是 Observable。这样无需修改表单结构，一个控件就能动态控制另一个控件的显示、隐藏、启用或禁用。
+Option 值本身也可以是 Observable。这样无需修改表单结构，就能让一个控件动态控制另一个控件的显示、隐藏、启用或禁用。
 
 ```cpp
 ll::ui::ObservableBoolean advanced{false, {.clientWritable = true}};
@@ -214,11 +214,11 @@ form.toggle("高级模式", advanced)
     .closeButton();
 ```
 
-开始显示后，表单结构不可再修改，但所有绑定值仍可改变。
+表单开始显示后，其结构便不可再修改，但所有绑定值仍可更改。
 
 ## 使用协程路径
 
-`showAsync()` 等待最终关闭结果。该任务必须在服务器线程启动或等待。
+`showAsync()` 会等待最终的关闭结果。该任务必须在服务器线程上启动或等待。
 
 ```cpp
 #include "ll/api/coro/CoroTask.h"
@@ -250,11 +250,11 @@ void launchSettings(Player& player) {
 }
 ```
 
-不要对同一个表单同时调用 `show()` 与 `showAsync()`；每个表单或 Session 只能显示一次。
+请勿对同一个表单同时调用 `show()` 和 `showAsync()`；每个表单或 Session 只能显示一次。
 
 ## 显示 MessageBox
 
-`MessageBox` 是双按钮对话框。与 `CustomForm` 的操作按钮不同，它的结果会说明选择了哪个按钮。
+`MessageBox` 是双按钮对话框。与 `CustomForm` 的操作按钮不同，它的返回结果会指明玩家点击了哪个按钮。
 
 ```cpp
 #include "ll/api/ui/form/MessageBox.h"
@@ -290,11 +290,11 @@ void confirmReset(Player& player) {
 }
 ```
 
-按钮编号从 1 开始：`button1` 产生 `1`，`button2` 产生 `2`。玩家 Busy、程序关闭或其他未选择按钮的关闭结果中，`selection` 为空。
+按钮编号从 1 开始：`button1` 产生 `1`，`button2` 产生 `2`。如果因玩家 Busy、程序主动关闭或其他未点击按钮的原因关闭，结果中的 `selection` 为空。
 
 ## 关闭表单
 
-应选择范围最小、符合意图的关闭操作：
+应根据意图选择作用范围最小的关闭操作：
 
 ```cpp
 auto targeted = form.close(); // 只关闭这个 CustomForm。
@@ -302,11 +302,11 @@ auto targeted = form.close(); // 只关闭这个 CustomForm。
 ll::ui::closeScreen(player);  // 关闭该玩家的全部 DDUI Screen。
 ```
 
-`form.close()` 返回 `Expected<>`，并要求表单正在显示。`closeScreen(player)` 返回 `void`；各活动 Session 稍后分别收到自己的 `ProgrammaticCloseAll` 完成结果。
+`form.close()` 返回 `Expected<>`，且要求表单当前正在显示。`closeScreen(player)` 返回 `void`，各个活动 Session 稍后会分别收到各自的 `ProgrammaticCloseAll` 完成结果。
 
 ## 打开资源包自定义 Screen
 
-只有资源包定义了 Screen 及其数据协议时才直接使用 `ScreenSession`。结构化数据应优先使用 `cereal::DynamicValue`，而不是兼容 JSON 重载。
+仅当资源包定义了 Screen 及其数据协议时，才应直接使用 `ScreenSession`。对于结构化数据，应优先使用 `cereal::DynamicValue`，而非用于兼容的 JSON 重载。
 
 ```cpp
 #include "ll/api/ui/base/ScreenSession.h"
@@ -339,7 +339,7 @@ void showCustomScreen(Player& player) {
 }
 ```
 
-`ScreenSession` 必须保持存活，其 `Property` 和 `Binding<T>` 句柄才能继续使用。生产环境中的自定义 Screen Owner 应保留 Session，直到完成 callback 执行。
+只有保持 `ScreenSession` 存活，其 `Property` 和 `Binding<T>` 句柄才能继续使用。在生产环境中，自定义 Screen Owner 应一直保留 Session，直到完成 callback 执行完毕。
 
 ## 常见错误
 

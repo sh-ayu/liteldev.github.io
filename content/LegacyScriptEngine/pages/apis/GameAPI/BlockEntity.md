@@ -1,30 +1,30 @@
 # 📮 Block Entity Object API
 
-In LSE, "block entity objects" are used to manipulate and obtain additional data associated with a particular block.
-Note: **Block Entity Object** is not a **Entity**! There is no special relationship between them.
+In LSE, "block entity objects" are used to read and manipulate the additional data associated with a block.
+Note: A **Block Entity Object** is not an **Entity**! There is no special relationship between them.
 
 ### Get a Block Entity Object
 
 #### Obtained From Blocks
 
 
-For an existing block object `bl`, there are:
+For an existing block object `bl`, call:
 
 `bl.getBlockEntity()` 
 
-- Return type: The block's block entity object.
+- Return value: The block's block entity object.
 - Return value type: `BlockEntity`
-  - If the return value is `Null`, it means that obtaining the block entity object failed, or this block **doesn't** have a corresponding entity object.
+  - A return value of `Null` means that retrieving the block entity object failed, or that this block **doesn't** have a corresponding entity object.
 
-> Note: Do not save a block entity object.
-> When the block corresponding to the block object is destroyed, the corresponding block entity object will become invalid. Therefore, if there is a need to operate a certain block entity for a long time, please obtain the real-time block entity object through the above method.
+> Note: Do not save a block entity object for long-term use.
+> When the corresponding block is destroyed, the block entity object becomes invalid. If you need to work with a block entity over time, retrieve a fresh block entity object using the method above.
 
 
 
 
 ### Block Entity Object - Properties
 
-Each block entity object contains some fixed object properties. For a particular block entity object `be`, there are the following properties:
+Every block entity object has the following fixed properties. For a given block entity object `be`:
 
 | Attributes | Meaning                                            | Data Type |
 | ---------- | -------------------------------------------------- | --------- |
@@ -38,13 +38,13 @@ These object properties are read-only and cannot be modified.
 
 ### Block Entity Object - Function
 
-Each block entity object contains some member functions (member methods) that can be executed. For a specific block entity object `be`, you can perform some operations on this block entity through the following functions:
+Every block entity object provides member functions (methods) that you can call. For a given block entity object `be`, you can perform the following operations:
 
 #### Get the Block Entity's NBT Object 
 
 `be.getNbt()`
 
-- Return type: NBT object of the block entity.
+- Return value: The NBT object of the block entity.
 - Return value type: `NbtCompound`
 
 
@@ -55,11 +55,11 @@ Each block entity object contains some member functions (member methods) that ca
 
 - Parameters:
   - nbt : `NbtCompound`  
-    NBT objects.
-- Return type: Whether the write was successful or not.
+    The NBT object.
+- Return value: Whether the write succeeded.
 - Return value type: `Boolean`
 
-For more usage of NBT objects, please refer to [NBT Interface Documentation](../NbtAPI/NBT.md)
+For more information on using NBT objects, see [NBT Interface Documentation](../NbtAPI/NBT.md).
 
 
 
@@ -67,7 +67,7 @@ For more usage of NBT objects, please refer to [NBT Interface Documentation](../
 
 `be.getBlock()`
 
-- Return type: The block entity's block object.
+- Return value: The block entity's block object.
 - Return value type: `Block`
 
 #### Set Block Entity Custom Name
@@ -79,8 +79,8 @@ For more usage of NBT objects, please refer to [NBT Interface Documentation](../
 
 - Parameters:
   - name : `String`
-    New block entity custom name.
-- Return type: Whether setting was successful.
+    The new custom name for the block entity.
+- Return value: Whether setting the name succeeded.
 - Return value type: `Boolean`
 
 #### Get Block Entity Custom Name
@@ -90,7 +90,7 @@ For more usage of NBT objects, please refer to [NBT Interface Documentation](../
 
 `be.getCustomName()`
 
-- Return type: The block entity's custom name.
+- Return value: The block entity's custom name.
 - Return value type: `String`
 
 

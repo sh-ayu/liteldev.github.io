@@ -1,46 +1,46 @@
 # 👜 Container Object API
 
-In LSE, "container objects" are used to manipulate information about containers that have grids and can store and place items.
-The **container** here is a broad concept. In addition to the traditional containers such as boxes and barrels, such as player inventory, boxes carried by alpaca, etc. can also be handled as "containers", obtained and used. Container APIs  corresponding to the container
+In LSE, "container objects" are used to manipulate containers that have slots for storing and placing items.
+Here, **container** is a broad concept. Beyond traditional containers like chests and barrels, player inventories, chests carried by llamas, and similar storage can also be obtained and manipulated as "containers" using the corresponding container APIs.
 
 ### Get a Container Object
 
 #### Get From Event or API
 
-Obtain the container object given by BDS by registering the **event listener** function, or calling some **returning container object** functions.
-For details, see [Event listener documentation - EventAPI](../EventAPI/Listen.md)      
+You can obtain a container object provided by BDS by registering an **event listener** function or calling a **returning container object** function.
+For details, see [Event listener documentation - EventAPI](../EventAPI/Listen.md).
 
 #### Get By Entity 
 
-Obtain a **container object** corresponding to a player's item bar, armor bar, and ender box through each member function of the player object
-See [Player Object API](./Player.md)      
+You can obtain a **container object** for a player's inventory, armor slots, or ender chest through the member functions of the player object.
+See [Player Object API](./Player.md).
 
 #### Obtained From Blocks
 
-For a block that can hold items, the corresponding **container object** is obtained through the member function of the block object.
-See [Block Object API](./Block.md)      
+For a block that can hold items, you can obtain its **container object** through the member function of the block object.
+See [Block Object API](./Block.md).
 
-> Note: Do not save a container object long-term.
-> When the entity/block corresponding to the container object is destroyed, the corresponding container object will become invalid. Therefore, if there is a need to operate a certain container for a long time, please obtain the real-time container object through the above methods.
+> Note: Do not store a container object long-term.
+> When the entity or block corresponding to a container object is destroyed, the container object becomes invalid. If you need to operate on a container over a long period, obtain a fresh container object in real time using the methods above.
 
 
 
 ### Container Info Object - Properties
 
-Each container information object contains some fixed object properties. for a specific container object `ct`, has the following properties:
+Every container object has a fixed set of properties. A specific container object `ct` has the following properties:
 
 | Attributes | Meaning                                      | Data Types |
 | ---------- | -------------------------------------------- | ---------- |
-| ct.size    | The total number of spaces the container has | `Integer`  |
+| ct.size    | The total number of slots in the container   | `Integer`  |
 | ct.type    | The type of container                        | `String`   |
 
 
 
 ### Container Object - Function
 
-Each container object contains some member functions (member methods) that can be executed. for a specific container object `ct`, you can perform some operations on this container through the following functions:
+Every container object has member functions (methods) that you can call. For a specific container object `ct`, you can perform operations on the container using the following functions:
 
-> Attention! After modifying the items corresponding to the player's inventory, don't forget to use the member function `pl.refreshItems` of the player object to refresh the player's inventory displayed by the client.
+> Attention! After modifying items in a player's inventory, remember to call the player object's `pl.refreshItems` member function to refresh the inventory displayed on the client.
 
 #### Put the Item Object Into the Container  
 
@@ -52,8 +52,8 @@ Each container object contains some member functions (member methods) that can b
     
   - amount : `Integer`
   
-    (optional) If provided this para, the original count property of the item will be ignored
-- Return type: Whether the item was added successfully or not.
+    (Optional) If provided, the item's original count property is ignored.
+- Return type: Whether the item was added successfully.
 - Return value type: `Boolean`
 
 
@@ -65,10 +65,10 @@ Each container object contains some member functions (member methods) that can b
 - Parameters: 
   - item : `Item`  
     The item to add to the container.
-- Return type: Whether the item was added successfully or not.
+- Return type: Whether the item was added successfully.
 - Return value type: `Boolean`
 
-Unlike the above function, this function will not stack to the existing item stack in the container.
+Unlike the function above, this function does not merge the item into existing item stacks in the container.
 
 
 
@@ -78,7 +78,7 @@ Unlike the above function, this function will not stack to the existing item sta
 
 - Parameters: 
   - item : `Item`  
-    The item to be placed in the container.
+    The item to place in the container.
 - Return type: Whether the item can be placed in the container.
 - Return value type: `Boolean`
 
@@ -90,10 +90,10 @@ Unlike the above function, this function will not stack to the existing item sta
 
 - Parameters: 
   - index : `Integer`  
-    The grid number in the container where the item is placed.
+    The slot index in the container where the item is located.
   - count : `Integer`  
-    The amount of items to remove from the container. If it is equal to or greater than the amount of that item in the container, the item stack will be cleared.
-- Return type: Whether the item removal was successful.
+    The number of items to remove from the container. If this is greater than or equal to the number of items in the slot, the item stack is cleared.
+- Return type: Whether the item was removed successfully.
 - Return value type: `Boolean`
 
 
@@ -104,11 +104,11 @@ Unlike the above function, this function will not stack to the existing item sta
 
 - Parameters: 
   - index : `Integer`  
-    The container grid location where the item is palced.
-- Return type: The item object at the grid location.
+    The container slot index where the item is located.
+- Return type: The item object at the slot index.
 - Return value type: `Item`
 
-The item object obtained here is a reference. That is to say, modifying the item object returned here, or using its API, is equivalent to directly manipulating the corresponding item in the container.
+The returned item object is a reference. Modifying it or calling its API directly modifies the corresponding item in the container.
 
 
 
@@ -118,10 +118,10 @@ The item object obtained here is a reference. That is to say, modifying the item
 
 - Parameters: 
   - index : `Integer`  
-    The container grid location where the item will be placed.
+    The container slot index where the item will be placed.
   - item : `Item`  
-    The item that will be placed in the container.
-- Return type: Whether placing the item in the container was successful.
+    The item to place in the container.
+- Return type: Whether the item was placed in the container successfully.
 - Return value type: `Boolean`
 
 
@@ -133,7 +133,7 @@ The item object obtained here is a reference. That is to say, modifying the item
 - Return type: All item objects in the container.
 - Return value type: `Array<Item,Item,...>`
 
-The item objects obtained here are all references. That is to say, modifying the item object returned here, or using its API, is equivalent to directly manipulating the corresponding item in the container.
+All returned item objects are references. Modifying any of them or calling their APIs directly modifies the corresponding item in the container.
 
 
 
@@ -141,8 +141,8 @@ The item objects obtained here are all references. That is to say, modifying the
 
 `ct.removeAllItems()`  
 
-- Return type: Whether the container was successfully cleared.
-- Return value type: `Boolean`
+- Returns: Whether the container was cleared.
+- Return type: `Boolean`
 
 
 
@@ -150,5 +150,5 @@ The item objects obtained here are all references. That is to say, modifying the
 
 `ct.isEmpty()`  
 
-- Return type: Whether the container is empty.
-- Return value type: `Boolean`
+- Returns: Whether the container is empty.
+- Return type: `Boolean`

@@ -2,22 +2,22 @@
 
 #### `"onMobDie"` - Mob/Player Death Event
 
-- Listener function prototype
+- Listener function prototype:
   `function(mob,source,cause)`
 - Parameters:
     - mob : `Entity`  
-      Dead entity object.
+      The dead entity object.
     - source : `Entity`  
-      The entity object that dealt the last damage (may be `Null`).
+      The entity object that dealt the final damage (may be `Null`).
     - cause : `Integer`   
-      Cause of injury
-- Intercept event: cannot be intercepted.
+      The cause of the damage.
+- Intercept event: Cannot be intercepted.
 
-Note that when the player dies, in addition to triggering `onPlayerDie` event, this event will also be triggered once.
+Note that when a player dies, this event triggers once in addition to the `onPlayerDie` event.
 
 #### `"onMobHurt"` - Mob/Player Hurt Event
 
-- Listener function prototype
+- Listener function prototype:
   `function(mob,source,damage,cause)`
 - Parameters:
     - mob : `Entity`  
@@ -27,11 +27,11 @@ Note that when the player dies, in addition to triggering `onPlayerDie` event, t
     - damage : `Float`  
       The amount of damage dealt.
     - cause : `ActorDamageCause`   
-      Cause of injury
+      The cause of the damage.
 
-- Intercept events: function returns `false`
+- Intercept event: Return `false` from the function.
 
-Here are values of `ActorDamageCause`:
+The values of `ActorDamageCause` are:
 
 | `ActorDamageCause` ENUM            | Value |
 | ---------------------------------- | --- |
@@ -75,7 +75,7 @@ Here are values of `ActorDamageCause`:
 
 #### `"onEntityExplode"` - Entity Explosion Event
 
-- Listener function prototype
+- Listener function prototype:
   `function(source,pos,radius,maxResistance,isDestroy,isFire)`
 - Parameters:
     - source : `Entity`  
@@ -83,80 +83,80 @@ Here are values of `ActorDamageCause`:
     - pos : `FloatPos`  
       The coordinates of the explosion.
     - radius : `Float`    
-      Blast radius.
+      The blast radius.
     - maxResistance : `Float`  
-      The maximum resistance of blocks that will break.
+      The maximum blast resistance of blocks that will break.
     - isDestroy : `Boolean`  
-      Does the explosion destroy blocks.
+      Whether the explosion destroys blocks.
     - isFire : `Boolean`  
-      Does the explosion produce flames.
+      Whether the explosion produces fire.
 
-- Intercept events: function returns `false`
+- Intercept event: Return `false` from the function.
 
 #### `"onMobTrySpawn"` - Mob try Naturally Spawn Event
 
-- Listener function prototype
+- Listener function prototype:
   `function(typeName,pos)`
 - Parameters:
     - typeName : `String`  
-      Entity Name
+      The entity name.
     - pos : `FloatPos`  
-      The coordinates of the spawn.
+      The spawn coordinates.
 
-- Intercept events: function returns `false`
+- Intercept event: Return `false` from the function.
 
 #### `"onMobSpawned"` - Mob Naturally Spawn Finished Event
 
-- Listener function prototype
+- Listener function prototype:
   `function(entity,pos)`
 - Parameters:
     - entity: `Entity`  
-      The entity that spawned.
+      The spawned entity.
     - pos : `FloatPos`  
-      The coordinates of the spawn.
+      The spawn coordinates.
 
-- Intercept events: cannot be intercepted.
+- Intercept event: Cannot be intercepted.
 
-You can use entity.despawn() or entity.remove() to intercept this event.
+You can call entity.despawn() or entity.remove() to remove the spawned entity.
 
 #### `"onPortalTrySpawnPigZombie"` - Nether Portal Try Spawn Zombified Piglin Event
 
-- Listener function prototype
+- Listener function prototype:
   `function(pos,axis)`
 - Parameters:
     - pos : `IntPos`
-      The portal block coordinates where the spawn attempt happened.
+      The coordinates of the portal block where the spawn attempt occurred.
     - axis : `Integer`
-      Portal axis enum value (`0` = Unknown, `1` = X, `2` = Z).
+      The portal axis enum value (`0` = Unknown, `1` = X, `2` = Z).
 
-- Intercept events: function returns `false`
+- Intercept event: Return `false` from the function.
 
 #### `"onProjectileHitEntity"` - Entity Hit by Projectile Event
 
-- Listener function prototype
+- Listener function prototype:
   `function(entity,source)`
 - Parameters:
     - entity: `Entity`  
-      The entity that was hit with a projectile.
+      The entity hit by the projectile.
     - source : `Entity`  
-      The projecticle entity (like arrows).
-- Intercept events: function returns `false`
+      The projectile entity (such as an arrow).
+- Intercept event: Return `false` from the function.
 
 #### `"onWitherBossDestroy"` - Block Broken by Wither Event
 
-- Listener function prototype
+- Listener function prototype:
   `function(witherBoss,AAbb,aaBB)`
 - Parameters:
     - witherBoss: `Entity`  
       The Wither entity object.
     - AAbb: `IntPos`
-      The area that the wither will destroy (box), the A coordinate of the diagonal point.
+      Corner A of the bounding box that the Wither will destroy.
     - aaBB: `IntPos`
-      The area that the wither will destroy (box), the B coordinate of the diagonal point.
+      The opposite corner B of the bounding box that the Wither will destroy.
 
-- Intercept events: function returns `false`
+- Intercept event: Return `false` from the function.
 
-Note that this event does not include wither explosion damage.
+Note that this event does not include damage from the Wither's explosions.
 
 #### `"onRide"` - Mob Ride Event
 
@@ -169,7 +169,7 @@ Note that this event does not include wither explosion damage.
       The entity that is being ridden.
 - Intercept events: function returns `false`
 
-Note: Riding includes minecart, boat, horse, pig, etc.
+Note: Riding includes minecarts, boats, horses, pigs, and similar entities.
 
 #### `"onStepOnPressurePlate"` - Pressure Plate Step Event
 
@@ -182,7 +182,7 @@ Note: Riding includes minecart, boat, horse, pig, etc.
       The pressed pressure plate block.
 - Intercept events: function returns `false`
 
-Note: When a creature steps on a pressure plate, this event will be triggered repeatedly.
+Note: This event triggers repeatedly while a creature stands on a pressure plate.
 
 #### `"onSpawnProjectile"` - Projectile Spawn Event
 
@@ -192,12 +192,11 @@ Note: When a creature steps on a pressure plate, this event will be triggered re
     - shooter : `Entity`  
       The entity that fired the projectile.
     - type : `String`  
-      Projectile Standard Type Name.
+      Standard type name of the projectile.
 
-- Intercept events: function returns  `false`
+- Intercept events: function returns `false`
 
-Note: Projectiles known to be intercepted are eggs, ender pearls, snowballs, tridents, arrows, and fishing rods (fish
-hooks).
+Note: Projectiles that can be intercepted include eggs, ender pearls, snowballs, tridents, arrows, and fishing rods (fish hooks).
 
 #### `"onProjectileCreated"` - Projectile Created Event
 
@@ -222,9 +221,9 @@ hooks).
     - npc : `Entity`  
       The NPC entity that executed the command.
     - pl : `Player`  
-      The player that triggered the execution of the NPC command.
+      The player that triggered the NPC command.
     - cmd : `String`  
-      The command being executed by NPCs. If there are multiple commands, they are separated by `;`.
+      The command executed by the NPC. Multiple commands are separated by `;`.
 - Intercept events: function returns `false`
 
 #### `"onChangeArmorStand"` - Armor Stand Change Event
@@ -235,7 +234,7 @@ hooks).
 - Parameters:
 
     - as: `Entity`  
-      Manipulated Armor Stand entity object.
+      The manipulated armor stand entity object.
     - pl : `Player`  
       The player that manipulated the armor stand.
     - slot : `Number`
@@ -250,14 +249,12 @@ hooks).
 - Parameters:
 
     - uniqueId: `String`
-      Unique identifer of the pre-transformed entity.
+      Unique identifier of the entity before transformation.
     - entity : `Entity`
       The transformed entity.
 - Intercept event: cannot be intercepted.
 
-Note: This event is triggered when the `TransformationComponent` of the entity in `Addons` is activated, and is mostly
-used for the interaction between the engine and the Addon. Only `UniqueId` is provided since the entity pointer before
-the transition is destroyed quickly.
+Note: This event triggers when the `TransformationComponent` of an entity in `Addons` is activated, and is mainly used for interaction between the engine and the Addon. Because the entity pointer from before the transformation is quickly destroyed, only its `UniqueId` is provided.
 
 #### `"onEndermanTakeBlock"` - Enderman Take Block Event
 
@@ -268,9 +265,9 @@ the transition is destroyed quickly.
   `function(entity, block, pos)`
 - Parameters
     - entity : `Entity`  
-      Enderman entity.
+      The Enderman entity.
     - block : `Block`  
-      Pick up the Block
+      The block being picked up.
     - pos : `IntPos`  
       The coordinates of the block.
 - Intercept events: function returns `false`

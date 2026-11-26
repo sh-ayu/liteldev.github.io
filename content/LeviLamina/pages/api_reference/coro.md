@@ -26,7 +26,7 @@ The Coroutine module provides C++20 coroutine infrastructure for asynchronous pr
 
 ### CoroTask\<T\>
 
-A coroutine task handle. The primary async return type.
+A coroutine task handle and the primary async return type.
 
 ```cpp
 namespace ll::coro {
@@ -64,7 +64,7 @@ public:
 
 ### Generator\<T\>
 
-A lazy sequence generator. Produces values on demand using `co_yield`.
+A lazy sequence generator that produces values on demand using `co_yield`.
 
 ```cpp
 namespace ll::coro {
@@ -80,7 +80,7 @@ struct Generator {
 
 ### Executor
 
-Abstract base for scheduling coroutine work.
+An abstract base class for scheduling coroutine work.
 
 ```cpp
 namespace ll::coro {

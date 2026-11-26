@@ -1,10 +1,10 @@
 # 💰 Economic System API
 
-In many servers, the economic system is a very critical part.  
-In order to solve various problems of traditional use of the scoreboard economic system, LegacyScriptEngine provides an interface to connect to the LegacyMoney economic system, whose data is shared with other mods and plugins. 
+An economy system is a critical part of many servers.  
+To solve the problems of traditional scoreboard-based economy systems, LegacyScriptEngine provides an interface to the LegacyMoney economy system, which shares its data with other mods and plugins.
 
-In addition to the capabilities of the traditional economic system, LegacyMoney also has additional capabilities such as querying the history of changes in the amount and operating the economy of offline players.  
-LegacyMoney is a dependency of LegacyScriptEngine (it is not bundled with LeviLamina) and is installed together with LegacyScriptEngine, so you can use this interface directly without additional installation. 
+Beyond the features of a traditional economy system, LegacyMoney can also query balance-change history and manage the balances of offline players.  
+LegacyMoney is a dependency of LegacyScriptEngine (it is not bundled with LeviLamina) and is installed along with it, so you can use this interface directly without installing anything else.
 
 ### Set the Player’s Deposit Amount
 
@@ -14,10 +14,10 @@ LegacyMoney is a dependency of LegacyScriptEngine (it is not bundled with LeviLa
 
 - Parameters: 
   - xuid : `String`  
-    The XUID identifier of the player.
+    The player's XUID identifier.
   - value : `Integer`  
-    Amount of money being set.  
-- Return value: Whether the setting is successful.
+    The amount of money to set.  
+- Return value: Whether the operation succeeded.
 - Return value type: `Boolean`
 
 
@@ -30,8 +30,8 @@ LegacyMoney is a dependency of LegacyScriptEngine (it is not bundled with LeviLa
 
 - Parameter: 
   - xuid : `String`  
-    The XUID identifier of the player to read.
-- Return value: Player's bank value.
+    The XUID identifier of the player to query.
+- Return value: The player's balance.
 - Return value type: `Integer`
 
 
@@ -44,10 +44,10 @@ LegacyMoney is a dependency of LegacyScriptEngine (it is not bundled with LeviLa
 
 - Parameters: 
   - xuid : `String`  
-    The XUID identifier of the player.
+    The player's XUID identifier.
   - value : `Integer`  
-    The amount of money to add to the player's bank.  
-- Return value: Whether the setting is successful.
+    The amount of money to add to the player's balance.  
+- Return value: Whether the operation succeeded.
 - Return value type: `Boolean`
 
 
@@ -60,10 +60,10 @@ LegacyMoney is a dependency of LegacyScriptEngine (it is not bundled with LeviLa
 
 - Parameters: 
   - xuid : `String`  
-    The XUID identifier of the player.
+    The player's XUID identifier.
   - value : `Integer`  
-    The amount of money to take from the player.  
-- Return value: Whether the setting is successful.
+    The amount of money to deduct from the player.  
+- Return value: Whether the operation succeeded.
 - Return value type: `Boolean`
 
 
@@ -79,17 +79,17 @@ LegacyMoney is a dependency of LegacyScriptEngine (it is not bundled with LeviLa
     The XUID identifier of the paying player.
     
   - xuid2 : `String`  
-    The XUID identifier of the player who will receive the payment.
+    The XUID identifier of the receiving player.
     
-    If you are using `Player.transMoney`, target can be `Player`.
+    If you use `Player.transMoney`, target can be a `Player` object.
     
   - money : `Integer`  
-    The amount of money being transferred.  
+    The amount of money to transfer.  
   
   - note : `String`  
-    (Optional) Add some text to this transfer.
+    (Optional) A note to attach to the transfer.
   
-- Return value: Whether the transfer is successful.
+- Return value: Whether the transfer succeeded.
 
 - Return value type: `Boolean`
 
@@ -103,23 +103,23 @@ LegacyMoney is a dependency of LegacyScriptEngine (it is not bundled with LeviLa
 
 - Parameters: 
   - xuid : `String`  
-    The XUID identifier of the player.
+    The player's XUID identifier.
   - time : `Integer`  
-    Query all records within the last `time` seconds.
+    Queries all records from the last `time` seconds.
 - Return value: An array of query result objects.
 - Return value type: `Array<Object>`
 
-Where the result is an array of record objects. for each `record` object record, with the following keys and corresponding values:
+The result is an array of `record` objects, each with the following keys and values:
 
 | Key            | Meaning of Value                       | Data Type |
 | -------------- | -------------------------------------- | --------- |
-| `record.from`  | Name of money sender                   | `String`  |
-| `record.to`    | Name of money receiver                 | `String`  |
+| `record.from`  | Name of the sender                     | `String`  |
+| `record.to`    | Name of the receiver                   | `String`  |
 | `record.money` | Amount of money                        | `Integer` |
-| `record.time`  | Time when this transaction occurred    | `String`  |
-| `record.note`  | Additional notes for this transaction. | `String`  |
+| `record.time`  | Time when the transaction occurred     | `String`  |
+| `record.note`  | Additional notes for the transaction   | `String`  |
 
-The format of the time string is: YYYY-mm-dd hh:mm:ss
+The time string uses the format YYYY-mm-dd hh:mm:ss.
 
 
 
@@ -129,8 +129,8 @@ The format of the time string is: YYYY-mm-dd hh:mm:ss
 
 - Parameter: 
   - time : `Integer`  
-    Delete all records older than `time` seconds.
-- Return value: Whether the deletion is successful.
+    Deletes all records older than `time` seconds.
+- Return value: Whether the deletion succeeded.
 - Return value type: `Boolean`
 
 

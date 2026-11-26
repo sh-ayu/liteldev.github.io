@@ -1,71 +1,67 @@
 # 🏃‍♂️ Player Object API
 
-In LSE, use "player objects" to manipulate and obtain information about a player.
+In LSE, you use "player objects" to get information about a player and manipulate them.
 
 ### Get a Player Object
 
 #### Get From Event or API
 
-By registering the **event listener** function, get the player object related to the related event given by BDS.
-For details, see [Event listener documentation - EventAPI](../EventAPI/Listen.md)
+Register an **event listener** function to get the player object associated with a BDS event.
+For details, see [Event listener documentation - EventAPI](../EventAPI/Listen.md).
 
 #### Acquired From Existing Players
 
-Manually generate player objects by **player information**
-Use this function to manually generate objects. Note that the player you want to get must be online, otherwise the
-generation will fail.
+Use this function to manually generate a player object from **player information**. The target player must be online, or the call will fail.
 
 `mc.getPlayer(info)`
 
 !!! warning 
-    Versions before 0.8.13 could not get player by UUID  
-    Versions before 0.9.5 could not get player by RuntimeId
+    Versions before 0.8.13 cannot get a player by UUID.  
+    Versions before 0.9.5 cannot get a player by RuntimeId.
 
 - Parameters:
     - info : `String`  
-      Player's name, XUID or UniqueId or RuntimeId or UUID.
+      The player's name, XUID, UniqueId, RuntimeId, or UUID.
 - Return value: The generated player object.
 - Return value type: `Player`
-    - If the return value is `Null`, it means that getting the player failed.
+    - A return value of `Null` means that getting the player failed.
 
 #### Get All Online Players
 
-This function returns an array of player objects, each of which corresponds to a player on the server.
+This function returns an array of player objects, one for each player currently on the server.
 
 `mc.getOnlinePlayers()`
 
-- Return value: List of online `Player` objects.
+- Return value: A list of online `Player` objects.
 - Return value type: `Array<Player,Player,...>`
 
-> Note: Do not save a `Player` object **long-term**.
-> When the player exits the server, the corresponding player object will become invalid. Therefore, if there is a need
-> to operate a player for a long time, please obtain the real-time player object through the above methods.
+> Note: Do not store a `Player` object **long-term**.
+> When a player leaves the server, their player object becomes invalid. If you need to work with a player over time, fetch a fresh player object using the methods above.
 
 ### Player Object - Properties
 
-Each player object contains some fixed object properties. For a particular player object `pl`, there are these
-properties.
+Every player object has a fixed set of properties. A player object `pl` has the following properties:
 
 | Attributes               | Meaning                                                      | Data Type        |
 |--------------------------|--------------------------------------------------------------|------------------|
 | pl.name                  | Player's name                                                | `String`         |
 | pl.pos                   | Player's coordinates                                         | `FloatPos`       |
-| pl.feetPos               | The coordinates of the player's leg                          | `FloatPos`       |
-| pl.blockPos              | The coordinates of the block that the player is standing on. | `IntPos`         |
-| pl.lastDeathPos          | The coordinates of the block that the player last died.      | `IntPos`         |
-| pl.realName              | Player's Real Name                                           | `String`         |
-| pl.xuid                  | Player XUID String                                           | `String`         |
-| pl.uuid                  | Player Uuid string                                           | `String`         |
+| pl.feetPos               | Coordinates of the player's feet                             | `FloatPos`       |
+| pl.blockPos              | Coordinates of the block that the player is standing on      | `IntPos`         |
+| pl.lastDeathPos          | Coordinates of the block where the player last died          | `IntPos`         |
+| pl.realName              | Player's real name                                           | `String`         |
+| pl.xuid                  | Player's XUID string                                         | `String`         |
+| pl.uuid                  | Player's UUID string                                         | `String`         |
 | pl.permLevel             | Player's permission level (0 - 4)                            | `Integer`        |
 | pl.gameMode              | Player's game mode (0 - 2, 6)                                | `Integer`        |
 | pl.canSleep              | Whether the player can sleep                                 | `Boolean`        |
 | pl.canFly                | Whether the player can fly                                   | `Boolean`        |
-| pl.canBeSeenOnMap        | Whether the player can be seen on map                        | `Boolean`        |
+| pl.canBeSeenOnMap        | Whether the player can be seen on a map                      | `Boolean`        |
 | pl.canFreeze             | Whether the player can freeze                                | `Boolean`        |
 | pl.canSeeDaylight        | Whether the player can see daylight                          | `Boolean`        |
-| pl.canShowNameTag        | Whether the player can show name tag                         | `Boolean`        |
-| pl.canStartSleepInBed    | Whether the player can start sleep in bed                    | `Boolean`        |
-| pl.canPickupItems        | Whether the player can pickup items                          | `Boolean`        |
+| pl.canShowNameTag        | Whether the player can show a name tag                       | `Boolean`        |
+| pl.canStartSleepInBed    | Whether the player can start sleeping in a bed               | `Boolean`        |
+| pl.canPickupItems        | Whether the player can pick up items                         | `Boolean`        |
 | pl.maxHealth             | Player's maximum health                                      | `Integer`        |
 | pl.health                | Player's current health                                      | `Integer`        |
 | pl.inAir                 | Whether the player is in the air                             | `Boolean`        |
@@ -73,52 +69,48 @@ properties.
 | pl.inLava                | Whether the player is in lava                                | `Boolean`        |
 | pl.inRain                | Whether the player is in rain                                | `Boolean`        |
 | pl.inSnow                | Whether the player is in snow                                | `Boolean`        |
-| pl.inWall                | Whether the player is in wall                                | `Boolean`        |
+| pl.inWall                | Whether the player is in a wall                              | `Boolean`        |
 | pl.inWaterOrRain         | Whether the player is in water or rain                       | `Boolean`        |
-| pl.inWorld               | Whether the player is in world                               | `Boolean`        |
-| pl.inClouds              | Whether the player is in clouds                              | `Boolean`        |
+| pl.inWorld               | Whether the player is in the world                           | `Boolean`        |
+| pl.inClouds              | Whether the player is in the clouds                          | `Boolean`        |
 | pl.speed                 | Player's current speed                                       | `Float`          |
 | pl.direction             | Player's current orientation                                 | `DirectionAngle` |
 | pl.uniqueId              | Player's (entity's) unique identifier                        | `String`         |
 | pl.runtimeId             | Player's (entity's) runtime identifier (Added in 0.9.5)      | `String`         |
 | pl.langCode              | Identifier of the language set by the player (e.g. zh_CN)    | `String`         |
-| pl.isLoading             | Player is loading                                            | `Boolean`        |
-| pl.isInvisible           | Player is invisible                                          | `Boolean`        |
-| pl.isInsidePortal        | Player is inside portal                                      | `Boolean`        |
-| pl.isHurt                | Player is hurt                                               | `Boolean`        |
-| pl.isTrusting            | Player is trusting                                           | `Boolean`        |
-| pl.isTouchingDamageBlock | Player is touching the damage block                          | `Boolean`        |
-| pl.isHungry              | Player is hungry                                             | `Boolean`        |
-| pl.isOnFire              | Player is on fire                                            | `Boolean`        |
-| pl.isOnGround            | Player is on ground                                          | `Boolean`        |
-| pl.isOnHotBlock          | Player is on hot block (magma and etc.)                      | `Boolean`        |
-| pl.isTrading             | Player is trading                                            | `Boolean`        |
-| pl.isAdventure           | Player is in Adventure Mode                                  | `Boolean`        |
-| pl.isGliding             | Player is gliding                                            | `Boolean`        |
-| pl.isSurvival            | Player is in Survival Mode                                   | `Boolean`        |
-| pl.isSpectator           | Player is in Spectator Mode                                  | `Boolean`        |
-| pl.isRiding              | Player is riding                                             | `Boolean`        |
-| pl.isDancing             | Player is dancing                                            | `Boolean`        |
-| pl.isCreative            | Player is in Creative Mode                                   | `Boolean`        |
-| pl.isFlying              | Player is flying                                             | `Boolean`        |
-| pl.isSleeping            | Player is sleeping                                           | `Boolean`        |
-| pl.isMoving              | Player is moving                                             | `Boolean`        |
-| pl.isSneaking            | Player is sneaking                                           | `Boolean`        |
+| pl.isLoading             | Whether the player is loading                                | `Boolean`        |
+| pl.isInvisible           | Whether the player is invisible                              | `Boolean`        |
+| pl.isInsidePortal        | Whether the player is inside a portal                        | `Boolean`        |
+| pl.isHurt                | Whether the player is hurt                                   | `Boolean`        |
+| pl.isTrusting            | Whether the player is trusting                               | `Boolean`        |
+| pl.isTouchingDamageBlock | Whether the player is touching a damage block                | `Boolean`        |
+| pl.isHungry              | Whether the player is hungry                                 | `Boolean`        |
+| pl.isOnFire              | Whether the player is on fire                                | `Boolean`        |
+| pl.isOnGround            | Whether the player is on the ground                          | `Boolean`        |
+| pl.isOnHotBlock          | Whether the player is on a hot block (magma, etc.)           | `Boolean`        |
+| pl.isTrading             | Whether the player is trading                                | `Boolean`        |
+| pl.isAdventure           | Whether the player is in Adventure Mode                      | `Boolean`        |
+| pl.isGliding             | Whether the player is gliding                                | `Boolean`        |
+| pl.isSurvival            | Whether the player is in Survival Mode                       | `Boolean`        |
+| pl.isSpectator           | Whether the player is in Spectator Mode                      | `Boolean`        |
+| pl.isRiding              | Whether the player is riding                                 | `Boolean`        |
+| pl.isDancing             | Whether the player is dancing                                | `Boolean`        |
+| pl.isCreative            | Whether the player is in Creative Mode                       | `Boolean`        |
+| pl.isFlying              | Whether the player is flying                                 | `Boolean`        |
+| pl.isSleeping            | Whether the player is sleeping                               | `Boolean`        |
+| pl.isMoving              | Whether the player is moving                                 | `Boolean`        |
+| pl.isSneaking            | Whether the player is sneaking                               | `Boolean`        |
 | pl.isSwimming            | Whether the player is swimming (Added in 0.19.1)             | `Boolean`        |
 | pl.isCrawling            | Whether the player is crawling (Added in 0.19.1)             | `Boolean`        |
 
-These object properties are read-only and cannot be modified. in:
+These object properties are read-only and cannot be modified. Specifically:
 
-- **coordinates** and **leg coordinates**: player is two blocks high, and `pos` are the coordinates of the player's
-  view's height, `feetPos` are the coordinates of the block position displayed in the game
-- The value of the **Player Game Mode** attribute is: `0` for survival mode, `1` for creative mode, `2` for adventure
-  mode, `6` for spectator mode
-- **Player's real name** attribute stored strings can be considered reliable, they will not be changed by name changes
-- **Player device IP address** attribute stores the player's device IP and port number, the format is similar to
-  `12.34.567.89:1111`
-- For a detailed explanation of the **player's current orientation** attribute,
-  see [Basic Game Interface Documentation](./Basic.md)
-- The comparison table of **operation authority level** attributes is as follows:
+- **coordinates** and **leg coordinates**: A player is two blocks high. `pos` holds the coordinates at the player's eye level, while `feetPos` holds the block coordinates displayed in the game.
+- **Player Game Mode**: `0` for survival mode, `1` for creative mode, `2` for adventure mode, and `6` for spectator mode.
+- **Player's real name**: Stores a reliable string that does not change when the player changes their display name.
+- **Player device IP address**: Stores the player's device IP address and port number in a format like `12.34.567.89:1111`.
+- For details on the **player's current orientation** attribute, see [Basic Game Interface Documentation](./Basic.md).
+- The **operation authority level** values are as follows:
 
 | Permission Level | Corresponding Authority  |
 |------------------|--------------------------|
@@ -128,8 +120,7 @@ These object properties are read-only and cannot be modified. in:
 
 ### Player Object - Function
 
-Each player object contains some member functions (member methods) that can be executed. For a specific player object
-`pl`, you can perform some operations on this player through the following functions.
+Each player object has member functions (methods) that you can call. For a given player object `pl`, you can perform actions on that player using the following functions.
 
 #### Determine if the Player Is OP
 
@@ -152,9 +143,9 @@ var open = pl.isOP();
 
 - Parameters:
     - msg : `String`  
-      (Optional parameter) The reason for the disconnection displayed to the kicked player.
+      (Optional) The disconnection reason shown to the kicked player.
       Defaults to "disconnecting from server".
-- Return value: Whether the connection was successfully disconnected.
+- Return value: Whether the player was successfully disconnected.
 - Return value type: `Boolean`
 
 [JavaScript]
@@ -178,10 +169,10 @@ pl:kick()
 - Parameters:
 
     - msg : `String`  
-      The message to be sent.
+      The message to send.
 
     - type : `Integer`  
-      (Optional parameter) The type of text message to send, default is `0`.
+      (Optional) The type of text message to send. Defaults to `0`.
 
 | Type Parameter | Message Type                      |
 |----------------|-----------------------------------|
@@ -206,13 +197,13 @@ pl.tell("Welcome back ~ ", 5);
 
 `pl.setTitle(content[,type[,fadeInTime,stayTime,fadeOutTime]])`
 
-- Parameter:
+- Parameters:
 
     - content : `String`  
       The title content.
 
     - type : `Integer`  
-      (optional) The title type, default = 2.
+      (Optional) The title type. Defaults to 2.
 
     | Types | Description         |
     |-------|---------------------|
@@ -227,17 +218,17 @@ pl.tell("Welcome back ~ ", 5);
     | 8     | ActionbarTextObject |
 
     - fadeInTime : `Integer`  
-      (optional) Fade in time, in `Tick` , default is 10
+      (Optional) Fade-in time, in `Tick`. Defaults to 10.
 
     - stayTime: `Integer`
 
-      (optional) Stay time, in `Tick` , default is 70
+      (Optional) Stay time, in `Tick`. Defaults to 70.
 
     - fadeOutTime:`Integer`
 
-      (optional) Fade out time, in `Tick` , default is 20
+      (Optional) Fade-out time, in `Tick`. Defaults to 20.
 
-- Return value: Is send successfully?
+- Return value: Whether the title was sent successfully.
 
 - Return value type: `Boolean`
 
@@ -248,10 +239,10 @@ pl.tell("Welcome back ~ ", 5);
 - Parameters:
 
     - msg : `String`  
-      The message to be sent.
+      The message to send.
 
     - type : `Integer`  
-      (Optional parameter) The type of text message to send, default is `0`.
+      (Optional) The type of text message to send. Defaults to `0`.
 
 | Type Parameter | Message Type                      |
 |----------------|-----------------------------------|
@@ -281,7 +272,7 @@ mc.broadcast("Hello everyone ~ ");
       The title of the toast.
 
     - message : `String`  
-      the message that the toast may contain alongside the title.
+      The message displayed alongside the title.
 
 - Return value: Whether the message was sent successfully.
 - Return value type: `Boolean`
@@ -298,9 +289,9 @@ pl.sendToast("Hello", "everyone ~");
 
 - Parameters:
     - cmd : `String`  
-      The command to be executed.
-- Return value: Whether the execution was successful.
-- Return value type:  `Boolean`
+      The command to execute.
+- Return value: Whether the command executed successfully.
+- Return value type: `Boolean`
 
 [JavaScript]
 
@@ -315,9 +306,9 @@ var open = pl.runcmd("tp ~ ~+50 ~");
 
 - Parameters:
     - text : `String`  
-      The text the player will be made to say.
-- Return value: Whether the execution was successful.
-- Return value type:  `Boolean`
+      The text the player will say.
+- Return value: Whether the action succeeded.
+- Return value type: `Boolean`
 
 #### Get Player Distance To Pos
 
@@ -327,7 +318,7 @@ var open = pl.runcmd("tp ~ ~+50 ~");
 - Parameters:
     - pos : `Entity` / `Player` / `IntPos` / `FloatPos`
       The target position.
-- Return value: Distance to coordinates (in blocks).
+- Return value: Distance to the coordinates (in blocks).
 - Return value type:  `Number`
 
 #### Speak to a Player as a Player
@@ -339,7 +330,7 @@ var open = pl.runcmd("tp ~ ~+50 ~");
       The text the player will be made to say.
     - target : `Player`  
       The player who will be spoken to.
-- Return value: Whether the execution was successful.
+- Return value: Whether the execution succeeded.
 - Return value type:  `Boolean`
 
 #### Teleport the Player to the Specified Location
@@ -349,13 +340,13 @@ var open = pl.runcmd("tp ~ ~+50 ~");
 
 - Parameters:
     - pos: `IntPos `/ `FloatPos`  
-      Target position coordinates (or use x, y, z, dimid to determine player position)
+      Target position coordinates (or use x, y, z, and dimid to specify the player's position).
 
     - rot: `DirectionAngle`
 
-      (Optional) The orientation of the player after teleport, or the same orientation as before teleport if default
+      (Optional) The player's orientation after teleporting. Defaults to the orientation before teleporting.
 
-- Return value: Whether the teleport was successful or not.
+- Return value: Whether the teleport succeeded.
 
 - Return value type: `Boolean`
 
@@ -370,7 +361,7 @@ pl.teleport(pos);
 
 `pl.kill()`
 
-- Return value: Whether the execution was successful.
+- Return value: Whether the execution succeeded.
 - Return value type: `Boolean`
 
 [JavaScript]
@@ -391,13 +382,13 @@ pl.kill();
     - damage : `Float`  
       The amount of damage to deal to the player.
     - type : `Integer`  
-      (Optional) Actor Damage Cause, default is `0` (`ActorDamageCause.Override`)
+      (Optional) Actor Damage Cause. Defaults to `0` (`ActorDamageCause.Override`).
     - source: `Entity`  
-      (Optional) Source of damage
+      (Optional) The source of the damage.
 - Return value: Whether the damage was dealt.
 - Return value type:  `Boolean`
 
-Note that the damage dealt here is real damage and cannot be reduced by protective equipment such as armor.
+Note that this deals true damage, which cannot be reduced by protective equipment such as armor.
 
 | `ActorDamageCause` ENUM            | Value |
 | ---------------------------------- | --- |
@@ -446,7 +437,7 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 - Parameters:
     - health : `Integer`  
       Number of hearts to heal.
-- Return value: Whether heal was dealt.
+- Return value: Whether the player was healed.
 - Return value type: `Boolean`
 
 #### Set Health for Player
@@ -456,7 +447,7 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 - Parameters:
     - health : `Integer`  
       Number of hearts.
-- Return value: Whether set health for player was success.
+- Return value: Whether the player's health was set.
 - Return value type: `Boolean`
 
 #### Set Absorption Attribute for Player
@@ -465,8 +456,8 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - value : `Integer`  
-      New value
-- Return value: Whether set attribute value for player was success.
+      New value.
+- Return value: Whether the player's attribute value was set.
 - Return value type: `Boolean`
 
 #### Set Attack Damage Attribute for Player
@@ -475,8 +466,8 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - value : `Integer`  
-      New value
-- Return value: Whether set attribute value for player was success.
+      New value.
+- Return value: Whether the player's attribute value was set.
 - Return value type: `Boolean`
 
 #### Set Maximal Attack Damage Attribute for Player
@@ -485,8 +476,8 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - value : `Integer`  
-      New value
-- Return value: Whether set attribute value for player was success.
+      New value.
+- Return value: Whether the player's attribute value was set.
 - Return value type: `Boolean`
 
 #### Set Follow Range Attribute for Player
@@ -495,8 +486,8 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - value : `Integer`  
-      New value
-- Return value: Whether set attribute value for player was success.
+      New value.
+- Return value: Whether the player's attribute value was set.
 - Return value type: `Boolean`
 
 #### Set Knockback Resistance Attribute for Player
@@ -505,8 +496,8 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - value : `Integer`  
-      New value (0 or 1)
-- Return value: Whether set attribute value for player was success.
+      New value (0 or 1).
+- Return value: Whether the player's attribute value was set.
 - Return value type: `Boolean`
 
 #### Set Luck Attribute for Player
@@ -515,8 +506,8 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - value : `Integer`  
-      New value
-- Return value: Whether set attribute value for player was success.
+      New value.
+- Return value: Whether the attribute value was set successfully.
 - Return value type: `Boolean`
 
 #### Set Movement Speed for Player
@@ -525,8 +516,8 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - value : `Integer`  
-      New value
-- Return value: Whether set attribute value for player was success.
+      New value.
+- Return value: Whether the attribute value was set successfully.
 - Return value type: `Boolean`
 
 #### Set Underwater Movement Speed for Player
@@ -535,8 +526,8 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - value : `Integer`  
-      New value
-- Return value: Whether set attribute value for player was success.
+      New value.
+- Return value: Whether the attribute value was set successfully.
 - Return value type: `Boolean`
 
 #### Set Lava Movement Speed for Player
@@ -545,8 +536,8 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - value : `Integer`  
-      New value
-- Return value: Whether set attribute value for player was success.
+      New value.
+- Return value: Whether the attribute value was set successfully.
 - Return value type: `Boolean`
 
 #### Set Max Health for Player
@@ -556,7 +547,7 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 - Parameters:
     - health : `Integer`  
       Number of hearts.
-- Return value: Whether set max health for player was success.
+- Return value: Whether the player's max health was set successfully.
 - Return value type: `Boolean`
 
 #### Set Hunger for Player
@@ -565,8 +556,8 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - hunger : `Integer`  
-      Number of hunger.
-- Return value: Whether set hunger for player was success.
+      Hunger value.
+- Return value: Whether the player's hunger was set successfully.
 - Return value type: `Boolean`
 
 #### Set the Specified Player on Fire
@@ -575,9 +566,9 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - time : `Integer`  
-      Fire time, in seconds.
+      Duration of the fire, in seconds.
     - isEffect : `Boolean`
-      Will there be a fire effect?
+      Whether to display the fire effect.
 - Return value: Whether the player was set on fire.
 - Return value type: `Boolean`
 
@@ -585,7 +576,7 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 `pl.stopFire()`
 
-- Return value: Has been extinguished.
+- Return value: Whether the fire was extinguished.
 - Return value type: `Boolean`
 
 #### Scale Player
@@ -594,7 +585,7 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - scale : `Float`  
-      New player size
+      New player size.
 - Return value: Whether the player was scaled.
 - Return value type: `Boolean`
 
@@ -604,8 +595,8 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - newname : `String`  
-      Player's new name.
-- Return value: WHether the rename was successful.
+      The player's new name.
+- Return value: Whether the rename was successful.
 - Return value type: `Boolean`
 
 [JavaScript]
@@ -619,20 +610,18 @@ pl.rename("newname");
 
 `pl.getBlockStandingOn()`
 
-- Return value: The `Block` object currently standing on.
+- Return value: The `Block` object the player is currently standing on.
 - Return value type: `Block`
 
 #### Get the Player's Device Information Object
 
 `pl.getDevice()`
 
-- Return value: Device information object corresponding to the player
+- Return value: The device information object for the player.
 - Return value type: `Device`
 
-The device information object stores certain information about the player's device, such as device IP address, device
-type, network latency, etc.  
-For additional information about device information objects, please refer
-to [Device Information Objects API](./Device.md)
+The device information object stores details about the player's device, such as its IP address, device type, and network latency.  
+For more information, see the [Device Information Objects API](./Device.md).
 
 #### Get the Item Object in the Player’s Main Hand
 
@@ -641,51 +630,49 @@ to [Device Information Objects API](./Device.md)
 - Return value: The item object in the player's main hand.
 - Return value type: `Item`
 
-The item object obtained here is a reference. That is to say, modifying the item object returned here, or using its API,
-is equivalent to directly operating the corresponding item in the player's main hand.
+This method returns a reference to the item object. Modifying the returned object or calling its API methods directly modifies the item in the player's main hand.
 
 #### Get the Item Object of the Player’s Off-Hand
 
 `pl.getOffHand()`
 
-- Return value: The item object in the player's off-hand
+- Return value: The item object in the player's off-hand.
 - Return value type: `Item`
 
-The item object obtained here is a reference. That is to say, modifying the item object returned here, or using its API,
-is equivalent to directly operating the corresponding item in the player's off hand.
+This method returns a reference to the item object. Modifying the returned object or calling its API methods directly modifies the item in the player's off-hand.
 
 #### Get the Container Object of the Player’s Inventory
 
 `pl.getInventory()`
 
-- Return value: The container object corresponding to the player's inventory
+- Return value: The container object for the player's inventory.
 - Return value type: `Container`
 
-For more usage of container objects, please refer to [Container Object API Documentation](./Container.md)
+For more information on using container objects, see the [Container Object API Documentation](./Container.md).
 
 #### Gets the Container Object for the Player’s Armor Bar
 
 `pl.getArmor()`
 
-- Return value: The container object corresponding to the player's armor bar
+- Return value: The container object for the player's armor bar.
 - Return value type: `Container`
 
-For more usage of container objects, please refer to [Container Object API Documentation](./Container.md)
+For more information on using container objects, see the [Container Object API Documentation](./Container.md).
 
 #### Get the Container Object of the Player’s Ender Chest
 
 `pl.getEnderChest()`
 
-- Return value: The container object corresponding to the player's ender chest.
+- Return value: The container object for the player's ender chest.
 - Return value type: `Container`
 
-For more usage of container objects, please refer to [Container Object API Documentation](./Container.md)
+For more information on using container objects, see the [Container Object API Documentation](./Container.md).
 
 #### Get the Player’s Respawn Coordinates
 
 `pl.getRespawnPosition()`
 
-- Return value: Respawn point coordinates
+- Return value: The respawn point coordinates.
 - Return value type: `IntPos`
 
 #### Modify the Player’s Respawn Coordinates
@@ -695,7 +682,7 @@ For more usage of container objects, please refer to [Container Object API Docum
 
 - Parameters:
     - pos : `IntPos` or `FloatPos`  
-      Respawn coordinates (or use x, y, z, dimid to determine respawn position)
+      Respawn coordinates (or pass x, y, z, and dimid to specify the respawn position).
 - Return value: Whether the modification was successful.
 - Return value type: `Boolean`
 
@@ -705,16 +692,15 @@ For more usage of container objects, please refer to [Container Object API Docum
 
 - Parameters:
     - item : `Item`  
-      The item being given.
+      The item to give.
 
     - amount: `Integer`
 
-      (Optional) The number of item given. If this parameter is provided, the Count property of the item object itself
-      will be ignored.
+      (Optional) The number of items to give. If provided, the item object's Count property is ignored.
 - Return value: Whether the item was given.
 - Return value type: `Boolean`
 
-If the player's inventory is full, excess items will be drop.
+If the player's inventory is full, excess items are dropped.
 
 #### Clears All Items of the Specified Type From the Player’s Backpack
 
@@ -722,24 +708,22 @@ If the player's inventory is full, excess items will be drop.
 
 - Parameters:
     - type : `String`  
-      Item object type name to clear
+      The type name of the item object to clear.
     - count : `Integer`  
-      (Optional) Item count to be clear, default is 1
-- Return value: The number of items cleared
+      (Optional) The number of items to clear. Defaults to 1.
+- Return value: The number of items cleared.
 - Return value type: `Integer`
 
-Compares the type attribute of all items in the player's inventory, main hand, off-hand, and armor to this string.
-If found, clear this item.
+Compares the type attribute of all items in the player's inventory, main hand, off-hand, and armor against this string, and clears matching items.
 
 #### Refresh Player Inventory, Armor Bar
 
 `pl.refreshItems()`
 
-- Return value: Whether the refresh was successful
+- Return value: Whether the refresh was successful.
 - Return value type: `Boolean`
 
-After modifying the player's items, in order for the client to take effect, it is necessary to refresh all the player's
-items.
+After modifying the player's items, refresh all of them for the changes to take effect on the client.
 
 #### Refresh All Chunks Loaded by the Player
 
@@ -755,7 +739,7 @@ items.
 - Parameters:
 
     - level : `Integer`  
-      Target operation authority level
+      The target operation permission level.
 
 | Player Permission Level | Corresponding Permission Authority |
 |-------------------------|------------------------------------|
@@ -781,7 +765,7 @@ pl.setPermLevel(1);
 - Parameters:
 
     - mode : `Integer`  
-      Target game mode, `0` is survival mode, `1` is creative mode, `2` is adventure mode. `6` is spectator mode.
+      The target game mode: `0` for survival mode, `1` for creative mode, `2` for adventure mode, and `6` for spectator mode.
 - Return value: Whether the modification was successful.
 - Return value type: `Boolean`
 
@@ -844,7 +828,7 @@ pl.getLevel()
 
 `pl.setLevel(count)`
 
-- Parameters
+- Parameters:
     - count : `Integer`  
       The number of experience levels to set.
 - Return value: Whether the setting was successful.
@@ -882,7 +866,7 @@ pl:resetLevel()
 
 `pl.setCurrentExperience(count)`
 
-- Parameters
+- Parameters:
     - count : `Integer`  
       The number of experience points to set.
 - Return value: Whether the setting was successful.
@@ -899,7 +883,7 @@ pl:resetLevel()
 
 `pl.setTotalExperience(count)`
 
-- Parameters
+- Parameters:
     - count : `Integer`  
       The number of experience points to set.
 - Return value: Whether the setting was successful.
@@ -911,7 +895,7 @@ pl:resetLevel()
 
 - Parameters:
     - count : `Integer`
-      The amount of experience points to give to the player.
+      The number of experience points to give to the player.
 - Return value: Whether the setting was successful.
 - Return value type: `Boolean`
 
@@ -943,10 +927,10 @@ pl:addExperience(6)
 
 `pl.getXpNeededForNextLevel()`
 
-- Return value: The amount of experience points required for the player to level up.
+- Return value: The number of experience points required for the player to level up.
 - Return value type: `Integer`
 
-Note that this method ignores the experience value that exceeds the level when calculating.
+Note that this calculation ignores any experience points already gained toward the next level.
 
 [JavaScript]
 
@@ -968,11 +952,11 @@ pl.getXpNeededForNextLevel()
 
 - Parameters:
     - server : `String`  
-      Target server IP / domain name
+      Target server IP or domain name
 
     - port : `Integer`  
       Target server port
-- Return value: Whether the transfer was successful or not.
+- Return value: Whether the transfer succeeded.
 - Return value type: `Boolean`
 
 [JavaScript]
@@ -986,7 +970,7 @@ pl.transServer("123.45.67.89", 23333);
 
 `pl.crash()`
 
-- Return value: Whether the execution was successful.
+- Return value: Whether the execution succeeded.
 - Return value type: `Boolean`
 
 [JavaScript]
@@ -1011,15 +995,15 @@ pl:crash()
 - Parameters:
 
     - title : `String`  
-      Sidebar Title
+      Sidebar title
     - data : `Object<String-Integer>`  
-      Sidebar Object Content Object  
-      Each key-value pair in the object will be set as a row of the sidebar content.
+      Sidebar content object.  
+      Each key-value pair in the object becomes a row in the sidebar.
     - sortOrder : `Number`  
-      (Optional) Sort order for sidebar content. `0` In ascending order of scores, `1` in descending order by score.
-      Default is `1`.
+      (Optional) Sort order for sidebar content. `0` sorts by score in ascending order; `1` sorts by score in descending order.
+      Defaults to `1`.
 
-- Return value: Whether the setting was successful or not.
+- Return value: Whether the setting succeeded.
 
 - Return value type: `Boolean`
 
@@ -1034,7 +1018,7 @@ pl.setSidebar("title", {"aaaa": 3, "bbb": 12, "cc": 7});
 
 `pl.removeSidebar()`
 
-- Return value: Whether the removal was successful.
+- Return value: Whether the removal succeeded.
 - Return value type: `Boolean`
 
 [JavaScript]
@@ -1050,14 +1034,14 @@ pl.removeSidebar();
 
 - Parameters:
     - uid : `Number`   
-      Unique identifier, no conflicting duplicates! One uid for one line of bar
+      Unique identifier; must not conflict with existing ones! Each uid corresponds to one boss bar line.
     - title : `String`  
-      Custom Health Bar Title
+      Custom health bar title
     - percent : `Integer`  
-      The percentage of health in the boss bar, the valid range is 0~100. `0` is empty boss bar, `100` is full.
+      The health percentage in the boss bar. Valid range: 0~100 (`0` is empty, `100` is full).
     - colour : `Integer`
       Health bar color (for example, `2` is RED)
-- Return value: Whether the setting was successful or not.
+- Return value: Whether the setting succeeded.
 - Return value type: `Boolean`
 
 [JavaScript]
@@ -1073,8 +1057,8 @@ pl.setBossBar(1145141919, "Hello ~ ", 80, 0);
 
 - Parameters:
     - uid : `Number`  
-      Identifier, corresponding to setBossBar!
-- Return value: Whether the removal was successful.
+      Identifier corresponding to setBossBar!
+- Return value: Whether the removal succeeded.
 - Return value type: `Boolean`
 
 [JavaScript]
@@ -1088,7 +1072,7 @@ pl.removeBossBar(1145141919);
 
 `pl.getNbt()`
 
-- Return value: Player's NBT object.
+- Return value: The player's NBT object.
 - Return value type: `NbtCompound`
 
 #### Write to an Online Player's NBT Object
@@ -1097,11 +1081,11 @@ pl.removeBossBar(1145141919);
 
 - Parameters:
     - nbt : `NbtCompound`  
-      NBT objects
-- Return value: Whether the write was successful or not.
+      NBT object
+- Return value: Whether the write succeeded.
 - Return value type: `Boolean`
 
-For more usage of NBT objects, please refer to [NBT Interface Documentation](../NbtAPI/NBT.md)
+For more information on using NBT objects, see [NBT Interface Documentation](../NbtAPI/NBT.md).
 
 #### Get an Player's NBT Object
 
@@ -1109,10 +1093,10 @@ For more usage of NBT objects, please refer to [NBT Interface Documentation](../
 
 - Parameters:
     - uuid : `String`  
-      Player`s UUID
-- Return value: Player's NBT object.
+      Player's UUID
+- Return value: The player's NBT object.
 - Return value type: `NbtCompound`
-    - If the player does not exist or no saved data is found, the return value is `Null`.
+    - Returns `Null` if the player does not exist or no saved data is found.
 
 #### Write to an Player's NBT Object
 
@@ -1120,14 +1104,14 @@ For more usage of NBT objects, please refer to [NBT Interface Documentation](../
 
 - Parameters:
     - uuid : `String`  
-      Player`s UUID
+      Player's UUID
     - nbt : `NbtCompound`  
-      NBT objects
-    - forceCreate : `Boolean` (Optional parameter)  
-      Whether to create offline player data when the UUID has no saved record. The default value is `false`.
-    - isOnlineMode : `Boolean` (Optional parameter)  
-      Only used when `forceCreate` is `true`. Whether the created player data uses online mode. The default value is `true`.
-- Return value: Whether the write was successful or not.
+      NBT object
+    - forceCreate : `Boolean` (Optional)  
+      Whether to create offline player data if no saved record exists for the UUID. Defaults to `false`.
+    - isOnlineMode : `Boolean` (Optional)  
+      Used only when `forceCreate` is `true`. Specifies whether the created player data uses online mode. Defaults to `true`.
+- Return value: Whether the write succeeded.
 - Return value type: `Boolean`
 
 #### Write Data to Some Special Tags of an Player's NBT Object
@@ -1136,12 +1120,12 @@ For more usage of NBT objects, please refer to [NBT Interface Documentation](../
 
 - Parameters:
     - uuid : `String`  
-      Player`s UUID
+      Player's UUID
     - nbt : `NbtCompound`  
-      NBT objects
+      NBT object
     - tags : `Array<String>`  
-      Tags need to write
-- Return value: Whether the write was successful or not.
+      Tags to write
+- Return value: Whether the write succeeded.
 - Return value type: `Boolean`
 
 #### Delete an Player's NBT Object
@@ -1150,19 +1134,19 @@ For more usage of NBT objects, please refer to [NBT Interface Documentation](../
 
 - Parameters:
     - uuid : `String`  
-      Player`s UUID
-- Return value: Whether the delete was successful or not.
+      Player's UUID
+- Return value: Whether the deletion succeeded.
 - Return value type: `Boolean`
 
-Using this API, you can delete saved offline player nbt data by UUID.
+Use this API to delete saved offline player NBT data by UUID.
 
 #### Get All Saved Player UUIDs
 
 `mc.getAllPlayerUuids([isOnlineMode])`
 
 - Parameters:
-    - isOnlineMode : `Boolean` (Optional parameter)  
-      `true` returns UUIDs of players who logged in with a Microsoft account; `false` returns UUIDs of offline mode players, default is `true`.
+    - isOnlineMode : `Boolean` (Optional)  
+      `true` returns the UUIDs of players who logged in with a Microsoft account; `false` returns the UUIDs of offline-mode players. Defaults to `true`.
 - Return value: List of saved player UUID strings.
 - Return value type: `Array<String,String,...>`
 
@@ -1172,8 +1156,8 @@ Using this API, you can delete saved offline player nbt data by UUID.
 
 - Parameters:
     - tag: `String`  
-      The tag string to be added.
-- Return value: Whether the setting was successful.
+      The tag string to add.
+- Return value: Whether the setting succeeded.
 - Return value type: `Boolean`
 
 #### Remove a Tag for a player
@@ -1183,7 +1167,7 @@ Using this API, you can delete saved offline player nbt data by UUID.
 - Parameters:
     - tag: `String`  
       The tag string to remove.
-- Return value: Whether the removal was successful.
+- Return value: Whether the removal succeeded.
 - Return value type: `Boolean`
 
 #### Check if the Player Has a Tag
@@ -1192,7 +1176,7 @@ Using this API, you can delete saved offline player nbt data by UUID.
 
 - Parameters:
     - tag: `String`  
-      Tag string to check
+      The tag string to check.
 - Return value: Whether the player has the tag.
 - Return value type: `Boolean`
 
@@ -1200,27 +1184,26 @@ Using this API, you can delete saved offline player nbt data by UUID.
 
 `pl.getAllTags()`
 
-- Return value: List of all tag strings of the player.
+- Return value: A list of all the player's tag strings.
 - Return value type: `Array<String,String,...>`
 
 #### Get a List of the Player’s Abilities (From the Player’s NBT)
 
 `pl.getAbilities()`
 
-- Return value:  A list object of key-value pairs of all player ability information.
+- Return value: An object containing key-value pairs of all player ability information.
 - Return value type: `Object<String-Any type>`
 
-Each item in the list of key-value pairs looks like: `"mayfly": 1` etc.
+Each key-value pair looks like `"mayfly": 1`, etc.
 
 #### Get a list of the player's Attributes (from the player's NBT)
 
 `pl.getAttributes()`
 
-- Return value: An array of all property objects of the player.
+- Return value: An array of all the player's attribute objects.
 - Return value type: `Array<Object,Object,...>`
 
-Each item in the array is a key-value pair list object `Object`, and the Attributes object contains several contents
-such as `Base` `Current` `DefaultMax` `DefaultMin` `Max` `Min` `Name` by default. Its content looks like:
+Each item in the array is a key-value `Object`. By default, an Attributes object contains keys such as `Base`, `Current`, `DefaultMax`, `DefaultMin`, `Max`, `Min`, and `Name`. Its content looks like this:
 
 ```json
 {
@@ -1234,13 +1217,13 @@ such as `Base` `Current` `DefaultMax` `DefaultMin` `Max` `Min` `Name` by default
 }
 ```
 
-(Here it's displayed visually using JSON format)
+(Shown here in JSON format for readability.)
 
 #### Get Player Sprint Status
 
 `pl.isSprinting()`
 
-- Return value: Player's sprint state
+- Return value: The player's sprinting state.
 - Return value type: `Boolean`
 
 #### Set Player Sprint State
@@ -1250,7 +1233,7 @@ such as `Base` `Current` `DefaultMax` `DefaultMin` `Max` `Min` `Name` by default
 - Parameters:
     - sprinting : `Boolean`  
       Sprinting state.
-- Return value: Whether the setting was successful.
+- Return value: Whether the setting succeeded.
 - Return value type: `Boolean`
 
 #### Get the Entity in the Player's Line of Sight
@@ -1260,7 +1243,7 @@ such as `Base` `Current` `DefaultMax` `DefaultMin` `Max` `Min` `Name` by default
 - Parameters:
     - maxDistance : `Float`  
       Maximum search distance.
-- Return value: The entity in the player's line of sight. Returns `Null` if it cannot be obtained.
+- Return value: The entity in the player's line of sight, or `Null` if none can be obtained.
 - Return value type: `Entity`
 
 #### Get the Block in the Player's Line of Sight
@@ -1271,12 +1254,12 @@ such as `Base` `Current` `DefaultMax` `DefaultMin` `Max` `Min` `Name` by default
     - includeLiquid : `Boolean`  
       Whether to include liquid blocks.
     - solidOnly : `Boolean`  
-      Whether to only allow blocks of the `Solid` type.
+      Whether to allow only blocks of type `Solid`.
     - maxDistance : `Float`  
       Maximum search distance.
     - fullOnly : `Boolean`  
-      Whether to only allow full blocks.
-- Return value: The block in the player's line of sight. Returns `Null` if it cannot be obtained.
+      Whether to allow only full blocks.
+- Return value: The block in the player's line of sight, or `Null` if none can be obtained.
 - Return value type: `Block`
 
 #### Sending packets to the player
@@ -1285,22 +1268,22 @@ such as `Base` `Current` `DefaultMax` `DefaultMin` `Max` `Min` `Name` by default
 
 - Parameters:
     - packet : `Packet`  
-      Packet
-- Return value: Whether the setting was successful.
+      Packet.
+- Return value: Whether the setting succeeded.
 - Return value type: `Boolean`
 
 #### Get the player's Biome ID
 
 `pl.getBiomeId()`
 
-- Return value: Biome ID
+- Return value: Biome ID.
 - Return value type: `Integer`
 
 #### Get the player's Biome Name
 
 `pl.getBiomeName()`
 
-- Return value: Biome Name
+- Return value: Biome name.
 - Return value type: `String`
 
 #### Set Player Ability
@@ -1309,44 +1292,44 @@ such as `Base` `Current` `DefaultMax` `DefaultMin` `Max` `Min` `Name` by default
 
 - Parameters:
     - AbilityID : `Integer`  
-      Ability's ID
+      Ability ID.
     - Value : `Boolean`  
-      Whether to turn on
-- Return value: None
+      Whether to enable the ability.
+- Return value: None.
 - Return value type: `Boolean`
 
 #### Get player's effects
 
 `pl.getAllEffects()`
 
-- Return value: effect ID which is player owned
-- Return type: `Array<Integer,Integer,...>`
+- Return value: The effect IDs the player currently has.
+- Return value type: `Array<Integer,Integer,...>`
 
 #### Add an effect for player
 
 `pl.addEffect(id, tick, level, showParticles)`
 
-- Parameter:
+- Parameters:
     - id : `Number`
-      Effect ID
+      Effect ID.
     - tick : `Number`
-      Lasting time
+      Duration.
     - level : `Number`
-      Effect's level
+      Effect level.
     - showParticles : `Boolean`
-      Whether to show particles
-- Return value: Whether succeed
-- Return type: `Boolean`
+      Whether to show particles.
+- Return value: Whether the operation succeeded.
+- Return value type: `Boolean`
 
 #### Remove an effect for player
 
 `pl.removeEffect(id)`
 
-- Parameter:
+- Parameters:
     - id : `Number`
-      Effect ID
-- Return value: Whether succeed
-- Return type: `Boolean`
+      Effect ID.
+- Return value: Whether the operation succeeded.
+- Return value type: `Boolean`
 
 | Name            | ID |
 |-----------------|----|
@@ -1396,26 +1379,26 @@ such as `Base` `Current` `DefaultMax` `DefaultMin` `Max` `Min` `Name` by default
     - str : `String`  
       Molang expression string.
 - Return value: The result of the Molang expression.
-- Return value type:  `Float`
+- Return value type: `Float`
 
-For detailed usage of Molang, refer to [MOLANG Doc bedrock.dev](https://bedrock.dev/docs/stable/Molang)
+For detailed usage of Molang, see [MOLANG Doc bedrock.dev](https://bedrock.dev/docs/stable/Molang).
 
 #### Convert Player Object to Entity Object
 
 `pl.toEntity()`
 
 - Return value: The converted `Entity` object.
-- Return value type:  `Entity`
-    - Returns `Null` if the transition fails.
+- Return value type: `Entity`
+    - Returns `Null` if the conversion fails.
 
-You can use this function to convert the player object to an entity object to use the entity-related APIs.
+Use this function to convert a player object to an entity object so you can call entity-related APIs on it.
 
 ### Determine whether it is a simulated player
 
 `pl.isSimulatedPlayer()`
 
-- Return value: Is player a simulated player
-- Return type: `Boolean`
+- Return value: Whether the player is a simulated player.
+- Return value type: `Boolean`
 
 ## Simulated player (due to too much overlap with the player API, no new simulated player class was generated)
 
@@ -1426,24 +1409,22 @@ You can use this function to convert the player object to an entity object to us
 
 - Parameters:
     - name : `String`  
-      Name of simulted player
+      Name of the simulated player.
     - pos : `IntPos `/ `FloatPos`  
-      (Optional) The coordinate object of the position of the spawned creature (or use x, y, z, dimid to determine the spawning
-      position). Defaults to the world spawn point
-- Return value: Generated (simulated) player object
+      (Optional) Coordinate object for the spawn position (or use x, y, z, and dimid to specify the spawn position). Defaults to the world spawn point.
+- Return value: The spawned (simulated) player object.
 - Return type: `Player`
-    - If the return value is `Null`, it means the generation failed.
+    - Returns `Null` if spawning fails.
 
 ### Simulated Player - Functions
 
-Each simulated player object contains some member functions (member methods) that can be executed. For a specific
-simulated player object `sp`, you can use the following functions to perform some operations on this simulated player.
+Each simulated player object provides member functions (methods) that you can call. For a given simulated player object `sp`, use the following functions to perform operations on it.
 
 #### Simulate Respawn
 
 `sp.simulateRespawn()`
 
-- Return value: Whether the simulation operation was successful
+- Return value: Whether the simulated action succeeded.
 - Return type: `Boolean`
 
 Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-gametest/simulatedplayer?view=minecraft-bedrock-experimental#respawn)
@@ -1455,9 +1436,9 @@ Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/cr
 - Parameters:
 
     - target : `Entity`  
-      (Optional parameter) Attack target, default is the entity in the line of sight
+      (Optional) The target to attack. Defaults to the entity in the line of sight.
 
-- Return value: Whether the simulation operation was successful
+- Return value: Whether the simulated action succeeded.
 - Return type: `Boolean`
 
 Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-gametest/simulatedplayer?view=minecraft-bedrock-experimental#attack)
@@ -1470,13 +1451,13 @@ Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/cr
 - Parameters:
 
     - pos :`IntPos`  
-      (Optional parameter) The coordinates of the block to be destroyed, default is the block in the line of sight
+      (Optional) Coordinates of the block to destroy. Defaults to the block in the line of sight.
     - block :`Block`  
-      (Optional parameter) The block to be destroyed, default is the block in the line of sight
+      (Optional) The block to destroy. Defaults to the block in the line of sight.
     - face :`Integer`  
-      (Optional parameter) Which face to destroy from
+      (Optional) The block face to destroy from.
 
-- Return value: Whether the simulation operation was successful
+- Return value: Whether the simulated action succeeded.
 - Return type: `Boolean`
 
 Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-gametest/simulatedplayer?view=minecraft-bedrock-experimental#breakblock)
@@ -1485,7 +1466,7 @@ Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/cr
 
 `sp.simulateDisconnect()`
 
-- Return value: Whether the simulation operation was successful
+- Return value: Whether the simulated action succeeded.
 - Return type: `Boolean`
 
 #### Simulate Interact
@@ -1497,15 +1478,15 @@ Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/cr
 - Parameters:
 
     - target : `Entity`  
-      (Optional parameter) Simulated interaction target, default is the block or entity in the line of sight
+      (Optional) Target of the simulated interaction. Defaults to the block or entity in the line of sight.
     - pos :`IntPos`  
-      (Optional parameter) Simulated interaction target, default is the block or entity in the line of sight
+      (Optional) Target of the simulated interaction. Defaults to the block or entity in the line of sight.
     - block :`Block`  
-      (Optional parameter) Simulated interaction target, default is the block or entity in the line of sight
+      (Optional) Target of the simulated interaction. Defaults to the block or entity in the line of sight.
     - face :`Number`  
-      (Optional parameter) Simulated interaction target block face
+      (Optional) Face of the target block to interact with.
 
-- Return value: Whether the simulation operation was successful
+- Return value: Whether the simulated action succeeded.
 - Return type: `Boolean`
 
 Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-gametest/simulatedplayer?view=minecraft-bedrock-experimental#interact)
@@ -1514,7 +1495,7 @@ Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/cr
 
 `sp.simulateJump()`
 
-- Return value: Whether the simulation operation was successful
+- Return value: Whether the simulated action succeeded.
 - Return type: `Boolean`
 
 Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-gametest/simulatedplayer?view=minecraft-bedrock-experimental#jump)
@@ -1523,7 +1504,7 @@ Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/cr
 
 `sp.simulateSneak()`
 
-- Return value: Whether the simulation operation was successful
+- Return value: Whether the simulated action succeeded.
 - Return type: `Boolean`
 
 #### Simulate Look At a Block or Entity
@@ -1533,21 +1514,21 @@ Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/cr
 `sp.simulateLookAt(block, [lookDuration])`
 
 !!! warning
-    `lookDuration` parameter is only available in 0.8.13 and later.
+    The `lookDuration` parameter is available only in 0.8.13 and later.
 
 - Parameters:
 
     - target : `Entity`  
-      The entity to look at
+      The entity to look at.
     - pos :`IntPos` / `FloatPos`  
-      The coordinates to look at
+      The coordinates to look at.
     - block :`Block`  
-      The block to look at
+      The block to look at.
     - lookDuration: `Integer`  
-      The duration SimulatedPlayer look  
+      How long the SimulatedPlayer looks at the target.  
       0 = Instant, 1 = Continuous, 2 = UntilMove
 
-- Return value: Whether the simulation operation was successful
+- Return value: Whether the simulated action succeeded.
 - Return type: `Boolean`
 
 Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-gametest/simulatedplayer?view=minecraft-bedrock-experimental#lookatblock)
@@ -1559,9 +1540,9 @@ Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/cr
 - Parameters:
 
     - rot : `Number`  
-      The angle to set
+      The angle to set.
 
-- Return value: Whether the simulation operation was successful
+- Return value: Whether the simulated action succeeded.
 - Return type: `Boolean`
 
 Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-gametest/simulatedplayer?view=minecraft-bedrock-experimental#rotatebody)
@@ -1572,11 +1553,11 @@ Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/cr
 
 - Parameters:
     - pos : `IntPos` / `FloatPos`  
-      Move direction
+      Movement direction
     - speed : `Number`  
-      (Optional parameter) Move speed, default is 1
+      (Optional) Movement speed. Defaults to 1.
 
-- Return value: Whether the move request was successful
+- Return value: Whether the move request succeeded
 - Return type: `Boolean`
 
 #### Move Relative to World Coordinate System
@@ -1585,11 +1566,11 @@ Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/cr
 
 - Parameters:
     - pos : `IntPos` / `FloatPos`  
-      Move direction
+      Movement direction
     - speed : `Number`  
-      (Optional parameter) Move speed, default is 1
+      (Optional) Movement speed. Defaults to 1.
 
-- Return value: Whether the move request was successful
+- Return value: Whether the move request succeeded
 - Return type: `Boolean`
 
 #### Move Straight to Coordinate
@@ -1600,13 +1581,13 @@ Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/cr
     - pos : `IntPos` / `FloatPos`  
       Target position
     - speed : `Number`  
-      (Optional parameter) Move speed, default is 1
+      (Optional) Movement speed. Defaults to 1.
 
-- Return value: Whether the move request was successful
+- Return value: Whether the move request succeeded
 - Return type: `Boolean`
 
 Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-gametest/simulatedplayer?view=minecraft-bedrock-experimental#movetolocation)  
-Note: If you need automatic pathfinding, consider using `Simulate Navigate Move`
+Note: For automatic pathfinding, use `Simulate Navigate Move` instead.
 
 #### Simulate Navigate Move
 
@@ -1620,10 +1601,9 @@ Note: If you need automatic pathfinding, consider using `Simulate Navigate Move`
     - pos : `IntPos` / `FloatPos`  
       Navigation target
     - speed : `Number`  
-      (Optional parameter) Move speed, default is 1
+      (Optional) Movement speed. Defaults to 1.
 
-- Return value: Whether the specified location can be reached and the navigation path, structure: {isFullPath:`Boolean`
-  ,path:`Number[3][]`}
+- Return value: Whether the specified location can be reached and the navigation path, with the structure {isFullPath:`Boolean`,path:`Number[3][]`}
 - Return type: `Object`
 
 Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-gametest/simulatedplayer?view=minecraft-bedrock-experimental#navigatetoblock)  
@@ -1677,8 +1657,7 @@ Return value example:
 }
 ```
 
-This data has a target coordinate of (0,2,0), and the path endpoint is (-1,0,0), so isFullPath is false, but since the
-path is not empty, the simulated player will move to the (-1,0,0) coordinate.
+Here, the target coordinate is (0,2,0), and the path ends at (-1,0,0), so isFullPath is false. Because the path is not empty, the simulated player still moves to (-1,0,0).
 
 #### Simulate Navigate Move (Multiple Targets)
 
@@ -1689,9 +1668,9 @@ path is not empty, the simulated player will move to the (-1,0,0) coordinate.
     - posArray : `IntPos[]` / `FloatPos[]`  
       Navigation targets
     - speed : `Number`  
-      (Optional parameter) Move speed, default is 1
+      (Optional) Movement speed. Defaults to 1.
 
-- Return value: Whether the simulation operation was successful
+- Return value: Whether the simulated action succeeded
 - Return type: `Boolean`
 
 Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-gametest/simulatedplayer?view=minecraft-bedrock-experimental#navigatetolocations)
@@ -1704,17 +1683,17 @@ Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/cr
 - Parameters:
 
     - item : `Item`  
-      (Optional parameter) The item to use, default is the selected item
+      (Optional) The item to use. Defaults to the selected item.
     - slot : `Number`  
-      (Optional parameter) The slot where the item is located, default is the selected item
+      (Optional) The slot containing the item. Defaults to the selected item.
     - pos : `IntPos`  
-      (Optional parameter) Target coordinate, default is the facing block coordinate
+      (Optional) Target coordinate. Defaults to the coordinate of the block being faced.
     - face : `Number`  
-      (Optional parameter) Target block face, default is 0
+      (Optional) Target block face. Defaults to 0.
     - relative : `FloatPos`  
-      (Optional parameter) Relative block offset coordinate, default is {0.5,0.5,0.5}
+      (Optional) Offset coordinate relative to the block. Defaults to {0.5,0.5,0.5}.
 
-- Return value: Whether the simulation operation was successful
+- Return value: Whether the simulated action succeeded
 - Return type: `Boolean`
 
 Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-gametest/simulatedplayer?view=minecraft-bedrock-experimental#useitem)
@@ -1723,7 +1702,7 @@ Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/cr
 
 `sp.simulateStopDestroyingBlock()`
 
-- Return value: Whether the simulation operation was successful
+- Return value: Whether the simulated action succeeded
 - Return type: `Boolean`
 
 Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-gametest/simulatedplayer?view=minecraft-bedrock-experimental#stopbreakingblock)
@@ -1732,7 +1711,7 @@ Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/cr
 
 `sp.simulateStopInteracting()`
 
-- Return value: Whether the simulation operation was successful
+- Return value: Whether the simulated action succeeded
 - Return type: `Boolean`
 
 Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-gametest/simulatedplayer?view=minecraft-bedrock-experimental#stopinteracting)
@@ -1741,7 +1720,7 @@ Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/cr
 
 `sp.simulateStopMoving()`
 
-- Return value: Whether the simulation operation was successful
+- Return value: Whether the simulated action succeeded
 - Return type: `Boolean`
 
 Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-gametest/simulatedplayer?view=minecraft-bedrock-experimental#stopmoving)
@@ -1750,7 +1729,7 @@ Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/cr
 
 `sp.simulateStopUsingItem()`
 
-- Return value: Whether the simulation operation was successful
+- Return value: Whether the simulated action succeeded
 - Return type: `Boolean`
 
 Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-gametest/simulatedplayer?view=minecraft-bedrock-experimental#stopusingitem)
@@ -1759,5 +1738,5 @@ Reference: [mojang-gametest docs](https://learn.microsoft.com/en-us/minecraft/cr
 
 `sp.simulateStopSneaking()`
 
-- Return value: Whether the simulation operation was successful
+- Return value: Whether the simulated action succeeded
 - Return type: `Boolean`

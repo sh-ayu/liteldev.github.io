@@ -4,11 +4,11 @@
 
 ### Muss ich über eine Originalversion von Minecraft Bedrock verfügen?
 
-Ja. LeviLauncher ist für die Verwendung mit einer rechtmäßig lizenzierten Kopie der **Minecraft Bedrock Edition (GDK / UWP)** konzipiert.
+Ja. LeviLauncher setzt eine rechtmäßig lizenzierte Kopie der **Minecraft Bedrock Edition (GDK / UWP)** voraus.
 
 ### Kann ich es unter macOS oder Linux verwenden?
 
-LeviLauncher gibt es als **Windows**- und als **Android**-Version ([Android-Anleitung](/de-DE/guide/version-management?platform=android)). Eine Version für macOS oder Linux gibt es nicht.
+LeviLauncher gibt es als **Windows**- und als **Android**-Version ([Android-Anleitung](/de-DE/guide/version-management?platform=android)). Für macOS oder Linux ist keine Version verfügbar.
 
 ### Gibt es eine iOS-Version?
 
@@ -16,11 +16,11 @@ Nein. Eine iOS-Version von LeviLauncher ist nicht geplant.
 
 ### Soll ich Release oder Preview wählen?
 
-Für reguläres Spielen empfiehlt sich stets der Minecraft-**Release**-Build. Der Minecraft-**Vorschau**-Build (Preview) sollte nur genutzt werden, wenn du bewusst neue Funktionen testen möchtest und Instabilitäten akzeptieren kannst.
+Für das reguläre Spielen empfiehlt sich immer der Minecraft-**Release**-Build. Nutze den Minecraft-**Vorschau**-Build (Preview) nur, wenn du gezielt neue Funktionen testen möchtest und mit Instabilitäten leben kannst.
 
 ### Ist Isolierung zwingend erforderlich?
 
-Nein, sie ist nicht zwingend – wird aber dringend empfohlen für Testumgebungen, Minecraft Preview und Modifikationen. Isolierung ist für GDK-Versionen und für UWP-x64-Versionen ab 1.19.70.2 verfügbar.
+Nein, zwingend ist sie nicht – für Testumgebungen, Minecraft Preview und Modifikationen wird sie aber dringend empfohlen. Isolierung steht für GDK-Versionen sowie für UWP-x64-Versionen ab 1.19.70.2 zur Verfügung.
 
 ### Kann ich Welten und Ressourcenpakete im Launcher verwalten?
 
@@ -28,19 +28,19 @@ Ja. LeviLauncher bietet Übersichten für Welten, Ressourcenpakete, Verhaltenspa
 
 ### Kann ich Mods installieren?
 
-Ja, dies gehört jedoch zu fortgeschrittenen Workflows. Wir empfehlen, zunächst mit einer sauberen, isolierten Version zu beginnen und schrittweise zu testen.
+Ja, das zählt jedoch zu den fortgeschrittenen Arbeitsabläufen. Wir empfehlen, mit einer sauberen, isolierten Version zu beginnen und Mods Schritt für Schritt zu testen.
 
 ### Kann ich LeviLauncher über die Befehlszeile verwenden?
 
-Ja, unter Windows. `LeviLauncher.exe` ohne Argumente öffnet das Fenster; mit einem Befehl wie `install latest`, `play`, `instance list` oder `mod install <Mod>` läuft es im Terminal und beendet sich danach. `LeviLauncher.exe help` zeigt alle Befehle, `LeviLauncher.exe help <Befehl>` die Optionen und Beispiele eines Befehls.
+Ja, unter Windows. `LeviLauncher.exe` ohne Argumente öffnet das Fenster; mit einem Befehl wie `install latest`, `play`, `instance list` oder `mod install <Mod>` läuft das Programm im Terminal und beendet sich anschließend. `LeviLauncher.exe help` listet alle Befehle auf, `LeviLauncher.exe help <Befehl>` zeigt die Optionen und Beispiele zu einem bestimmten Befehl.
 
 ### Was braucht die Android-Version?
 
-Android 9.0 oder neuer auf einem ARM64-Gerät und Minecraft Bedrock Edition 1.21.80 oder neuer aus Google Play. Siehe [Installation](../install?platform=android).
+Android 9.0 oder neuer auf einem ARM64-Gerät sowie die Minecraft Bedrock Edition 1.21.80 oder neuer aus Google Play. Siehe [Installation](../install?platform=android).
 
 ### Kann ich unter Android mehrere Minecraft-Versionen nutzen?
 
-Ja. Importiere offizielle Minecraft-APKs, um andere Versionen im Launcher zu starten, und aktiviere die Isolierung, um ihre Daten zu trennen.
+Ja. Importiere offizielle Minecraft-APKs, um andere Versionen über den Launcher zu starten, und aktiviere die Isolierung, um deren Daten getrennt zu halten.
 
 ## Community-Zugänge
 
@@ -50,7 +50,7 @@ Ja. Importiere offizielle Minecraft-APKs, um andere Versionen im Launcher zu sta
 
 ## So gibst du Probleme oder Feature-Ideen weiter
 
-Bitte verwende [GitHub Issues](https://github.com/LiteLDev/LeviLauncher/issues), um Folgendes zu melden:
+Bitte melde folgende Anliegen über [GitHub Issues](https://github.com/LiteLDev/LeviLauncher/issues):
 
 - Reproduzierbare Fehler  
 - Installationsprobleme, die eindeutig mit LeviLauncher zusammenhängen  
@@ -64,4 +64,4 @@ Probleme mit der Android-Version gehören in [LiteLDev/LeviLauncher-Android Issu
 - Aktualisiere auf die neueste verfügbare Version  
 - Führe einen Vergleichstest mit einer sauberen, isolierten Version durch  
 - Deaktiviere vorübergehend neu hinzugefügte Mods oder Ressourcenpakete  
-- Notiere die genauen Schritte, die zum Problem führen  
+- Notiere die genauen Schritte, die zum Problem führen

@@ -22,7 +22,7 @@ LeviLamina/
 
 #### `src/` — 通用 + 服务端
 
-包含服务端和客户端共享的代码，以及仅服务端的实现：
+包含服务端和客户端共享的代码，以及服务端独有的实现：
 
 ```
 src/
@@ -49,7 +49,7 @@ src/
 
 #### `src-client/` — 仅客户端
 
-客户端特定的扩展和覆盖（42 个文件）：
+客户端专用的扩展和重写（42 个文件）：
 
 ```
 src-client/
@@ -70,7 +70,7 @@ src-client/
 
 #### `src-server/` — 仅服务端
 
-服务端特定的扩展（18 个文件）：
+服务端专用的扩展（18 个文件）：
 
 ```
 src-server/
@@ -88,10 +88,10 @@ src-server/
 
 ### 第 1 层：`mc/` — Bedrock 引擎头文件
 
-- **来源**: 从 Minecraft 基岩版专用服务器逆向工程
+- **来源**: 逆向自 Minecraft 基岩版专用服务器
 - **目的**: 提供游戏内部的 C++ 接口
-- **维护**: 由 `header_generator` 工具从 BedrockAnalyzer 转储生成
-- **范围**: 只读，不被 LeviLamina 修改
+- **维护**: 由 `header_generator` 工具根据 BedrockAnalyzer 的转储数据生成
+- **范围**: 只读，LeviLamina 不会修改
 
 **关键命名空间:**
 - `::Actor`, `::Player`, `::Mob` — 实体系统
@@ -103,27 +103,27 @@ src-server/
 ### 第 2 层：`ll/core/` — 内部实现
 
 - **目的**: 实现 LeviLamina 的核心功能
-- **可见性**: 内部，不暴露给模组
-- **依赖**: 使用 `mc/` 头文件和 `ll/api/`
+- **可见性**: 仅限内部使用，不向模组暴露
+- **依赖**: 依赖 `mc/` 头文件和 `ll/api/`
 
 **关键组件:**
 - **ModRegistrar** — 模组生命周期管理
 - **NativeModManager** — DLL 加载
 - **内置命令** — `/version`、`/ll`、`/tpdim`、`/crash`
-- **CrashLogger** — 异常处理和 Sentry 集成
-- **Tweaks** — 游戏修改（漏洞修复、内存分配器等）
+- **CrashLogger** — 异常处理与 Sentry 集成
+- **Tweaks** — 游戏调整（漏洞修复、内存分配器等）
 
 ### 第 3 层：`ll/api/` — 公共 API
 
 - **目的**: 为模组开发者提供稳定的 API
 - **可见性**: 通过 `LLAPI`/`LLNDAPI` 宏导出
-- **版本控制**: 语义化版本，保证兼容性
+- **版本控制**: 遵循语义化版本规范，保证兼容性
 
 **设计原则:**
 - **类型安全**: 大量使用 C++20 概念和类型萃取
-- **错误处理**: `Expected<T>` 用于可恢复错误
+- **错误处理**: 使用 `Expected<T>` 处理可恢复错误
 - **异步支持**: 协程和执行器
-- **反射**: 编译期反射用于序列化
+- **反射**: 使用编译期反射实现序列化
 - **事件驱动**: 发布-订阅事件系统
 
 ## 模块依赖关系
@@ -168,7 +168,7 @@ src-server/
 
 ### 构建配置
 
-由 XMake 中的 `--target_type` 控制：
+通过 XMake 中的 `--target_type` 选项控制：
 
 ```lua
 -- xmake.lua
@@ -204,12 +204,12 @@ option("target_type")
 
 **服务端:**
 - 由 PreLoader 加载到 `bedrock_server_mod.exe`（安装时由 PeEditor 从 `bedrock_server.exe` 生成，原文件保留为 `bedrock_server.exe.bak`）
-- 钩子服务器初始化
+- 挂钩服务器初始化过程
 - 提供服务端事件和服务
 
 **客户端:**
 - 由 PreLoader 加载到 `Minecraft.Windows.exe`（安装时由 PeEditor 原地修改，原文件保留为 `Minecraft.Windows.exe.bak`）
-- 钩子客户端初始化
+- 挂钩客户端初始化过程
 - 提供客户端输入、渲染和 UI
 
 ## 设计模式
@@ -224,7 +224,7 @@ option("target_type")
 
 ### 工厂模式
 
-用于动态对象创建：
+用于动态创建对象：
 - `PacketRegistrar` — 数据包工厂
 - `EventBus::setEventEmitter()` — 事件发射器工厂
 
@@ -246,14 +246,14 @@ option("target_type")
 
 ### 分配策略
 
-- **mimalloc** — 默认分配器，提升性能
-- **智能指针** — `std::shared_ptr`、`std::unique_ptr` 用于所有权
+- **mimalloc** — 默认分配器，用于提升性能
+- **智能指针** — 使用 `std::shared_ptr` 和 `std::unique_ptr` 管理所有权
 - **optional_ref** — 对 Bedrock 对象的非拥有引用
 
 ### 钩子管理
 
-- **HookRegistrar** — 自动钩子注册/清理
-- **优先级系统** — 控制钩子执行顺序
+- **HookRegistrar** — 自动注册和清理钩子
+- **优先级系统** — 控制钩子的执行顺序
 
 ## 线程安全
 
@@ -265,9 +265,9 @@ option("target_type")
 
 ### 同步
 
-- **ServerThreadExecutor** — 在服务器线程上执行
-- **ThreadPoolExecutor** — 在后台线程上执行
-- **原子操作** — 尽可能无锁
+- **ServerThreadExecutor** — 在服务器线程上执行任务
+- **ThreadPoolExecutor** — 在后台线程上执行任务
+- **原子操作** — 尽可能采用无锁设计
 - **互斥锁** — 保护共享状态
 
 ## 相关文档

@@ -18,7 +18,7 @@ The Base module provides the foundational building blocks used throughout the Le
 | `ll/api/base/Containers.h` | Container type aliases (`SmallDenseSet`, `SmallStringMap`, etc.) |
 | `ll/api/base/Meta.h` | Metaprogramming utilities (`visitIndex`, etc.) |
 | `ll/api/base/SourceLocation.h` | Source code location information |
-| `ll/api/base/ToString.h` | To-string conversion utilities |
+| `ll/api/base/ToString.h` | String conversion utilities |
 | `ll/api/base/CompilerPredefine.h` | Compiler detection and `LL_SHARED_EXPORT`/`LL_SHARED_IMPORT` |
 | `ll/api/base/Alias.h` | Storage helpers (`UntypedStorage`, `TypedStorage`) used by game headers |
 | `ll/api/base/ScopedValue.h` | `ScopedValue<T>`: replaces a variable for a scope and restores it on exit |
@@ -33,10 +33,10 @@ Defined in `Macro.h`, these macros control symbol visibility between LeviLamina 
 | `LLNDAPI` | `[[nodiscard]] LLAPI` | `[[nodiscard]] LLAPI` |
 | `LLCAPI` | `extern "C" LLAPI` | `extern "C" LLAPI` |
 
-The switch is controlled by the `LL_EXPORT` define, which is set in `xmake.lua` via `add_defines("LL_EXPORT")`.
+The `LL_EXPORT` macro controls this switch and is set in `xmake.lua` via `add_defines("LL_EXPORT")`.
 
 !!! tip "Creating Your Own Export Macros"
-    For your mod, define a similar pair:
+    Define a similar pair for your mod:
     ```cpp
     #ifdef MY_MOD_EXPORT
     #define MY_MOD_API __declspec(dllexport)
@@ -54,18 +54,18 @@ Defined in `Concepts.h`, these C++20 concepts provide type constraints used acro
 |---------|-------------|
 | `IsString<T>` | `T` is a string-like type (`std::string`, `std::string_view`, `char*`, etc.) |
 | `IsOneOf<T, Ts...>` | `T` is one of the types in `Ts...` |
-| `IsInTypes<T, U>` | `T` is contained in type list `U` |
-| `IsExpected<T>` | `T` is an expected-like type with `value()`, `error()`, `has_value()` |
+| `IsInTypes<T, U>` | `T` is contained in the type list `U` |
+| `IsExpected<T>` | `T` is an expected-like type with `value()`, `error()`, and `has_value()` |
 | `IsLeviExpected<T>` | `IsExpected<T>` with `error_type == ll::Error` |
 | `IsOptional<T>` | `T` is an optional-like type (not expected) |
-| `RangeLoopable<T>` | `T` can be iterated with range-based for |
+| `RangeLoopable<T>` | `T` can be iterated with a range-based for loop |
 | `Associative<T>` | `T` is a range with `key_type` and `mapped_type` |
 | `ArrayLike<T>` | `T` is a range without `mapped_type` |
 | `Specializes<T, Z>` | `T` is a specialization of template `Z` |
 | `TupleLike<T>` | `T` supports `std::tuple_size` and `std::get` |
-| `Stringable<T>` | `T` has `toString()` or `to_string()` method |
+| `Stringable<T>` | `T` has a `toString()` or `to_string()` method |
 | `Awaitable<T>` | `T` is a C++20 awaitable type |
-| `Require<T, Pred>` | `T` satisfies predicate `Pred` (adapter for type traits) |
+| `Require<T, Pred>` | `T` satisfies the predicate `Pred` (adapter for type traits) |
 
 ### Example
 
@@ -87,7 +87,7 @@ void iterateOver(T const& range) {
 
 ## FixedString
 
-Defined in `FixedString.h`, `FixedString` is a compile-time string type used primarily for template parameters (e.g., in the i18n `_tr` literal).
+Defined in `FixedString.h`, `FixedString` is a compile-time string type used primarily for template parameters (such as in the i18n `_tr` literal).
 
 ```cpp
 #include "ll/api/base/FixedString.h"

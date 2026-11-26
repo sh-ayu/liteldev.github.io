@@ -1,12 +1,12 @@
 # 📝 Scoreboard API
 
-In LSE, use the "score object" to operate and obtain a specific scoring variable, and provide many other common interfaces for manipulating the scoreboard.
+LSE uses a "score object" to get and manipulate a specific scoring variable, and provides many other common interfaces for manipulating the scoreboard.
 
-MC uses **score items** as the core of the scoreboard system, each of which has a name and can be used to track specific players, entities or even string targets. In the scoring item, the corresponding score of each tracking target is recorded.
+MC builds its scoreboard system around **score items**. Each score item has a name, tracks specific players, entities, or even string targets, and records the corresponding score for each tracked target.
 
 ### Get a Scoring Item Object
 
-Obtain a scoring item object through the following interface and perform related operations:
+Use the following interfaces to get a scoring item object and perform related operations:
 
 #### Create a New Scoring Item
 
@@ -17,11 +17,11 @@ Obtain a scoring item object through the following interface and perform related
      Scoring item name.  
   -  displayName : `String`  
      (Optional) Scoring item display name. Defaults to `name`.  
-- Return type: The newly created scoring item object.
+- Return value: The newly created scoring item object.
 - Return value type: `Objective`
-  - If it returns `Null`, it means the creation failed.
+  - Returns `Null` if creation fails.
 
-This interface acts like a command  `/scoreboard objectives add <name> <displayName> dummy`
+This interface works like the command `/scoreboard objectives add <name> <displayName> dummy`.
 
 
 
@@ -31,10 +31,10 @@ This interface acts like a command  `/scoreboard objectives add <name> <displayN
 
 - Parameters: 
   - name : `String`  
-    The name of the score to get.
-- Return type: The corresponding scoring item object.
+    The name of the scoring item to get.
+- Return value: The corresponding scoring item object.
 - Return value type: `Objective`
-  - If `Null` is returned, it means the scoring item does not exist.
+  - Returns `Null` if the scoring item does not exist.
 
 
 
@@ -42,10 +42,10 @@ This interface acts like a command  `/scoreboard objectives add <name> <displayN
 
 `mc.getAllScoreObjectives()`
 
-- Return type: All score object objects recorded by the scoreboard system.
+- Return value: All scoring item objects recorded by the scoreboard system.
 - Return value type: `Array<Objective,Objective,...>`
 
-This interface acts like a command  `/scoreboard objectives list`
+This interface works like the command `/scoreboard objectives list`.
 
 
 
@@ -55,17 +55,17 @@ This interface acts like a command  `/scoreboard objectives list`
 
 - Parameters: 
   - slot : `String`   
-    Display slot name to be queried, which can be `"sidebar"`/`"belowname"`/`"list"`
-- Return type: Scoring items being displayed in the `slot` slot.
+    The display slot name to query: `"sidebar"` / `"belowname"` / `"list"`.
+- Return value: The scoring item currently displayed in `slot`.
 - Return value type: `Objective`
-  - If it returns `Null`, it means that the corresponding slot does not display the scoring item.
+  - Returns `Null` if no scoring item is displayed in the slot.
 
 
 
 
 ### Scoring Object - Properties
 
-Each scoring item object contains some fixed object properties. for a specific scoring item object `ob`, has the following properties:
+Every scoring item object has the following fixed properties. A scoring item object `ob` has these properties:
 
 | Attributes     | Meaning                          | Data Type |
 | -------------- | -------------------------------- | --------- |
@@ -78,16 +78,16 @@ These object properties are read-only and cannot be modified.
 
 ### Scoring Item Object - Function
 
-Each scoring item object contains some member functions (member methods) that can be executed. for a specific scoring item object `ob`, you can perform some operations on this scoring item through the following functions:
+Every scoring item object provides member functions (methods) that you can call. For a scoring item object `ob`, you can perform the following operations:
 
 #### Get the Score for a Tracked Goal
 
 `ob.getScore(target)`
 
 - Parameters: 
-  - target  : `Player` / `String`  
-    The tracking target to be queried, which can be passed in a player object or any string.
-- Return type: The target/player's score for this scoring item.
+  - target : `Player` / `String`  
+    The tracked target to query (a player object or any string).
+- Return value: The target's or player's score for this scoring item.
 - Return value type: `Integer`
 
 **Make sure the score is existing before using this API**
@@ -101,15 +101,15 @@ Reduce score: `ob.reduceScore(target,score)`
 
 - Parameters: 
   - target : `Player` / `String`  
-    The target tracked by the scoring item, which can be passed in a player object or an arbitrary string.
+    The target tracked by the scoring item (a player object or an arbitrary string).
   - score : `Integer`  
-    Score to set/increase/decrease.
-- Return type: The score of the target after the set/increase/decrease operation.
+    Score to set, increase, or decrease.
+- Return value: The target's score after the operation.
 - Return value type: `Integer`
-  - If `Null` is returned, the operation failed.
+  - Returns `Null` if the operation fails.
 
 !!! warning
-    If the score doesn't exist, will try creating a score, then return `0`(If *target* is `String`) or `null`(If *target* is `Player`)  
+    If the score does not exist, this API tries to create it, and then returns `0` (if *target* is a `String`) or `null` (if *target* is a `Player`).  
     Reason: [#971](https://github.com/LiteLDev/LeviLamina/issues/971#issuecomment-1385047649)
 
 
@@ -119,11 +119,11 @@ Reduce score: `ob.reduceScore(target,score)`
 
 - Parameters: 
   - target : `Player` / `String`  
-    The target tracked by the scoring item, which can be passed in a player object or an arbitrary string.
-- Return type: Whether the target was deleted successfully.
+    The target tracked by the scoring item (a player object or an arbitrary string).
+- Return value: Whether the target was deleted successfully.
 - Return value type: `Boolean`
 
-Stop tracking will directly delete the value of the goal's scoring item. You need to create it again if you need to access it again.
+Stopping tracking deletes the target's score from this scoring item. To access it again, you must recreate it.
 
 
 
@@ -133,17 +133,17 @@ Stop tracking will directly delete the value of the goal's scoring item. You nee
 
 - Parameters: 
   - slot : `String`   
-    Displays the slot name string, which can be `"sidebar"`/`"belowname"`/`"list"`
+    The display slot name: `"sidebar"` / `"belowname"` / `"list"`.
   - sortOrder : `Integer`  
-    (Optional parameter) the sorting method, which can be `0` (ascending) or `1`(descending order), the default is `0`
-- Return type: Whether setting the display was successful.
+    (Optional) The sort order: `0` (ascending) or `1` (descending). Defaults to `0`.
+- Return value: Whether the display state was set successfully.
 - Return value type: `Boolean`
 
 
 
 ### Other Scoreboard APIs
 
-The following APIs provide more APIs for operating the scoreboard system:
+The following APIs provide additional operations for the scoreboard system:
 
 #### Get the Score of a online Player’s Scoring Item (Convenience Function)
 
@@ -152,10 +152,10 @@ The following APIs provide more APIs for operating the scoreboard system:
 - Parameters: 
   - name : `String`  
     Scoring item name.  
-- Return type: The numerical value on the scoreboard.
+- Return value: The numerical value on the scoreboard.
 - Return value type: `Integer`
 
-Before using, you must ensure that the corresponding scoring item already exists.
+Make sure the corresponding scoring item already exists before using this function.
 
 ```js
 //For a player object pl: 
@@ -168,10 +168,10 @@ log("You have money:",pl.getScore("money"));
 
 - Parameters: 
   - uuid : `String`  
-    Player`s UUID.
+    Player's UUID.
   - name : `String`  
     Scoring item name.  
-- Return type: The numerical value on the scoreboard.
+- Return value: The numerical value on the scoreboard.
 - Return value type: `Integer`
 
 #### Modify the Score of a Online Player’s Scoring Item (Convenience Function)
@@ -182,13 +182,13 @@ Reduce score: `pl.reduceScore(name,value)`
 
 - Parameters: 
   - name : `String`  
-    Scoring item name  
+    Scoring item name.  
   - value : `Integer`  
-    The value to set/increase/decrease  
-- Return type: Whether the setting was successful.
+    The value to set, increase, or decrease.  
+- Return value: Whether the modification succeeded.
 - Return value type: `Boolean`
 
-If the score doesn't exist, will return `false` and create the score
+If the score does not exist, this function creates it and returns `false`.
 
 ```js
 //For a player object pl: 
@@ -206,12 +206,12 @@ Delete score: `mc.deletePlayerScore(uuid, name)`
 
 - Parameters: 
   - uuid : `String`  
-    Player`s UUID.
+    Player's UUID.
   - name : `String`  
-    Scoring item name  
+    Scoring item name.  
   - value : `Integer`  
-    The value to set/increase/decrease  
-- Return type: Whether the setting was successful.
+    The value to set, increase, or decrease.  
+- Return value: Whether the modification succeeded.
 - Return value type: `Boolean
 
 #### Player Stops Tracking Scoring Items (Convenience Function) 
@@ -220,11 +220,11 @@ Delete score: `mc.deletePlayerScore(uuid, name)`
 
 - Parameters: 
   - name : `String`  
-    Scoring item name   
-- Return type: Whether the removal was successful.
+    Scoring item name.   
+- Return value: Whether the removal succeeded.
 - Return value type: `Boolean`
 
-Before using, you must ensure that the corresponding scoring item already exists.
+Make sure the corresponding scoring item already exists before using this function.
 
 ```js
 //For a player object pl: 
@@ -237,11 +237,11 @@ pl.deleteScore("what");
 
 - Parameters: 
   -  name : `String`  
-     Scoring item name   
-- Return type: Whether the removal was successful.
+     Scoring item name.   
+- Return value: Whether the removal succeeded.
 - Return value type: `Boolean`
 
-This interface acts like a command `/scoreboard objectives remove <name>`
+This function works like the `/scoreboard objectives remove <name>` command.
 
 
 
@@ -251,8 +251,8 @@ This interface acts like a command `/scoreboard objectives remove <name>`
 
 - Parameters: 
   - slot : `String`   
-    Displays the slot name string, which can be `"sidebar"`/`"belowname"`/`"list"`
-- Return type: Whether the display objective was cleared successfully.
+    The display slot name, which can be `"sidebar"`/`"belowname"`/`"list"`.
+- Return value: Whether the display objective was cleared successfully.
 - Return value type: `Boolean`
 
 

@@ -2,16 +2,14 @@
 
 ## Introduction
 
-LeviLamina provides a simple i18n class to support multilingual functionality for itself and mods.
+LeviLamina provides a simple i18n class to support multiple languages for itself and for mods.
 
 ## Usage
 
 ### Loading Language Files
 
 - Include the header file `ll/api/i18n/I18n.h`.
-- Call the `ll::i18n::getInstance().load` method in the `load` method of your mod, passing the path to the language files. This path is
-  typically a folder but can also be a single JSON file. LeviLamina provides the `Mod::getLangDir` method for developers
-  to obtain the standard language file path.
+- Call `ll::i18n::getInstance().load` in your mod's `load` method and pass the path to your language files. This path is typically a folder, but it can also be a single JSON file. You can use `Mod::getLangDir` to get the standard language file path.
 
 ```cpp
 #include "ll/api/i18n/I18n.h"
@@ -63,8 +61,8 @@ Example language file content:
 ### Using I18n to Translate Text
 
 - Include the header file `ll/api/i18n/I18n.h`.
-- Use the directive `using namespace ll::i18n_literals` in your source file.
-- Append the `_tr()` literal to strings for translation.
+- Add `using namespace ll::i18n_literals` to your source file.
+- Append the `_tr()` literal to strings to translate them.
 
 ```cpp
 #include "ll/api/i18n/I18n.h"

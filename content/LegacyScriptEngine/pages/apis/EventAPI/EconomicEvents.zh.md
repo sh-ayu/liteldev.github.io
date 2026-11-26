@@ -1,6 +1,6 @@
 # 💰 经济系统事件
 
-此处为 LegacyMoney 经济系统相关的经济变动事件（见[经济系统 API](../DataAPI/Economy.zh.md)）
+本文介绍与 LegacyMoney 经济系统相关的经济变动事件（见[经济系统 API](../DataAPI/Economy.zh.md)）。
 
 #### `"beforeMoneyAdd"` - 玩家金额增加前事件
 
@@ -8,10 +8,10 @@
   `function(xuid,money)`
 - 参数：
   - xuid : `String`  
-    金额变动的玩家的XUID
+    金额变动玩家的 XUID
   - money : `Integer`  
     增加的金额
-- 拦截事件：函数返回`false`
+- 拦截事件：函数返回 `false`
 
 
 
@@ -21,7 +21,7 @@
   `function(xuid,money)`
 - 参数：
   - xuid : `String`  
-    金额变动的玩家的XUID
+    金额变动玩家的 XUID
   - money : `Integer`  
     增加的金额
 
@@ -33,10 +33,10 @@
   `function(xuid,money)`
 - 参数：
   - xuid : `String`  
-    金额变动的玩家的XUID
+    金额变动玩家的 XUID
   - money : `Integer`  
     减少的金额
-- 拦截事件：函数返回`false`
+- 拦截事件：函数返回 `false`
 
 
 
@@ -46,7 +46,7 @@
   `function(xuid,money)`
 - 参数：
   - xuid : `String`  
-    金额变动的玩家的XUID
+    金额变动玩家的 XUID
   - money : `Integer`  
     减少的金额
 
@@ -58,12 +58,12 @@
   `function(from,to,money)`
 - 参数：
   - from : `String`  
-    发起转账的玩家的XUID
+    发起转账玩家的 XUID
   - to : `String`  
-    接受转账的玩家的XUID
+    接收转账玩家的 XUID
   - money : `Integer`  
     转账的金额
-- 拦截事件：函数返回`false`
+- 拦截事件：函数返回 `false`
 
 
 
@@ -73,9 +73,9 @@
   `function(from,to,money)`
 - 参数：
   - from : `String`  
-    发起转账的玩家的XUID
+    发起转账玩家的 XUID
   - to : `String`  
-    接受转账的玩家的XUID
+    接收转账玩家的 XUID
   - money : `Integer`  
     转账的金额
 
@@ -88,10 +88,10 @@
   `function(xuid,money)`
 - 参数：
   - xuid : `String`  
-    金额变动的玩家的XUID
+    金额变动玩家的 XUID
   - money : `Integer`  
-    被设置的金额
-- 拦截事件：函数返回`false`
+    设置的金额
+- 拦截事件：函数返回 `false`
 
 
 
@@ -101,8 +101,8 @@
   `function(xuid,money)`
 - 参数：
   - xuid : `String`  
-    金额变动的玩家的XUID
+    金额变动玩家的 XUID
   - money : `Integer`  
-    被设置的金额
+    设置的金额
 
 

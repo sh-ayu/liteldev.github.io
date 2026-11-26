@@ -1,6 +1,6 @@
 # Command line
 
-This page tells you how to invoke `lip`: which commands there are, how arguments are read, where the output goes, what the exit status means, and what a dry run and Ctrl+C do. Each command has its own page; this one holds what they all share.
+This page explains how to invoke `lip`: the available commands, how arguments are parsed, where output goes, what exit statuses mean, and how dry runs and Ctrl+C work. Each command has its own page; this page covers what they all share.
 
 ## Synopsis
 
@@ -13,19 +13,19 @@ lip (cache | config | daemon | pkg) (-h | --help)
 lip <command> [<argument>...]
 ```
 
-In a synopsis, `word` is written as it is, `<name>` is replaced by a value, `[x]` is optional, `x | y` is either one, `(x | y)` groups alternatives, and `x...` is `x` one or more times.
+In a synopsis, `word` is written literally, `<name>` is replaced by a value, `[x]` is optional, `x | y` means either one, `(x | y)` groups alternatives, and `x...` means `x` one or more times.
 
 | Invocation | What lip does |
 | --- | --- |
-| `lip` | Runs the [interface](interface.md) when standard input and standard output are both terminals. Otherwise writes the help for `lip` to standard output. |
-| `lip -h`, `lip --help` | Writes the help for `lip` to standard output, whatever follows. |
-| `lip -v`, `lip --version` | Writes its version, a [SemVer](https://semver.org/spec/v2.0.0.html) version, and a line break to standard output, whatever follows. |
-| `lip --uri <link>` | Opens a `lip://` [install link](links.md): the interface asks whether to install its package. Only as the first of exactly two arguments. |
+| `lip` | Runs the [interface](interface.md) when standard input and standard output are both terminals. Otherwise, writes the help for `lip` to standard output. |
+| `lip -h`, `lip --help` | Writes the help for `lip` to standard output, regardless of what follows. |
+| `lip -v`, `lip --version` | Writes its version (a [SemVer](https://semver.org/spec/v2.0.0.html) version) and a line break to standard output, regardless of what follows. |
+| `lip --uri <link>` | Opens a `lip://` [install link](links.md): the interface asks whether to install its package. Valid only as the first of exactly two arguments. |
 | `lip cache -h`, `lip config -h`, `lip daemon -h`, `lip pkg -h` | Writes the help for the command group to standard output. `--help` does the same. |
-| `lip --daemon` | Runs as the [daemon](commands/daemon.md) until it exits, and writes nothing. lip starts it this way itself; you never need to. |
-| `lip <command> ...` | Carries out the command. |
+| `lip --daemon` | Runs as the [daemon](commands/daemon.md) until it exits, and writes nothing. lip starts the daemon this way itself; you never need to. |
+| `lip <command> ...` | Runs the command. |
 
-Writing the help or the version exits with code 0; `lip --uri` exits as the [interface](interface.md#exit-status) does, and with a non-zero code when the link is invalid or there is no terminal. Any other first argument that starts with `-` is a [usage error](#usage-errors).
+Writing the help or version exits with code 0. `lip --uri` exits with the same status as the [interface](interface.md#exit-status), or with a non-zero code when the link is invalid or there is no terminal. Any other first argument that starts with `-` is a [usage error](#usage-errors).
 
 ## Commands
 
@@ -33,12 +33,12 @@ Commands for running a server:
 
 | Command | Does |
 | --- | --- |
-| [`lip setup`](commands/setup.md) | Chooses the game and the loader of the workspace. |
+| [`lip setup`](commands/setup.md) | Chooses the game and loader for the workspace. |
 | [`lip install`](commands/install.md) | Installs packages into the workspace. |
 | [`lip uninstall`](commands/uninstall.md) | Uninstalls packages from the workspace. |
 | [`lip update`](commands/update.md) | Updates installed packages. |
-| [`lip list`](commands/list.md) | Lists the installed packages. |
-| [`lip run`](commands/run.md) | Runs the server of the workspace. |
+| [`lip list`](commands/list.md) | Lists installed packages. |
+| [`lip run`](commands/run.md) | Runs the workspace server. |
 | [`lip cache clean`](commands/cache_clean.md) | Deletes the cache. |
 | [`lip config get`, `set`, `list`, `delete`](commands/config.md) | Reads and writes the configuration. |
 
@@ -46,7 +46,7 @@ Commands for the daemon:
 
 | Command | Does |
 | --- | --- |
-| [`lip daemon status`](commands/daemon.md) | Shows whether the daemon runs. |
+| [`lip daemon status`](commands/daemon.md) | Shows whether the daemon is running. |
 | [`lip daemon stop`](commands/daemon.md) | Stops the daemon. |
 
 Commands for developing packages:
@@ -62,17 +62,17 @@ A command for lip itself:
 | --- | --- |
 | [`lip self-update`](commands/self_update.md) | Updates lip to its latest release. |
 
-`cache`, `config`, `daemon` and `pkg` are **command groups**: the first word of a command name of two words.
+`cache`, `config`, `daemon`, and `pkg` are **command groups**: the first word of a two-word command name.
 
 ## Arguments
 
-Command names, group names and option names are case-sensitive.
+Command names, group names, and option names are case-sensitive.
 
-- The first argument is a command name of one word or a command group. After a command group comes `-h`, `--help`, or the second word of a command of that group. Anything else is a usage error, and so is a command group with nothing after it.
-- `--` is not a separator in lip: any argument that is `--` is a usage error.
-- Options and operands may come in any order after the command name. Operands are assigned in the order given.
+- The first argument is a one-word command name or a command group. A command group must be followed by `-h`, `--help`, or the second word of a command in that group. Anything else—including a command group with nothing after it—is a usage error.
+- `--` is not a separator in lip: passing `--` as an argument is a usage error.
+- Options and operands may appear in any order after the command name. Operands are assigned in the order given.
 
-Each argument of a command that starts with `-` is an option:
+Each command argument that starts with `-` is an option:
 
 | Form | Meaning |
 | --- | --- |
@@ -83,116 +83,116 @@ Each argument of a command that starts with `-` is an option:
 
 - An option that takes a value and is written without `=` takes the next argument as its value. That argument must not start with `-`.
 - A value must not be empty.
-- A **flag** is an option that takes no value. A flag given more than once counts once.
-- An option that takes a value and is given more than once has the value of its last occurrence.
-- Short options cannot be combined: what `-nh` means is not defined. Neither is a flag written with a value, such as `--json=true`. Do not use them.
+- A **flag** is an option that takes no value. Giving a flag more than once counts as giving it once.
+- When an option that takes a value is given more than once, its last occurrence takes effect.
+- Short options cannot be combined (`-nh` is undefined), and flags cannot be given a value (such as `--json=true`). Do not use either form.
 
 Every other argument is an **operand**.
 
 ## Usage errors
 
-The arguments of a command are a usage error when:
+A command's arguments cause a usage error when:
 
-1. an option is not an option of the command;
+1. an option is not valid for the command;
 2. an option that takes a value has none;
-3. an operand or an option that the synopsis requires is absent; or
-4. there are more operands than the command takes.
+3. an operand or option required by the synopsis is missing; or
+4. more operands are given than the command accepts.
 
-On a usage error, lip writes a message to standard error, exits with a non-zero code, and does nothing else. It writes no [failure report](files.md#failure-reports).
+On a usage error, lip writes a message to standard error, exits with a non-zero code, and does nothing else. It does not write a [failure report](files.md#failure-reports).
 
 ## Options of every command
 
 | Option | Description |
 | --- | --- |
-| `-h`, `--help` | Writes the help of the command to standard output and exits with code 0. The command does nothing else. |
+| `-h`, `--help` | Writes the command's help to standard output and exits with code 0. The command does nothing else. |
 
-`-h` wins over a missing operand or an unknown option: `lip install -h` and `lip install -h --bogus` write the help. It does not win over an option value that is missing, or over too many operands; those stay usage errors.
+`-h` overrides a missing operand or an unknown option: `lip install -h` and `lip install -h --bogus` both print the help. It does not override a missing option value or too many operands; those remain usage errors.
 
 ## Working directory
 
-The **workspace** of every command is the current working directory. A relative path in an argument is relative to it. There is no option that names another workspace: change the directory first.
+The **workspace** for every command is the current working directory. Relative paths in arguments are resolved relative to it. There is no option to specify another workspace; change to the directory first.
 
 ## Output
 
-- A **result** is the data a command is asked for. It goes to standard output. Only `list`, `config get`, `config list`, `daemon status` and `self-update --check` have one.
-- A **message** is everything else: progress, information, warnings, errors, the final success line. It goes to standard error. Its wording may change between versions; do not parse it.
-- Help goes to standard output.
+- A **result** is the data requested from a command, written to standard output. Only `list`, `config get`, `config list`, `daemon status`, and `self-update --check` produce a result.
+- A **message** is everything else—progress, information, warnings, errors, and the final success line—written to standard error. Message wording may change between versions, so do not parse it.
+- Help is written to standard output.
 
-So `lip list > packages.txt` saves only the list, and `2> /dev/null` hides only the messages. Messages are always in English.
+As a result, `lip list > packages.txt` saves only the list, and `2> /dev/null` hides only the messages. Messages are always in English.
 
 ### JSON
 
-These commands take `--json`. Standard output then receives only the result, as JSON, followed by a line break:
+The following commands accept `--json`. When it is passed, standard output receives only the result as JSON, followed by a line break:
 
 | Command | JSON result |
 | --- | --- |
 | [`lip list --json`](commands/list.md#output) | `{ "ExplicitInstalled": [...], "ImplicitInstalled": [...] }` |
 | [`lip config get <KEY> --json`](commands/config.md#output) | The value as a JSON string, or `null`. |
-| [`lip config list --json`](commands/config.md#output) | An object that maps each key to its value, or `null`. |
+| [`lip config list --json`](commands/config.md#output) | An object mapping each key to its value, or `null`. |
 | [`lip daemon status --json`](commands/daemon.md#output) | `{ "running": false }`, or `{ "running": true, "version": "...", "pid": ... }`. |
 
-Without `--json`, the layout of a result is for people and may change.
+Without `--json`, the result is formatted for human readers and may change.
 
 ## Exit status
 
 | Code | Meaning |
 | --- | --- |
 | `0` | The command succeeded. |
-| not `0` | The command failed, a usage error included. A message on standard error says why. |
+| not `0` | The command failed (including usage errors). A message on standard error explains why. |
 
-[`lip run`](commands/run.md#exit-status) is the exception: once it has started the server, it exits with the exit code of the server.
+[`lip run`](commands/run.md#exit-status) is the exception: once it starts the server, it exits with the server's exit code.
 
-A command that fails for another reason than a usage error may write a **failure report**, a file below `.lip/logs/` in the workspace, and names it in a message. See [Failure reports](files.md#failure-reports).
+When a command fails for any reason other than a usage error, it may write a **failure report** under `.lip/logs/` in the workspace and print the file path in a message. See [Failure reports](files.md#failure-reports).
 
 ## Package arguments
 
-`install` and `update` take **package arguments**. lip classifies each one by the first rule that applies:
+`install` and `update` take **package arguments**. lip classifies each argument using the first rule that matches:
 
-1. **URL.** An argument that starts with `https://` is the URL of a ZIP archive. Any other scheme followed by `://`, such as `http://` or `file://`, is invalid.
-2. **Local path.** Take the argument without the part from its last `#` on, or the whole argument when it names an existing file or directory. It is a local path when that part
-   - starts with `./`, `../`, `.\` or `..\`;
+1. **URL.** An argument starting with `https://` is the URL of a ZIP archive. Any other scheme followed by `://`, such as `http://` or `file://`, is invalid.
+2. **Local path.** Consider the argument with everything from its last `#` onward removed—or the entire argument if it names an existing file or directory. It is a local path when that part
+   - starts with `./`, `../`, `.\`, or `..\`;
    - is `.` or `..`;
    - is an absolute path; or
-   - ends with `.zip` (in any case) or names an existing file or directory, and the argument contains no `@`.
+   - ends with `.zip` (case-insensitive) or names an existing file or directory, and the argument contains no `@`.
 
    A local path that does not exist is invalid.
-3. **Remote repository.** Anything else: `<repo>[#<variant>][@<ref>]`. A `<repo>` without `/` is a repository of LiteLDev: `LeviLamina@1.9.7` is `github.com/LiteLDev/LeviLamina@1.9.7`.
+3. **Remote repository.** Anything else: `<repo>[#<variant>][@<ref>]`. A `<repo>` without `/` refers to a LiteLDev repository: `LeviLamina@1.9.7` expands to `github.com/LiteLDev/LeviLamina@1.9.7`.
 
-A URL and a local path may end in `#<variant>`. The ref of a remote repository is one of:
+Both URLs and local paths may end with `#<variant>`. The ref of a remote repository can be one of the following:
 
 | Ref | Selects |
 | --- | --- |
-| none | The version tags of the repository (`v<version>`), highest first. |
-| `@<version>` | The commit of the tag `v<version>`. |
+| none | The repository's version tags (`v<version>`), highest first. |
+| `@<version>` | The commit for the tag `v<version>`. |
 | `@branch:<name>` | The commit the branch points to. |
 | `@tag:<name>` | The commit the tag points to. |
-| `@rev:<commit>` | The commit with that id: all 40 hexadecimal digits. |
+| `@rev:<commit>` | The commit with that full 40-digit hexadecimal ID. |
 
-A command with an invalid package argument fails before anything changes. [`lip install`](commands/install.md) has examples of each form.
+If any package argument is invalid, the command fails before making any changes. See [`lip install`](commands/install.md) for examples of each form.
 
 ## Environment
 
-lip installs packages for one **environment**: the side `server` and the platform `win-x64`, whatever system lip runs on. `setup`, `install`, `uninstall`, `update` and `run` fail in a workspace whose [state file](../concepts/state_file.md) records another side, or a platform other than `win-x64` and `linux-x64`. A state file of `linux-x64` is [read as one of `win-x64`](../concepts/state_file.md#workspaces-of-linux-x64).
+Regardless of the host system, lip installs packages for a single **environment**: the `server` side and the `win-x64` platform. `setup`, `install`, `uninstall`, `update`, and `run` fail if the workspace's [state file](../concepts/state_file.md) records a different side, or a platform other than `win-x64` or `linux-x64`. A `linux-x64` state file is [read as `win-x64`](../concepts/state_file.md#workspaces-of-linux-x64).
 
 ## Workspace operations
 
-`setup`, `install`, `uninstall` and `update` without `--dry-run` each carry out one **workspace operation**: they change the workspace as a whole or not at all.
+When run without `--dry-run`, `setup`, `install`, `uninstall`, and `update` each perform one **workspace operation**, modifying the workspace atomically—either in full or not at all.
 
-- An operation takes the workspace lock, `.lip/lock`. When another process holds it, the command fails at once and changes nothing.
-- When an earlier operation was interrupted, the next one first completes or undoes it.
-- A failure before the workspace starts to change changes nothing. A failure after that is undone. Hook commands that already ran are not reversed.
+- Each operation acquires the workspace lock (`.lip/lock`). If another process holds the lock, the command fails immediately without changing anything.
+- If a previous operation was interrupted, the next operation finishes or rolls it back first.
+- If a failure occurs before the workspace is modified, nothing changes. If a failure occurs during modification, the changes are rolled back, though any hook commands that have already run are not reversed.
 
 [How lip works](../concepts/how_lip_works.md) explains this in full.
 
 ## Dry run
 
-`setup`, `install`, `uninstall` and `update` take `-n` or `--dry-run`. A dry run carries out every step that changes nothing, and writes as messages what the operation would do to which packages. It:
+`setup`, `install`, `uninstall`, and `update` accept `-n` or `--dry-run`. A dry run carries out every step that makes no changes, and outputs messages describing what the operation would do to which packages. It:
 
-- does not take the workspace lock, so it works while another command changes the workspace;
-- does not recover an interrupted operation: when `.lip/journal` exists, it says so and plans with the workspace as it is;
-- runs no hook command;
-- asks no question; and
-- creates, replaces and deletes no file or directory, with one exception: when it fails, it may write a failure report.
+- does not take the workspace lock, so it works while another command is changing the workspace;
+- does not recover an interrupted operation: if `.lip/journal` exists, it reports this and plans against the workspace as it is;
+- runs no hook commands;
+- asks no questions; and
+- creates, replaces, or deletes no files or directories, with one exception: if it fails, it may write a failure report.
 
 A dry run still uses the network to resolve packages, and writes nothing to the cache.
 
@@ -202,18 +202,18 @@ What Ctrl+C does depends on what lip is doing:
 
 | lip is | The first Ctrl+C | A second Ctrl+C |
 | --- | --- | --- |
-| planning an operation, before the workspace changes | Ends lip at once. Nothing has changed. | |
-| changing the workspace | Cancels the operation and undoes its changes. | Ends lip at once. The next operation on the workspace recovers it. |
-| running the server with `lip run` | Sends `stop` to the server. lip exits when the server has. | Nothing more: lip never exits before the server. |
+| planning an operation, before the workspace changes | Stops lip immediately. Nothing has changed. | |
+| changing the workspace | Cancels the operation and undoes its changes. | Stops lip immediately. The next operation on the workspace recovers it. |
+| running the server with `lip run` | Sends `stop` to the server. lip exits once the server has exited. | Nothing more: lip never exits before the server. |
 | attached to a managed server (`lip run --managed`) | Sends `stop` to the server. You stay attached until it exits. | The same. |
 
 See [`lip run`](commands/run.md#stopping) for the other signals.
 
 ## The daemon
 
-Every command except those of the group `daemon`, and the interface, are carried out by the **daemon**: a background `lip` process of your user that the first command starts. You see no difference: the command uses your working directory, your environment variables, your terminal and your Ctrl+C, and `lip` exits with the exit code of the command.
+The **daemon**—a background `lip` process running as your user and started by the first command—carries out the interface and every command except those in the `daemon` group. You see no difference: the command uses your working directory, environment variables, terminal, and Ctrl+C, and `lip` exits with the command's exit code.
 
-When lip cannot start or reach the daemon, it writes a message and carries out the command itself. Only `lip run --managed` needs the daemon. See [`lip daemon`](commands/daemon.md).
+If lip cannot start or reach the daemon, it prints a message and runs the command itself. Only `lip run --managed` requires the daemon. See [`lip daemon`](commands/daemon.md).
 
 ## See also
 

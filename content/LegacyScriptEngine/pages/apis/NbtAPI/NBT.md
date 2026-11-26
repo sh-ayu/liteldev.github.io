@@ -5,12 +5,12 @@
 >
 > --- Minecraft Wiki
 
-This provides scripts with the ability to manipulate the **NBT** data type. **NBT** interface support greatly improves the scalability of the game.
+This API lets scripts manipulate the **NBT** data type. **NBT** interface support greatly improves the scalability of the game.
 
-In the game, a node called **NBT tag** is used to identify an item of NBT data. A variety of data types such as ordinary data, List, Compound, etc. can be stored in NBT tags.
+In the game, a node called an **NBT tag** identifies an item of NBT data. NBT tags can store a variety of data types, such as ordinary data, List, and Compound.
 
-In LegacyScriptEngine, each NBT data type has its corresponding data type, and we collectively call them "NBT objects".
-The comparison of the LSE type with the NBT data type is as follows:
+In LegacyScriptEngine, each NBT data type has a corresponding data type; together, they are called "NBT objects".
+The following table compares LSE types with NBT data types:
 
 | NBT Data Type | Corresponding NBT Object Type | Type Description (Wiki)                         |
 | ------------- | ----------------------------- | ----------------------------------------------- |
@@ -25,14 +25,14 @@ The comparison of the LSE type with the NBT data type is as follows:
 | `List`        | `NbtList`                     | NBT List (similar to array)                     |
 | `Compound`    | `NbtCompound`                 | NBT Tags (Similar to a list of Key-Value pairs) |
 
-Each data type may have a slightly different usage interface. They are introduced separately below:
+Each data type may have a slightly different interface. They are described separately below:
 
 
 
 ## 🎈 NBT Object Generic Interface 
 
-Each NBT object contains some executable member functions (member methods).  
-For any kind of NBT object, there are the following general interfaces. named `nbt`. An example of an NBT object of:
+Each NBT object has executable member functions (member methods).  
+Assume an NBT object named `nbt`. Any kind of NBT object provides the following general interfaces:
 
 #### Get the Data Type Stored by the NBT Object 
 
@@ -53,17 +53,17 @@ Possible return values are: `NBT.End` `NBT.Byte` `NBT.Short` `NBT.Int` `NBT.Long
 
 - Parameter:
   - space : `Integer`  
-    (Optional parameter) If you want to format the output string, pass this parameter.  
-    Represents the number of spaces per indent, so the resulting string is more human-readable.  
-    This parameter defaults to `-1`, i.e. the output string is not formatted.
+    (Optional parameter) Pass this parameter to format the output string.  
+    Specifies the number of spaces per indent to make the output string more readable.  
+    Defaults to `-1`, which leaves the output string unformatted.
 - Return value: The JSON form of the NBT object.
 - Return value type: `String`
 
-Hint: If this NBT object stores the `List` or `Compoundtype`, they will expand recursively to `Array` or `Object`.
-If this NBT object stores the `ByteArray` Type, the output byte string will be base64 encoded before output.
+Hint: If this NBT object stores a `List` or `Compoundtype`, it expands recursively into an `Array` or `Object`.
+If this NBT object stores the `ByteArray` type, the output byte string is base64-encoded before output.
 
-> The string output by the above function conforms to the JSON standard format, but cannot be deserialized.
-> If there is a need for deserialization, please use the **SNBT** interface provided by the NBT tag class.
+> The string returned by this function conforms to the standard JSON format, but it cannot be deserialized.
+> If you need deserialization, use the **SNBT** interface provided by the NBT tag class.
 
 
 #### Convert NBT Object to SNBT String
@@ -95,20 +95,20 @@ The following values are available:
 |----------------------------|---------------|-------------|
 | `SnbtFormat.Minimize`      | `0`           | Minimal output. |
 | `SnbtFormat.CompoundLineFeed` | `1`        | Insert line feeds for compound members. |
-| `SnbtFormat.ArrayLineFeed` | `2`           | Insert line feeds for arrays / lists. |
-| `SnbtFormat.Colored`       | `4`           | Add color formatting to output. |
+| `SnbtFormat.ArrayLineFeed` | `2`           | Insert line feeds for arrays and lists. |
+| `SnbtFormat.Colored`       | `4`           | Add color formatting to the output. |
 | `SnbtFormat.Console`       | `8`           | Use console-oriented formatting. |
 | `SnbtFormat.ForceAscii`    | `16`          | Force ASCII output. |
 | `SnbtFormat.ForceQuote`    | `32`          | Force quoted string output. |
 | `SnbtFormat.CommentMarks`  | `64`          | Add comment-style marks. |
 | `SnbtFormat.Jsonify`       | `96`          | Preset: `ForceQuote | CommentMarks`. |
-| `SnbtFormat.PartialLineFeed` | `1`         | Alias of `CompoundLineFeed`. |
+| `SnbtFormat.PartialLineFeed` | `1`         | Alias for `CompoundLineFeed`. |
 | `SnbtFormat.AlwaysLineFeed` | `3`          | Preset: `CompoundLineFeed | ArrayLineFeed`. |
-| `SnbtFormat.PrettyFilePrint` | `1`         | Alias of `PartialLineFeed`. |
+| `SnbtFormat.PrettyFilePrint` | `1`         | Alias for `PartialLineFeed`. |
 | `SnbtFormat.PrettyChatPrint` | `5`         | Preset: `PrettyFilePrint | Colored`. |
 | `SnbtFormat.PrettyConsolePrint` | `13`    | Preset: `PrettyFilePrint | Colored | Console`. |
 
 `CompoundLineFeed`, `ArrayLineFeed`, `Colored`, `Console`, `ForceAscii`, `ForceQuote`, and `CommentMarks` are bit flags.  
-The other entries above are predefined combinations or aliases.
+The remaining entries are predefined combinations or aliases.
 
 

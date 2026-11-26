@@ -76,21 +76,21 @@ Use `mc.runcmdEx` instead of `mc.runcmd`. `runcmdEx` has an output-hiding mechan
 
 ## How do I run a command with OP/console permission in an LSE plugin? How do I get the command output?
 
-`mc.runcmd(cmd)` runs the command as the server console (ServerCommandOrigin, permission level Owner, which is higher than OP). It is not limited by player permissions and only returns whether the command succeeded (Boolean). `mc.runcmdEx(cmd)` also runs as the console and returns a `{success, output}` object. You can store `output` in a variable and analyze it, and the output is not printed to the console.
+`mc.runcmd(cmd)` runs a command as the server console (ServerCommandOrigin, permission level Owner, which is higher than OP). It is not limited by player permissions and returns only a Boolean indicating whether the command succeeded. `mc.runcmdEx(cmd)` also runs as the console, suppresses the console output, and returns a `{success, output}` object so you can store `output` in a variable and inspect it.
 
 ## What is the difference between `mc.runcmd` and `mc.runcmdEx` in LSE?
 
-`mc.runcmd(cmd)` runs a command in the background and only returns whether it succeeded (Boolean). The command output is printed to the console as usual. `mc.runcmdEx(cmd)` runs the command and returns a result object `{ success: Boolean, output: String }`. The output is suppressed and not shown in the console, so call `log(result.output)` yourself if needed.
+`mc.runcmd(cmd)` runs a command in the background, prints its output to the console as usual, and returns only whether it succeeded (Boolean). `mc.runcmdEx(cmd)` runs the command, suppresses its console output, and returns a result object `{ success: Boolean, output: String }`. Call `log(result.output)` yourself if you still want the output printed.
 
-Do not call `runcmd`/`runcmdEx` inside an `onConsoleCmd` listener, or it may loop forever.
+Do not call `runcmd` or `runcmdEx` inside an `onConsoleCmd` listener, or it may cause an infinite loop.
 
 ## What permission level does `mc.runcmdEx` use to run commands in LSE?
 
-The same as the console: both `mc.runcmd` and `mc.runcmdEx` run as a ServerCommandOrigin named `"Server"` with permission level `CommandPermissionLevel::Owner` (the highest), so they can run every command the console can run.
+The same as the console: both `mc.runcmd` and `mc.runcmdEx` run as a ServerCommandOrigin named `"Server"` with permission level `CommandPermissionLevel::Owner` (the highest), so they can run any command the console can run.
 
 ## For cross-server transfer in LSE, is it better to listen for player input (a fake command) with `mc.listen("onPlayerCmd")`, or to register a real command? How do I register one?
 
-Register a real command. The client shows command hints for it, and it also works from command blocks and similar places. Example:
+Register a real command. The client shows command hints for it, and it also works from command blocks and other sources. Example:
 
 ```js
 mc.listen('onServerStarted', () => {
@@ -111,13 +111,13 @@ Note that `setup()` returns `true` on success, so negate it to check for failure
 
 ## In LSE, how do I trigger/call an mcfunction in a data pack (behavior pack) without rewriting it?
 
-Run the vanilla `function` command: `mc.runcmdEx("function 函数名")` (runs as the console and returns `{success, output}`), or `pl.runcmd("function 函数名")` (runs as the player).
+Run the vanilla `function` command: `mc.runcmdEx("function 函数名")` (runs as the console and returns `{success, output}`) or `pl.runcmd("function 函数名")` (runs as the player).
 
 ## In LSE, after registering a command with `mc.newCommand` and adding an optional parameter with `cmd.optional(...)`, the game shows command hints but running the command reports `未知的命令` ("unknown command"). Why? Also, what do the square brackets in `pl.tell(msg[,type])` in the documentation mean?
 
-The `[ ]` in the documentation only marks an "optional parameter"; it does not mean you should wrap the arguments in an array. Pass the arguments in order, for example `hub.optional("hub_num", ParamType.Int)`.
+In the documentation, `[ ]` simply marks an "optional parameter"; it does not mean you should wrap the arguments in an array. Pass the arguments in order, for example `hub.optional("hub_num", ParamType.Int)`.
 
-The command shows as unknown because `overload` was not called. After adding parameters, you must declare an overload with `cmd.overload([...])` (for example `hub.overload(["hub_num"])`; for an overload with no parameters, write `hub.overload([])`), then call `setCallback`, and finally `setup()`.
+The command is reported as unknown because `overload` was not called. After adding parameters, you must declare an overload with `cmd.overload([...])` (for example, `hub.overload(["hub_num"])`, or `hub.overload([])` for an overload with no parameters), then call `setCallback`, and finally call `setup()`.
 
 See <https://lse.levimc.org/zh/apis/> and <https://github.com/LiteLDev/legacy-script-engine-api>.
 
@@ -125,17 +125,17 @@ See <https://lse.levimc.org/zh/apis/> and <https://github.com/LiteLDev/legacy-sc
 
 ## Does LSE have an API to get the list of all commands registered on the server?
 
-LSE provides no ready-made API to get the list of all registered commands (the command-related interfaces are only `mc.runcmd` / `mc.runcmdEx` / `mc.newCommand` / `mc.regPlayerCmd` / `mc.regConsoleCmd` / `mc.sendCmdOutput` and so on).
+LSE provides no built-in API to get the list of all registered commands (its command-related interfaces are limited to `mc.runcmd`, `mc.runcmdEx`, `mc.newCommand`, `mc.regPlayerCmd`, `mc.regConsoleCmd`, `mc.sendCmdOutput`, and similar functions).
 
-A workaround is to run the `help` command with `mc.runcmdEx("help")` and parse the returned `output` text. If you really need the complete list, a C++ mod can get it through the `CommandRegistry` of LeviLamina / BDS.
+As a workaround, run the `help` command with `mc.runcmdEx("help")` and parse the returned `output` text. If you need the complete list, a C++ mod can get it through the `CommandRegistry` of LeviLamina / BDS.
 
 *Applies to: all current LSE versions (0.23.1 still has no such API)*
 
 ## Does LSE have an API to make an entity run a command? The entity object has no method like `execute`.
 
-LSE's entity (Entity) object has no method for running commands (only the player object has `pl.runcmd`). You can use the vanilla `execute` command instead: run ``execute as @e[c=1,type=\<entity type>] at @s run \<command>`` with `mc.runcmdEx` (add coordinate / name / tag selector conditions as needed to locate the entity precisely; for example, tag the target entity first and then use `@e[tag=xxx]`).
+LSE's entity (Entity) object has no method for running commands (only the player object has `pl.runcmd`). Use the vanilla `execute` command instead: run ``execute as @e[c=1,type=\<entity type>] at @s run \<command>`` with `mc.runcmdEx` (add coordinate / name / tag selector conditions as needed to locate the entity precisely; for example, tag the target entity first and then use `@e[tag=xxx]`).
 
-If you use C++, you can refer to the command-execution implementation in the LSE source code.
+If you use C++, see the command-execution implementation in the LSE source code.
 
 *Applies to: all current LSE versions*
 
@@ -143,82 +143,82 @@ If you use C++, you can refer to the command-execution implementation in the LSE
 
 Things to check:
 
-1. First, `log(res.action)` or similar in the callback to confirm that the parameters are passed in correctly and that the callback runs;
-2. Write `break` at the end of every `case` of a `switch`; otherwise execution falls through, which can overwrite the output or cause errors;
-3. Make sure the world's `sendcommandfeedback` game rule is not turned off;
+1. First, call `log(res.action)` or similar in the callback to confirm that the parameters are passed in correctly and that the callback runs.
+2. Put `break` at the end of every `case` in a `switch`; otherwise execution falls through, which can overwrite the output or cause errors.
+3. Make sure the world's `sendcommandfeedback` game rule is enabled.
 4. As a workaround, send a message directly to the executor with `ori.player.tell(...)` (note that `ori.player` is empty when the command is run from the console).
 
-Also, remember to `close` databases such as KVDatabase when you are done; otherwise opening them again elsewhere raises an error.
+Also, remember to `close` databases such as KVDatabase when you are done; otherwise, opening them again elsewhere raises an error.
 
-*Applies to: all current LSE versions. Not confirmed against the source code or the documentation: treat it as a pointer.*
+*Applies to: all current LSE versions. Not confirmed against the source code or the documentation: treat this as a pointer.*
 
 ## When registering an LSE command with a player selector parameter, reading `res.pl.name` in the callback gives `undefined`. Why?
 
-A `ParamType.Player` (and `ParamType.Actor`) parameter returns an array of objects (`Array<Player>` / `Array<Actor>`), not a single object. Access it by index, for example `res.pl[0].name`, or iterate over the array (check the array length first, because the selector may match no player).
+A `ParamType.Player` (or `ParamType.Actor`) parameter returns an array of objects (`Array<Player>` / `Array<Actor>`), not a single object. Access it by index—for example, `res.pl[0].name`—or iterate over the array (check the array length first, because the selector may match no player).
 
 *Applies to: all current LSE versions*
 
 ## How do I give a command multiple aliases when registering it in LSE?
 
-Call `cmd.setAlias(alias)` multiple times; each call adds one alias. On the C++ side this corresponds to LeviLamina's `CommandHandle::alias()`, which internally calls `CommandRegistry::registerAlias`.
+Call `cmd.setAlias(alias)` multiple times; each call adds one alias. On the C++ side, this corresponds to LeviLamina's `CommandHandle::alias()`, which internally calls `CommandRegistry::registerAlias`.
 
 *Applies to: all current LSE versions*
 
 ## When registering a command in LSE, how do I make a string parameter that supports Tab completion of existing values, like the vanilla `tag` command? I changed the parameter to `SoftEnum` but the game shows no suggestions.
 
-Use a soft enum: first define the soft enum and its initial values with `cmd.setSoftEnum(name, values)`, then declare the parameter with `cmd.mandatory` / `cmd.optional` (parameter name, `ParamType.SoftEnum`, name) and add it to an overload. Afterwards you can add or remove options dynamically with `cmd.addSoftEnumValues` / `removeSoftEnumValues`. The game shows completion suggestions only when the soft enum contains values.
+Use a soft enum: first define the soft enum and its initial values with `cmd.setSoftEnum(name, values)`, then declare the parameter with `cmd.mandatory` / `cmd.optional` (parameter name, `ParamType.SoftEnum`, name) and add it to an overload. Afterwards, you can add or remove options dynamically with `cmd.addSoftEnumValues` / `removeSoftEnumValues`. The game shows completion suggestions only when the soft enum contains values.
 
 ## A command registered by LSE (such as `/home`) reports insufficient permission when run. How do I fix it?
 
-The usual cause is that the command has no overload. After creating the command with `mc.newCommand`, you must add at least one overload, for example `cmd.overload([])` for a command without parameters, then call `setCallback` and `setup`. Also note that the permission parameter of `mc.newCommand` defaults to `PermType.Admin`. To let regular players use the command, pass `PermType.Any` explicitly, for example `mc.newCommand("home", "回家", PermType.Any)`.
+This usually happens because the command has no overload. After creating the command with `mc.newCommand`, you must add at least one overload—for example, `cmd.overload([])` for a command without parameters—and then call `setCallback` and `setup`. Also note that the permission parameter of `mc.newCommand` defaults to `PermType.Admin`. To let regular players use the command, pass `PermType.Any` explicitly, for example `mc.newCommand("home", "回家", PermType.Any)`.
 
 ## Why does LSE's command origin type `OriginType` have no `Server`, only `DedicatedServer` and others?
 
-LSE's runtime `OriginType` enum is generated directly from BDS's vanilla `CommandOriginType`, and the member names match the vanilla ones: `Player`, `CommandBlock`, `MinecartCommandBlock`, `DevConsole`, `Test`, `AutomationPlayer`, `ClientAutomation`, `DedicatedServer`(7), `Entity`, `Virtual`, `GameArgument`, `EntityServer`, `Precompiled`, `GameDirectorEntityServer`, `Scripting`, `ExecuteContext`. Use `OriginType.DedicatedServer` for console/server origins. The TS declarations in `legacy-script-engine-api` keep the names from the LL2 era (`Server`, `Block`, `Actor` and so on, with `DedicatedServer` as an alias of `Server`), so editor completion offers `Server`, but that member does not exist at runtime. You can also get the type name string with `ori.typeName`.
+LSE's runtime `OriginType` enum is generated directly from BDS's vanilla `CommandOriginType`, and its member names match the vanilla ones: `Player`, `CommandBlock`, `MinecartCommandBlock`, `DevConsole`, `Test`, `AutomationPlayer`, `ClientAutomation`, `DedicatedServer`(7), `Entity`, `Virtual`, `GameArgument`, `EntityServer`, `Precompiled`, `GameDirectorEntityServer`, `Scripting`, `ExecuteContext`. Use `OriginType.DedicatedServer` for console/server origins. The TS declarations in `legacy-script-engine-api` retain the names from the LL2 era (`Server`, `Block`, `Actor`, and so on, with `DedicatedServer` as an alias for `Server`), so editor completion suggests `Server`, even though that member does not exist at runtime. You can also get the type name as a string with `ori.typeName`.
 
 ## Does LSE's command registration API have a block states command parameter? Can I get its value?
 
-The `ParamType` enum keeps `BlockState` (value 16), and you can use it to register parameters with `mandatory` / `optional`. However, LSE does not handle this type when converting the parsed command result into script values, so the parameter value in the callback is empty (`undefined`) and the type is unusable in practice. If you need block states, use a string or JSON parameter and parse it yourself.
+The `ParamType` enum includes `BlockState` (value 16), and you can use it to register parameters with `mandatory` / `optional`. However, LSE does not handle this type when converting parsed command results into script values, so the parameter value in the callback is empty (`undefined`), making the type unusable in practice. If you need block states, use a string or JSON parameter and parse it yourself.
 
 *Applies to: LSE v0.23.1*
 
 ## How do I run a command as a player in an LSE script? Can `player.runcmd` run administrator (OP) commands?
 
-LSE provides `player.runcmd(cmd)` to run a command as the player. Internally it builds a `PlayerCommandOrigin` from that player, which is no different from the player typing the command, so which commands can run depends on that player's permissions, and a non-OP player cannot use it to run administrator commands. To run with higher permissions, use the console identity `mc.runcmd` / `mc.runcmdEx` (`ServerCommandOrigin`, Owner permission) together with `/execute as "<player name>" run <command>`.
+LSE provides `player.runcmd(cmd)` to run a command as a player. Internally, it builds a `PlayerCommandOrigin` from that player, which behaves the same as the player typing the command themselves. Which commands can run therefore depends on that player's permissions, and a non-OP player cannot use it to run administrator commands. To run a command with higher permissions, use the console identity `mc.runcmd` / `mc.runcmdEx` (`ServerCommandOrigin`, Owner permission) together with `/execute as "<player name>" run <command>`.
 
 ## A button in an LSE menu plugin (such as cmenu) shows "Unknown command" when it runs a command. What is the cause?
 
-Such plugins usually run commands with `pl.runcmd()`, as the player and with the player's permissions. The "unknown command" message appears when the player lacks permission (the command requires OP), or when the plugin that provides the command (land claims, shops, check-in and so on) is not installed or the command is not registered. To fix it, first install the plugins that provide these commands, for example iland for land claims, and pshop or Tmessential for shops. Then delete the entries you do not need from the menu's JSON configuration. When editing the JSON, mind the syntax: the last element must not be followed by an extra comma.
+Menu plugins usually run commands with `pl.runcmd()` as the player, using the player's permissions. The "unknown command" message appears when the player lacks permission (because the command requires OP), when the plugin that provides the command (such as land claims, shops, or check-in) is not installed, or when the command is not registered. To fix this, first install the plugins that provide those commands—for example, iland for land claims, and pshop or Tmessential for shops. Then delete the entries you do not need from the menu's JSON configuration. When editing the JSON, watch the syntax: the last element must not have a trailing comma.
 
 *Applies to: current version (depends on the third-party menu and command plugins in use). Not confirmed against the source code or the documentation: treat it as a pointer.*
 
 ## What is the difference between `setSoftEnum()` and `setEnum()` on the `Command` object in LSE/LLSE?
 
-`setSoftEnum(name, values)` registers a soft enum, used with a `ParamType.SoftEnum` parameter; after the command is registered, its candidate values can still be changed dynamically with `addSoftEnumValues` / `removeSoftEnumValues` and so on. `setEnum(name, values)` registers a regular enum, which cannot be changed after registration. Use a soft enum when the candidates must change at runtime (such as player names or a dynamic list).
+`setSoftEnum(name, values)` registers a soft enum for use with a `ParamType.SoftEnum` parameter. After the command is registered, you can still change its candidate values dynamically with methods such as `addSoftEnumValues` and `removeSoftEnumValues`. `setEnum(name, values)` registers a regular enum, which cannot be changed after registration. Use a soft enum when the candidates need to change at runtime (such as player names or a dynamic list).
 
 ## I changed the permission level of a command in an LSE plugin, but it has no effect after reloading the plugin. Why?
 
-An LSE command has its name, description, permission and other properties fixed when `mc.newCommand` first registers it. When the plugin reloads, the command already exists, and LSE warns `Runtime command xxx already exists, changes will not beapplied except for setOverload!` (the source text is exactly this). Only overloads and callbacks are updated; changes to permission and the like take effect only after a server restart. Also note the permission enum: `PermType.Any`(0) \< `PermType.GameMasters`(1, OP) \< `PermType.Admin`(2, the default of `mc.newCommand`) \< `PermType.HostPlayer`(3) \< `PermType.Console`(4); `Admin` is one level above `GameMasters`. If you do not want to restrict permission, use `PermType.Any` and check in the callback yourself (for example with `origin.player?.isOP()`). LSE itself provides no interface to change a command's permission after registration.
+When `mc.newCommand` first registers an LSE command, it fixes the command's name, description, permission level, and other properties. When the plugin reloads, the command already exists, and LSE logs the warning `Runtime command xxx already exists, changes will not beapplied except for setOverload!` (exact text from the source). Only overloads and callbacks are updated; changes to permissions and other properties take effect only after a server restart. Also note the order of the permission enum: `PermType.Any`(0) \< `PermType.GameMasters`(1, OP) \< `PermType.Admin`(2, the default for `mc.newCommand`) \< `PermType.HostPlayer`(3) \< `PermType.Console`(4); `Admin` is one level above `GameMasters`. If you do not want to restrict permissions at the command level, use `PermType.Any` and check permissions in the callback yourself (for example, with `origin.player?.isOP()`). LSE provides no API to change a command's permission level after registration.
 
 *Applies to: LSE 0.9 and later; still applies to current 0.23.x*
 
 ## In an LSE plugin I want to restrict some players from using another plugin's commands. After I intercept the command, the other plugin's form still pops up. Can I intercept another plugin's forms?
 
-Normally, returning `false` from `onPlayerCmd` to block command execution also stops the other plugin's command and any form that follows, unless that plugin's "command" is implemented by listening to chat or other events rather than by registering a command. LSE can technically intercept forms as well, but this is not recommended. The correct approach is to intercept command execution, or to have the plugins cooperate directly to forbid execution.
+Normally, returning `false` from `onPlayerCmd` blocks command execution and stops both the other plugin's command and any form it opens—unless that plugin implements its "command" by listening to chat or other events rather than registering an actual command. While LSE can technically intercept forms as well, doing so is not recommended. The right approach is to intercept command execution, or have the plugins cooperate directly to block it.
 
 ## In an LSE script plugin, `mc.runcmdEx("list")` returns text containing `§` color codes, which breaks parsing or display. How do I handle it?
 
-`mc.runcmdEx` returns an object `{success, output}`, and the command output is in the `.output` field. You need to strip the color codes yourself, for example:
+`mc.runcmdEx` returns an object `{success, output}`, with the command output in the `.output` field. You need to strip the color codes yourself, for example:
 
 ```js
 mc.runcmdEx("list").output.replace(/§./g, "")
 ```
 
-If you only want the online players, it is better to use `mc.getOnlinePlayers()` to get an array of player objects and count them yourself, which avoids parsing localized command output text.
+If you only need the online players, use `mc.getOnlinePlayers()` instead to get an array of player objects and count them yourself. This avoids parsing localized command output.
 
 ## How do I write a `/back` command with LSE that returns a player to their last death point? Do I need to record the death coordinates myself?
 
-No, you do not need to record them yourself. LSE's player object provides the `pl.lastDeathPos` property (an `IntPos` that includes the dimension `dimid`); when the player has no death record, the property is empty (`undefined`). Example:
+No, you do not need to record them yourself. LSE's player object provides the `pl.lastDeathPos` property (an `IntPos` that includes the dimension `dimid`). If the player has no recorded death, this property is `undefined`. Example:
 
 ```js
 const cmd = mc.newCommand('back', '返回死亡点', PermType.Any);
@@ -234,11 +234,11 @@ cmd.setCallback((cmd, origin, output, result) => {
 cmd.setup();
 ```
 
-Note: when ScriptX cannot get a value it returns `undefined`, not `null`, so check for emptiness with `!x` and do not use a strict `== null` comparison. Another approach is to read the vanilla death-position field from `player.getNbt()`, but the field name belongs to the vanilla BDS structure and is less reliable than using `lastDeathPos` directly.
+Note: When ScriptX cannot retrieve a value, it returns `undefined`, not `null`, so check for an empty value with `!x` rather than a strict `== null` comparison. Alternatively, you can read the vanilla death-position field from `player.getNbt()`, but because that field name belongs to the internal BDS structure, it is less reliable than using `lastDeathPos` directly.
 
 ## When registering a command with LSE (for example `/pay <player> <amount>`), how do I make a parameter optional so the client does not mark the command red when it is omitted?
 
-Command syntax checking is done on the client. Declare the parameter with `cmd.optional(name, type, ...)` instead of `cmd.mandatory(...)`, or provide an extra overload that does not include the parameter (leave it out of the `cmd.overload([...])` list), then check in the callback whether the parameter in `results` is empty/`undefined`.
+The client checks command syntax. Declare the parameter with `cmd.optional(name, type, ...)` instead of `cmd.mandatory(...)`, or add a separate overload that omits the parameter from `cmd.overload([...])`. Then, in the callback, check whether the parameter in `results` is empty (`undefined`).
 
 *Applies to: LSE all current versions*
 
@@ -246,8 +246,8 @@ Command syntax checking is done on the client. Declare the parameter with `cmd.o
 
 1. The command name (and everything except variable parameters such as `String`/`RawText`/`Message`) may only use lowercase English letters.
 2. A `RawText` parameter can only be the last parameter.
-3. Register commands in the `onServerStarted` event (the official examples do this).
-4. The argument of `overload` is an array; with no parameters write `cmd.overload([])`. You must call `cmd.setup()` at the end.
+3. Register commands in the `onServerStarted` event, as shown in the official examples.
+4. `overload` takes an array as its argument; if the command has no parameters, pass `cmd.overload([])`. You must call `cmd.setup()` at the end.
 
 Example (Python):
 
@@ -259,6 +259,6 @@ cmd.setCallback(callback)
 cmd.setup()
 ```
 
-See the LSE documentation `GameAPI/Command` for details.
+See `GameAPI/Command` in the LSE documentation for details.
 
-*Applies to: LSE all current versions*
+*Applies to: all current versions of LSE*

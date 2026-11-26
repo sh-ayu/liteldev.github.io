@@ -1,13 +1,13 @@
 # LeviLauncher installieren
 
-LeviLauncher gibt es als Windows- und als Android-Version sowie als macOS-Version, die sich in der Beta befindet. Der Tab für dein Gerät ist bereits ausgewählt.
+LeviLauncher gibt es für Windows und Android sowie als Beta-Version für macOS. Der Tab für dein Gerät ist bereits ausgewählt.
 
 ## Was du brauchst
 
 === "Windows"
 
     - Windows 10 oder 11.
-    - Eine lizenzierte Kopie von Minecraft Bedrock Edition (GDK / UWP) aus dem Microsoft Store.
+    - Eine lizenzierte Kopie der Minecraft Bedrock Edition (GDK / UWP) aus dem Microsoft Store.
 
 === "Android"
 
@@ -17,10 +17,10 @@ LeviLauncher gibt es als Windows- und als Android-Version sowie als macOS-Versio
 === "macOS"
 
     - macOS 14.6 oder neuer auf einem Mac mit Apple Silicon.
-    - Eine lizenzierte Kopie von Minecraft Bedrock Edition. LeviLauncher führt das Windows-Spiel (GDK) über Wine aus.
+    - Eine lizenzierte Kopie der Minecraft Bedrock Edition. LeviLauncher führt das Windows-Spiel (GDK) über Wine aus.
 
 ::: info iOS
-Es gibt keine iOS-Version von LeviLauncher, und wir planen auch keine.
+Für iOS gibt es keine Version von LeviLauncher, und wir planen auch keine.
 :::
 
 ## Installieren
@@ -28,23 +28,23 @@ Es gibt keine iOS-Version von LeviLauncher, und wir planen auch keine.
 === "Windows"
 
     1. Öffne das [neueste Release von LeviLauncher](https://github.com/LiteLDev/LeviLauncher/releases/latest) und lade `LeviLauncher-amd64-installer.exe` herunter.
-    2. Führe die Datei aus und schließe den Einrichtungsassistenten ab. Er fragt nach Administratorrechten, weil er standardmäßig nach `Program Files` installiert. Wenn er WebView2 oder eine andere Komponente installieren möchte, lass ihn fortfahren.
+    2. Führe die Datei aus und folge dem Einrichtungsassistenten. Da er standardmäßig nach `Program Files` installiert, fragt er nach Administratorrechten. Wenn er WebView2 oder eine andere Komponente installieren möchte, lass ihn fortfahren.
 
     Das Release enthält zwei weitere Dateien, die du normalerweise nicht brauchst:
 
-    | Datei | Was sie ist |
+    | Datei | Zweck |
     | --- | --- |
-    | `LeviLauncher.exe` | Die portable Version: Lege sie allein in einen neuen Ordner, dessen Pfad nur englische Buchstaben enthält, und starte sie von dort. |
-    | `LeviLauncher.zip` | Das Paket, das der Launcher herunterlädt, wenn er sich selbst aktualisiert. |
+    | `LeviLauncher.exe` | Die portable Version: Lege sie einzeln in einen neuen Ordner, dessen Pfad nur englische Buchstaben enthält, und starte sie von dort. |
+    | `LeviLauncher.zip` | Das Paket, das der Launcher beim Selbst-Update herunterlädt. |
 
 === "Android"
 
-    1. Öffne auf dem Gerät das [neueste Release von LeviLauncher für Android](https://github.com/LiteLDev/LeviLauncher-Android/releases/latest) und lade die Datei herunter, deren Name auf `-release.apk` endet.
-    2. Öffne die heruntergeladene Datei. Wenn Android meldet, dass dein Browser keine Apps installieren darf, tippe auf **Einstellungen**, aktiviere **Dieser Quelle vertrauen**, gehe zurück und tippe auf **Installieren**.
+    1. Öffne auf dem Gerät das [neueste Release von LeviLauncher für Android](https://github.com/LiteLDev/LeviLauncher-Android/releases/latest) und lade die Datei mit der Endung `-release.apk` herunter.
+    2. Öffne die heruntergeladene Datei. Falls Android meldet, dass dein Browser keine Apps installieren darf, tippe auf **Einstellungen**, aktiviere **Dieser Quelle vertrauen**, gehe zurück und tippe auf **Installieren**.
 
 === "macOS"
 
-    Die macOS-Version befindet sich in der Beta: Sie liegt in den Releases, die als **Pre-release** markiert sind, nicht im neuesten stabilen Release.
+    Die macOS-Version ist noch in der Beta-Phase: Du findest sie nicht im neuesten stabilen Release, sondern in den als **Pre-release** markierten Releases.
 
     1. Öffne die [Releases von LeviLauncher](https://github.com/LiteLDev/LeviLauncher/releases) und suche das neueste Release, das `LeviLauncher-macos-arm64-installer.dmg` enthält.
     2. Lade diese Datei herunter, öffne sie und ziehe **LeviLauncher** in **Programme**.
@@ -53,30 +53,30 @@ Es gibt keine iOS-Version von LeviLauncher, und wir planen auch keine.
 
 ## Prüfen, ob es funktioniert
 
-Starte LeviLauncher. Sein Fenster öffnet sich; beim ersten Start zeigt es die Ersteinrichtung (Windows, macOS) oder die Lizenzvereinbarung (Android).
+Starte LeviLauncher. Das Fenster öffnet sich und zeigt beim ersten Start die Ersteinrichtung (Windows, macOS) oder die Lizenzvereinbarung (Android).
 
 ## Aktualisieren
 
 === "Windows"
 
-    LeviLauncher sucht beim Start nach einer neueren Version und bietet an, sie zu installieren; die Aktualisierung erfolgt an Ort und Stelle. Um selbst nachzusehen, öffne **Einstellungen** und klicke auf **Auf Update prüfen**, oder führe `LeviLauncher.exe self-update` aus.
+    LeviLauncher sucht beim Start nach einer neueren Version, bietet ihre Installation an und aktualisiert sich direkt vor Ort. Um manuell zu suchen, öffne die **Einstellungen** und klicke auf **Auf Update prüfen**, oder führe `LeviLauncher.exe self-update` aus.
 
 === "Android"
 
-    LeviLauncher bietet eine neuere Version an, sobald er eine findet, lädt ihre APK herunter und übergibt sie Android zur Installation. Wenn dein Netzwerk GitHub nicht erreicht, lade die neue APK aus den Releases herunter und installiere sie über die App.
+    Sobald LeviLauncher eine neuere Version findet, bietet er sie an, lädt die APK herunter und übergibt sie an Android zur Installation. Kann dein Netzwerk GitHub nicht erreichen, lade die neue APK selbst aus den Releases herunter und installiere sie über die bestehende App.
 
 === "macOS"
 
-    LeviLauncher sucht beim Start nach einer neueren Version und bietet an, sie zu installieren.
+    LeviLauncher sucht beim Start nach einer neueren Version und bietet ihre Installation an.
 
 ## Beta- und ältere Versionen
 
-Jede Version mit ihren Dateien und Änderungen steht auf den Release-Seiten:
+Alle Versionen samt Dateien und Änderungen findest du auf den Release-Seiten:
 
 - Windows und macOS: [Releases von LiteLDev/LeviLauncher](https://github.com/LiteLDev/LeviLauncher/releases)
 - Android: [Releases von LiteLDev/LeviLauncher-Android](https://github.com/LiteLDev/LeviLauncher-Android/releases)
 
-Eine **Beta** ist ein Release, das dort als **Pre-release** markiert ist, etwa `v1.2.0-beta.1`. Sie enthält, was die nächste Version bringt, bevor es fertig ist, und kann fehlerhaft sein. Um eine auszuprobieren, lade ihre Dateien wie oben beschrieben aus ihrem Release herunter. Unter Windows kann ein installierter LeviLauncher den Betas auch folgen: Aktiviere **Beta-Updates erhalten** in den **Einstellungen**, dann bietet er jede neue Beta als Update an. Deaktiviere die Option, um bei stabilen Versionen zu bleiben.
+Eine **Beta** ist dort als **Pre-release** markiert, etwa `v1.2.0-beta.1`. Sie enthält bereits die Neuerungen der kommenden Version, ist aber noch nicht fertig und kann Fehler enthalten. Um eine Beta auszuprobieren, lade ihre Dateien wie oben beschrieben aus dem jeweiligen Release herunter. Unter Windows kann ein bereits installierter LeviLauncher Betas auch automatisch beziehen: Aktiviere in den **Einstellungen** die Option **Beta-Updates erhalten**, damit er jede neue Beta als Update anbietet. Deaktiviere die Option wieder, um bei stabilen Versionen zu bleiben.
 
 ## Nächste Schritte
 

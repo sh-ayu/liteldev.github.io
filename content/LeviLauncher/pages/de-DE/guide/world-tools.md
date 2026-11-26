@@ -3,18 +3,18 @@ platforms: [windows]
 ---
 # Welt-Tools
 
-LeviLauncher bietet einige Werkzeuge, die dir helfen, deine Weltdaten zu schützen und zu überprüfen.
+LeviLauncher bietet Werkzeuge, mit denen du deine Weltdaten sichern und prüfen kannst.
 
 ## Hauptfunktionen
 
-- Exportieren von Welten als `.mcworld` oder andere Backup-Pakete
-- Anzeigen weltbezogener Informationen
-- Bearbeiten bestimmter `level.dat`-Felder
-- Sichereres Ändern des Weltnamens über den Launcher-Prozess
+- Welten als `.mcworld` oder andere Backup-Pakete exportieren
+- Weltinformationen anzeigen
+- Bestimmte Felder in der `level.dat` bearbeiten
+- Weltnamen über den Launcher sicherer ändern
 
 ## Wann du eine Welt sichern solltest
 
-In folgenden Szenarien wird ein Backup empfohlen:
+Ein Backup empfiehlt sich in folgenden Fällen:
 
 - Vor dem Testen einer Minecraft Preview
 - Vor dem Installieren oder Aktualisieren mehrerer Mods
@@ -23,16 +23,16 @@ In folgenden Szenarien wird ein Backup empfohlen:
 
 ## Über das Bearbeiten von `level.dat`
 
-LeviLauncher kann bestimmte Felder aus der `level.dat` in einer leichter handhabbaren Form zugänglich machen.
+LeviLauncher stellt bestimmte Felder der `level.dat` übersichtlich zur Bearbeitung bereit.
 
 ::: warning Bitte bearbeite dies mit Vorsicht
-Die `level.dat` enthält sensible Welt-Metadaten. Erstelle bitte zunächst ein Backup und ändere nur Felder, die du verstehst.
+Die `level.dat` enthält sensible Welt-Metadaten. Erstelle vorher ein Backup und ändere nur Felder, deren Bedeutung du kennst.
 :::
 
 ## Empfohlene Backup-Gewohnheiten
 
-1. Erstelle ein Backup vor größeren Versionsupdates.
-2. Erstelle ein Backup vor dem Hinzufügen neuer Mods oder Ressourcenpakete.
+1. Erstelle vor größeren Versionsupdates ein Backup.
+2. Erstelle vor dem Hinzufügen neuer Mods oder Ressourcenpakete ein Backup.
 3. Bewahre mindestens eine Sicherungskopie außerhalb des Arbeitsverzeichnisses der aktuellen Version auf.
 
 ## Verwandte Lektüre

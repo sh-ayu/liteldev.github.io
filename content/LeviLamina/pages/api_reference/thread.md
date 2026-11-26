@@ -12,7 +12,7 @@ The Thread module provides thread pool executors, server thread executors, and s
 |--------|-------------|
 | `ll/api/thread/ThreadPoolExecutor.h` | Thread pool executor |
 | `ll/api/thread/ServerThreadExecutor.h` | Server main thread executor |
-| `ll/api/thread/GlobalThreadPauser.h` | Pause all game threads |
+| `ll/api/thread/GlobalThreadPauser.h` | Pauses all game threads |
 | `ll/api/thread/ThreadName.h` | Thread naming utility (`getThreadName`, `setThreadName`) |
 | `ll/api/thread/InplaceExecutor.h` | Executor that runs work immediately on the calling thread |
 | `ll/api/thread/InterruptableSleep.h` | Blocking sleep that another thread can interrupt |
@@ -127,5 +127,5 @@ void createCustomPool() {
 
 ## Related
 
-- [Coroutine](coro.md) — Executors are used by coroutines
+- [Coroutine](coro.md) — Coroutines that use these executors
 - [Chrono](chrono.md) — Duration types for delayed execution

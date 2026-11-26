@@ -10,97 +10,97 @@ lip install <PACKAGES>... [--accept-eula] [--accept-rosetta-license] [-n | --dry
 
 ## Description
 
-`lip install` installs each of `<PACKAGES>`, with its dependencies, into the workspace, as one [workspace operation](../cli.md#workspace-operations). Each of `<PACKAGES>` is a [package argument](../cli.md#package-arguments):
+`lip install` installs each of `<PACKAGES>` and its dependencies into the workspace as a single [workspace operation](../cli.md#workspace-operations). Each of `<PACKAGES>` is a [package argument](../cli.md#package-arguments):
 
 | Form | Example | Installs |
 | --- | --- | --- |
-| `<repo>` | `github.com/user/repo` | The highest version tag of the git repository `https://<repo>.git`. |
-| `<repo>#<variant>` | `github.com/LiteLDev/LegacyScriptEngine#lua` | That variant of the package. Every form below takes `#<variant>` too, before the `@`. |
+| `<repo>` | `github.com/user/repo` | The highest version tag in the Git repository `https://<repo>.git`. |
+| `<repo>#<variant>` | `github.com/LiteLDev/LegacyScriptEngine#lua` | That variant of the package. Every form below also accepts `#<variant>` before the `@`. |
 | `<repo>@<version>` | `github.com/user/repo@1.0.0` | The commit of the tag `v<version>`. |
-| `<repo>@branch:<name>` | `github.com/user/repo@branch:main` | The commit the branch points to now. |
-| `<repo>@tag:<name>` | `github.com/user/repo@tag:nightly` | The commit the tag points to now. Any tag name works. |
-| `<repo>@rev:<commit>` | `github.com/user/repo@rev:0123456789abcdef0123456789abcdef01234567` | That commit. All 40 hexadecimal digits are needed. |
+| `<repo>@branch:<name>` | `github.com/user/repo@branch:main` | The commit that the branch currently points to. |
+| `<repo>@tag:<name>` | `github.com/user/repo@tag:nightly` | The commit that the tag currently points to. Any tag name works. |
+| `<repo>@rev:<commit>` | `github.com/user/repo@rev:0123456789abcdef0123456789abcdef01234567` | That commit. All 40 hexadecimal digits are required. |
 | An `https://` URL | `https://example.com/package.zip` | The ZIP archive at that URL. `#<variant>` may follow. |
-| A local path | `./package.zip`, `../MyTool`, `C:\Downloads\package.zip` | A ZIP file, or a directory, on your disk. `#<variant>` may follow. |
+| A local path | `./package.zip`, `../MyTool`, `C:\Downloads\package.zip` | A ZIP file or directory on your disk. `#<variant>` may follow. |
 
-A `<repo>` without `/` is a repository of LiteLDev: `LeviLamina` is `github.com/LiteLDev/LeviLamina`.
+A `<repo>` without a `/` refers to a LiteLDev repository: `LeviLamina` expands to `github.com/LiteLDev/LeviLamina`.
 
 What it does:
 
-- The packages you name become **explicitly installed**. One that was installed as a dependency becomes explicitly installed too.
-- The dependencies of the packages are installed as **dependency packages**.
-- An installed package keeps its version when that still works. Otherwise a dependency package may change version.
-- Dependency packages that no explicitly installed package needs any more are uninstalled.
+- The packages you name become **explicitly installed**, including any that were previously installed as dependencies.
+- Their dependencies are installed as **dependency packages**.
+- Already-installed packages keep their versions when compatible; otherwise, a dependency package may change version.
+- Dependency packages that are no longer needed by any explicitly installed package are uninstalled.
 
-What it refuses, before anything changes:
+What it rejects before making any changes:
 
-- A package argument that is invalid, or names no package for the side `server` and the platform `win-x64`.
+- An invalid package argument, or one that has no package for the `server` side and `win-x64` platform.
 - A package that is already explicitly installed. Use [`lip update`](update.md) to change its version.
 - Two arguments that name the same package.
-- A set of packages that cannot be installed together, such as two mods with the same mod name, or dependencies that no version satisfies.
-- Anything that would change the game or the loader. See below.
+- A set of packages that cannot be installed together, such as two mods with the same mod name or dependencies that no version can satisfy.
+- Anything that would change the game or the loader (see below).
 
-The version of a package installed from `@branch:`, `@tag:` or `@rev:` is the `version` in its `lip.toml` at that commit. Such a package also satisfies dependencies on the same repository and variant, when its version is in their range.
+The version of a package installed from `@branch:`, `@tag:`, or `@rev:` is the `version` in its `lip.toml` at that commit. Such a package also satisfies dependencies on the same repository and variant if its version falls within their required range.
 
 ### The game and the loader
 
 The **game** and the **loader** are the installed packages of `github.com/LiteLDev/bds` and `github.com/LiteLDev/LeviLamina`; see [`lip setup`](setup.md#terms).
 
-`lip install` never installs, uninstalls or replaces the game or the loader, except as [Setting up with install](#setting-up-with-install) says. When the packages cannot be installed with them as they are, for example when a mod needs a newer LeviLamina, the command fails and names the game version, the loader version and `lip setup`. Set up a game and a loader that the mod supports with [`lip setup`](setup.md), then install the mod.
+Except as described in [Setting up with install](#setting-up-with-install), `lip install` never installs, uninstalls, or replaces the game or the loader. If the requested packages are incompatible with the current game or loader—for example, if a mod requires a newer LeviLamina—the command fails and reports the game version, the loader version, and `lip setup`. Use [`lip setup`](setup.md) to set up a compatible game and loader, then install the mod.
 
-In a workspace that has no game, `lip install` fails and points to `lip setup` when a package you name, or one that it would install, is a mod, the server or LeviLamina. File packages that need none of them can be installed without a game.
+In a workspace without a game, `lip install` fails and points to `lip setup` if any package you name—or any dependency it would install—is a mod, the server, or LeviLamina. File packages that do not depend on any of these can be installed without a game.
 
 ### Setting up with install
 
-An argument **names the server** when it is `github.com/LiteLDev/bds`, with or without a variant or ref. An argument **names the loader** when it is `github.com/LiteLDev/LeviLamina` without a variant, and without a ref or with `@<version>`. Both are compared ignoring case.
+An argument **names the server** if it is `github.com/LiteLDev/bds`, with or without a variant or ref. An argument **names the loader** if it is `github.com/LiteLDev/LeviLamina` with no variant, and with either no ref or `@<version>`. Both comparisons are case-insensitive.
 
-When an argument names the server or the loader, `lip install` is carried out as a [`lip setup`](setup.md), together with the other arguments, in one operation:
+If an argument names the server or the loader, `lip install` runs as [`lip setup`](setup.md), together with the other arguments, in a single operation:
 
 | Setting | Value |
 | --- | --- |
 | Build | `linux` when the server is named as `github.com/LiteLDev/bds#linux`; `windows` otherwise. |
-| Loader | No loader when no argument names LeviLamina. Otherwise LeviLamina: at the version of its `@<version>`; without one, the newest version that fits the game version that the server argument gives; or the newest LeviLamina when no argument gives a game version. |
-| Game version | The `@<version>` of the server argument. Without one: the newest game version that the LeviLamina above accepts, or the newest game version when no argument names LeviLamina. |
+| Loader | No loader if no argument names LeviLamina. Otherwise LeviLamina: at the `@<version>` specified; if none is specified, the latest version compatible with the game version from the server argument; or the latest LeviLamina if no argument gives a game version. |
+| Game version | The `@<version>` of the server argument. If none is specified, the latest game version supported by the resolved LeviLamina, or the latest game version if no argument names LeviLamina. |
 
 | Command | Sets up |
 | --- | --- |
-| `lip install LeviLamina` | The newest LeviLamina, with the newest game it supports. |
-| `lip install LeviLamina@1.0.0` | LeviLamina 1.0.0, with the newest game it supports. |
-| `lip install github.com/LiteLDev/bds@1.21.0 LeviLamina` | The game 1.21.0, with the newest LeviLamina that fits it. |
-| `lip install github.com/LiteLDev/bds@1.21.0` | The Windows server 1.21.0, without a loader. |
-| `lip install github.com/LiteLDev/bds#linux` | The newest Linux server, without a loader. |
+| `lip install LeviLamina` | The latest LeviLamina, with the latest game it supports. |
+| `lip install LeviLamina@1.0.0` | LeviLamina 1.0.0, with the latest game it supports. |
+| `lip install github.com/LiteLDev/bds@1.21.0 LeviLamina` | Game 1.21.0, with the latest compatible LeviLamina. |
+| `lip install github.com/LiteLDev/bds@1.21.0` | Windows server 1.21.0, without a loader. |
+| `lip install github.com/LiteLDev/bds#linux` | The latest Linux server, without a loader. |
 
-Two arguments that name the server, or two that name the loader, fail the command. Everything that [`lip setup`](setup.md) says holds: the license question, `--accept-eula`, left-out packages and the system dependencies.
+Passing two arguments that name the server, or two that name the loader, causes the command to fail. Everything documented for [`lip setup`](setup.md) applies: the license prompt, `--accept-eula`, left-out packages, and system dependencies.
 
 ## Options
 
 | Option | Description |
 | --- | --- |
-| `--accept-eula` | Accept the [license of the game](setup.md#the-license) without being asked, when `lip install` is carried out as a setup. Otherwise it has no effect. |
-| `--accept-rosetta-license` | Accept the license of Rosetta 2, so that lip installs it without asking when a Mac with Apple silicon lacks it. See [macOS on Apple silicon](../../guides/linux_macos.md#macos-on-apple-silicon). |
-| `-n`, `--dry-run` | A [dry run](../cli.md#dry-run). The messages name the packages that would be installed, uninstalled or marked explicitly installed. Nothing is changed. |
-| `-h`, `--help` | Write the help and exit. |
+| `--accept-eula` | Accept the [game license](setup.md#the-license) without prompting when `lip install` runs as a setup. Has no effect otherwise. |
+| `--accept-rosetta-license` | Accept the Rosetta 2 license so lip installs it without prompting when a Mac with Apple silicon lacks it. See [macOS on Apple silicon](../../guides/linux_macos.md#macos-on-apple-silicon). |
+| `-n`, `--dry-run` | Perform a [dry run](../cli.md#dry-run). Messages list the packages that would be installed, uninstalled, or marked as explicitly installed, without making any changes. |
+| `-h`, `--help` | Print help and exit. |
 
 ## Output
 
-`lip install` has no result: it writes nothing to standard output. Progress and the final line are messages on standard error. The hook commands of the packages write to standard output and standard error themselves.
+`lip install` produces no result and writes nothing to standard output. Progress and the final line are written to standard error. Package hook commands write directly to standard output and standard error.
 
 ## Exit status
 
 | Code | Meaning |
 | --- | --- |
 | `0` | The packages were installed, or the dry run finished. |
-| not `0` | A usage error, or the installation failed. An installation that failed is undone. |
+| not `0` | A usage error occurred, or the installation failed. A failed installation is undone. |
 
 ## Examples
 
-Install a mod from its repository, at its newest version:
+Install the latest version of a mod from its repository:
 
 ```shell
 lip install github.com/LiteLDev/LegacyScriptEngine#lua
 ```
 
-Install a given version, and see first what it would do:
+Preview what installing a given version would do, then install it:
 
 ```shell
 lip install github.com/user/repo@1.0.0 --dry-run
@@ -113,7 +113,7 @@ Install several packages in one operation:
 lip install github.com/user/repo github.com/user/other@2.1.0
 ```
 
-Install from a branch, a URL, a ZIP file and a directory:
+Install from a branch, a URL, a ZIP file, and a directory:
 
 ```shell
 lip install github.com/user/repo@branch:main
@@ -122,7 +122,7 @@ lip install ./package.zip
 lip install ../MyTool
 ```
 
-Set up a server and install a mod in one step, in a script:
+Set up a server and install a mod in one step in a script:
 
 ```shell
 lip install LeviLamina github.com/user/repo --accept-eula

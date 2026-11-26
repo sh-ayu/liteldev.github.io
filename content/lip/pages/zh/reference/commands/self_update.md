@@ -10,32 +10,32 @@ lip self-update [--check] [-h | --help]
 
 ## 说明
 
-`lip self-update` 找出 lip 的最新发布；如果它比正在运行的 lip 新，就按 lip 当初的安装方式安装它。
+`lip self-update` 会查找 lip 的最新发布；如果比正在运行的 lip 新，就按 lip 当初的安装方式安装它。
 
 ### 检查
 
-lip 从 lip 仓库 `https://github.com/LiteLDev/lip.git` 的标签读取 [lip 的发布](https://github.com/LiteLDev/lip/releases)，方式和读取任何包的版本一样：每个 `v` 加 SemVer 版本的标签就是一个发布。其他标签会被忽略。
+lip 从仓库 `https://github.com/LiteLDev/lip.git` 的标签读取 [lip 的发布](https://github.com/LiteLDev/lip/releases)，方式与读取其他包的版本相同：每个 `v` 加 SemVer 版本的标签代表一个发布，其他标签会被忽略。
 
-**最新发布**是版本最高的那个。像 `1.1.0-beta.1` 这样的预发布版本，只有在正在运行的 lip 本身也是预发布版本时才计入。
+**最新发布**即版本最高的发布。像 `1.1.0-beta.1` 这样的预发布版本，只有在正在运行的 lip 本身也是预发布版本时才会纳入比较。
 
-没有任何发布，或者最新发布并不比正在运行的 lip 新时，lip 写明它已是最新，并且不做任何更改。带 `--check` 时，无论哪种情况，lip 都到此为止。
+如果没有任何发布，或者最新发布不比正在运行的 lip 新，lip 会输出它已是最新，不做任何更改。若指定了 `--check`，无论哪种情况，lip 都到此为止。
 
 ### 安装类型
 
 | 类型 | 含义 | lip 如何得知 |
 | --- | --- | --- |
-| `msi` | lip 是由 Windows 安装程序 `lip-<version>-<platform>.msi` 安装的。 | `lip` 可执行文件旁边的 `install.json` 文件内容是一个 `kind` 为 `"msi"` 的 JSON 对象。它由安装程序写入。 |
+| `msi` | lip 是由 Windows 安装程序 `lip-<version>-<platform>.msi` 安装的。 | `lip` 可执行文件旁边的 `install.json` 文件由安装程序写入，内容为 `kind` 是 `"msi"` 的 JSON 对象。 |
 | `portable` | lip 是从归档中解压出来的，或以其他任何方式安装的。 | 没有 `install.json`。 |
 
-对类型 `msi`，**安装范围**说明安装程序为谁安装了 lip：`user` 是运行安装程序的用户，`machine` 是所有用户。它是 `install.json` 的成员 `scope`：`{"kind": "msi", "scope": "user"}` 或 `{"kind": "msi", "scope": "machine"}`。没有这个成员时（早先的安装程序写的是 `{"kind": "msi"}`），安装范围是 `machine`。
+对于 `msi` 类型，**安装范围**表示安装程序是为谁安装的 lip：`user` 为运行安装程序的用户，`machine` 为所有用户。它由 `install.json` 的 `scope` 成员指定：`{"kind": "msi", "scope": "user"}` 或 `{"kind": "msi", "scope": "machine"}`。若没有该成员（早期安装程序写入的是 `{"kind": "msi"}`），安装范围为 `machine`。
 
-如果 `install.json` 存在，却不是 `kind` 为 `"msi"`、并且没有 `scope` 或 `scope` 为 `"user"` 或 `"machine"` 的 JSON 对象，`lip self-update` 失败。
+如果 `install.json` 存在，但内容不是 JSON 对象，或者不满足 `kind` 为 `"msi"` 且无 `scope`（或 `scope` 为 `"user"` 或 `"machine"`），`lip self-update` 就会失败。
 
-`<platform>` 是 lip 运行所在的系统：`win-`、`linux-` 或 `osx-`，后接 `x64` 或 `arm64`。在其他系统上，`lip self-update` 在做出任何更改之前失败。
+`<platform>` 是 lip 运行所在的系统：`win-`、`linux-` 或 `osx-`，后接 `x64` 或 `arm64`。在其他系统上，`lip self-update` 会在做出任何更改前失败。
 
 ### 更新
 
-不带 `--check` 且存在更新的发布 `V` 时，lip 依次：
+未指定 `--check` 且存在更新的发布 `V` 时，lip 依次执行以下步骤：
 
 1. 读取安装类型和安装范围。
 2. 选定发布中要安装的文件。在 Windows 以外的系统上，类型 `msi` 会失败。
@@ -47,54 +47,54 @@ lip 从 lip 仓库 `https://github.com/LiteLDev/lip.git` 的标签读取 [lip �
    | Windows 和 macOS 上的 `portable` | `lip-V-<platform>.zip` |
 
 3. 清空并创建[缓存目录](../files.md#缓存目录)中的 `self-update` 目录。
-4. 从 `https://github.com/LiteLDev/lip/releases/download/vV/<文件>` 把文件下载到 `self-update` 中。下载失败时（例如发布中还没有这个文件），命令失败。
-5. 按安装类型安装该文件；见下文。
+4. 从 `https://github.com/LiteLDev/lip/releases/download/vV/<文件>` 将文件下载到 `self-update` 中。若下载失败（例如发布中还没有这个文件），命令失败。
+5. 按安装类型安装该文件，详见下文。
 
-第 1 到 4 步中的失败不会更改安装目录中的任何文件。
+第 1 到 4 步若失败，不会更改安装目录中的任何文件。
 
-**`msi`。** lip 启动 `msiexec /i <file> /qn /norestart`。安装范围为 `machine` 时，lip 以管理员身份启动它；Windows 会请你允许。安装范围为 `user` 时，lip 以运行 lip 的用户身份启动它，Windows 不会询问。你拒绝，或者 `msiexec` 没能启动时，命令失败。否则 lip 写明安装程序正在运行，并立即以退出码 0 退出，不等待它结束。安装程序在后台静默地替换 lip，不会重启 Windows。请关闭其他正在运行的 `lip` 进程，让它能够完成。
+**`msi`。** lip 启动 `msiexec /i <file> /qn /norestart`。安装范围为 `machine` 时，lip 以管理员身份启动它，Windows 会请求你允许；安装范围为 `user` 时，lip 以当前用户身份启动它，Windows 不会询问。如果你拒绝，或者 `msiexec` 未能启动，命令失败。否则，lip 会输出安装程序正在运行，并立即以退出码 0 退出，不等待其结束。安装程序会在后台静默替换 lip，不会重启 Windows。请关闭其他正在运行的 `lip` 进程，以便安装完成。
 
-**`portable`。** lip 把归档解压到 `self-update` 中，然后逐个替换 lip 所在目录中的文件：每个已有的文件先改名为 `<file>.old`，再在原位置写入新文件。任何一步失败时，lip 把所有改过名的文件恢复原样，然后失败。所有文件都写好之后，lip 删除能删除的 `.old` 文件和 `self-update` 目录。
+**`portable`。** lip 将归档解压到 `self-update` 中，然后逐个替换 lip 所在目录中的文件：先把每个已有文件改名为 `<file>.old`，再在原位置写入新文件。若任一步骤失败，lip 会把所有改过名的文件恢复原样，然后报错退出。所有文件写入完毕后，lip 会删除可删除的 `.old` 文件和 `self-update` 目录。
 
-- 目录中不在归档里的文件会保留。
-- 在 Windows 上，正在运行的 `lip.exe` 无法删除，所以 `lip.exe.old` 会留下。下一次启动的 `lip` 会删除它。
-- 在 Linux 上，解压 `.tar.xz` 归档需要系统中有 `tar` 和 `xz`。
+- 目录中不在归档内的文件会保留。
+- 在 Windows 上，正在运行的 `lip.exe` 无法删除，因此会留下 `lip.exe.old`，由下次启动的 `lip` 删除。
+- 在 Linux 上，解压 `.tar.xz` 归档需要系统装有 `tar` 和 `xz`。
 
 ### 更新之后
 
-如果这次更新替换了 lip 或启动了安装程序，执行它的[守护进程](daemon.md)会在空闲后退出，这样下一条命令就会启动新版本。它还在运行托管服务器时会继续运行；参见[更新之后](daemon.md#更新之后)。
+如果这次更新替换了 lip 或启动了安装程序，执行更新的[守护进程](daemon.md)会在空闲后退出，以便下一条命令启动新版本。如果守护进程仍在运行托管服务器，则会继续运行；参见[更新之后](daemon.md#更新之后)。
 
-正在运行的界面仍然是旧版本。在界面的[设置](../../interface/settings.md)页用**安装更新**装好更新后，界面会提示你退出 lip 再重新运行（如果启动的是安装程序，就提示你退出 lip 让安装程序完成），并给出**退出 lip**和**以后再说**两个按钮。界面结束后，lip 会在标准错误写一行，例如 `lip 已更新到 1.1.0。请再次运行 lip 以启动新版本。`
+正在运行的界面仍是旧版本。在界面的[设置](../../interface/settings.md)页通过**安装更新**完成更新后，界面会提示你退出 lip 并重新运行（若启动的是安装程序，则提示退出 lip 以完成安装），并提供**退出 lip**和**以后再说**两个按钮。界面关闭后，lip 会在标准错误输出一行提示，例如 `lip 已更新到 1.1.0。请再次运行 lip 以启动新版本。`
 
 ### 网络
 
-设置了 [`github_proxy`](../configuration.md#github-proxy) 时，标签和更新文件都通过它获取，代理失败时再直接连接 GitHub。lip 不读取 `SHA256SUMS`，也不访问 GitHub API。代理有可能改变 lip 安装的内容，所以请使用你信任的代理。
+配置了 [`github_proxy`](../configuration.md#github-proxy) 时，标签和更新文件都会通过该代理获取，代理失败时再直接连接 GitHub。lip 不读取 `SHA256SUMS`，也不访问 GitHub API。代理可能会篡改 lip 安装的内容，请仅使用你信任的代理。
 
 ## 选项
 
 | 选项 | 说明 |
 | --- | --- |
-| `--check` | 只查找最新发布。不安装任何东西，也不做任何更改。 |
+| `--check` | 只查找最新发布。不安装任何内容，也不做任何更改。 |
 | `-h`、`--help` | 输出帮助并退出。 |
 
 ## 输出
 
-只有 `lip self-update --check` 有结果。存在更新的发布时，标准输出收到它的版本和一个换行：
+只有 `lip self-update --check` 会产生标准输出。存在更新的发布时，标准输出会收到该版本号和一个换行：
 
 ```
 1.1.0
 ```
 
-lip 已是最新时，标准输出什么都收不到。其余的都是写到标准错误的消息。
+lip 已是最新时，标准输出为空。其余消息均写入标准错误。
 
-所以脚本要靠输出是否为空来区分这两种情况，而不是靠退出码。
+因此，脚本应根据标准输出是否为空来区分这两种情况，而不是根据退出码。
 
 ## 退出状态
 
 | 退出码 | 含义 |
 | --- | --- |
 | `0` | lip 已是最新；或 `--check` 已完成（无论是否存在更新的发布）；或更新已安装；或安装程序已启动。 |
-| 非 `0` | 用法错误，或检查或更新失败。 |
+| 非 `0` | 用法错误，或检查、更新失败。 |
 
 ## 示例
 
@@ -110,7 +110,7 @@ lip self-update --check
 lip self-update
 ```
 
-在 POSIX shell 脚本中，只在有新版本时更新：
+在 POSIX shell 脚本中，仅当有新版本时才更新：
 
 ```shell
 if [ -n "$(lip self-update --check 2> /dev/null)" ]; then

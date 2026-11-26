@@ -1,77 +1,77 @@
 # Mods & Intégrations
 
-LeviLauncher prend en charge des workflows liés aux Mods qui vont au-delà des fonctionnalités d'un « lanceur de base ».
+LeviLauncher prend en charge la gestion des Mods bien au-delà des fonctions d'un « lanceur de base ».
 
 ## Fonctionnalités actuellement disponibles
 
 === "Windows"
 
     - Importer des paquets de Mods (`.mcmod`)
-    - Les paquets `.zip` et les Mods `.dll` isolés restent acceptés : choisissez **Tous les fichiers (\*.\*)** dans le sélecteur de fichiers
+    - Importer des paquets `.zip` et des Mods `.dll` autonomes en sélectionnant **Tous les fichiers (\*.\*)** dans le sélecteur de fichiers
     - Activer ou désactiver les Mods installés
-    - Supprimer les Mods dont vous n'avez plus besoin
-    - Utiliser des flux de navigation et d'obtention liés à CurseForge
+    - Supprimer les Mods devenus inutiles
+    - Parcourir et récupérer des ressources sur CurseForge
     - Installer des paquets LIP avec le gestionnaire de paquets intégré, compatible avec [lip](https://github.com/LiteLDev/lip)
-    - Fonctionner avec des workflows de chargeurs comme LeviLamina
+    - Utiliser des chargeurs de Mods comme LeviLamina
 
     ::: warning Zone avancée
-    La compatibilité des Mods, des chargeurs et des intégrations de gestion de paquets évolue souvent rapidement, surtout sur les versions Minecraft Preview (Aperçu). Considérez ceci comme une fonctionnalité avancée et procédez par tests progressifs.
+    La compatibilité des Mods, des chargeurs et des gestionnaires de paquets évolue souvent rapidement, surtout sur les versions Minecraft Preview (Aperçu). Considérez ces outils comme des fonctionnalités avancées et testez vos ajouts progressivement.
     :::
 
 === "Android"
 
-    - charger des Mods natifs (bibliothèques `.so`) dans le jeu
-    - garder les configurations moddées dans des versions isolées
+    - Charger des Mods natifs (bibliothèques `.so`) dans le jeu
+    - Conserver chaque configuration moddée dans une version isolée
 
-    Vous créez des Mods natifs ? Consultez [Android native mods](https://levimc.org/LeviLamina/developer_guides/android/) dans la documentation de LeviLamina (en anglais).
+    Vous développez des Mods natifs ? Consultez [Android native mods](https://levimc.org/LeviLamina/developer_guides/android/) dans la documentation de LeviLamina (en anglais).
 
 ## Workflow recommandé pour les Mods
 
-1. Commencez avec une version isolée propre.
-2. Vérifiez d'abord que cette version peut démarrer normalement sans Mods.
+1. Partez d'une version isolée propre.
+2. Vérifiez d'abord qu'elle démarre normalement sans Mods.
 3. Ajoutez un seul Mod ou un petit groupe de modifications à la fois.
 4. Testez le lancement après chaque modification.
-5. Conservez toujours un chemin de sauvegarde pour vos mondes importants.
+5. Gardez toujours un moyen de sauvegarder vos mondes importants.
 
 ## CurseForge <Badge platform="windows" />
 
-Le lanceur propose des flux de navigation et de gestion de paquets liés à CurseForge, vous permettant de trouver plus facilement les ressources appropriées directement dans l'application.
+Le lanceur intègre la navigation et la gestion des paquets CurseForge pour vous aider à trouver les bonnes ressources directement depuis l'application.
 
-C'est utile pour :
+Cela permet de :
 
-- Avoir une expérience de recherche plus guidée
-- Voir rapidement les fichiers compatibles d'un projet
-- Éviter de faire toutes vos recherches en dehors du lanceur
+- Bénéficier d'une recherche plus guidée
+- Repérer rapidement les fichiers compatibles d'un projet
+- Chercher vos ressources sans quitter le lanceur
 
 ## lip et LeviLamina <Badge platform="windows" />
 
-LeviLauncher intègre un gestionnaire de paquets compatible avec [lip](https://github.com/LiteLDev/lip) : vous n'avez donc pas besoin d'installer lip ni le runtime .NET séparément. Il suit lip : chaque version enregistre ses paquets dans `.lip/state.json`, et les paquets sont lus depuis leur `lip.toml` (les anciens paquets qui n'ont qu'un `tooth.json` fonctionnent toujours). Les versions sur lesquelles LeviLamina ou des paquets LIP ont été installés avec un ancien launcher (`tooth_lock.json`) sont migrées automatiquement lors de la première opération sur les paquets. Lorsque **Utiliser des miroirs** est activé, les téléchargements de paquets depuis GitHub passent par le **Proxy GitHub** défini dans les [Paramètres](./settings-personalization) ; sinon, ils se connectent directement à GitHub (via le proxy système, s'il y en a un). Un proxy GitHub enregistré auparavant, ou un `github_proxy` défini dans le `config.toml` de lip (dans `%APPDATA%\lip`, par exemple avec `lip config set github_proxy <URL>`), s'applique dans les deux cas. **Nettoyer le cache** supprime les fichiers de paquets téléchargés.
+LeviLauncher intègre un gestionnaire de paquets compatible avec [lip](https://github.com/LiteLDev/lip) : vous n'avez donc besoin d'installer ni lip ni le runtime .NET séparément. Il fonctionne comme lip : chaque version enregistre ses paquets dans `.lip/state.json`, et les métadonnées des paquets sont lues depuis leur `lip.toml` (les anciens paquets qui n'ont qu'un `tooth.json` restent pris en charge). Les versions contenant LeviLamina ou des paquets LIP installés avec un ancien lanceur (`tooth_lock.json`) sont migrées automatiquement dès la première opération sur les paquets. Lorsque **Utiliser des miroirs** est activé, le téléchargement des paquets depuis GitHub passe par le **Proxy GitHub** défini dans les [Paramètres](./settings-personalization) ; sinon, la connexion à GitHub est directe (en utilisant le proxy système, le cas échéant). Un proxy GitHub enregistré précédemment ou un `github_proxy` défini dans le `config.toml` de lip (dans `%APPDATA%\lip`, par exemple via `lip config set github_proxy <URL>`) s'applique dans les deux cas. **Nettoyer le cache** supprime les fichiers de paquets téléchargés.
 
-Depuis lip v0.40, chaque entrée d'un `lip.toml` et de `.lip/state.json` indique où elle s'exécute avec `side` (`server` ou `client`) et `platform` (un identifiant de runtime .NET comme `win-x64`) ; lip v0.39 et antérieur les appelait `platform` et `runtime`. Un `.lip/state.json` écrit avec les anciennes clés, par lip v0.39 ou antérieur ou par un ancien lanceur, est converti automatiquement avant la prochaine opération de paquets : `platform` devient `side` et `runtime` devient `platform`. Un fichier que lip ne peut toujours pas lire est refusé avec un message qui indique le changement : renommez `platform` en `side` et `runtime` en `platform`, ou réinstallez les paquets de cette version.
+Depuis lip v0.40, chaque entrée de `lip.toml` et de `.lip/state.json` indique son environnement d'exécution à l'aide des clés `side` (`server` ou `client`) et `platform` (un identifiant de runtime .NET comme `win-x64`), là où lip v0.39 et les versions antérieures utilisaient `platform` et `runtime`. Tout fichier `.lip/state.json` utilisant les anciennes clés — qu'il ait été généré par lip v0.39 ou antérieur, ou par un ancien lanceur — est converti automatiquement avant l'opération suivante sur les paquets : `platform` devient `side` et `runtime` devient `platform`. Si lip ne parvient toujours pas à lire le fichier, il le rejette avec un message signalant ce changement : renommez alors `platform` en `side` et `runtime` en `platform`, ou réinstallez les paquets de cette version.
 
-Ce type d'intégration convient mieux aux utilisateurs avancés souhaitant utiliser des workflows basés sur les paquets ou les chargeurs.
+Cette intégration s'adresse avant tout aux utilisateurs avancés qui gèrent leurs installations via des paquets ou des chargeurs.
 
 Bonnes pratiques :
 
-- Commencez toujours par une version Release (officielle) stable
-- Ne modifiez pas plusieurs facteurs à haut risque en même temps
+- Partez toujours d'une version Release (officielle) stable
+- Évitez de modifier plusieurs paramètres risqués en même temps
 - Notez la combinaison de versions qui « fonctionnait correctement la dernière fois »
 
-Pour ajouter LeviLamina à une version client, consultez [Install client on Windows](https://levimc.org/LeviLamina/user_guides/install_on_client/) dans la documentation de LeviLamina (en anglais).
+Pour installer LeviLamina sur une version client, consultez [Install client on Windows](https://levimc.org/LeviLamina/user_guides/install_on_client/) dans la documentation de LeviLamina (en anglais).
 
 ### Page LeviMC Mods
 
-La page **LeviMC Mods** liste les mods de [levimc.org/mods](https://levimc.org/mods/) qui ont une version pour le client sous Windows x64 (une entrée avec `side = "client"` et `platform = "win-x64"`). Vous pouvez les rechercher par nom, ID, auteur, étiquette ou description ; les trier par pertinence, étoiles, dernière mise à jour ou plus récents ; et les filtrer par version du jeu, version de LeviLamina, étiquettes (les étiquettes recommandées comme Bibliothèque / API ou Économie viennent en premier, et une étiquette peut aussi être exclue), licence (une famille comme Permissive ou un ID SPDX), dépendances et auteur (**Plus de …** sur la page d'un mod). L'installation d'un mod choisit sa variante `client`, sinon sa variante par défaut, sinon la première autre variante ayant une version pour le client ; la page d'un mod permet de choisir une autre de ces variantes. Le bouton **Install with LeviLauncher** de la page d'un mod sur levimc.org est un lien `levilauncher://install/<mod id>?version=<version>`, qui demande à LeviLauncher d'installer cette version du mod.
+La page **LeviMC Mods** répertorie les mods de [levimc.org/mods](https://levimc.org/mods/) qui disposent d'une version client pour Windows x64 (une entrée avec `side = "client"` et `platform = "win-x64"`). Vous pouvez les rechercher par nom, ID, auteur, étiquette ou description ; les trier par pertinence, étoiles, dernière mise à jour ou plus récents ; et les filtrer par version du jeu, version de LeviLamina, étiquettes (les étiquettes recommandées comme Bibliothèque / API ou Économie apparaissent en premier, et vous pouvez aussi exclure une étiquette), licence (une famille comme Permissive ou un ID SPDX), dépendances et auteur (**Plus de …** sur la page d'un mod). L'installation d'un mod sélectionne par ordre de priorité sa variante `client`, sa variante par défaut ou la première autre variante compatible avec le client ; la page du mod permet de choisir manuellement l'une de ces variantes. Sur levimc.org, le bouton **Install with LeviLauncher** de la page d'un mod ouvre un lien `levilauncher://install/<mod id>?version=<version>` qui demande à LeviLauncher d'installer cette version du mod.
 
 ## Mods natifs <Badge platform="android" />
 
-Les Mods natifs exécutent du code natif dans le processus du jeu. N'installez que des Mods de sources fiables, et testez-les d'abord dans une version isolée.
+Les Mods natifs exécutent du code natif dans le processus du jeu. N'installez que des Mods issus de sources fiables, et testez-les d'abord dans une version isolée.
 
-Pour créer les vôtres, suivez [Android native mods](https://levimc.org/LeviLamina/developer_guides/android/) dans la documentation de LeviLamina (en anglais).
+Pour créer les vôtres, consultez [Android native mods](https://levimc.org/LeviLamina/developer_guides/android/) dans la documentation de LeviLamina (en anglais).
 
 ## Si une erreur survient après avoir ajouté des Mods
 
 - Désactivez d'abord le Mod le plus récent
-- Comparez avec l'état précédent qui fonctionnait correctement
+- Comparez avec la configuration précédente qui fonctionnait
 - Transférez ou sauvegardez vos mondes importants avant de poursuivre les tests
 - Consultez ensuite la page [Mise à jour et résolution de problèmes](./update-troubleshooting)

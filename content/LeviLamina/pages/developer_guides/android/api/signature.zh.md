@@ -2,7 +2,7 @@
 
 ## 作用
 
-Signature API 在已加载模块中解析符号或字节特征。
+Signature API 用于在已加载的模块中解析符号或字节特征。
 
 ## 头文件
 
@@ -21,7 +21,7 @@ resolveSignatures(std::span<const std::string> signatures,
                   std::string_view moduleName);
 ```
 
-无法解析时返回 `0`。
+解析失败时返回 `0`。
 
 ## Pattern 格式
 
@@ -53,16 +53,15 @@ if (update == 0) {
 }
 ```
 
-同一模块解析多个特征时优先使用 `resolveSignatures()`。
+在同一模块中解析多个特征时，优先使用 `resolveSignatures()`。
 
 ## 虚表函数
 
-`<pl/memory/Vtable.hpp>` 通过 RTTI 而不是字节特征解析虚函数：
+`<pl/memory/Vtable.hpp>` 通过 RTTI（而非字节特征）解析虚函数：
 
 ```cpp
 uintptr_t resolveVtableFunction(std::string_view typeInfoName, size_t slot,
                                 std::string_view moduleName);
 ```
 
-`typeInfoName` 是 Itanium typeinfo-name 符号（`"_ZTS9CameraAPI"`）或其存储的名称
-（`"9CameraAPI"`），`slot` 是函数从虚表地址点起的索引。无法解析时返回 `0`。
+`typeInfoName` 是 Itanium typeinfo-name 符号（`"_ZTS9CameraAPI"`）或其保存的名称（`"9CameraAPI"`），`slot` 是函数相对于虚表地址点（address point）的索引。解析失败时返回 `0`。

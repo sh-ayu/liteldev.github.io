@@ -3,9 +3,9 @@ platforms: [android]
 ---
 # 快速啟動 URI
 
-Android 版的 **Quick Launch**（快速啟動）用一個 `minecraft://` URI 啟動 Minecraft，告訴遊戲先開啟甚麼。快速啟動畫面上的每個操作都會產生下面的某個 URI；**Custom URI**（自訂 URI）接受任何以 `minecraft://` 開頭的 URI。遊戲如何處理 URI 由 Minecraft 決定。以下操作名稱為應用程式英文介面中顯示的名稱，括號內為譯名。
+Android 版的 **Quick Launch**（快速啟動）會透過 `minecraft://` URI 啟動 Minecraft，並指示遊戲先開啟甚麼。快速啟動畫面上的每項操作都會產生下方列出的其中一個 URI，而 **Custom URI**（自訂 URI）則接受任何以 `minecraft://` 開頭的 URI。URI 的實際處理方式由 Minecraft 決定。下表列出應用程式英文介面顯示的操作名稱，括號內為譯名。
 
-LeviLauncher 也能開啟其他應用程式中的 `minecraft://` 連結：Android 會把它列為可以開啟這類連結的應用程式之一。
+LeviLauncher 也能開啟來自其他應用程式的 `minecraft://` 連結，Android 會將其列為可開啟此類連結的應用程式之一。
 
 ## 操作
 
@@ -24,14 +24,14 @@ LeviLauncher 也能開啟其他應用程式中的 `minecraft://` 連結：Androi
 | **Execute Command**（執行指令） | `minecraft://?slashcommand=<指令>` | 要在遊戲中執行的指令 |
 | **Custom URI**（自訂 URI） | 任意 `minecraft://…` | URI |
 
-伺服器名稱、世界名稱和指令會經過 URL 編碼（空格變為 `%20`，`/` 變為 `%2F`）。
+伺服器名稱、世界名稱和指令都會經過 URL 編碼（空格轉為 `%20`，`/` 轉為 `%2F`）。
 
 ## 範例
 
-要加入 `play.example.org` 上連接埠為 `19132` 的伺服器，選擇 **Connect to Server**，或在裝置上開啟這個連結：
+若要加入 `play.example.org` 上連接埠為 `19132` 的伺服器，請選擇 **Connect to Server**，或在裝置上開啟以下連結：
 
 ```text
 minecraft://connect/?serverUrl=play.example.org&serverPort=19132
 ```
 
-其他 Android 專屬功能見[帳號與快速啟動](../guide/accounts-quick-launch)。
+其他 Android 專屬功能請參閱[帳號與快速啟動](../guide/accounts-quick-launch)。

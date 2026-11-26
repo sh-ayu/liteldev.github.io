@@ -4,7 +4,7 @@
 
 ## Overview
 
-The Utils module provides various utility functions for system information, string manipulation, hashing, random number generation, file I/O, Base64 encoding, and error handling.
+The Utils module provides utility functions for system information, string manipulation, hashing, random number generation, file I/O, Base64 encoding, and error handling.
 
 ## Headers
 
@@ -243,8 +243,7 @@ void compressExample() {
 }
 ```
 
-For anything large, stream it instead so neither side is held in memory. Push input with `write` as
-often as needed, then call `finish` once:
+For large data, stream it instead so neither side is held in memory. Push input with `write` as often as needed, then call `finish` once:
 
 ```cpp
 #include "ll/api/utils/CompressUtils.h"
@@ -269,11 +268,9 @@ ll::Expected<> compressToSocket(std::string_view chunk1, std::string_view chunk2
 }
 ```
 
-`compressFile` and `decompressFile` wrap the same machinery for the file-to-file case, completing
-under a temporary name so an interrupted run leaves no half-written output behind.
+`compressFile` and `decompressFile` wrap the same machinery for the file-to-file case, writing under a temporary name until completion so an interrupted run leaves no half-written output behind.
 
-`decompress` does not limit its output unless given a `maxSize`. Pass one for data from an untrusted
-source, since a small input can expand enormously.
+`decompress` does not limit its output unless given a `maxSize`. Pass one for data from an untrusted source, since a small input can expand enormously.
 
 ## Related
 

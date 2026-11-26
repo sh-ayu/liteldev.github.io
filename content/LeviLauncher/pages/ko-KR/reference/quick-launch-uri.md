@@ -3,9 +3,9 @@ platforms: [android]
 ---
 # 빠른 실행 URI
 
-Android 버전의 **Quick Launch**(빠른 실행)는 `minecraft://` URI로 Minecraft를 시작해, 게임이 처음에 무엇을 열지 알려 줍니다. 빠른 실행 화면의 각 작업은 아래 URI 중 하나를 만들며, **Custom URI**(사용자 지정 URI)는 `minecraft://`로 시작하는 어떤 URI든 받습니다. 게임이 URI로 무엇을 할지는 Minecraft가 정합니다. 작업 이름은 앱의 영어 인터페이스에 표시되는 이름이며, 괄호 안은 번역입니다.
+Android 버전의 **Quick Launch**(빠른 실행)는 `minecraft://` URI로 Minecraft를 실행하여, 시작할 때 열 화면이나 작업을 게임에 전달합니다. 빠른 실행 화면의 각 작업은 아래 URI 중 하나를 생성하며, **Custom URI**(사용자 지정 URI)에는 `minecraft://`로 시작하는 모든 URI를 입력할 수 있습니다. 각 URI의 동작은 Minecraft에서 결정합니다. 작업 이름은 앱의 영어 인터페이스에 표시되는 이름이며, 괄호 안은 한국어 번역입니다.
 
-LeviLauncher는 다른 앱의 `minecraft://` 링크도 엽니다. Android는 이 링크를 열 수 있는 앱 중 하나로 LeviLauncher를 제시합니다.
+LeviLauncher는 다른 앱에서 클릭한 `minecraft://` 링크도 처리합니다. 이런 링크를 열면 Android가 선택할 수 있는 앱 목록에 LeviLauncher를 표시합니다.
 
 ## 작업
 
@@ -24,14 +24,14 @@ LeviLauncher는 다른 앱의 `minecraft://` 링크도 엽니다. Android는 이
 | **Execute Command**(명령 실행) | `minecraft://?slashcommand=<명령>` | 게임에서 실행할 명령 |
 | **Custom URI**(사용자 지정 URI) | 임의의 `minecraft://…` | URI |
 
-서버 이름, 월드 이름, 명령은 URL 인코딩됩니다(공백은 `%20`, `/`는 `%2F`).
+서버 이름, 월드 이름, 명령은 URL 인코딩됩니다(예: 공백은 `%20`, `/`는 `%2F`).
 
 ## 예
 
-`play.example.org`의 포트 `19132` 서버에 접속하려면 **Connect to Server**를 고르거나, 기기에서 다음 링크를 여세요.
+`play.example.org`의 포트 `19132` 서버에 접속하려면 **Connect to Server**를 선택하거나, 기기에서 다음 링크를 여세요.
 
 ```text
 minecraft://connect/?serverUrl=play.example.org&serverPort=19132
 ```
 
-나머지 Android 전용 기능은 [계정 및 빠른 실행](../guide/accounts-quick-launch)을 참조하세요.
+다른 Android 전용 기능은 [계정 및 빠른 실행](../guide/accounts-quick-launch)을 참조하세요.

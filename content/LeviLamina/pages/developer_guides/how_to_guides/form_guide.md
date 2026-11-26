@@ -1,15 +1,11 @@
 # Form Guide
 
-LeviLamina provides a minimalist form API that allows developers to implement complex form functionalities with just a
-few lines of code.  
-The header files for the Form API are stored in `ll/api/form`. Additionally, since Minecraft's form IDs are unique at
-runtime, we provide **FormIdManager** to retrieve Minecraft's form IDs, allowing developers to implement their own form
-API.
+LeviLamina provides a minimalist form API that lets you build complex forms in just a few lines of code.  
+The Form API headers are located in `ll/api/form`. Since Minecraft's form IDs are unique at runtime, LeviLamina also provides **FormIdManager** to obtain them, allowing you to implement your own form API.
 
 ## FormIdManager
 
-The header file for FormIdManager is located at `ll/api/form/FormIdManager.h`, exporting the
-`ll::form::FormIdManager::genFormId` method, which is used to obtain a unique form ID.
+The FormIdManager header is located at `ll/api/form/FormIdManager.h` and exports `ll::form::FormIdManager::genFormId`, which generates a unique form ID.
 
 ### Example
 
@@ -21,28 +17,20 @@ void test() { uint formId = ll::form::FormIdManager::genFormId(); }
 
 ## SimpleForm
 
-SimpleForm is a basic form that provides a title, content, and buttons.  
-The header file for SimpleForm is located at `ll/api/form/SimpleForm.h`.  
-Additionally, since methods like `appendButton` in SimpleForm return a reference to SimpleForm, they support method
-chaining.
+SimpleForm is a basic form with a title, content, and buttons.  
+Its header is located at `ll/api/form/SimpleForm.h`.  
+Methods such as `appendButton` return a reference to the SimpleForm object, so you can chain calls.
 
 ### Usage
 
-1. Include the header file `ll/api/form/SimpleForm.h`
-2. Construct a SimpleForm object. You can use either a parameterized or parameterless constructor. The parameterized
-   constructor requires a title and content, while the parameterless constructor requires manually calling the
-   `setTitle` and `setContent` methods to set the title and content.
-3. Add buttons using the `appendButton` method and add visual-only elements using `appendHeader`, `appendLabel`, and `appendDivider` methods.
-4. Use the `sendTo` method to send the form to a player. This requires passing a reference to a `Player` object and a
-   callback function. The callback function parameters include a reference to the `Player` object, the index of the
-   button selected by the player, and an enumeration of the cancellation reason. For detailed parameters, refer to the
-   `Callback` declaration in the `ll/api/form/SimpleForm.h` header file.
+1. Include the header file `ll/api/form/SimpleForm.h`.
+2. Construct a SimpleForm object. You can use either the parameterized constructor, which takes a title and content, or the parameterless constructor, in which case you must call `setTitle` and `setContent` manually.
+3. Add buttons with `appendButton`, and add visual-only elements with `appendHeader`, `appendLabel`, and `appendDivider`.
+4. Call `sendTo` to send the form to a player, passing a reference to a `Player` object and a callback function. The callback receives a reference to the `Player` object, the index of the selected button, and an enumeration value indicating the cancellation reason. For the exact signature, see the `Callback` declaration in `ll/api/form/SimpleForm.h`.
 
 !!! tip
-    When the button index is -1, it means the player canceled the form.  
-    `FormCancelReason` is essentially `std::optional<ModalFormCancelReason>`, so you need to check whether it has a value
-    before using it. You should also use the enumeration values of `ModalFormCancelReason` to determine the cancellation
-    reason. The example uses the `magic_enum` library to retrieve the enumeration value name.
+    A button index of -1 means the player canceled the form.  
+    `FormCancelReason` is an alias for `std::optional<ModalFormCancelReason>`, so check that it contains a value before accessing it, then compare it against the `ModalFormCancelReason` enumeration values to determine why the form was canceled. The example below uses the `magic_enum` library to get the enumeration value's name.
 
 ### Example
 
@@ -85,28 +73,17 @@ void sendSimpleFormToPlayer(Player& player) {
 
 ## CustomForm
 
-CustomForm is an advanced form that provides a title, labels, input fields, toggles, dropdowns, sliders, and step
-sliders.
+CustomForm is an advanced form that supports a title, labels, input fields, toggles, dropdowns, sliders, and step sliders.
 
 ### Usage
 
-1. Include the header file `ll/api/form/CustomForm.h`
-2. Construct a CustomForm object. You can use either a parameterized or parameterless constructor. The parameterized
-   constructor requires a title, while the parameterless constructor requires manually calling the `setTitle` method to
-   set the title.
-3. Add custom form elements using `appendInput`, `appendToggle`, `appendDropdown`, `appendSlider`, and
-   `appendStepSlider` methods and add visual-only elements using `appendHeader`, `appendLabel`, and `appendDivider` methods.
-4. Use the `sendTo` method to send the form to a player. This requires passing a reference to a `Player` object and a
-   callback function. The callback function parameters include a reference to the `Player` object, the form result, and
-   an enumeration of the cancellation reason. For detailed parameters, refer to the `Callback` declaration in the
-   `ll/api/form/CustomForm.h` header file.
+1. Include the header file `ll/api/form/CustomForm.h`.
+2. Construct a CustomForm object. You can use either the parameterized constructor, which takes a title, or the parameterless constructor, in which case you must call `setTitle` manually.
+3. Add form elements with `appendInput`, `appendToggle`, `appendDropdown`, `appendSlider`, and `appendStepSlider`, and add visual-only elements with `appendHeader`, `appendLabel`, and `appendDivider`.
+4. Call `sendTo` to send the form to a player, passing a reference to a `Player` object and a callback function. The callback receives a reference to the `Player` object, the form result, and an enumeration value indicating the cancellation reason. For the exact signature, see the `Callback` declaration in `ll/api/form/CustomForm.h`.
 
 !!! tip
-    The form result `CustomFormResult` is actually
-    `std::optional<std::unordered_map<std::string, CustomFormElementResult>>`, an unordered associative container storing
-    element names and results. You can retrieve the corresponding result by element name. The result type is
-    `CustomFormElementResult`, which is a variant (`std::variant<std::monostate, uint64, double, std::string>`), so you need
-    to check its type using `std::holds_alternative` before retrieving it using `std::get`.
+    `CustomFormResult` is an alias for `std::optional<std::unordered_map<std::string, CustomFormElementResult>>`, an unordered map from element names to their results. Look up each result by its element name. Each value is a `CustomFormElementResult`—a variant (`std::variant<std::monostate, uint64, double, std::string>`)—so check its active type with `std::holds_alternative` before extracting the value with `std::get`.
 
 ### Example
 
@@ -160,23 +137,16 @@ void sendCustomFormToPlayer(Player& player) {
 
 ## ModalForm
 
-ModalForm is a modal form that provides a title, content, and two buttons, typically used for binary choices.
+ModalForm is a modal dialog with a title, content, and two buttons, typically used for yes/no or other binary choices.
 
 ### Usage
 
-1. Include the header file `ll/api/form/ModalForm.h`
-2. Construct a ModalForm object. You can use either a parameterized or parameterless constructor. The parameterized
-   constructor requires a title, content, upper button, and lower button, while the parameterless constructor requires
-   manually calling `setTitle`, `setContent`, `setUpperButton`, and `setLowerButton` methods.
-3. Use the `sendTo` method to send the form to a player. This requires passing a reference to a `Player` object and a
-   callback function. The callback function parameters include a reference to the `Player` object, the button selection
-   result, and an enumeration of the cancellation reason. For detailed parameters, refer to the `Callback` declaration in
-   the `ll/api/form/ModalForm.h` header file.
+1. Include the header file `ll/api/form/ModalForm.h`.
+2. Construct a ModalForm object. You can use either the parameterized constructor, which takes a title, content, upper button, and lower button, or the parameterless constructor, in which case you must call `setTitle`, `setContent`, `setUpperButton`, and `setLowerButton` manually.
+3. Call `sendTo` to send the form to a player, passing a reference to a `Player` object and a callback function. The callback receives a reference to the `Player` object, the selected button, and an enumeration value indicating the cancellation reason. For the exact signature, see the `Callback` declaration in `ll/api/form/ModalForm.h`.
 
 !!! tip
-    `ModalFormResult` is actually an alias for `std::optional<ModalFormSelectedButton>`, and `ModalFormSelectedButton` is a
-    Bool enumeration with two `Upper = true` and `Lower = false` values, representing the upper and lower buttons,
-    respectively.
+    `ModalFormResult` is an alias for `std::optional<ModalFormSelectedButton>`. `ModalFormSelectedButton` is a boolean-backed enumeration with two values, `Upper = true` and `Lower = false`, representing the upper and lower buttons respectively.
 
 ### Example
 
@@ -206,7 +176,7 @@ void sendModalFormToPlayer(Player& player) {
 
 ## sendUpdate
 
-When the player has the form open, `SimpleForm::sendUpdate`, `CustomForm::sendUpdate`, and `ModalForm::sendUpdate` can be used to update the form, and there are no restrictions on the content and type of the form to be updated. The parameters are the same as those of `sendTo`. These methods require that the player remains in the state of having the form open; otherwise, they will have no effect.
+While the player has a form open, you can update it using `SimpleForm::sendUpdate`, `CustomForm::sendUpdate`, or `ModalForm::sendUpdate`. There are no restrictions on the content or type of the updated form, and the parameters are the same as those of `sendTo`. The player must still have a form open for these methods to work; otherwise, they have no effect.
 
 ### Example
 

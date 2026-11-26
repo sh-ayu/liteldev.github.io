@@ -4,7 +4,7 @@
 
 ## Overview
 
-The Config module provides template functions for loading and saving mod configuration files as JSON. It leverages the [Reflection](reflection.md) module for automatic serialization/deserialization and supports versioned configuration with automatic migration.
+The Config module provides template functions for loading and saving mod configuration files as JSON. It uses the [Reflection](reflection.md) module for automatic serialization and deserialization, and supports versioned configurations with automatic migration.
 
 ## Headers
 
@@ -16,9 +16,9 @@ The Config module provides template functions for loading and saving mod configu
 
 ### IsConfig
 
-A config type must satisfy:
+A config type must satisfy the following requirements:
 
-- `ll::reflection::Reflectable<T>` — The type must be an aggregate (for reflection)
+- `ll::reflection::Reflectable<T>` — Must be an aggregate type (for reflection)
 - Has an integral `version` field
 
 ```cpp
@@ -47,14 +47,14 @@ template <IsConfig T, class J = nlohmann::ordered_json, class F = bool(T&, J&)>
 bool loadConfig(T& config, std::filesystem::path const& path, F&& updater = defaultConfigUpdater<T, J>);
 ```
 
-Loads a config from `path` into `config`. If the file does not exist, saves the current `config` as a default. Returns `true` if no rewrite was needed (version matched).
+Loads a configuration from `path` into `config`. If the file does not exist, saves the current `config` as the default. Returns `true` if the version matched and no rewrite was needed.
 
 **Behavior:**
 
-1. If the file doesn't exist → saves the default config first, then loads it like an existing file (its version matches, so this returns `true`)
-2. If the file has no `version` or a different one → calls `updater` and deserializes only if it returns `true`; returns `false`
-3. If the file exists and version matches → deserializes directly, returns `true`
-4. If the file is empty or unreadable → leaves `config` unchanged, returns `false`
+1. If the file does not exist: saves the default config first, then loads it as an existing file (returns `true` because the version matches).
+2. If the file has a missing or mismatched `version`: calls `updater`, deserializes only if that call returns `true`, and returns `false`.
+3. If the file exists and the version matches: deserializes directly and returns `true`.
+4. If the file is empty or unreadable: leaves `config` unchanged and returns `false`.
 
 ### defaultConfigUpdater
 
@@ -63,7 +63,7 @@ template <class T, class J>
 bool defaultConfigUpdater(T& config, J& data);
 ```
 
-The default update strategy: merges the existing file content onto the default config using `merge_patch`, preserving user modifications while adding new fields.
+The default update strategy. It merges the existing file content into the default config using `merge_patch`, preserving user modifications while adding new fields.
 
 ## Usage
 
@@ -81,7 +81,7 @@ struct MyConfig {
 ```
 
 !!! note
-    The struct must be an aggregate type (no user-defined constructors, no private members, no virtual functions) for reflection to work.
+    For reflection to work, the struct must be an aggregate type (no user-defined constructors, private members, or virtual functions).
 
 ### Loading and Saving
 
@@ -141,7 +141,7 @@ void loadConfigV2(ll::mod::Mod& mod) {
 
 ### Generated JSON Example
 
-For the `MyConfig` struct above, the generated JSON looks like:
+For the `MyConfig` struct above, the generated JSON looks like this:
 
 ```json
 {

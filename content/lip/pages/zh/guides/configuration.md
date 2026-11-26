@@ -44,7 +44,7 @@ lip config list --workspace
 └─────────┴───────┘
 ```
 
-`(not set)` 表示这个键没有值。`(empty)` 表示它被设成了空值，对 `github_proxy` 来说这是一种单独的选择（见下文）。
+`(not set)` 表示这个键没有值。`(empty)` 表示它被设成了空值；对 `github_proxy` 来说，这是一种单独的选择（见下文）。
 
 **查看一项设置：**
 
@@ -62,7 +62,7 @@ lip config set language zh-Hans
 ✓ Config key 'language' set to 'zh-Hans'.
 ```
 
-键不允许的值，lip 会拒绝，并且什么都不改。
+如果设了某个键不允许的值，lip 会拒绝，并且什么都不改。
 
 **删除一项设置**，让它回到默认值：
 
@@ -110,7 +110,7 @@ lip config set language zh-Hant
 
 作用域：工作区。值：`never` 或 `on-failure`。默认：`never`。
 
-这个工作区的服务器崩溃（也就是以非 0 的退出码退出）时，lip 是否重新启动它。
+这个工作区的服务器崩溃（即以非 0 退出码退出）时，lip 是否重新启动它。
 
 ```sh
 lip config set restart on-failure --workspace
@@ -128,7 +128,7 @@ hint: lip could not reach the server. Check your network connection. If GitHub i
 
 ### 什么是 GitHub 代理
 
-GitHub 代理是一个替你从 GitHub 取东西的网络服务。你把它的地址告诉 lip，lip 就会把这个地址加上一个 `/`，放在它要向 GitHub 请求的完整地址前面。
+GitHub 代理是一个替你从 GitHub 取东西的网络服务。你把代理地址告诉 lip 后，lip 会在要向 GitHub 请求的完整地址前面加上这个代理地址和一个 `/`。
 
 把 `github_proxy` 设为 `https://proxy.example.com` 之后，对
 
@@ -142,13 +142,13 @@ https://github.com/LiteLDev/lip.git/info/refs
 https://proxy.example.com/https://github.com/LiteLDev/lip.git/info/refs
 ```
 
-所以，你设置的就是这个服务本身的地址，也就是在浏览器里你会把 GitHub 链接贴在它后面的那个地址。以 `/github.com` 或 `/https://github.com` 结尾的地址（旧版 lip 需要这样写）仍然可用：lip 会去掉这个结尾。lip 0.41.1 及更早的版本必须带上这个结尾。
+所以，你要设置的就是这个服务本身的地址——也就是平时在浏览器里，你会把 GitHub 链接贴在它后面的那个地址。以 `/github.com` 或 `/https://github.com` 结尾的地址（旧版 lip 需要这样写）仍然可用：lip 会去掉这个结尾。lip 0.41.1 及更早的版本必须带上这个结尾。
 
 需要知道三点：
 
-- **只有 GitHub 走代理。** 发往 `github.com`，以及发往以 `.github.com` 或 `.githubusercontent.com` 结尾的地址（例如 `raw.githubusercontent.com`）的请求，都使用代理：仓库、文件，以及 lip 自身的更新。从其他网站下载的内容，例如从 minecraft.net 下载的游戏，不走代理。
+- **只有 GitHub 走代理。** 发往 `github.com`，以及发往以 `.github.com` 或 `.githubusercontent.com` 结尾的地址（例如 `raw.githubusercontent.com`）的请求，都会走代理，包括仓库、文件，以及 lip 自身的更新。从其他网站下载的内容（例如从 minecraft.net 下载的游戏）不走代理。
 - **lip 会回退。** 通过代理的请求失败时，lip 会直接向 GitHub 发送请求。
-- **lip 不推荐任何代理。** 代理能看到你通过它下载的所有内容，也有可能篡改它。请使用你自己或你信任的人运行的代理。
+- **lip 不推荐任何代理。** 代理能看到你通过它下载的所有内容，也有可能篡改内容。请使用你自己或你信任的人运行的代理。
 
 ### 设置代理
 
@@ -160,7 +160,7 @@ lip config set github_proxy https://proxy.example.com
 
 ### 测试代理
 
-lip 检查能否连上 GitHub 的方法，是请求 lip 的版本列表。你可以通过代理请求同样的内容。可用的代理会返回 `200`：
+lip 通过请求自身的版本列表来检查能否连上 GitHub。你也可以通过代理请求同样的内容，可用的代理会返回 `200`：
 
 ::: code-group
 
@@ -186,7 +186,7 @@ curl -s -o /dev/null -w "%{http_code}\n" "https://proxy.example.com/https://gith
 lip config delete github_proxy
 ```
 
-不再使用代理，并告诉 lip 你就是直接连接，这样界面不会再询问。做法是把它设成空值：
+不再使用代理，并告诉 lip 直接连接（这样界面不会再询问），做法是把它设成空值：
 
 ::: code-group
 
@@ -200,14 +200,14 @@ lip config set github_proxy ""
 
 :::
 
-在 PowerShell 里需要 `--%`：不加的话，Windows PowerShell 会把空值丢掉。在界面里，可以在设置页面为 GitHub 代理选择“直接连接”。
+在 PowerShell 里需要加上 `--%`：不加的话，Windows PowerShell 会把空值丢掉。在界面里，可以在设置页面为 GitHub 代理选择“直接连接”。
 
 ### 系统代理
 
-`github_proxy` 不是普通的 HTTP 代理。如果你的网络有普通的 HTTP 代理，lip 不需要专门的设置就会使用它：
+`github_proxy` 不是普通的 HTTP 代理。如果你的网络有普通的 HTTP 代理，不需要专门设置，lip 就会直接使用：
 
 - lip 会遵循你运行它的那个终端里的环境变量 `HTTPS_PROXY`、`HTTP_PROXY`、`ALL_PROXY` 和 `NO_PROXY`（或同名的小写变量）。
-- 没有这些变量时，它使用系统设置的代理。
+- 没有这些变量时，它会使用系统设置的代理。
 
 ::: code-group
 
@@ -222,7 +222,7 @@ HTTPS_PROXY=http://proxy.example.com:8080 lip install LegacyScriptEngine#lua
 
 :::
 
-把地址换成你的代理地址。这样的代理对所有下载都生效，不只是 GitHub。
+把地址换成你的代理地址。这样的代理对所有下载都生效，而不只是 GitHub。
 
 ## 设置保存在哪里
 
@@ -232,6 +232,6 @@ HTTPS_PROXY=http://proxy.example.com:8080 lip install LegacyScriptEngine#lua
 | 用户，Linux 和 macOS | `$XDG_CONFIG_HOME/lip/config.toml`，默认是 `~/.config/lip/config.toml` |
 | 工作区 | 服务器文件夹里的 `.lip/config.toml` |
 
-两者都是很小的文本文件，可以手动编辑。文件不存在或读不出来时，视为没有任何设置。格式见[配置文件](../reference/configuration.md)，lip 用到的每个文件都列在[文件和目录](../reference/files.md)里。
+两者都是很小的文本文件，可以手动编辑。文件不存在或无法读取时，视为没有任何设置。格式见[配置文件](../reference/configuration.md)，lip 用到的每个文件都列在[文件和目录](../reference/files.md)里。
 
-移动或复制服务器文件夹时，工作区设置会跟着走。用户设置不会。
+移动或复制服务器文件夹时，工作区设置会跟着走，而用户设置不会。

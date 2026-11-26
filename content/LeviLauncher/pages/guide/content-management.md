@@ -1,6 +1,6 @@
 # Content Management
 
-LeviLauncher can manage the content that belongs to a version, especially when you use isolated setups.
+LeviLauncher manages the content for each version, which is especially useful for isolated setups.
 
 ## Content areas available in the launcher
 
@@ -21,7 +21,7 @@ LeviLauncher can manage the content that belongs to a version, especially when y
 
 ## Why content management matters
 
-For many players, the launcher becomes most useful after version installation, because it helps you keep different play environments organized.
+For many players, the launcher is most useful after installing a version because it keeps different play environments organized.
 
 Examples:
 
@@ -33,36 +33,36 @@ Examples:
 
 ### Open the content hub
 
-Open **Content Management** from the **Launch** page to see counts and shortcuts for the main content categories.
+Open **Content Management** from the **Launch** page to view item counts and shortcuts for the main content categories.
 
 ### Import content
 
-LeviLauncher supports import workflows such as drag and drop for selected content types.
+You can import supported content types into LeviLauncher—for example, by dragging and dropping files.
 
 ### Open the underlying folder
 
-Use folder-opening actions when you need manual inspection or file cleanup.
+Open the underlying folder when you need to inspect or clean up files manually.
 
 ### Keep content separated with isolation
 
-When a version is isolated, its content stays inside that version's workspace, which is ideal for testing and organization.
+When a version is isolated, its content stays inside that version's workspace, which is ideal for testing and staying organized.
 
 ## Import, export and back up <Badge platform="android" />
 
-The Android version can import and export worlds and resource packs, and create backups before risky changes.
+On Android, you can import and export worlds and resource packs, and create backups before making risky changes.
 
-- Backups are stored in the launcher-managed backup location.
-- For important worlds, keep another copy outside app storage too.
+- Backups are saved to the launcher-managed backup location.
+- For important worlds, keep an extra copy outside app storage as well.
 
 ## Recommended organization habits
 
-- keep test packs away from your main survival setup
-- back up important worlds before major changes
+- keep test packs separate from your main survival setup
+- back up important worlds before making major changes
 - use clear version names so you always know which content belongs where
 
 ## Screenshots and servers <Badge platform="windows" />
 
-Screenshots and server lists can also be easier to reason about when each version has a separate purpose.
+Screenshots and server lists are also easier to keep track of when each version has a dedicated purpose.
 
 ## Related guides
 

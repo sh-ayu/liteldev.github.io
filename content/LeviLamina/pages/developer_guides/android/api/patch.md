@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Patch API reads, writes, and reverts process memory through the SDK.
+The Patch API reads, writes, and reverts process memory through the SDK.
 
 ## Header
 
@@ -25,7 +25,7 @@ bool revertPatch(std::string_view name);
 void revertAllPatches();
 ```
 
-Patch names identify the saved original bytes used by `revertPatch()`.
+Patch names identify the saved original bytes that `revertPatch()` restores.
 
 ## Example
 
@@ -68,5 +68,5 @@ private:
 
 - Hex strings are whitespace-separated bytes. Each token must contain one or two
   hex digits.
-- Reusing a patch name replaces the previous saved record.
+- Reusing a patch name replaces the previously saved record.
 - Wrong instruction bytes or a wrong address can still crash the process.

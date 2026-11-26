@@ -1,26 +1,26 @@
 # Find Function Guide
 
-This article will introduce how to understand the functions in BDS and how to find the functions you want in BDS.
+This article explains how to understand BDS functions and how to find the ones you need.
 
 ## How to Start?
 
-Before you begin, it's best if you have already read the [Hook Guide](hook_guide.md). You should also have some understanding of C++ and low-level knowledge.
+Before you begin, it is best to read the [Hook Guide](hook_guide.md) first. You should also have some understanding of C++ and low-level concepts.
 
 ### Tools Needed
 
-`IDA Pro`: Used for decompiling the binary files of BDS.
+`IDA Pro`: Used to decompile BDS binaries.
 !!! Note
-    If you haven't purchased IDA Pro, you can use [IDA Free](https://hex-rays.com/ida-free), but IDA Free does not have the feature to decompile functions into C language.
+    If you have not purchased IDA Pro, you can use [IDA Free](https://hex-rays.com/ida-free), though IDA Free cannot decompile functions into C.
 
 ## Why Understand BDS Functions?
 
-Imagine a scenario where you need to get a player's coordinates, how would you do it?
+Suppose you need to get a player's coordinates. How would you do it?
 
-Obviously, if you have opened IDA Pro and looked at the generated function list, you would find that BDS is highly object-oriented. And if you have searched for `Player`, you would discover many functions in this class, but not see functions like `getPos` or `getPosition`.
+If you open IDA Pro and look at the generated function list, you will see that BDS is highly object-oriented. Searching for `Player` reveals many functions in the class, but nothing like `getPos` or `getPosition`.
 
 Why is that?
 
-At this point, if we open LeviLamina’s [`Fake Header`](https://github.com/LiteLDev/LeviLamina/blob/53135ef92ccc4ee5cda12772651e1d7e319300e8/src/mc/world/actor/player/Player.h#L129) file about the Player class, we find that the class is defined like this:
+If we open LeviLamina's [`Fake Header`](https://github.com/LiteLDev/LeviLamina/blob/53135ef92ccc4ee5cda12772651e1d7e319300e8/src/mc/world/actor/player/Player.h#L129) file for the Player class, we find it defined like this:
 
 ```cpp
 class Player : public ::Mob {
@@ -28,19 +28,19 @@ class Player : public ::Mob {
 };
 ```
 
-Clearly, Player inherits from the Mob class, which in turn inherits from Actor. In the Actor class, we finally find the function:
+Player inherits from the Mob class, which in turn inherits from Actor. In the Actor class, we finally find the function:
 
 ```cpp
 class Vec3 const& getPosition() const;
 ```
 
-We guess the possible function of this function based on its name, and the return value is a reference of type `Vec3`, which meets our expectations.
+We can guess what this function does from its name, and its `Vec3` reference return value matches our expectations.
 
-However, to be more certain of the function's role, we need to look at its implementation.
+To be more certain of what the function does, however, we need to examine its implementation.
 
-We open IDA Pro and search for `Actor::getPosition`.
+Open IDA Pro and search for `Actor::getPosition`.
 
-IDA Pro gives us this result:
+IDA Pro gives the following result:
 
 === "Assembly"
 
@@ -77,42 +77,42 @@ IDA Pro gives us this result:
     }
     ```
 
-This function is very simple; it returns a pointer of type `Vec3`. This pointer is the `this` pointer plus an offset `84`.
+This function is very simple: it returns a `Vec3` pointer calculated by adding an offset of `84` to the `this` pointer.
 
-Based on experience, a pointer to an object plus an offset is often a member variable.
+Based on experience, an object pointer plus an offset is often a member variable.
 
-Our subsequent practice proved that this function indeed returns the player's coordinates (or the coordinates of an entity).
+Subsequent testing confirmed that this function returns the coordinates of the player (or entity).
 
-In fact, this function is very simple, the naming of the function is also very intuitive, and the process of finding it is also straightforward. In our development, relying on such a method to find the target is the most basic skill.
+This function is simple, intuitively named, and straightforward to find. Finding target functions this way is a fundamental skill in our development work.
 
 ## How to Find Functions After Determining the Mod Purpose?
 
-Sometimes, our purpose in finding functions is not to call them, but to modify their behavior to meet our needs.
+Sometimes, we look for a function not to call it, but to modify its behavior to suit our needs.
 
-For example, if we want to implement a feature where player chat content is forwarded to the console, we need to find the function in BDS that handles player chat. (Yes, native BDS does not have this feature)
+For example, to forward player chat messages to the console, we need to find the function in BDS that handles player chat. (Yes, native BDS does not have this feature.)
 
-So, how do we find this function?
+So how do we find this function?
 
-By consulting resources, we know that the communication between the Minecraft Bedrock Edition client and the server uses the `RakNet` protocol, and the `RakNet` protocol uses the `UDP` protocol.
+From existing documentation, we know that the Minecraft Bedrock Edition client and server communicate over the `RakNet` protocol, and the `RakNet` protocol runs over `UDP`.
 
-This means that BDS will receive packets from the client.
+This means BDS receives packets from the client.
 
-It is known from research that the packet handling chat is `TextPacket`. We open IDA Pro and search for `TextPacket`.
+Research shows that the packet that handles chat is `TextPacket`. Open IDA Pro and search for `TextPacket`.
 
-We successfully find the function that receives `TextPacket`:
+This reveals the function that receives `TextPacket`:
 
 ```cpp
 public: virtual void __cdecl ServerNetworkHandler::handle(class NetworkIdentifier const & __ptr64,class TextPacket const & __ptr64) __ptr64
 //symbol: ?handle@ServerNetworkHandler@@UEAAXAEBVNetworkIdentifier@@AEBVTextPacket@@@Z
 ```
 
-Using the knowledge we learned in the [Hook Guide](hook_guide.md), we can easily hook this function to achieve our functionality. (Right?)
+Using what we covered in the [Hook Guide](hook_guide.md), we can easily hook this function to implement our feature. (Right?)
 
-Well, actually, we encounter a second problem: there doesn't seem to be a `std::string` type parameter here, and we seem unable to get the player's chat content.
+In practice, we run into a second problem: there is no `std::string` parameter here, so there seems to be no way to get the player's chat content.
 
-But is that really the case?
+Or is there?
 
-We open IDA Pro and look at the pseudocode of this function:
+Open IDA Pro and inspect the pseudocode of this function:
 
 ```cpp
 void __fastcall ServerNetworkHandler::handle(
@@ -196,11 +196,11 @@ void __fastcall ServerNetworkHandler::handle(
 }
 ```
 
-It looks complicated, right?
+It looks complicated, doesn't it?
 
-But we don't need to understand it all at once. We just need to be clear about the information we need to get: the `Player` and the `chat content`.
+You don't need to understand all of it at once. Just focus on the two pieces of information we need: the `Player` and the `chat content`.
 
-And the chat content is likely of type `std::string`. We can search for `std::string` in this function and find this segment:
+The chat content is likely a `std::string`. Searching for `std::string` inside this function turns up the following block:
 
 ```cpp
 std::string::string(v17, (char *)a3 + 88);
@@ -210,7 +210,7 @@ std::string::string(v17, (char *)a3 + 88);
 std::string::string(v23, (char *)a3 + 56);
 ```
 
-There are so many string constructors, but we notice that v23 does not have subsequent calls, while v17 does. We can guess that v17 is the string we want.
+There are several string constructors here, but notice that v23 is not used in subsequent calls, whereas v17 is. We can guess that v17 holds the string we want.
 
 The following code:
 
@@ -222,9 +222,9 @@ if ( (unsigned int)ServerNetworkEventCoordinator::sendEvent(v10, &v13) == 1 )
             (struct ChatEvent *)v17);
 ```
 
-also greatly supports our guess.
+strongly supports this guess.
 
-And the Player can be easily obtained from the first line:
+The Player is easy to obtain from the first line:
 
 ```cpp
 v5 = (const struct Player *)(*(__int64 (__fastcall **)(char *, const struct NetworkIdentifier *, _QWORD))(*((_QWORD *)this - 2) + 8i64))(
@@ -233,11 +233,11 @@ v5 = (const struct Player *)(*(__int64 (__fastcall **)(char *, const struct Netw
                                 *((unsigned __int8 *)a3 + 16));
 ```
 
-This is clearly a call to a virtual function, eventually returning a Player pointer.
+This is clearly a virtual function call that returns a Player pointer.
 
-We could copy this directly, but it’s not elegant.
+We could copy this expression directly, but that isn't very clean.
 
-And by consulting LeviLamina's information about [ServerNetworkHandler](https://github.com/LiteLDev/LeviLamina/blob/53135ef92ccc4ee5cda12772651e1d7e319300e8/src/mc/network/ServerNetworkHandler.h#L625), we can know that the ServerNetworkHandler class provides a virtual function `_getServerPlayer`, which is used to get a player pointer. But, as seen in the pseudocode and the above context, directly calling _getServerPlayer is not feasible; we need to make a -16 offset to the `this` pointer to correctly get the player pointer. For convenience, LeviLamina's hook macros provide `thisFor<T>()`, which applies this adjustment for you, so in a hook you can get the player pointer directly (this is how LeviLamina's own `PlayerChatEvent` does it):
+Checking LeviLamina's definition of [ServerNetworkHandler](https://github.com/LiteLDev/LeviLamina/blob/53135ef92ccc4ee5cda12772651e1d7e319300e8/src/mc/network/ServerNetworkHandler.h#L625) shows that the ServerNetworkHandler class provides a virtual function, `_getServerPlayer`, that returns a player pointer. However, as the pseudocode and context above show, we cannot call _getServerPlayer directly; we have to apply a -16 offset to the `this` pointer to get the player pointer properly. For convenience, LeviLamina's hook macros provide `thisFor<T>()`, which applies this adjustment automatically, letting you retrieve the player pointer directly inside a hook (this is how LeviLamina's own `PlayerChatEvent` does it):
 
 ```cpp
 // Inside LL_TYPE_INSTANCE_HOOK(..., ServerNetworkHandler, &ServerNetworkHandler::$handle, void,
@@ -245,26 +245,26 @@ And by consulting LeviLamina's information about [ServerNetworkHandler](https://
 auto player = thisFor<NetEventCallback>()->_getServerPlayer(identifier, packet.mSenderSubId);
 ```
 
-Thus, we have achieved our goal. We can hook this function to implement our feature.
+That gives us everything we need. We can now hook this function to implement our feature.
 
-The specific code implementation is omitted due to space constraints.
+The full implementation is omitted here for brevity.
 
-And in the new version, LeviLamina has provided some structural information about the packets. You can see in [TextPacket.h](https://github.com/LiteLDev/LeviLamina/blob/19e0aeb44c13967307bb1ed0795325fca41e0e48/src/mc/network/packet/TextPacket.h#L13) that the LeviLamina developers have completed the structure information of this packet.
+In newer versions, LeviLamina also provides struct definitions for several packets. As shown in [TextPacket.h](https://github.com/LiteLDev/LeviLamina/blob/19e0aeb44c13967307bb1ed0795325fca41e0e48/src/mc/network/packet/TextPacket.h#L13), the LeviLamina developers have filled in the fields of this packet.
 
 ```cpp
 std::string              mMessage;    // this+0x58
 ```
 
-Using this, we can directly use `textPacket.mMessage` instead of the offset to get the player's chat content.
+With this definition, you can read `textPacket.mMessage` directly instead of using a raw offset to get the player's chat content.
 
 !!! Danger
-    However, it is important to note that we are not the official source, and the structural information we provide may not be entirely accurate. The structure may change with version updates, and we may not update it in time. Therefore, when using structures to replace offsets, you must be careful!
-    Of course, if you discover such issues, you are welcome to submit a PR.
+    Keep in mind that we are not an official source, so the struct definitions we provide may not be completely accurate. Struct layouts can also change across version updates, and we may not always update them right away. Be careful when using struct fields in place of raw offsets!
+    If you find any discrepancies, you are welcome to submit a PR.
 
 ## Conclusion
 
-This article introduced how to understand the functions in BDS and how to find the functions you want in BDS.
+This article explained how to read functions in BDS and how to locate the ones you need.
 
-In fact, this tutorial can only be an introductory guide. In actual development, you will encounter more difficult conditions and situations, which require you to make more effort, learn more knowledge, and solve more problems.
+This tutorial is only an introduction. Real-world development will present harder cases that require more effort, deeper knowledge, and further problem-solving.
 
-I hope this tutorial can help you, and wish you a pleasant development!
+We hope this tutorial helps you get started—happy coding!

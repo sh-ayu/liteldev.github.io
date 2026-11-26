@@ -1,12 +1,10 @@
 # Tap 协议
 
-为 [bedboo](https://github.com/LiteLDev/bedboo)（传输 `bedd`）提供的客户端游戏数据包只读流。配置 `tap`
-（[配置](/zh/guide/configuration#功能开关)）；状态：[`tap` 操作](/zh/reference/websocket#bedboo-操作)。
+为 [bedboo](https://github.com/LiteLDev/bedboo)（传输层 `bedd`）提供的客户端游戏数据包只读流。配置项为 `tap`（见[配置](/zh/guide/configuration#功能开关)），状态查询见 [`tap` 操作](/zh/reference/websocket#bedboo-操作)。
 
 ## 订阅与帧
 
-`{"op":"tap","action":"subscribe"}` → `{"ok":true}`，之后每帧一条二进制消息。该连接上不要再发其他内容。第二个订阅者：
-`busy`；关闭时：`disabled`。
+发送 `{"op":"tap","action":"subscribe"}` 会收到 `{"ok":true}`，此后每帧对应一条二进制消息。请勿在该连接上发送其他内容。已有订阅者时返回 `busy`；功能关闭时返回 `disabled`。
 
 | 字节（LE） | 字段 |
 |---|---|
@@ -30,12 +28,12 @@
 | `LINK_UP` | `type` remote\|local、`address` |
 | `LINK_DOWN` | `reason` |
 | `REPLAY_BEGIN` | `frames` |
-| `REPLAY_END` | `complete`（超过 `tapJournalMiB` 时为 false；无日志：空的一对，false） |
-| `DROPPED` | `count`；订阅者落后 > 32 MiB；随后断开（重新订阅：完整重放） |
+| `REPLAY_END` | `complete`（超过 `tapJournalMiB` 时为 false；无日志时发送空的一对，为 false） |
+| `DROPPED` | `count`；订阅者落后 > 32 MiB，随后断开连接（重新订阅会触发完整重放） |
 
-实时帧等到 REPLAY_END 之后；按 seq 跳过重复帧。
+实时帧在 REPLAY_END 之后才发送；请按 seq 跳过重复帧。
 
-发布者共用 `src/TapSink.h`（[代码规范](https://github.com/LiteLDev/BeDD/blob/main/CONTRIBUTING.md#code-rules)）；钩子只复制，由订阅者线程取走。
+各发布者共用 `src/TapSink.h`（见[代码规范](https://github.com/LiteLDev/BeDD/blob/main/CONTRIBUTING.md#code-rules)）；钩子只负责复制数据，由订阅者线程取走。
 
 ## 远程服务器（`NetTap.cpp`）
 
@@ -50,29 +48,28 @@
 
 ## 单人世界和局域网主机世界（`TapLoopback.cpp`，配置 `tapLoopback`）
 
-默认 `true`，需要 `tap`。钩住 `LoopbackPacketSender`；数据包重新序列化（头同上，`Packet::write` 使用发送方 `NetworkSystem`
-的 `ReflectionCtx`）；flags 2 + 4。
+默认为 `true`，依赖 `tap`。钩住 `LoopbackPacketSender`，数据包会重新序列化（头格式同上，`Packet::write` 使用发送方 `NetworkSystem` 的 `ReflectionCtx`）；flags 为 2 + 4。
 
 | | |
 |---|---|
-| CLIENTBOUND | 服务端发送方 `$sendToClient`（两个）、`$sendToClients`、`$sendBroadcast`（两个）、`$sendTo`（自 1.26.60 起经虚表调用 `$sendTo`、`$sendBroadcast(except)`）；仅 `Local` 连接。局域网访客：计入 `guest`。广播在本地玩家的 `start_game` 之后 |
+| CLIENTBOUND | 服务端发送方 `$sendToClient`（两个）、`$sendToClients`、`$sendBroadcast`（两个）、`$sendTo`（自 1.26.60 起经虚表调用 `$sendTo`、`$sendBroadcast(except)`）；仅限 `Local` 连接。局域网访客计入 `guest`。广播在本地玩家的 `start_game` 之后开始 |
 | SERVERBOUND_ECHO | 客户端发送方 `$sendToServer`、`$send`、`$sendTo`；从不含 id 1、3、4、193 |
 | 区块 | 每个 `subchunk_request`/`subchunk`（一个原点，最多 `highest_subchunk_count`；`client_cache_status.enabled:false`） |
-| 链路 | 仅当 `tap::gLinkType` 为 local；由客户端发送方的首个数据包和 `$onConnectionClosed` 设置。链路未知前，`Local` 客户端连接计入（从不写 `gLinkType`）。远程捕获只在 `Remote` 时发布：不会重复 |
-| 无接收端 | `tap::gEmit` 为 null：只计数。`state.stats.tapLoopback{enabled, hooks, link, clientbound, echo, bytes, unpublished, guest}` |
+| 链路 | 仅在 `tap::gLinkType` 为 local 时生效，由客户端发送方的首个数据包和 `$onConnectionClosed` 设置。链路未知前，`Local` 客户端连接也会计入（但从不写入 `gLinkType`）。远程捕获只在 `Remote` 时发布，因此不会重复 |
+| 无接收端 | `tap::gEmit` 为 null 时只计数。`state.stats.tapLoopback{enabled, hooks, link, clientbound, echo, bytes, unpublished, guest}` |
 | `trace` | 记录前 50 帧（`trace tap loopback: in\|out id= len=`）；前 4000 帧写入 `mods\BeDD\data\tap-loopback.bin`（seq、tUs 为 0） |
 
 ## 加入日志（`TapJournal.cpp`）
 
-挂在 `bedd::tap::gEmit` 链上，设置 `bedd::tap::gReplay`（在 REPLAY 标记之间对每个订阅者调用）。
+挂在 `bedd::tap::gEmit` 链上，并设置 `bedd::tap::gReplay`（在两个 REPLAY 标记之间对每个订阅者调用）。
 
 | | |
 |---|---|
-| 保留 | 仅 CLIENTBOUND。新链路和 `start_game`（11，首帧）时重置 |
+| 保留 | 仅 CLIENTBOUND。新链路建立和收到 `start_game`（11，作为首帧）时重置 |
 | 每键保留最新 | `level_chunk`（x、z、dim）、`update_block`（pos、layer）、`set_time`、`set_health`、`network_chunk_publisher_update`、`current_structure_feature`、`inventory_content`（window）、`inventory_slot`（window、slot）、`level_event`（事件 id）、`update_abilities`（unique id）、`add_*`（unique id；`add_player` 用 runtime id）；按 runtime id：`set_entity_motion`、`move_entity`、`move_player`、`mob_armor_equipment` |
 | 按实体 + 字段 | `set_entity_data`（键）、`update_attributes`（名字）、`move_entity_delta`（字段）、`mob_effect`（效果） |
-| `subchunk` | 更新的帧覆盖其全部子区块后丢弃；无法遍历的：保留 |
-| `remove_entity`（14） | 删除 add 帧（`add_player` 按 unique id 字节）和 runtime id 键 |
+| `subchunk` | 被后续帧覆盖全部子区块后丢弃；无法遍历的则保留 |
+| `remove_entity`（14） | 删除对应的 add 帧（`add_player` 按 unique id 字节匹配）和 runtime id 键 |
 | 不保留 | `text`、`animate`、`network_stack_latency`、`play_sound`、`stop_sound`、`level_sound_event`（v1、v2）、`spawn_particle_effect`、`level_event_generic` |
-| 上限 | `tapJournalMiB`（128）：超出后 `complete:false` 直到重置（晚到的订阅者缺区块） |
+| 上限 | `tapJournalMiB`（128）：超出后 `complete:false` 直至重置（晚到的订阅者会缺失区块） |
 | 统计 | `state.stats.journal`：`enabled, frames, bytes, complete, seen, compacted, pruned, transient, overCap, resets, replays` |

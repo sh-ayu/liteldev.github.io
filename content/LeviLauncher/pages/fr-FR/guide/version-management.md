@@ -1,76 +1,76 @@
 # Gestion des versions
 
-LeviLauncher considère chaque environnement installé comme une version pouvant être gérée de manière indépendante. Dans l'application, les versions installées sont appelées instances et sont listées sur la page **Instances**.
+LeviLauncher traite chaque environnement installé comme une version gérable indépendamment. Dans l'application, ces versions sont appelées des instances et figurent sur la page **Instances**.
 
 ## Ce que vous pouvez faire
 
 === "Windows"
 
     - Installer des versions Release ou Preview
-    - Définir un nom facilement identifiable pour la version
-    - Lancer rapidement une version spécifique
-    - Supprimer les versions dont vous n'avez plus besoin
-    - Ouvrir les paramètres dédiés à la version
+    - Donner un nom explicite à la version
+    - Lancer rapidement une version précise
+    - Supprimer les versions inutilisées
+    - Ouvrir les paramètres propres à la version
     - Créer un raccourci bureau pour la version
 
 === "Android"
 
-    - importer des APK officiels de Minecraft et les lancer dans le lanceur, sans installer chaque version sur le système
-    - garder plusieurs versions et leurs données séparées
-    - choisir la version que lance l'écran de lancement
+    - Importer des APK officiels de Minecraft et les exécuter dans le lanceur sans installer chaque version sur le système
+    - Conserver plusieurs versions et leurs données séparément
+    - Choisir la version démarrée depuis l'écran de lancement
 
 ## Différence entre Release (officielle) et Preview (Aperçu) <Badge platform="windows" />
 
 | Type | Pour qui ? | Description |
 | --- | --- | --- |
 | Release (officielle) | Jeu quotidien stable | Convient à la majorité des joueurs |
-| Preview (Aperçu) | Tester les nouveautés | Plus susceptible de présenter des changements de compatibilité pour les mondes, les paquets ou les Mods |
+| Preview (Aperçu) | Test des nouveautés | Plus susceptible d'introduire des changements de compatibilité pour les mondes, les packs ou les mods |
 
 ## Qu'est-ce que l'isolation ?
 
 === "Windows"
 
-    L'isolation est disponible pour les versions GDK et pour les versions UWP x64 1.19.70.2 ou ultérieures. Une fois l'isolation activée, LeviLauncher enregistre les données de la version dans son propre espace de travail, au lieu de les partager avec l'emplacement des données par défaut.
+    L'isolation est prise en charge pour les versions GDK ainsi que pour les versions UWP x64 1.19.70.2 ou ultérieures. Lorsqu'elle est activée, LeviLauncher enregistre les données de la version dans son propre espace de travail plutôt que dans l'emplacement par défaut partagé.
 
-    L'isolation est adaptée à ces besoins :
+    L'isolation répond notamment aux besoins suivants :
 
-    - Utiliser des combinaisons de contenu différentes pour chaque version
-    - Tester les Mods ou les versions Minecraft Preview (Aperçu) de manière plus sûre
-    - Réduire le risque qu'un environnement n'affecte un autre
+    - Utiliser des combinaisons de contenus différentes selon les versions
+    - Tester des mods ou des versions Minecraft Preview (Aperçu) avec moins de risques
+    - Éviter qu'un environnement en perturbe un autre
 
 === "Android"
 
-    Activez l'isolation pour une version importée lorsque ses mondes, packs et paramètres doivent rester séparés de la version installée depuis Google Play. Les versions importées ont souvent besoin de l'isolation pour démarrer.
+    Activez l'isolation sur une version importée si ses mondes, packs et paramètres doivent rester séparés de la version installée depuis Google Play. Les versions importées ont souvent besoin de l'isolation pour démarrer.
 
 ## Opérations courantes sur les versions <Badge platform="windows" />
 
 ### Installer une nouvelle version
 
-Installez-la depuis la page **Télécharger**, puis retournez à **Lancer** pour la lancer.
+Installez la version depuis la page **Télécharger**, puis revenez sur **Lancer** pour la démarrer.
 
-L'interrupteur **Installer LeviLamina** de la page d'installation est activé par défaut ; désactivez-le pour installer le jeu sans LeviLamina. Il ne s'applique qu'aux versions prises en charge par LeviLamina.
+Sur la page d'installation, l'option **Installer LeviLamina** est activée par défaut ; désactivez-la pour installer le jeu sans LeviLamina. Cette option ne concerne que les versions prises en charge par LeviLamina.
 
 ### Renommer une version
 
-Dans **Instances** ou dans **Paramètres de l'instance**, attribuez-lui un nom plus descriptif de son usage, par exemple `Release Survival` ou `Preview Test`.
+Dans **Instances** ou **Paramètres de l'instance**, donnez-lui un nom qui reflète son usage, par exemple `Release Survival` ou `Preview Test`.
 
 ### Supprimer une version
 
-Supprimez les versions dont vous n'avez plus besoin, en particulier les environnements Minecraft Preview (Aperçu) dont le test est terminé.
+Supprimez les versions dont vous n'avez plus besoin, en particulier les environnements Minecraft Preview (Aperçu) une fois vos tests terminés.
 
 ::: warning Confirmez avant de supprimer
-La suppression d'une version peut entraîner la suppression du contenu associé à cet environnement géré. Sauvegardez d'abord vos mondes importants.
+La suppression d'une version peut entraîner la perte du contenu associé à cet environnement géré. Sauvegardez d'abord vos mondes importants.
 :::
 
 ### Créer un raccourci bureau
 
-Utilisez **Créer un raccourci sur le bureau** dans le menu à côté du bouton **Lancer** pour créer un raccourci vers une version spécifique, vous permettant de la lancer directement.
+Dans le menu situé à côté du bouton **Lancer**, sélectionnez **Créer un raccourci sur le bureau** pour créer un raccourci permettant de lancer directement cette version.
 
 ## Stratégie recommandée pour les versions <Badge platform="windows" />
 
 - Une version Release (officielle) isolée pour le jeu quotidien
-- Une version Preview (Aperçu) isolée utilisée uniquement lorsque nécessaire
-- Une version de test temporaire pour les Mods ou le dépannage
+- Une version Preview (Aperçu) isolée, utilisée uniquement au besoin
+- Une version de test temporaire pour les mods ou le dépannage
 
 ## Lectures associées
 

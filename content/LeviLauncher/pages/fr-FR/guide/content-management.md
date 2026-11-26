@@ -1,6 +1,6 @@
 # Gestion du contenu
 
-LeviLauncher peut gérer le contenu lié aux versions, ce qui est particulièrement utile lorsqu'il est utilisé avec un environnement isolé.
+LeviLauncher permet de gérer le contenu propre à chaque version, ce qui s'avère particulièrement utile avec des environnements isolés.
 
 ## Types de contenu gérables dans le lanceur
 
@@ -21,7 +21,7 @@ LeviLauncher peut gérer le contenu lié aux versions, ce qui est particulièrem
 
 ## Pourquoi cette partie est-elle importante ?
 
-Pour de nombreux joueurs, la raison principale pour commencer à utiliser le lanceur régulièrement n'est pas simplement « installer une version », mais plutôt « organiser clairement les différents environnements ».
+Pour de nombreux joueurs, l'intérêt d'utiliser le lanceur au quotidien n'est pas tant d'« installer une version » que d'« organiser clairement les différents environnements ».
 
 Par exemple :
 
@@ -33,36 +33,36 @@ Par exemple :
 
 ### Ouvrir la vue d'ensemble du contenu
 
-Depuis la page **Lancer**, ouvrez **Gestion du contenu** pour voir le nombre d'éléments de chaque type et accéder rapidement aux entrées correspondantes.
+Depuis la page **Lancer**, ouvrez **Gestion du contenu** pour consulter le nombre d'éléments de chaque type et accéder rapidement aux rubriques correspondantes.
 
 ### Importer du contenu
 
-LeviLauncher prend en charge le processus d'importation pour certains types de contenu, par exemple par glisser-déposer.
+LeviLauncher permet d'importer certains types de contenu, notamment par glisser-déposer.
 
 ### Ouvrir le dossier réel
 
-Si vous avez besoin de vérifier ou de nettoyer les fichiers manuellement, vous pouvez utiliser l'action « Ouvrir le répertoire » fournie par le lanceur.
+Pour vérifier ou nettoyer les fichiers manuellement, utilisez l'action « Ouvrir le répertoire » proposée par le lanceur.
 
 ### Utiliser l'isolation pour garder le contenu indépendant
 
-Lorsqu'une version est isolée, son contenu est enregistré dans un espace de travail dédié, ce qui est parfait pour les tests et l'archivage.
+Lorsqu'une version est isolée, son contenu est enregistré dans un espace de travail dédié, ce qui est idéal pour les tests et l'archivage.
 
 ## Importer, exporter et sauvegarder <Badge platform="android" />
 
-La version Android peut importer et exporter des mondes et des packs de ressources, et créer des sauvegardes avant les changements risqués.
+La version Android permet d'importer et d'exporter des mondes et des packs de ressources, ainsi que de créer des sauvegardes avant d'effectuer des modifications risquées.
 
-- Les sauvegardes sont stockées à l'emplacement de sauvegarde géré par le lanceur.
-- Pour les mondes importants, gardez aussi une autre copie hors du stockage de l'application.
+- Les sauvegardes sont enregistrées à l'emplacement géré par le lanceur.
+- Pour les mondes importants, conservez également une copie en dehors du stockage de l'application.
 
 ## Bonnes pratiques de gestion
 
 - Ne mélangez pas les packs de ressources de test avec vos mondes principaux
 - Sauvegardez toujours les mondes importants avant toute modification majeure
-- Donnez des noms clairs à vos versions pour éviter toute confusion quant à leur contenu
+- Donnez des noms explicites à vos versions pour éviter toute confusion sur leur contenu
 
 ## À propos des captures d'écran et des serveurs <Badge platform="windows" />
 
-Si vos différentes versions ont des objectifs distincts, il est généralement plus clair de séparer également les captures d'écran et les listes de serveurs par version.
+Si vos versions ont des usages distincts, il est généralement plus clair de séparer aussi les captures d'écran et les listes de serveurs par version.
 
 ## Lectures associées
 

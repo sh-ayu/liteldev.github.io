@@ -1,17 +1,16 @@
 # 协程指南
 
-从LeviLamina 1.0.0开始，协程替代了Scheduler。
+从 LeviLamina 1.0.0 开始，协程已取代 Scheduler。
 
 ## 用法
 
-1. 引用头文件
+1. 引入头文件
    ```cpp
    #include "ll/api/chrono/GameChrono.h"
    #include "ll/api/coro/CoroTask.h"
    ```
-2. 在函数中调用`ll::coro::keepThis`，传入返回值为`ll::coro::CoroTask`的lambda函数
-3. 在`keepThis`后调用`launch`或`syncLaunch`方法，后者会阻塞服务器线程，传入`Executor`类，比如
-   `ll::thread::ServerThreadExecutor`
+2. 在函数中调用`ll::coro::keepThis`，并传入一个返回类型为`ll::coro::CoroTask`的 lambda 函数
+3. 在`keepThis`的返回值上调用`launch`或`syncLaunch`方法（后者会阻塞服务器线程），并传入一个`Executor`类，例如`ll::thread::ServerThreadExecutor`
 
 !!! tip "可用的Executor"
     `ll::thread::ServerThreadExecutor`(ll/api/thread/ServerThreadExecutor.h): 服务器线程
@@ -22,7 +21,7 @@
 
 ### ServerThreadExecutor
 
-以下函数使用协程实现了在服务器线程每20 tick输出字符串到控制台1次，共计20次。
+以下函数使用协程在服务器线程上每 20 tick 向控制台输出 1 次字符串，共输出 20 次。
 
 ```cpp
 #include "ll/api/chrono/GameChrono.h"
@@ -43,7 +42,7 @@ void createServerThreadCoro() {
 
 ### ThreadPoolExecutor
 
-以下函数使用协程实现了在线程池中每秒输出字符串到控制台1次，共计20次。
+以下函数使用协程在线程池中每秒向控制台输出 1 次字符串，共输出 20 次。
 
 ```cpp
 #include "ll/api/chrono/GameChrono.h"

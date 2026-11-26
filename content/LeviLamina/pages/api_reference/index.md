@@ -1,6 +1,6 @@
 # API Reference
 
-Welcome to the LeviLamina API Reference. This section provides detailed documentation for every module under `ll/api`, including class descriptions, method signatures, usage examples, and platform notes.
+Welcome to the LeviLamina API Reference. This section documents every module under `ll/api`, including class descriptions, method signatures, usage examples, and platform notes.
 
 ## Module Overview
 
@@ -64,9 +64,9 @@ LeviLamina's API is organized into the following modules:
 
 ## Scope Legend
 
-- **Common** — Available in both server and client builds. Headers located in `src/ll/api/`.
-- **Server** — Server-specific extensions. Headers located in `src-server/ll/api/`.
-- **Client** — Client-specific extensions. Headers located in `src-client/ll/api/`.
+- **Common** — Available in both server and client builds. Headers are in `src/ll/api/`.
+- **Server** — Server-specific extensions. Headers are in `src-server/ll/api/`.
+- **Client** — Client-specific extensions. Headers are in `src-client/ll/api/`.
 
 ## Conventions
 
@@ -74,5 +74,5 @@ All code examples in this reference:
 
 - Include the necessary `#include` directives
 - Use fully qualified namespaces on first mention
-- Are compilable with C++20 and the LeviLamina build environment
+- Compile with C++20 and the LeviLamina build environment
 - Use `LLAPI` / `LLNDAPI` macros for exported functions (see [Base](base.md) for details)

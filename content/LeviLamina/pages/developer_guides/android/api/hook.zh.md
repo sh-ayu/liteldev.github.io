@@ -26,7 +26,7 @@ enum class HookPriority : int {
 }
 ```
 
-优先级数值越小，hook 链中越早执行。
+优先级数值越小，在 hook 链中越早执行。
 
 ## 函数
 
@@ -37,13 +37,11 @@ int hook(FuncPtr target, FuncPtr detour, FuncPtr *originalFunc,
 bool unhook(FuncPtr target, FuncPtr detour);
 ```
 
-`hook()` 成功返回 `0`，参数无效或安装失败返回 `-1`。`originalFunc` 接收 detour
-中继续调用链所需的函数指针。
+`hook()` 成功返回 `0`，参数无效或安装失败返回 `-1`。`originalFunc` 用于接收在 detour 中继续调用链所需的函数指针。
 
 ## RAII 句柄
 
-如果 hook 应在 `disable()` 或对象析构时自动移除，请使用
-`pl::memory::HookHandle`。
+如果需要在 `disable()` 或对象析构时自动移除 hook，请使用 `pl::memory::HookHandle`。
 
 ```cpp
 #include <pl/memory/Hook.hpp>
@@ -79,7 +77,7 @@ bool MyMod::disable() {
 
 ## 常见错误
 
-- `target`、`detour` 或 `originalFunc` 传入 `nullptr`。
-- detour 签名没有和目标函数完全一致。
+- 为 `target`、`detour` 或 `originalFunc` 传入 `nullptr`。
+- detour 的签名与目标函数不完全一致。
 - 在 detour 中直接调用目标地址，导致递归。
-- 目标模块和地址尚不可用时就安装 hook。
+- 在目标模块和地址尚不可用时安装 hook。

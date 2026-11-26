@@ -4,7 +4,7 @@
 
 ## Overview
 
-The Input module provides keyboard and mouse input binding for the client. It allows mods to register custom key bindings with callbacks and handle input events.
+The Input module provides keyboard and mouse input binding for the client. It lets mods register custom key bindings with callbacks and handle input events.
 
 ## Headers
 
@@ -163,10 +163,10 @@ void listenToMouse() {
 
 ## Platform Notes
 
-- This module is **client-only** and not available in server builds
-- Key codes follow Windows virtual key codes
-- Input events can be cancelled to prevent default behavior
+- This module is **client-only** and not available in server builds.
+- Key codes follow Windows virtual key codes.
+- Input events can be canceled to prevent default behavior.
 
 ## Related
 
-- [Event](event.md) — Input events are part of the event system
+- [Event](event.md) — Input events are part of the event system.

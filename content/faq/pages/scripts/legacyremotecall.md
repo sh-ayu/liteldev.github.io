@@ -42,54 +42,54 @@ Only specific `std::pair` types are supported: `std::pair<Vec3, int>` (converted
 
 ## What is `LLSEGlobal` that I see in LSE?
 
-When you use `ll.exports` / `ll.imports` / `ll.hasExported` without specifying a namespace (passing only the function name), the default namespace `LLSEGlobal` is used automatically.
+When you call `ll.exports`, `ll.imports`, or `ll.hasExported` without specifying a namespace (passing only the function name), LSE automatically uses the default namespace `LLSEGlobal`.
 
 *Applies to: LSE, all current versions*
 
 ## What is LegacyRemoteCall (RemoteCall) and what problem does it solve? Should a new mod depend on it?
 
-LegacyRemoteCall exports functions for cross-plugin calls, mainly so that LSE's JS/Lua plugins can call functions exported by C++ mods (it underlies `ll.exports`/`ll.imports`). It is a companion component of LegacyScriptEngine (LSE depends on it) and exists for compatibility with the old LLSE ecosystem. The maintainers advise that new native mods should not hard-depend on RemoteCall; if you need to offer an interface to scripts, write a separate optional external module that does the exporting.
+LegacyRemoteCall exports functions for cross-plugin calls, mainly so that LSE's JS and Lua plugins can call functions exported by C++ mods (it underlies `ll.exports` and `ll.imports`). It is a companion component to LegacyScriptEngine (LSE depends on it) and exists for compatibility with the old LLSE ecosystem. The maintainers advise against making new native mods hard-depend on RemoteCall; if you need to expose an interface to scripts, write a separate optional external module to handle the exports.
 
 *Applies to: current version (LegacyRemoteCall 0.23.x)*
 
 ## Which module implements cross-plugin function import/export (`ll.export`/`ll.import`) from the old LLSE in LeviLamina? How do I declare plugin load order and dependencies?
 
-In LL2 it was provided by LL itself and ScriptEngine. In LeviLamina it is provided jointly by LegacyRemoteCall (<https://github.com/LiteLDev/LegacyRemoteCall>) and LSE: the function table lives in LegacyRemoteCall (it stores `std::function<ValueType(std::vector<ValueType>)>`), while the script-side `ll.exports`/`ll.imports` are defined in LSE (`ll.export`/`ll.import` are compatibility aliases). LeviLamina uses a modular design, and plugin dependencies and load order are declared in `manifest.json`: `dependencies` (required dependencies), plus fields such as `optionalDependencies`, `loadBefore` and `conflicts`.
+In LL2, this feature was provided by LL itself and ScriptEngine. In LeviLamina, it is provided jointly by LegacyRemoteCall (<https://github.com/LiteLDev/LegacyRemoteCall>) and LSE: LegacyRemoteCall holds the function table (storing `std::function<ValueType(std::vector<ValueType>)>`), while LSE defines the script-side `ll.exports` and `ll.imports` (`ll.export` and `ll.import` are compatibility aliases). LeviLamina uses a modular design, and you declare plugin dependencies and load order in `manifest.json` using `dependencies` (required dependencies) along with fields such as `optionalDependencies`, `loadBefore`, and `conflicts`.
 
 *Applies to: LeviLamina current version; LSE current version*
 
 ## I installed GMLIB-LegacyRemoteCallApi, but plugins that depend on GMLIB still report a missing prerequisite. What should I do?
 
-GMLIB and GMLIB-LegacyRemoteCallApi are not the same thing (the latter is only the RemoteCall interface layer for LSE script plugins), so you need to install GMLIB itself separately: <https://github.com/GroupMountain/GMLIB-Release>, or run `lip install github.com/GroupMountain/GMLIB-Release` in the server root directory.
+GMLIB and GMLIB-LegacyRemoteCallApi are separate packages—the latter is only the RemoteCall interface layer for LSE script plugins. You still need to install GMLIB itself from <https://github.com/GroupMountain/GMLIB-Release>, or by running `lip install github.com/GroupMountain/GMLIB-Release` in the server root directory.
 
 *Applies to: LeviLamina servers that use GMLIB*
 
 ## After an upgrade, LSE's support libraries such as nodejs fail to install or load, with errors related to LegacyRemoteCall. What should I do?
 
-This is caused by a version mismatch between LegacyRemoteCall and LegacyScriptEngine / LeviLamina; all three must match. The current LSE `lip.toml` already declares LegacyRemoteCall as a dependency (for example, LSE 0.23.x depends on LegacyRemoteCall 0.23.* and LeviLamina 26.60.*), so installing or updating with lip pulls in the matching version automatically: update the package with `lip update` (or `lip update github.com/LiteLDev/LegacyScriptEngine`); to change the LeviLamina version itself, use `lip setup`. When installing manually, be sure to replace LegacyRemoteCall as well. Commands follow the current lip.
+This happens when LegacyRemoteCall, LegacyScriptEngine, and LeviLamina have mismatched versions; all three must match. The current LSE `lip.toml` already declares LegacyRemoteCall as a dependency (for example, LSE 0.23.x depends on LegacyRemoteCall 0.23.* and LeviLamina 26.60.*), so installing or updating with lip pulls in the matching version automatically. Update the package with `lip update` (or `lip update github.com/LiteLDev/LegacyScriptEngine`), and use `lip setup` to change the LeviLamina version itself. If you install manually, be sure to replace LegacyRemoteCall as well. Commands follow the current lip.
 
 ## When exporting a function/event with RemoteCall for LSE to call, the call works but throws `bad variant access`. What is the cause?
 
-`bad variant access` means the actual type of a parameter or return value does not match the type declared in `RemoteCall::exportAs` / `importAs` (internally the value is taken from a `std::variant` with `std::get`, which throws `std::bad_variant_access` when the type differs). Check that the types passed from JS match the signature of the C++ exported function. Do not declare parameters of basic numeric types (and of the converted types `WorldPosType` and `BlockPosType`) as references (neither `int&` nor `const int&` works); pass them by value instead. The newer `RemoteCallAPI.h` adds a `static_assert` against extracting references from conversions such as `NumberType`, so this form fails to compile (since 0.21.1, reference parameters cause a compile-time error).
+`bad variant access` means the actual type of a parameter or return value does not match the type declared in `RemoteCall::exportAs` or `importAs` (internally, the value is extracted from a `std::variant` with `std::get`, which throws `std::bad_variant_access` on a type mismatch). Check that the types passed from JS match the signature of the exported C++ function. Do not declare parameters of basic numeric types—or of the converted types `WorldPosType` and `BlockPosType`—as references (neither `int&` nor `const int&` works); pass them by value instead. Newer versions of `RemoteCallAPI.h` add a `static_assert` against extracting references from conversions such as `NumberType`, so this form fails to compile (since 0.21.1, reference parameters cause a compile-time error).
 
 *Applies to: LegacyRemoteCall current version*
 
 ## GMLIB loads fine, but GMLIB-LegacyRemoteCallApi (LRCA) fails to load. What is the cause?
 
-Usually the versions do not match: GMLIB, GMLIB-LegacyRemoteCallApi, LegacyRemoteCall, iListenAttentively, LegacyScriptEngine and LeviLamina itself are not on compatible versions. Update LeviLamina and all related dependencies together to mutually matching versions, without leaving any out. The current LRCA manifest declares dependencies on GMLIB, LegacyRemoteCall, iListenAttentively and ModAPI, and a missing or mismatched one causes the load to fail. In addition, LRCA is a passive mod: it is loaded only when another mod or script plugin declares a dependency on it.
+This is usually a version mismatch: GMLIB, GMLIB-LegacyRemoteCallApi, LegacyRemoteCall, iListenAttentively, LegacyScriptEngine, and LeviLamina itself are not on compatible versions. Update LeviLamina and all related dependencies together to matching versions, without leaving any out. The current LRCA manifest declares dependencies on GMLIB, LegacyRemoteCall, iListenAttentively, and ModAPI; if any of these is missing or mismatched, LRCA fails to load. In addition, LRCA is a passive mod: it loads only when another mod or script plugin declares a dependency on it.
 
 ## Loading a plugin reports `[GMLIB-LegacyRemoteCallApi] setUnknownBlockCleaner is not implemented`. What happened to GMLIB's unknown-block cleaning API?
 
-GMLIB's `setUnknownBlockCleaner` feature (cleaning unknown/wrong blocks) has been removed. LRCA keeps only an empty stub export, which prints `setUnknownBlockCleaner is not implemented` when called, so plugins that depend on it cannot use that feature. To clean unknown blocks, use GMEssentials (GME) instead: <https://github.com/GroupMountain/GMEssentials-Release/>
+GMLIB has removed `setUnknownBlockCleaner` (the feature for cleaning unknown or invalid blocks). LRCA keeps only an empty stub export that prints `setUnknownBlockCleaner is not implemented` when called, so plugins that depend on it can no longer use this feature. To clean unknown blocks, use GMEssentials (GME) instead: <https://github.com/GroupMountain/GMEssentials-Release/>
 
 *Applies to: current GMLIB-LegacyRemoteCallApi version*
 
 ## An LSE plugin calling interfaces that GMLIB exports through GMLIB-LegacyRemoteCallApi (for example `translateString`) fails even though LegacyRemoteCallApi is installed. Why?
 
-GMLIB-LegacyRemoteCallApi is a passive mod: it is loaded only when another mod or plugin depends on it. Declare it in the `dependencies` of your plugin's `manifest.json`, for example:
+GMLIB-LegacyRemoteCallApi is a passive mod: it loads only when another mod or plugin depends on it. Add it to `dependencies` in your plugin's `manifest.json`, for example:
 
 ```json
 "dependencies": [{ "name": "GMLIB-LegacyRemoteCallApi" }]
 ```
 
-The `version` field of a dependency can be omitted (any version matches when omitted); if you write it, it is a version range constraint.
+The `version` field of a dependency is optional. If you omit it, any version matches; if you include it, it acts as a version range constraint.

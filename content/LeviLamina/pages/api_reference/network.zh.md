@@ -4,8 +4,7 @@
 
 ## 概述
 
-Network 模块用于定义在客户端和服务器之间收发的自定义数据包。玩家进入之前，LeviLamina 会检查两端是否处理了各自需要的数据包，
-之后也会持续告诉每一端对方处理哪些数据包。
+Network 模块用于定义在客户端与服务器之间收发的自定义数据包。玩家进入游戏前，LeviLamina 会检查两端是否都处理了各自所需的数据包，并在之后持续同步各自处理的数据包列表。
 
 ## 头文件
 
@@ -18,7 +17,7 @@ Network 模块用于定义在客户端和服务器之间收发的自定义数据
 
 ### 定义数据包
 
-继承 `PacketBase` 并实现 `write` 与 `read`。继承即完成注册，不需要再调用别的函数。
+继承 `PacketBase` 并实现 `write` 与 `read`。继承即完成注册，无需调用其他函数。
 
 ```cpp
 #include "ll/api/network/packet/Packet.h"
@@ -42,8 +41,7 @@ public:
 
 ### 处理数据包
 
-继承 `PacketHandlerBase` 并实现 `handlePacket`。继承即完成注册，LeviLamina 会创建一个处理器实例。`side` 表示处理该数据包的一端：
-客户端发来的数据包为 `PacketSide::Server`，服务器发来的为 `PacketSide::Client`。
+继承 `PacketHandlerBase` 并实现 `handlePacket`。继承即完成注册，LeviLamina 会自动创建一个处理器实例。`side` 表示处理该数据包的一端：客户端发来的数据包为 `PacketSide::Server`，服务器发来的为 `PacketSide::Client`。
 
 ```cpp
 class SetLabelHandler : public ll::network::PacketHandlerBase<SetLabelHandler, SetLabelPacket> {
@@ -71,13 +69,11 @@ packet.sendToClient(networkId, subClientId); // 服务器发往某个连接
 packet.sendToClients();                      // 服务器发往所有客户端
 ```
 
-`sendTo` 也可以传入方块坐标与维度，或者一个实体，发给其周围的玩家。
+`sendTo` 也可以传入方块坐标与维度，或传入一个实体，将数据包发给周围的玩家。
 
 ### 自定义数据包 ID 与版本
 
-数据包在网络上默认以类型名作为标识，因此重命名类或其命名空间都会改变 ID，分开编写的服务端模组和客户端模组也必须使用相同的类型名。
-如需固定 ID，可声明 `CustomPacketId`；它在编译期读取，与事件的 `CustomEventId` 相同。数据包的线上格式改变时，请增加
-`PacketVersion`：版本不同的对端会把它视为另一个数据包，因此不会读错。
+数据包在网络上默认以类型名标识，因此重命名类或其命名空间都会改变 ID；分开编写的服务端模组和客户端模组也必须使用相同的类型名。如需固定 ID，可声明 `CustomPacketId`，它与事件的 `CustomEventId` 一样在编译期读取。数据包的网络传输格式改变时，请递增 `PacketVersion`：版本不同的对端会将其视为另一个数据包，从而避免读取错误。
 
 ```cpp
 class SetLabelPacket : public ll::network::PacketBase<SetLabelPacket> {
@@ -88,17 +84,13 @@ public:
 };
 ```
 
-`ll::network::getPacketId<T>` 返回 `T` 实际使用的 ID，`ll::network::makePacketRuntimeId(id, version)` 返回网络上实际发送的运行时 ID。
-版本为 0 时就是 ID 的哈希，因此没有版本号的数据包运行时 ID 不变。脚本引擎通过 `makePacketRuntimeId` 与 C++ 定义的数据包互通。
+`ll::network::getPacketId<T>` 返回 `T` 实际使用的 ID，`ll::network::makePacketRuntimeId(id, version)` 返回网络上实际发送的运行时 ID。版本为 0 时，运行时 ID 即为 ID 的哈希，因此未指定版本号的数据包运行时 ID 保持不变。脚本引擎通过 `makePacketRuntimeId` 与 C++ 定义的数据包互通。
 
 ### 处理端与必需数据包
 
-`Side` 表示数据包由哪一端处理：`PacketSide::Server` 表示客户端发往服务器的数据包，`PacketSide::Client` 表示服务器发往客户端的数据包，
-`PacketSide::Both`（默认）表示两端都处理。处理器默认在数据包声明的一端处理，也可以通过 `PacketHandlerBase` 的第三个模板参数另行指定。
-主持世界的客户端同时是服务器和客户端。
+`Side` 表示数据包由哪一端处理：`PacketSide::Server` 表示客户端发往服务器的数据包，`PacketSide::Client` 表示服务器发往客户端的数据包，`PacketSide::Both`（默认）表示两端都处理。处理器默认在数据包声明的一端工作，也可以通过 `PacketHandlerBase` 的第三个模板参数另行指定。主持世界的客户端同时作为服务器和客户端运行。
 
-数据包默认是必需的，声明 `Optional` 后才是可选的。玩家登录时、发送世界之前，服务器会检查客户端是否处理了所有客户端一侧的必需数据包，
-客户端也会检查服务器是否处理了所有服务端一侧的必需数据包。缺少的一方会被断开连接，并提示缺少哪些数据包；原版客户端或服务器视为全部缺少。
+数据包默认为必需，声明 `Optional` 后才变为可选。玩家登录时，在发送世界数据之前，服务器会检查客户端是否处理了所有客户端侧的必需数据包，客户端也会检查服务器是否处理了所有服务端侧的必需数据包。缺少必需数据包的一方会被断开连接，并提示所缺的数据包；原版客户端或服务器视为缺失全部数据包。
 
 ```cpp
 class SetLabelPacket : public ll::network::PacketBase<SetLabelPacket> {
@@ -112,10 +104,9 @@ public:
 
 ### 检查对端
 
-必需数据包不需要检查。缺少必需数据包的客户端或服务器会在登录时被断开，所以服务端从 `PlayerJoinEvent` 起可以直接向任何玩家发送必需数据包，
-客户端在世界开始加载后也可以直接发给服务器。
+必需数据包无需检查。缺少必需数据包的客户端或服务器会在登录时被断开，因此服务端从 `PlayerJoinEvent` 起即可直接向任何玩家发送必需数据包，客户端在世界开始加载后也可直接发给服务器。
 
-只有可选数据包可能在对端缺失。服务端用 `canSendTo` 检查，可以传入玩家或连接的 `NetworkIdentifier`；客户端用 `canSendToServer` 检查：
+只有可选数据包才可能在对端缺失。服务端用 `canSendTo` 检查（可传入玩家或连接的 `NetworkIdentifier`），客户端用 `canSendToServer` 检查：
 
 ```cpp
 SetLabelPacket packet;            // 声明了 Optional{true}
@@ -127,10 +118,9 @@ if (packet.canSendToServer()) {   // 客户端
 }
 ```
 
-两者都会保持最新：加载或卸载模组时，只把它处理的数据包告诉对端。
+两端的状态都会实时更新：加载或卸载模组时，只会将该模组处理的数据包变动同步给对端。
 
-这些检查只是本地查找，不会发送任何数据。它们在 `PacketBase` 上也是静态函数，不必为了检查而先构造数据包，适合在同一数据包的多个版本之间选择。
-运行时注册的数据包可以把运行时 ID 传给 `Packet::canSendTo(id, player)` 和 `Packet::canSendToServer(id)`：
+这些检查只是本地查找，不会发送任何数据。它们在 `PacketBase` 上也是静态函数，无需先构造数据包即可检查，适合在同一数据包的多个版本之间做出选择。对于运行时注册的数据包，可将运行时 ID 传给 `Packet::canSendTo(id, player)` 和 `Packet::canSendToServer(id)`：
 
 ```cpp
 if (SetLabelPacketV2::canSendToServer()) {
@@ -142,7 +132,7 @@ if (SetLabelPacketV2::canSendToServer()) {
 
 ### 运行时注册
 
-脚本引擎以及在运行时定义数据包的模组可以直接使用 `PacketRegistrar`。请传入拥有该注册的模组，这样它被卸载时注册会被移除；处理器的变化会立即告诉对端。
+脚本引擎以及在运行时定义数据包的模组可以直接使用 `PacketRegistrar`。请传入拥有该注册项的模组，以便在模组卸载时自动移除注册；处理器的变动会立即通知对端。
 
 ```cpp
 auto& registrar = ll::network::PacketRegistrar::getInstance();
@@ -155,13 +145,11 @@ registrar.unregisterHandler(id);
 registrar.unregisterPacket(id);
 ```
 
-处理器在被注销或其模组被卸载之前必须保持存活。
+处理器在注销或其所属模组卸载之前必须保持存活。
 
 ### 示例：SimpleTunnel
 
-一个双向传递字符串的通道。`send` 发送消息，`co_await receive()` 等待下一条消息。收到的消息先放在队列里，等协程来取；
-消息到达时，`ConditionVariable` 会唤醒正在等待的协程。处理器把消息放进收到它的那一端的通道；通道在它那一端第一次用到时才创建，服务器或客户端只有一个，主持世界的客户端两端各一个。
-每一端处理数据包的线程就是执行器运行的线程，所以队列不需要加锁。该数据包是必需的，所以玩家进入之后，两端一定都有这个通道。
+这是一个双向传递字符串的通道。`send` 发送消息，`co_await receive()` 等待下一条消息。收到的消息先放入队列，等待协程读取；消息到达时，`ConditionVariable` 会唤醒正在等待的协程。处理器会将消息放入接收端对应的通道；通道在所在端首次使用时才创建，纯服务器或纯客户端各只有一个，而主持世界的客户端则两端各有一个。每一端处理数据包的线程正是执行器运行的线程，因此队列无需加锁。由于该数据包是必需的，玩家进入游戏后，两端必定都已具备该通道。
 
 服务端模组和客户端模组共用：
 
@@ -246,7 +234,7 @@ public:
 };
 ```
 
-服务端模组在启用时启动循环，把每条消息回显回去：
+服务端模组在启用时启动循环，原样回显每条消息：
 
 ```cpp
 #include "ll/api/thread/ServerThreadExecutor.h"
@@ -279,14 +267,9 @@ void talkToServer() {
 
 ### 检查的过程
 
-客户端通过身份验证后，在协商资源包期间，服务器会发送 `levilamina:register`，列出自己处理的数据包的运行时 ID。
-LeviLamina 客户端读到后立即回复自己的 `levilamina:register`；原版客户端会丢弃这个不认识的数据包。服务器在资源包栈之前发出它，
-所以 LeviLamina 客户端的回复总是在它报告资源包栈加载完成之前到达。收到这个报告后，服务器在创建玩家之前检查自己需要的数据包，
-缺少时断开客户端，因此被拒绝的客户端不会触发 `PlayerConnectEvent`。玩家创建之前，服务器只接受客户端发来的 `levilamina:register`
-这一个自定义数据包。客户端在收到 StartGame 时检查自己需要的数据包。
+客户端通过身份验证后，在协商资源包期间，服务器会发送 `levilamina:register`，列出自己处理的数据包的运行时 ID。LeviLamina 客户端收到后会立即回复自己的 `levilamina:register`；原版客户端则会丢弃这个无法识别的数据包。由于服务器在发送资源包栈之前就发出了该数据包，LeviLamina 客户端的回复总会在它报告资源包栈加载完成之前到达。服务器收到加载完成的报告后，会在创建玩家之前检查自身所需的数据包；若发现缺失则断开客户端连接，因此被拒绝的客户端不会触发 `PlayerConnectEvent`。在玩家创建之前，服务器只接受客户端发来的 `levilamina:register` 这一个自定义数据包。客户端则在收到 StartGame 时检查自身所需的数据包。
 
-此后，任一端处理的数据包发生变化时，都会再发送 `levilamina:register`。它的内容是一个布尔值（true 表示开始处理这些数据包，false 表示不再处理），
-接着是一个 64 位无符号变长整数表示的数量，后面跟着这么多个 64 位运行时 ID。
+此后，任一端处理的数据包发生变化时，都会再次发送 `levilamina:register`。其内容依次为一个布尔值（true 表示开始处理这些数据包，false 表示不再处理）、一个表示数量的 64 位无符号变长整数，以及对应数量的 64 位运行时 ID。
 
 ## 相关模块
 

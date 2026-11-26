@@ -4,13 +4,13 @@
 
 ## 概述
 
-Memory 模块提供了底层内存操作、带优先级控制的函数钩子、签名扫描和符号解析。它使模组能够在二进制层面拦截和修改游戏行为。
+Memory 模块提供底层内存操作、带优先级的函数钩子、特征码扫描和符号解析，让模组能够在二进制层面拦截并修改游戏行为。
 
 ## 头文件
 
 | 头文件 | 说明 |
 |--------|------|
-| `ll/api/memory/Hook.h` | 函数钩子宏和注册 |
+| `ll/api/memory/Hook.h` | 函数钩子宏与注册 |
 | `ll/api/memory/Memory.h` | 内存操作工具 |
 | `ll/api/memory/Signature.h` | 二进制模式匹配 |
 | `ll/api/memory/Symbol.h` | 符号名称解析 |
@@ -73,7 +73,7 @@ LL_AUTO_TYPE_INSTANCE_HOOK(HookName, HookPriority::Normal, ClassName, &ClassName
 }
 ```
 
-`Identifier` 可以是函数指针、符号、地址或特征码。`LL_INSTANCE_HOOK` / `LL_AUTO_INSTANCE_HOOK` 和 `LL_AUTO_TYPE_STATIC_HOOK` 用法相同，且每个宏都有在优先级之后额外接受 `RegisterSaveOptions` 参数的 `_EX` 变体（如 `LL_TYPE_INSTANCE_HOOK_EX`）。
+`Identifier` 可以是函数指针、符号、地址或特征码。`LL_INSTANCE_HOOK`、`LL_AUTO_INSTANCE_HOOK` 和 `LL_AUTO_TYPE_STATIC_HOOK` 的用法相同。此外，每个宏都提供对应的 `_EX` 变体（如 `LL_TYPE_INSTANCE_HOOK_EX`），在优先级参数之后额外接受一个 `RegisterSaveOptions` 参数。
 
 ### 内存工具
 
@@ -186,8 +186,8 @@ void callVirtual(void* obj) {
 
 ## 平台说明
 
-- 优先使用函数指针（`&ClassName::method`，虚函数的实现用 `&ClassName::$method`），而非符号名称、地址或特征码
-- 钩子优先级决定执行顺序（数字越小越早执行）
+- 优先使用函数指针（`&ClassName::method`，虚函数的实现用 `&ClassName::$method`），避免直接使用符号名称、地址或特征码
+- 钩子优先级决定执行顺序（数值越小，执行越早）
 
 ## 相关模块
 

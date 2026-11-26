@@ -1,46 +1,46 @@
 # Actualizaciones y solución de problemas
 
-Cuando el comportamiento de instalación, actualización o inicio de LeviLauncher no sea el esperado, consulta primero esta página.
+Si la instalación, la actualización o el inicio de LeviLauncher no funcionan como esperabas, consulta primero esta página.
 
 ## Problemas comunes <Badge platform="windows" />
 
 ### El lanzador indica que la versión Release no está autorizada
 
-Una cuenta de Microsoft solo puede iniciar sesión en Microsoft Store en 10 dispositivos, y el lanzador cuenta como un dispositivo independiente.  
-Por ello, debes eliminar los dispositivos que no necesites en la [gestión de dispositivos de Microsoft Store](https://account.microsoft.com/devices/content).
+Una cuenta de Microsoft solo puede iniciar sesión en Microsoft Store en un máximo de 10 dispositivos, y el lanzador cuenta como un dispositivo independiente.  
+Para solucionarlo, elimina los dispositivos que ya no uses desde la [gestión de dispositivos de Microsoft Store](https://account.microsoft.com/devices/content).
 
 ### Gaming Services ausente o dañado
 
-- Utiliza la guía proporcionada por el lanzador para instalarlo o repararlo.
-- Si es necesario, vuelve a Microsoft Store para comprobar el estado de la instalación de Minecraft Bedrock.
+- Sigue la guía del lanzador para instalarlo o repararlo.
+- Si es necesario, abre Microsoft Store para comprobar el estado de la instalación de Minecraft Bedrock.
 
 ### GameInput ausente
 
-- Instala el redistribuible necesario según las indicaciones de LeviLauncher.
+- Instala el paquete redistribuible necesario siguiendo las indicaciones de LeviLauncher.
 - Tras la instalación, reinicia el lanzador si es necesario.
 
 ### Ruta de instalación no escribible
 
-- En **Configuración → Configuración básica**, cambia la ruta del contenido gestionado a una ubicación escribible.
-- Si el lanzador solicita privilegios elevados durante la instalación o autoactualización, solo permítelo si confías en la fuente.
+- En **Configuración → Configuración básica**, cambia la ruta del contenido gestionado a una carpeta con permisos de escritura.
+- Si el lanzador solicita privilegios elevados durante la instalación o la autoactualización, concédelos solo si confías en el origen.
 
 ### LeviLauncher se cierra al instante o nunca muestra una ventana
 
-- Si el lanzador sigue fallando antes de que aparezca la interfaz, revisa `%LOCALAPPDATA%\LeviLauncher\Logs\startup.log`.
-- Vuelve a intentarlo una vez tras un inicio fallido. Si sigue ocurriendo, adjunta `startup.log` al abrir un Issue en GitHub.
+- Si el lanzador se cierra antes de que aparezca la interfaz, revisa `%LOCALAPPDATA%\LeviLauncher\Logs\startup.log`.
+- Vuelve a intentarlo una vez más. Si el fallo persiste, abre un Issue en GitHub y adjunta `startup.log`.
 
 ### Una versión no se inicia
 
-- Primero prueba si la versión se inicia sin Mods
-- Comprueba si los componentes necesarios de Windows siguen presentes
-- Confirma que la versión se ha instalado completamente
-- Intenta reproducir el problema en un entorno de prueba aislado y limpio
+- Comprueba primero si la versión se inicia sin Mods
+- Verifica que los componentes necesarios de Windows sigan instalados
+- Confirma que la versión se haya instalado por completo
+- Intenta reproducir el fallo en un entorno de prueba limpio y aislado
 
 ### Descarga muy lenta o fallos repetidos
 
-- Cambia de mirror
-- Reinténtalo más tarde
-- Si es posible, utiliza una fuente de paquetes locales
+- Cambia de servidor espejo (mirror)
+- Vuelve a intentarlo más tarde
+- Si es posible, usa una fuente de paquetes local
 
 ## Problemas comunes en Android <Badge platform="android" />
 
@@ -50,42 +50,42 @@ Instala o actualiza la aplicación oficial de Minecraft desde Google Play (1.21.
 
 ### Una versión importada no se inicia
 
-Las versiones importadas suelen necesitar aislamiento. Actívalo en los ajustes de la instancia y vuelve a intentarlo.
+Las versiones importadas suelen requerir aislamiento. Actívalo en los ajustes de la instancia y vuelve a intentarlo.
 
 ### Un inicio falla
 
-Abre el registro de inicio desde la pantalla de error y revisa el motivo antes de cambiar ajustes.
+Abre el registro de inicio desde la pantalla de error y comprueba la causa antes de modificar cualquier ajuste.
 
 ### Migración de datos
 
-El lanzador puede migrar directorios de datos antiguos antes de continuar. No borres el directorio antiguo hasta que la migración termine y tus mundos, paquetes y ajustes estén disponibles.
+El lanzador puede migrar directorios de datos antiguos antes de continuar. No elimines el directorio antiguo hasta que termine la migración y hayas comprobado que tus mundos, paquetes y ajustes están disponibles.
 
 ## Pasos de recuperación más seguros
 
 1. Haz primero una copia de seguridad de los mundos importantes.
-2. Elimina los Mods o paquetes de recursos añadidos recientemente.
-3. Realiza una prueba de comparación con una versión aislada limpia.
+2. Retira los Mods o paquetes de recursos que hayas añadido recientemente.
+3. Prueba con una versión limpia y aislada para comparar.
 4. Si es necesario, reinstala la versión afectada.
 
 ## Sobre la autoactualización <Badge platform="windows" />
 
-LeviLauncher puede comprobar, descargar e instalar actualizaciones de la aplicación. Si el directorio de instalación no es escribible, en algunos entornos podría requerir permisos de administrador.
+LeviLauncher puede buscar, descargar e instalar actualizaciones de la aplicación. Si el directorio de instalación no tiene permisos de escritura, algunos entornos podrían solicitar permisos de administrador.
 
 ## Cuándo deberías crear un Issue
 
-Se recomienda enviar un problema a GitHub cuando se cumplan las siguientes condiciones:
+Se recomienda abrir un Issue en GitHub si se cumplen estas condiciones:
 
-- Puedes reproducir el problema de forma estable
-- El problema persiste tras realizar los pasos básicos de recuperación
-- El problema parece ser de LeviLauncher en sí, y no un problema general del entorno de Windows
+- Puedes reproducir el fallo de forma consistente
+- El problema persiste tras seguir los pasos básicos de recuperación
+- El fallo parece propio de LeviLauncher y no del entorno de Windows en general
 
-Al enviarlo, incluye siempre:
+Al abrirlo, incluye siempre:
 
 - Versión de Windows
 - Versión de LeviLauncher
-- Tus pasos de operación específicos
+- Los pasos exactos que seguiste
 - Capturas de pantalla o registros (si los tienes)
 
 Enlace para informar de problemas: [GitHub Issues](https://github.com/LiteLDev/LeviLauncher/issues)
 
-Para la versión para Android, incluye la versión de Android, el modelo del dispositivo y el registro de inicio, y abre la incidencia en [LiteLDev/LeviLauncher-Android](https://github.com/LiteLDev/LeviLauncher-Android/issues).
+Para la versión de Android, indica la versión de Android, el modelo del dispositivo y el registro de inicio, y abre el Issue en [LiteLDev/LeviLauncher-Android](https://github.com/LiteLDev/LeviLauncher-Android/issues).

@@ -2,9 +2,7 @@
 
 ## Purpose
 
-Config API provides typed JSON configuration for native mods. It can create
-default config files, merge existing user values into new defaults, normalize
-the JSON layout, and generate `config.schema.json` for the launcher editor.
+The Config API provides typed JSON configuration for native mods. It creates default config files, merges existing user values into new defaults, normalizes the JSON layout, and generates `config.schema.json` for the launcher editor.
 
 ## Header
 
@@ -12,8 +10,7 @@ the JSON layout, and generate `config.schema.json` for the launcher editor.
 #include <pl/Config.hpp>
 ```
 
-Config types should be simple aggregate structs with public fields, default
-member initializers, and an integral `version` field.
+Config types should be simple aggregate structs with public fields, default member initializers, and an integral `version` field.
 
 ## Define a Config
 
@@ -44,14 +41,11 @@ struct ModConfig {
 };
 ```
 
-Field order in generated JSON follows the aggregate field order. Fields whose
-names start with `$` are ignored by reflection.
+The field order in the generated JSON matches the aggregate's field order. Reflection ignores fields whose names start with `$`.
 
 ## Load and Save
 
-During native mod lifecycle calls, `ConfigFile` can use the current mod's
-default `config/config.json` and `config/config.schema.json` paths. You may
-still pass explicit paths when you need a non-default location.
+During native mod lifecycle calls, `ConfigFile` uses the current mod's default `config/config.json` and `config/config.schema.json` paths. You may still pass explicit paths when you need a non-default location.
 
 ```cpp
 class MyMod {
@@ -85,20 +79,18 @@ mConfig->save();
 
 ## Update Behavior
 
-`ConfigFile<T>::load()` starts from the C++ default value, then merges the
-existing JSON into that default layout.
+`ConfigFile<T>::load()` starts with the C++ default value and merges the existing JSON into that default layout.
 
 - Missing files are created automatically.
-- New fields are added with C++ defaults.
+- New fields are added with their C++ defaults.
 - Existing user values are preserved when they can be deserialized.
-- `version` is forced back to the C++ default `version`.
+- `version` is reset to the C++ default `version`.
 - Malformed or incomplete files are normalized and written back.
-- Unknown keys are not kept after normalization.
+- Unknown keys are removed during normalization.
 
 ## Schema Metadata
 
-The schema generator infers `type`, `default`, nested `properties`, array
-`items`, and enum choices. Add UI metadata with `pl::config::Schema<T>`.
+The schema generator infers `type`, `default`, nested `properties`, array `items`, and enum choices. Use `pl::config::Schema<T>` to add UI metadata.
 
 ```cpp
 template <> struct pl::config::Schema<ModConfig> {
@@ -146,5 +138,4 @@ Supported metadata:
 | `std::vector<T>` | array |
 | `std::optional<T>` | value or `null` |
 
-Prefer simple config structs. Avoid custom constructors, private fields, and
-logic-heavy config objects.
+Prefer simple config structs. Avoid custom constructors, private fields, and logic-heavy config objects.

@@ -174,7 +174,7 @@ Only triggers when dispenser/dropper ejects normal items (non-projectiles).
   - block : `Block`  
     The block that was hit.
   - source : `Entity`  
-    The projectile entities fired (arrows).
+    The projectile entity that was fired (arrows).
 - Intercept events: function returns `false`
 
 
@@ -187,14 +187,14 @@ Only triggers when dispenser/dropper ejects normal items (non-projectiles).
   - block : `Block`  
     The block object where the redstone update occurred.
   - level : `Integer`  
-    Updated redstone power levels (0-15).
+    The updated redstone power level (0-15).
   - isActive : `Boolean`  
-    Indicates whether the redstone update is active or off.  
+    Indicates whether the redstone update is active or inactive.  
     - If `true`, the redstone became active.
-    - if `false`, the redstone became inactive.
+    - If `false`, the redstone became inactive.
 - Intercept events: function returns `false`
 
-Currently, the types of blocks that can monitor redstone updates are: redstone wire, redstone torch, redstone repeater, redstone comparator.
+Currently, the following block types can monitor redstone updates: redstone wire, redstone torch, redstone repeater, and redstone comparator.
 
 
 
@@ -204,15 +204,15 @@ Currently, the types of blocks that can monitor redstone updates are: redstone w
   `function(pos,isMinecart,item)`
 - Parameters: 
   - pos : `FloatPos`  
-    Where the hopper is located.
+    The position of the hopper.
   - isMinecart : `Boolean`  
-    Is it a hopper minecart?
+    Whether it is a hopper minecart.
   - item : `Item`  
-    The searched item object.
+    The detected item object.
 - Intercept events: function returns `false`
 
-Note: After placing the funnel, this event will be repeatedly triggered on the server side.
-After you intercept the event, the hopper will not be able to absorb the item.
+Note: After a hopper is placed, this event triggers repeatedly on the server side.
+If you intercept this event, the hopper will not be able to absorb the item.
 
 
 
@@ -222,9 +222,9 @@ After you intercept the event, the hopper will not be able to absorb the item.
   `function(pos,isMinecart,item)`
 - Parameters: 
   - pos : `FloatPos`  
-    Where the hopper is located.
+    The position of the hopper.
   - isMinecart : `Boolean`  
-    Is it a hopper minecart?
+    Whether it is a hopper minecart.
   - item : `Item`  
     The item object to be output.
 - Intercept events: function returns `false`
@@ -237,12 +237,12 @@ After you intercept the event, the hopper will not be able to absorb the item.
   `function(pistonPos,block)`
 - Parameters: 
   - pistonPos : `IntPos`  
-    Working piston coordinates.
+    The coordinates of the active piston.
   - block : `Block`  
     The block object that the piston attempted to push.
 - Intercept events: function returns `false`
 
-If the piston is blocked by a block and cannot be pushed, this event will loop continuously.
+If a block obstructs the piston and prevents it from pushing, this event will loop continuously.
 
 
 
@@ -252,12 +252,12 @@ If the piston is blocked by a block and cannot be pushed, this event will loop c
   `function(pistonPos,block)`
 - Parameters: 
   - pistonPos : `IntPos`  
-    Working piston coordinates.
+    The coordinates of the active piston.
   - block : `Block`  
     The pushed block object.
-- Intercept event: Unable to intercept.
+- Intercept event: Cannot be intercepted.
 
-Note: This event fires at the same time as the previous Try event (before the push), but it cannot be intercepted and also fires when the pushed position is air.
+Note: This event fires at the same time as the preceding Try event (before the push), but it cannot be intercepted and also fires when the pushed position is air.
 
 
 
@@ -267,9 +267,9 @@ Note: This event fires at the same time as the previous Try event (before the pu
   `function(pos,entity)`
 - Parameters: 
   - pos : `IntPos`  
-    Coordinates of degraded arable land.
+    The coordinates of the degraded farmland.
   - entity : `Entity`  
-    Entity that degraded the arable land.
+    The entity that degraded the farmland.
 - Intercept events: function returns `false`
 
 
@@ -295,7 +295,7 @@ NOTE: Actions include placing items, removing items, and rotating items.
   `function(from,to)`
 - Parameters: 
   - from : `Block`  
-    Water source block object.
+    The water source block object.
   - to : `IntPos`  
     The coordinates of the position where the liquid will flow.
 - Intercept events: function returns `false`

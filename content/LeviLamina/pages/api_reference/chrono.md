@@ -14,7 +14,7 @@ The Chrono module provides game-specific time types based on `std::chrono`, incl
 
 ## Game Tick Durations
 
-Game time is measured in **ticks** (20 ticks = 1 real-time second). The following duration types are provided:
+Game time is measured in **ticks** (20 ticks = 1 real-time second). The module provides the following duration types:
 
 | Type | Definition | Equivalent |
 |------|-----------|------------|

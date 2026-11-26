@@ -1,6 +1,6 @@
 # Inhaltsverwaltung
 
-LeviLauncher kann inhaltsbezogene Daten verwalten, die mit einzelnen Minecraft-Versionen verknüpft sind – besonders effektiv in Kombination mit isolierten Umgebungen.
+LeviLauncher verwaltet die Inhalte einzelner Minecraft-Versionen – besonders wirkungsvoll in Kombination mit isolierten Umgebungen.
 
 ## Im Launcher verwaltbare Inhaltstypen
 
@@ -21,48 +21,48 @@ LeviLauncher kann inhaltsbezogene Daten verwalten, die mit einzelnen Minecraft-V
 
 ## Warum das wichtig ist
 
-Für viele Spieler ist der entscheidende Grund, einen Launcher langfristig zu nutzen, nicht nur das „Installieren einer Version“, sondern vielmehr das „klare Trennen verschiedener Spielumgebungen“.
+Viele Spieler nutzen einen Launcher langfristig nicht nur zum „Installieren einer Version“, sondern vor allem zum „klaren Trennen verschiedener Spielumgebungen“.
 
 Beispiele:
 
 - Eine Version ausschließlich für Vanilla-Überlebenswelten  
 - Eine Version speziell zum Testen von Ressourcenpaketen  
-- Eine separate Minecraft Preview-Version, um Screenshots und Serverlisten unabhängig zu speichern  
+- Eine separate Minecraft Preview-Version mit eigenen Screenshots und Serverlisten  
 
 ## Häufige Aktionen <Badge platform="windows" />
 
 ### Inhaltsübersicht öffnen
 
-Öffne auf der Seite **Starten** die **Inhaltsverwaltung**, um Anzahlen und Schnellzugriffe für die wichtigsten Inhaltskategorien zu sehen.
+Öffne auf der Seite **Starten** die **Inhaltsverwaltung**, um die Anzahl der Einträge sowie Schnellzugriffe für die wichtigsten Inhaltskategorien zu sehen.
 
 ### Inhalte importieren
 
-Für bestimmte Inhaltstypen unterstützt LeviLauncher einen Import-Workflow – beispielsweise per Drag & Drop.
+Bestimmte Inhaltstypen lassen sich in LeviLauncher direkt importieren – etwa per Drag & Drop.
 
 ### Tatsächliche Ordner öffnen
 
-Falls du Dateien manuell prüfen oder bereinigen möchtest, kannst du über den Launcher direkt die entsprechenden Verzeichnisse öffnen.
+Wenn du Dateien manuell prüfen oder aufräumen möchtest, kannst du die entsprechenden Ordner direkt aus dem Launcher heraus öffnen.
 
 ### Isolierung zur Inhaltsunabhängigkeit nutzen
 
-Sobald eine Version isoliert ist, werden ihre Inhalte in einem separaten Arbeitsverzeichnis gespeichert – ideal für Tests und archivische Ordnung.
+Ist eine Version isoliert, liegen ihre Inhalte in einem eigenen Arbeitsverzeichnis – ideal zum Testen und für eine saubere Archivierung.
 
 ## Importieren, exportieren und sichern <Badge platform="android" />
 
-Die Android-Version kann Welten und Ressourcenpakete importieren und exportieren und vor riskanten Änderungen Backups anlegen.
+Unter Android lassen sich Welten und Ressourcenpakete importieren und exportieren sowie vor riskanten Änderungen als Backup sichern.
 
-- Backups liegen am vom Launcher verwalteten Backup-Ort.
+- Backups werden im Backup-Verzeichnis des Launchers abgelegt.
 - Bewahre von wichtigen Welten zusätzlich eine Kopie außerhalb des App-Speichers auf.
 
 ## Empfohlene Ordnungsgrundsätze
 
 - Test-Ressourcenpakete nicht mit Hauptwelten mischen  
 - Wichtige Welten vor größeren Änderungen sichern  
-- Versionen klar benennen, um Zuordnungsfehler zu vermeiden  
+- Versionen eindeutig benennen, um Verwechslungen zu vermeiden  
 
 ## Hinweis zu Screenshots und Servern <Badge platform="windows" />
 
-Wenn verschiedene Versionen unterschiedliche Zwecke erfüllen, empfiehlt es sich, auch Screenshots und Serverlisten versionsweise zu trennen – das sorgt für bessere Übersichtlichkeit.
+Wenn du verschiedene Versionen für unterschiedliche Zwecke nutzt, solltest du auch Screenshots und Serverlisten pro Version trennen – das hält alles übersichtlich.
 
 ## Weiterführende Themen
 

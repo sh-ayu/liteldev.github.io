@@ -1,13 +1,12 @@
 # 📚 NbtList - List type
 
-A `NbtList` represents a list that stores a list of NBT objects, similar to a data structure like a list/array.
-The interface of the object can perform some operations unique to the NBT list.
+An `NbtList` stores a sequence of NBT objects, much like a list or array, and provides methods specific to NBT lists.
 
 ### Get an NBT List Object
 
 #### Parse From an Existing NBT Object
 
-See [NbtList - List Type](./NBTList.md) and [NbtCompound - Tag Type](./NBTCompound.md) documentation.
+See the [NbtList - List Type](./NBTList.md) and [NbtCompound - Tag Type](./NBTCompound.md) documentation.
 
 
 
@@ -18,16 +17,14 @@ See [NbtList - List Type](./NBTList.md) and [NbtCompound - Tag Type](./NBTCompou
 
 - Parameter: 
   - data : `Array<NBT object>` (optional parameter)   
-    Pass in an array of NBT objects. Arrays are allowed to contain other
-    array/object structures, but the contents must all be NBT objects. `Null`
-    values are treated as `NBT.End`.
-- Return value: The generated NBT object.
+    An array of NBT objects. The array may contain nested array or object structures, as long as all elements are NBT objects. `Null` values are treated as `NBT.End`.
+- Return value: The created NBT object.
 - Return value type: `NbtList`
-  - If the creation fails, an exception will be thrown.
+  - Throws an exception if creation fails.
 
 
 
-For a certain `NbtList` type of object `list`, there are the following interfaces.
+An `NbtList` object `list` provides the following methods.
 
 #### Get List Length
 
@@ -45,11 +42,11 @@ For a certain `NbtList` type of object `list`, there are the following interface
 - Parameter: 
   - index : `Integer`  
     The index of the element to query.
-- Return value: The data type of the NBT stored at this element.
+- Return value: The data type of the NBT stored at this index.
 - Return value type: `Enum`
-  - If the NBT being read does not exist, it will return `Null`
+  - Returns `Null` if the NBT at that index does not exist.
 
-Possible return values are: `NBT.End` `NBT.Byte` `NBT.Short` `NBT.Int` `NBT.Long`   
+Possible return values: `NBT.End` `NBT.Byte` `NBT.Short` `NBT.Int` `NBT.Long`   
 `NBT.Float` `NBT.Double` `NBT.ByteArray` `NBT.String`  
 `NBT.List` `NBT.Compound`
 
@@ -61,11 +58,10 @@ Possible return values are: `NBT.End` `NBT.Byte` `NBT.Short` `NBT.Int` `NBT.Long
 
 - Parameters: 
   - index : `Integer`  
-    The index of the NBT you want to operate on.
+    The target index.
   - tag: `NBT object`   
-    NBT object to write to. Passing `Null` writes `NBT.End`. The index must
-    already exist; the original element at that position will be replaced.
-- Return value: The NBT list that has been written (for other operations in the chain).
+    The NBT object to write. Passing `Null` writes `NBT.End`. The index must already exist; the existing element at that position is replaced.
+- Return value: The modified NBT list (for method chaining).
 - Return value type: `NbtList`
 
 
@@ -76,10 +72,10 @@ Possible return values are: `NBT.End` `NBT.Byte` `NBT.Short` `NBT.Int` `NBT.Long
 
 - Parameter: 
   - index : `Integer`  
-    The index of the NBT you want to operate on.
-- Return value: The NBT Object at the index position.
+    The target index.
+- Return value: The NBT object at the given index.
 - Return value type: `NBT object`
-  - If the NBT being read does not exist, it will return `Null`
+  - Returns `Null` if the NBT at that index does not exist.
 
 
 
@@ -89,8 +85,8 @@ Possible return values are: `NBT.End` `NBT.Byte` `NBT.Short` `NBT.Int` `NBT.Long
 
 - Parameter: 
   - tag: `NBT object`  
-    The NBT object being added to the list. Passing `Null` appends `NBT.End`.
-- Return value: The NBT list with the NBT object added (for chaining operations).
+    The NBT object to append to the list. Passing `Null` appends `NBT.End`.
+- Return value: The modified NBT list (for method chaining).
 - Return value type: `NbtList`
 
 
@@ -101,17 +97,16 @@ Possible return values are: `NBT.End` `NBT.Byte` `NBT.Short` `NBT.Int` `NBT.Long
 
 - Parameter: 
   - index : `Integer`  
-    The position of the NBT object to be deleted.  
+    The index of the NBT object to delete.  
     The index cannot exceed the number of NBT objects in the list.
-- Return value: Processed NBT list (easy for chaining to perform other operations).
+- Return value: The modified NBT list (for method chaining).
 - Return value type: `NbtList`
 
 
 
 ## Some Convenience Functions to Assist in the Manipulation of NBT Objects
 
-Obviously, purely using NBT objects can be cumbersome and syntactically complex when modifying some of the NBT values.
-Therefore, some convenient functions for simplifying object operations are also provided here. By directly operating the data at the specified location and avoiding transit through the NBT object, the amount of code can be reduced to a certain extent.
+Working strictly with NBT objects can make modifying values verbose and cumbersome. The following helper methods let you read and write data at a given index directly, without wrapping or unwrapping NBT objects, which keeps your code shorter.
 
 #### Set Data at a Specific Position
 
@@ -127,12 +122,11 @@ Therefore, some convenient functions for simplifying object operations are also 
 
 - Parameter: 
   - index : `Integer`  
-    The index of the NBT you want to operate on.
+    The target index.
   - data: `Number` / `Float` / `Double` / `ByteBuffer` / `String`  
-    The specific data being written.  
-    The index must already exist. The original element at that position will be
-    replaced with the corresponding NBT type.
-- Return value: NBT list that has been written (for other operations in the chain).
+    The data to write.  
+    The index must already exist. The existing element at that position is replaced with an NBT of the corresponding type.
+- Return value: The modified NBT list (for method chaining).
 - Return value type: `NbtList`
 
 
@@ -143,11 +137,11 @@ Therefore, some convenient functions for simplifying object operations are also 
 
 - Parameter: 
   - index : `Integer`  
-    The index of the NBT you want to operate on.
-- Return value: The data stored in the specified location in the list.
-- Return value type: `Number` / `Float` / `Double` / `ByteBuffer` / `String`, whatever is the data type of the data stored by the object.
-  - If the target location stores the `List` type NBT, it will return a `NbtList` object; if the target location stores a `Compound` type NBT, it will return a `NbtCompound` object.
-  - If the NBT being read does not exist, it will return `Null`
+    The target index.
+- Return value: The data stored at the specified index in the list.
+- Return value type: `Number` / `Float` / `Double` / `ByteBuffer` / `String`, matching the data type stored by the object.
+  - If the target index holds a `List` NBT, this returns an `NbtList` object; if it holds a `Compound` NBT, this returns an `NbtCompound` object.
+  - Returns `Null` if the NBT at that index does not exist.
 
 
 
@@ -158,7 +152,7 @@ Therefore, some convenient functions for simplifying object operations are also 
 - Return value: The array form of the list.
 - Return value type: `Array`
 
-Convert the contents of List to LSE array/list, convert all data items to LSE data type and store them in the corresponding subscript of the array/list for easy reading and processing.
-If an item in the List stores a `List` or `Compound` type which will recursively expand at the corresponding position as `Array` or `Object`.
+Converts the contents of a List into an LSE array/list for easy reading and processing. Each data item is converted to its corresponding LSE data type and stored at the matching index in the array/list.
+If an item in the List is of type `List` or `Compound`, it is recursively expanded at the corresponding position into an `Array` or `Object`.
 
 

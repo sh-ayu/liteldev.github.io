@@ -1,6 +1,6 @@
 # Operation modes
 
-All three modes are on at once over the same [WebSocket](/guide/usage). `ping` reports `defaultMode` and each mode's
+All three modes are active at once over the same [WebSocket](/guide/usage). `ping` reports `defaultMode` and each mode's
 ops in this build (`modes`).
 
 | Mode | For | Ops |
@@ -13,7 +13,7 @@ ops in this build (`modes`).
 
 **bedboo first, then `ui`, then simulated input.**
 
-- bedboo ops answer in game terms (numbers): exact, small, and independent of window size, GUI scale and key
+- bedboo ops answer in game terms (numbers): exact, compact, and independent of window size, GUI scale, and key
   bindings.
 - A `ui` view is a few hundred characters per screen; controls are clicked by `ref`, not pixels.
 - A screenshot costs an agent ~500–1800 image tokens, needs another to verify, and its pixel positions break.
@@ -23,11 +23,11 @@ screenshots.
 
 ## bedboo
 
-[bedboo](https://github.com/LiteLDev/bedboo) is a mineflayer-compatible Bedrock bot library. With `transport: 'bedd'`
-it turns `bot.dig`, `bot.lookAt`, `bot.setControlState`, `bot.chat`, `bot.clickWindow` and the rest into these ops and
+[bedboo](https://github.com/LiteLDev/bedboo) is a mineflayer-compatible Bedrock bot library. With `transport: 'bedd'`,
+it translates `bot.dig`, `bot.lookAt`, `bot.setControlState`, `bot.chat`, `bot.clickWindow`, and the rest into these ops and
 reads packets from the `tap` ([setup](/guide/usage#with-bedboo); coverage: bedboo's BeDD guide).
 
-Without bedboo, send the ops ([`call`](/guide/usage#a-small-client); fields: [bedboo ops](/reference/websocket#bedboo-ops)):
+Without bedboo, send the ops directly ([`call`](/guide/usage#a-small-client); fields: [bedboo ops](/reference/websocket#bedboo-ops)):
 
 ```js
 await call('look', { yaw: 90, pitch: 30 });
@@ -37,8 +37,8 @@ await call('button', { button: 'attack', action: 'down', releaseOn: 'blockChange
 
 ## UI tree
 
-`ui` returns the screen in front (JSON UI or Ore UI) as text; act on a line's `ref`. Read forms, fields, roles and
-errors: [UI tree](/reference/ui).
+`ui` returns the active screen (JSON UI or Ore UI) as text, and you act on a line's `ref`. For read forms, fields, roles, and
+errors, see [UI tree](/reference/ui).
 
 ```
 screen start_screen
@@ -52,7 +52,7 @@ under: toast_screen, debug_screen, cubemap_background_screen
 await call('ui', { action: 'click', ref: 'e1' });   // reply: changed, target, screen; view when the screen changed
 ```
 
-Refs last while their screen is on the stack, across connections. Actions use the virtual mouse and keyboard. On
+Refs remain valid across connections while their screen is on the stack. Actions use the virtual mouse and keyboard. On
 `stale_ref`, read `ui` again.
 
 ## Simulated input

@@ -4,15 +4,15 @@ platforms: [android]
 
 # アカウントとクイック起動
 
-これらは Android 版 LeviLauncher の機能です。
+以下は Android 版 LeviLauncher の機能です。
 
 ## Xbox アカウント
 
-LeviLauncher はランチャー内で複数の Xbox アカウントを管理できます。Minecraft を起動する前に使うアカウントを選べば、ゲームは想定どおりのアカウントで起動します。
+LeviLauncher では、ランチャー内で複数の Xbox アカウントを管理できます。Minecraft を起動する前に使用するアカウントを選択しておけば、目的のアカウントでゲームを起動できます。
 
 ## クイック起動
 
-クイック起動（Quick Launch）は Minecraft の URI アクションを使い、よく使う操作へ直接移動します。アクションによって次のことができます。
+クイック起動（Quick Launch）は、Minecraft の URI アクションを利用して、よく使う操作を直接実行する機能です。アクションに応じて、次の操作を行えます。
 
 - ゲーム画面を開く
 - サーバーに接続する、またはサーバーを追加する

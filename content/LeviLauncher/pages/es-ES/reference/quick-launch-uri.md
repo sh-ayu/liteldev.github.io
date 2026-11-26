@@ -3,9 +3,9 @@ platforms: [android]
 ---
 # URI de inicio rápido
 
-El **Lanzamiento Rápido** de la versión para Android inicia Minecraft con una URI `minecraft://`, que indica al juego qué abrir primero. Cada acción de la pantalla de Lanzamiento Rápido construye una de las URI de abajo; **URI Personalizada** acepta cualquier URI que empiece por `minecraft://`. Lo que el juego haga con una URI depende de Minecraft.
+El **Lanzamiento Rápido** de la versión para Android inicia Minecraft mediante una URI `minecraft://`, que le indica al juego qué abrir primero. Cada acción de la pantalla de Lanzamiento Rápido genera una de las URI que se muestran más abajo, mientras que **URI Personalizada** admite cualquier URI que empiece por `minecraft://`. Lo que el juego haga con una URI depende de Minecraft.
 
-LeviLauncher también abre enlaces `minecraft://` desde otras aplicaciones: Android lo ofrece como una de las aplicaciones que pueden abrirlos.
+LeviLauncher también abre enlaces `minecraft://` desde otras aplicaciones: Android lo ofrece entre las aplicaciones que pueden abrirlos.
 
 ## Acciones
 
@@ -21,17 +21,17 @@ LeviLauncher también abre enlaces `minecraft://` desde otras aplicaciones: Andr
 | **Añadir Servidor Externo** | `minecraft://?addExternalServer=<nombre>\|<dirección>:<puerto>` | Un nombre, la dirección y el puerto (predeterminado `19132`) |
 | **Unirse a Realm** | `minecraft://acceptRealmInvite?inviteID=<código>` | El código de invitación del Realm |
 | **Cargar Mundo** | `minecraft://connect/?localWorld=<mundo>` | El nombre de un mundo local |
-| **Ejecutar Comando** | `minecraft://?slashcommand=<comando>` | Un comando que ejecutar en el juego |
+| **Ejecutar Comando** | `minecraft://?slashcommand=<comando>` | Un comando para ejecutar en el juego |
 | **URI Personalizada** | cualquier `minecraft://…` | La URI |
 
 El nombre del servidor, el nombre del mundo y el comando se codifican como URL (un espacio se convierte en `%20` y `/` en `%2F`).
 
 ## Ejemplo
 
-Para unirte a un servidor en `play.example.org` con el puerto `19132`, elige **Conectar a Servidor**, o abre este enlace en el dispositivo:
+Para unirte a un servidor en `play.example.org` con el puerto `19132`, selecciona **Conectar a Servidor** o abre este enlace en el dispositivo:
 
 ```text
 minecraft://connect/?serverUrl=play.example.org&serverPort=19132
 ```
 
-Consulta [Cuentas e inicio rápido](../guide/accounts-quick-launch) para el resto de funciones exclusivas de Android.
+Consulta [Cuentas e inicio rápido](../guide/accounts-quick-launch) para ver el resto de las funciones exclusivas de Android.

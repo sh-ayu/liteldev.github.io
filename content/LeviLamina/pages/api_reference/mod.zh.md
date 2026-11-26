@@ -4,7 +4,7 @@
 
 ## 概述
 
-Mod 模块管理模组生命周期、元数据（清单）、目录结构，并提供对模组特定资源的访问，如日志器、配置目录和数据目录。
+Mod 模块管理模组的生命周期、元数据（清单）和目录结构，并提供对日志器、配置目录、数据目录等模组专属资源的访问。
 
 ## 头文件
 
@@ -21,7 +21,7 @@ Mod 模块管理模组生命周期、元数据（清单）、目录结构，并�
 
 ### Mod
 
-表示已加载的模组，包含生命周期回调和资源访问。
+表示已加载的模组，提供生命周期回调和资源访问接口。
 
 ```cpp
 namespace ll::mod {
@@ -103,9 +103,7 @@ struct Manifest {
 }
 ```
 
-依赖项省略 `version` 时可匹配任意版本，也可匹配未声明版本的目标；一旦写出范围，目标必须声明匹配的版本。
-完整语法见 [Data（数据结构）](data.zh.md#versionrequirement)。裸完整版本 `1.2.3` 暂时保留旧语义
-`>=1.2.3 <2.0.0`，并会输出迁移警告；精确匹配请使用 `=1.2.3`。
+依赖项省略 `version` 时可匹配任意版本，也可匹配未声明版本的目标；一旦指定了版本范围，目标就必须声明匹配的版本。完整语法见 [Data（数据结构）](data.zh.md#versionrequirement)。裸完整版本 `1.2.3` 暂时保留旧语义 `>=1.2.3 <2.0.0`，并会输出迁移警告；精确匹配请使用 `=1.2.3`。
 
 ### 模组类型
 
@@ -116,9 +114,9 @@ struct Manifest {
 | `native` | LeviLamina 的原生模组管理器（`NativeModManagerName`） | LeviLamina 启动后，与其他 LeviLamina 模组一起加载。普通的 C++ 模组使用此类型。 |
 | `preload-native` | PreLoader | 游戏启动前、LeviLamina 的模组之前加载。LeviLamina 本身就使用此类型。LeviLamina 的模组注册表会跳过这类清单，因此它们不属于 LeviLamina 模组。 |
 
-其他 `type` 由通过 `ModManagerRegistry` 为该类型注册的模组管理器加载（例如脚本引擎）。如果没有为该类型注册管理器，加载会失败并提示 "Unrecognized mod type"。
+其他 `type` 由通过 `ModManagerRegistry` 注册了对应类型的模组管理器加载（例如脚本引擎）。如果该类型未注册管理器，加载会失败并提示 "Unrecognized mod type"。
 
-无论哪种类型，将 `passive` 设为 `true` 后，只有当其他模组依赖它时才会加载该模组。
+无论哪种类型，将 `passive` 设为 `true` 后，只有当其他模组依赖该模组时才会加载它。
 
 ### 依赖语义
 
@@ -128,9 +126,7 @@ struct Manifest {
 | `optionalDependencies` | 可用且版本匹配的依赖先加载 | 不阻止使用方加载 | 加载时成功绑定后有 |
 | `loadBefore` | 声明方先加载 | 不建立依赖关系 | 无 |
 
-`loadBefore` 只约束启动加载和批量操作顺序，绝不会阻止任一方单独 disable 或 unload。动态加载不会重排已经加载的
-模组；若新模组要求在已加载目标之前加载，LeviLamina 会记录警告并继续。可选依赖只在使用方加载时绑定，因此之后
-才动态加载的可选依赖提供方不会被追溯加入生命周期保护。
+`loadBefore` 只约束启动加载和批量操作的顺序，绝不会阻止任一方单独 disable 或 unload。动态加载不会重排已加载的模组；若新模组要求在已加载的目标之前加载，LeviLamina 会记录警告并继续。可选依赖只在使用方加载时绑定，因此之后才动态加载的可选依赖提供方不会被追溯加入生命周期保护。
 
 ## 使用方法
 
@@ -146,8 +142,7 @@ ll::mod::NativeMod& getSelfMod() {
 
 ### 注册模组入口
 
-`ll/api/mod/RegisterHelper.h` 提供 `LL_REGISTER_MOD(Class, instance)`。它导出 LeviLamina 加载 DLL 时调用的入口函数：
-该入口会调用 `instance.load()`，并在类定义了 `enable()`、`disable()` 和 `unload()` 时将它们绑定为模组的回调。它们都返回 `bool`。
+`ll/api/mod/RegisterHelper.h` 提供 `LL_REGISTER_MOD(Class, instance)`，用于导出 LeviLamina 加载 DLL 时调用的入口函数。该入口会调用 `instance.load()`，并在类定义了 `enable()`、`disable()` 和 `unload()` 时将它们绑定为模组回调。这些方法均返回 `bool`。
 
 ```cpp
 #include "ll/api/mod/NativeMod.h"
@@ -213,8 +208,7 @@ void registerCallbacks(ll::mod::Mod& mod) {
 
 ### 目录结构
 
-模组位于模组根目录（`getModsRoot()`）中：服务端为 `plugins/`，客户端为 `mods/`。（`plugins/` 目录存在时 PreLoader
-使用它，否则使用 `mods/`；`PreLoaderConfig.json` 中的 `modsPath` 可以覆盖该设置。）每个模组具有以下目录结构：
+模组位于模组根目录（`getModsRoot()`）下：服务端为 `plugins/`，客户端为 `mods/`。（若 `plugins/` 目录存在，PreLoader 会优先使用它，否则使用 `mods/`；可通过 `PreLoaderConfig.json` 中的 `modsPath` 覆盖该设置。）每个模组的目录结构如下：
 
 ```
 plugins/                       # 客户端为 mods/
@@ -235,8 +229,7 @@ worlds/
         └── MyMod/             # 世界特定数据 (getWorldDataDir())
 ```
 
-未加载世界时，`getWorldConfigDir()` 和 `getWorldDataDir()` 返回 `std::nullopt`。在客户端连接远程服务器时，它们分别是游戏目录下的
-`ll_config/<host>_<port>/MyMod/` 和 `ll_data/<host>_<port>/MyMod/`。
+未加载世界时，`getWorldConfigDir()` 和 `getWorldDataDir()` 返回 `std::nullopt`。客户端连接远程服务器时，它们分别指向游戏目录下的 `ll_config/<host>_<port>/MyMod/` 和 `ll_data/<host>_<port>/MyMod/`。
 
 ## 相关模块
 

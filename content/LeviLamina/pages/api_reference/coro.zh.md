@@ -4,7 +4,7 @@
 
 ## 概述
 
-Coroutine 模块提供了 C++20 协程基础设施，用于 LeviLamina 中的异步编程。包括协程任务（`CoroTask<T>`）、生成器（`Generator<T>`）、执行器和用于 sleep/yield 操作的 awaiter。
+Coroutine 模块为 LeviLamina 中的异步编程提供 C++20 协程基础设施，包括协程任务（`CoroTask<T>`）、生成器（`Generator<T>`）、执行器，以及用于 sleep/yield 操作的 awaiter。
 
 ## 头文件
 
@@ -26,7 +26,7 @@ Coroutine 模块提供了 C++20 协程基础设施，用于 LeviLamina 中的异
 
 ### CoroTask\<T\>
 
-协程任务句柄，主要的异步返回类型。
+协程任务句柄，也是主要的异步返回类型。
 
 ```cpp
 namespace ll::coro {
@@ -64,7 +64,7 @@ public:
 
 ### Generator\<T\>
 
-惰性序列生成器，使用 `co_yield` 按需产生值。
+惰性序列生成器，使用 `co_yield` 按需产出值。
 
 ```cpp
 namespace ll::coro {
@@ -80,7 +80,7 @@ struct Generator {
 
 ### Executor
 
-调度协程工作的抽象基类。
+用于调度协程工作的抽象基类。
 
 ```cpp
 namespace ll::coro {

@@ -4,7 +4,7 @@
 
 ## Overview
 
-The Mod module manages mod lifecycle, metadata (manifest), directory structure, and provides access to mod-specific resources like loggers, config directories, and data directories.
+The Mod module manages mod lifecycles, metadata (manifests), and directory structures, and provides access to mod-specific resources such as loggers, config directories, and data directories.
 
 ## Headers
 
@@ -103,22 +103,18 @@ Dependency entries keep the existing manifest JSON shape:
 }
 ```
 
-Omitting a dependency's `version` accepts any declared version, including an unversioned target. If a range is present,
-the target must declare a matching version. See [Data](data.md#versionrequirement) for the complete range syntax. A bare
-full version such as `1.2.3` temporarily keeps the legacy meaning `>=1.2.3 <2.0.0` and emits a migration warning; use
-`=1.2.3` for an exact match.
+Omitting a dependency's `version` accepts any declared version, including an unversioned target. If a range is present, the target must declare a matching version. See [Data](data.md#versionrequirement) for the complete range syntax. A bare full version such as `1.2.3` temporarily keeps the legacy meaning `>=1.2.3 <2.0.0` and emits a migration warning; use `=1.2.3` for an exact match.
 
 ### Mod Types
 
-The manifest's `type` field decides who loads the mod:
+The manifest's `type` field determines what loads the mod:
 
 | `type` | Loaded by | When |
 |--------|-----------|------|
-| `native` | LeviLamina's native mod manager (`NativeModManagerName`) | After LeviLamina has started, together with the other LeviLamina mods. Use this for ordinary C++ mods. |
+| `native` | LeviLamina's native mod manager (`NativeModManagerName`) | After LeviLamina starts, alongside the other LeviLamina mods. Use this for ordinary C++ mods. |
 | `preload-native` | PreLoader | Before the game starts, before LeviLamina's own mods. LeviLamina itself uses this type. LeviLamina skips these manifests in its own mod registry, so they are not LeviLamina mods. |
 
-Any other `type` is loaded by the mod manager that was registered for that type through `ModManagerRegistry` (for
-example by a script engine). If no manager is registered for it, loading fails with "Unrecognized mod type".
+Any other `type` is loaded by the mod manager registered for that type through `ModManagerRegistry` (for example, by a script engine). If no manager is registered for it, loading fails with "Unrecognized mod type".
 
 For every type, setting `passive` to `true` means the mod is loaded only when another mod depends on it.
 
@@ -130,10 +126,7 @@ For every type, setting `passive` to `true` means the mod is loaded only when an
 | `optionalDependencies` | Matching available dependency first | Does not block the consumer | Yes, when bound at load time |
 | `loadBefore` | Declaring mod first | Does not create a dependency | No |
 
-`loadBefore` is only a startup and bulk-operation ordering constraint. It never prevents either mod from being disabled
-or unloaded independently. Dynamic loading does not reorder already loaded mods; if a new mod asks to load before an
-already loaded target, LeviLamina logs a warning and continues. Optional dependencies are bound only when their consumer
-loads, so loading an optional provider later does not retroactively add lifecycle protection.
+`loadBefore` is only a startup and bulk-operation ordering constraint. It never prevents either mod from being disabled or unloaded independently. Dynamic loading does not reorder already loaded mods; if a new mod asks to load before an already loaded target, LeviLamina logs a warning and continues. Optional dependencies are bound only when their consumer loads, so loading an optional provider later does not retroactively add lifecycle protection.
 
 ## Usage
 
@@ -149,9 +142,7 @@ ll::mod::NativeMod& getSelfMod() {
 
 ### Registering the Mod Entry
 
-`ll/api/mod/RegisterHelper.h` provides `LL_REGISTER_MOD(Class, instance)`. It exports the entry point that LeviLamina
-calls when loading the DLL: that entry calls `instance.load()`, and `instance.enable()`, `disable()` and `unload()` are
-bound as the mod's callbacks if the class defines them. Each of them returns `bool`.
+`ll/api/mod/RegisterHelper.h` provides `LL_REGISTER_MOD(Class, instance)`. It exports the entry point that LeviLamina calls when loading the DLL. That entry point calls `instance.load()`, and binds `instance.enable()`, `disable()`, and `unload()` as the mod's callbacks if the class defines them. Each of these methods returns `bool`.
 
 ```cpp
 #include "ll/api/mod/NativeMod.h"
@@ -217,9 +208,7 @@ void registerCallbacks(ll::mod::Mod& mod) {
 
 ### Directory Structure
 
-Mods live in the mods root (`getModsRoot()`): `plugins/` on the server and `mods/` on the client. (PreLoader uses
-`plugins/` when that directory exists, otherwise `mods/`; `modsPath` in `PreLoaderConfig.json` overrides it.) Each mod
-has the following directory structure:
+Mods live in the mods root (`getModsRoot()`): `plugins/` on the server and `mods/` on the client. (PreLoader uses `plugins/` when that directory exists, and `mods/` otherwise; `modsPath` in `PreLoaderConfig.json` overrides this.) Each mod has the following directory structure:
 
 ```
 plugins/                       # mods/ on the client
@@ -240,9 +229,7 @@ worlds/
         └── MyMod/             # World-specific data (getWorldDataDir())
 ```
 
-`getWorldConfigDir()` and `getWorldDataDir()` return `std::nullopt` while no world is loaded. On the client, when
-connected to a remote server, they are `ll_config/<host>_<port>/MyMod/` and `ll_data/<host>_<port>/MyMod/` in the game
-directory instead.
+`getWorldConfigDir()` and `getWorldDataDir()` return `std::nullopt` while no world is loaded. On the client, when connected to a remote server, they instead point to `ll_config/<host>_<port>/MyMod/` and `ll_data/<host>_<port>/MyMod/` in the game directory.
 
 ## Related
 

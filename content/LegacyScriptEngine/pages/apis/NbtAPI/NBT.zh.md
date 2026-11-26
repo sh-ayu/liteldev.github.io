@@ -1,44 +1,44 @@
 # 🏷️ NBT API
 
-> **NBT（二进制命名标签**，**N**amed **B**inary **T**ags**）** 格式为Minecraft中用于向文件中存储数据的一种存储格式。   
-> NBT格式以树形结构并配以许多*标签* 的形式存储数据。所有的标签都有一个独立的ID和名称。
+> **NBT（二进制命名标签**，**N**amed **B**inary **T**ags**）** 格式是 Minecraft 用于在文件中存储数据的格式。  
+> NBT 格式以树形结构配以众多*标签*来存储数据。每个标签都有独立的 ID 和名称。
 >
 > --- Minecraft Wiki
 
-这里为脚本提供了操作 **NBT** 数据类型的能力。 **NBT** 接口的支持，极大的提高了游戏的可扩展性
+本节提供了在脚本中操作 **NBT** 数据的接口。对 **NBT** 接口的支持极大地提高了游戏的可扩展性。
 
-游戏中，使用被称为 **NBT标签 **的节点来标识一项NBT数据。NBT标签中可以储存普通数据、List、Compound 等多种数据类型。   
+游戏中使用称为 **NBT标签 **的节点来标识一项 NBT 数据。NBT 标签可以储存普通数据、List、Compound 等多种数据类型。  
 
-在LegacyScriptEngine中，每种NBT数据类型都有其对应的数据类型，我们统称他们为「NBT对象」。  
-脚本引擎类型与NBT数据类型的对照如下：
+在 LegacyScriptEngine 中，每种 NBT 数据类型都有对应的数据类型，统称为「NBT 对象」。  
+脚本引擎类型与 NBT 数据类型的对照如下：
 
 | NBT数据类型 | 对应的NBT对象类型 | 类型说明（来自MC Wiki）       |
 | ----------- | ----------------- | ----------------------------- |
-| `Byte`      | `NbtByte`         | 有符号字节 或 布尔值（8位）   |
-| `Short`     | `NbtShort`        | 有符号短整型（16位）          |
-| `Int`       | `NbtInt`          | 有符号整形（32位）            |
-| `Long`      | `NbtLong`         | 有符号长整型（64位）          |
+| `Byte`      | `NbtByte`         | 有符号字节或布尔值（8 位）    |
+| `Short`     | `NbtShort`        | 有符号短整型（16 位）         |
+| `Int`       | `NbtInt`          | 有符号整型（32 位）           |
+| `Long`      | `NbtLong`         | 有符号长整型（64 位）         |
 | `Float`     | `NbtFloat`        | 单精度浮点数                  |
 | `Double`    | `NbtDouble`       | 双精度浮点数                  |
 | `ByteArray` | `NbtByteArray`    | 字节数组                      |
 | `String`    | `NbtString`       | UTF-8 字符串                  |
-| `List`      | `NbtList`         | NBT 列表（类似于 数组）       |
-| `Compound`  | `NbtCompound`     | NBT 标签（类似于 键值对列表） |
+| `List`      | `NbtList`         | NBT 列表（类似于数组）        |
+| `Compound`  | `NbtCompound`     | NBT 标签（类似于键值对列表）  |
 
-每种数据类型可能有略微不同的使用接口。下面对他们作分别介绍
+不同数据类型的接口略有差异，下文将逐一介绍。
 
 
 
 ## 🎈  NBT 对象通用接口
 
-每一个 NBT 对象都包含一些可以执行的成员函数（成员方法）  
-对于任何种类的NBT对象，都有下面这些通用的接口。以名为`nbt`的某个NBT对象为例：
+每个 NBT 对象都包含一些可调用的成员函数（成员方法）。  
+所有类型的 NBT 对象都支持以下通用接口。下面以名为 `nbt` 的 NBT 对象为例：
 
 #### 获取NBT对象储存的数据类型
 
 `nbt.getType()`
 
-- 返回值：此NBT对象储存的数据类型
+- 返回值：此 NBT 对象储存的数据类型
 - 返回值类型：`Enum`
 
 可能的返回值有：`NBT.End` `NBT.Byte` `NBT.Short` `NBT.Int` `NBT.Long`   
@@ -53,17 +53,17 @@
 
 - 参数
   - space : `Integer`  
-    （可选参数）如果要格式化输出的字符串，则传入此参数  
-    代表每个缩进的空格数量，这样生成的字符串更适合人阅读  
-    此参数默认为-1，即不对输出字符串进行格式化
-- 返回值：对应的JSON字符串
+    （可选参数）用于格式化输出字符串。  
+    表示每一级缩进的空格数，使生成的字符串更易阅读。  
+    默认为 -1，即不格式化输出字符串。
+- 返回值：对应的 JSON 字符串
 - 返回值类型：`String`
 
-提示：如果这个NBT对象储存的是`List`或者`Compound`类型，将递归展开为`Array`或`Object`  
-如果这个NBT对象储存的是`ByteArray`类型，输出的字节串将先进行base64编码后再输出
+提示：如果该 NBT 对象储存的是 `List` 或 `Compound` 类型，则会递归展开为 `Array` 或 `Object`。  
+如果储存的是 `ByteArray` 类型，输出的字节串会先经过 base64 编码。
 
-> 上述函数输出的字符串符合JSON标准格式，但是无法进行反序列化。  
-> 如果有反序列化的需求，请使用 NBT标签类 提供的的 **SNBT** 接口
+> 该函数输出的字符串符合 JSON 标准格式，但无法反序列化。  
+> 如需反序列化，请使用 NBT 标签类提供的 **SNBT** 接口。
 
 
 #### 将 NBT 对象转换为 SNBT 字符串
@@ -79,14 +79,13 @@
 - 返回值类型：`String`
 
 调用 `nbt.toSNBT()` 时，默认使用 `SnbtFormat.ForceQuote`。  
-调用 `nbt.toSNBT(space)` 且 `space >= 0` 时，默认使用
-`SnbtFormat.PartialLineFeed`。  
-如果需要显式指定其他 SNBT 格式，请使用 `nbt.toSNBT(space, format)`。
+调用 `nbt.toSNBT(space)` 且 `space >= 0` 时，默认使用 `SnbtFormat.PartialLineFeed`。  
+如需显式指定其他 SNBT 格式，请使用 `nbt.toSNBT(space, format)`。
 
 
 ## 🎨 SnbtFormat 枚举
 
-`SnbtFormat` 是 `nbt.toSNBT([space[,format]])` 使用的枚举。
+`SnbtFormat` 是供 `nbt.toSNBT([space[,format]])` 使用的枚举。
 
 可用的枚举值如下：
 

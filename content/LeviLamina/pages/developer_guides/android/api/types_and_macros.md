@@ -19,16 +19,11 @@ The SDK installs only these headers:
 #include <pl/memory/Vtable.hpp>
 ```
 
-`<pl/Platform.hpp>` has small Android helpers in `pl::platform`:
-`setClipboardText(text)` sets the clipboard text, and
-`httpGet(url, timeoutMs = 5000)` performs an HTTP GET and returns an
-`HttpResponse` (`status`, `body`, `retryAfter`, `ok()`).
+`<pl/Platform.hpp>` provides small Android helpers in `pl::platform`: `setClipboardText(text)` sets the clipboard text, and `httpGet(url, timeoutMs = 5000)` performs an HTTP GET request and returns an `HttpResponse` (`status`, `body`, `retryAfter`, `ok()`).
 
 ## PL_EXPORT
 
-`PL_EXPORT` marks a symbol with default visibility on supported compilers. Most
-mods do not need it directly; use it only for native symbols that another
-library intentionally calls.
+`PL_EXPORT` marks a symbol with default visibility on supported compilers. Most mods do not need it directly; use it only for native symbols that another library intentionally calls.
 
 ```cpp
 #include <pl/Export.hpp>
@@ -53,11 +48,9 @@ public:
 PL_REGISTER_MOD(MyMod, MyMod::instance())
 ```
 
-Use the macro once in a source file. `instanceExpr` must return or create an
-object that remains alive for the process lifetime.
+Use the macro once in a source file. `instanceExpr` must return or create an object that stays alive for the lifetime of the process.
 
-The registered type must provide `bool load()`. `bool enable()`,
-`bool disable()`, and `bool unload()` are optional.
+The registered type must provide `bool load()`. `bool enable()`, `bool disable()`, and `bool unload()` are optional.
 
 ## Naming
 

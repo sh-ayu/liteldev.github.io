@@ -1,18 +1,18 @@
 # Update & Troubleshooting
 
-Use this page when LeviLauncher installs, updates, or launches do not behave as expected.
+Use this page when LeviLauncher does not install, update, or launch as expected.
 
 ## Common issues <Badge platform="windows" />
 
 ### The launcher says the Release version is not authorized
 
-A Microsoft account can only sign in to the Microsoft Store on up to 10 devices, and the launcher counts as a separate device.
+A Microsoft account can sign in to the Microsoft Store on up to 10 devices, and the launcher counts as a separate device.
 Remove any devices you no longer need in [Microsoft Store device management](https://account.microsoft.com/devices/content).
 
 ### Gaming Services is missing or broken
 
 - Repair or install it through the guided flow.
-- If needed, revisit the Microsoft Store installation state for Minecraft Bedrock.
+- If needed, check the Microsoft Store installation state for Minecraft Bedrock.
 
 ### GameInput is missing
 
@@ -22,31 +22,31 @@ Remove any devices you no longer need in [Microsoft Store device management](htt
 ### Installation path is not writable
 
 - Move your managed content path to a writable location in **Settings → Basic Settings**.
-- If the launcher requests elevation for install or self-update, allow it when you trust the action.
+- If the launcher requests elevation to install or self-update, allow it if you trust the action.
 
 ### LeviLauncher closes immediately or never shows a window
 
-- If the launcher still fails before the UI appears, check `%LOCALAPPDATA%\LeviLauncher\Logs\startup.log`.
-- Retry once after a failed launch. If it still happens, attach `startup.log` when opening a GitHub issue.
+- If the launcher fails before the UI appears, check `%LOCALAPPDATA%\LeviLauncher\Logs\startup.log`.
+- Retry once after a failed launch. If it still fails, attach `startup.log` when opening a GitHub issue.
 
 ### A version fails to launch
 
-- test the same version without mods
-- confirm required Windows components still exist
-- verify that the version finished installing correctly
-- retry with a clean isolated test setup
+- Test the same version without mods.
+- Confirm that required Windows components are still installed.
+- Verify that the version finished installing cleanly.
+- Retry with a clean, isolated test setup.
 
 ### Downloads are too slow or fail repeatedly
 
-- switch mirrors
-- retry later
-- use a local package source if available
+- Switch mirrors.
+- Retry later.
+- Use a local package source if available.
 
 ## Common issues on Android <Badge platform="android" />
 
 ### Minecraft is missing or unsupported
 
-Install or update the official Minecraft app from Google Play (1.21.80 or later), then open LeviLauncher again.
+Install or update the official Minecraft app from Google Play (1.21.80 or later), then reopen LeviLauncher.
 
 ### An imported version fails to launch
 
@@ -58,18 +58,18 @@ Open the launch log from the failure screen and check the reported reason before
 
 ### Data migration
 
-The launcher may migrate older data directories before continuing. Do not delete the old directory until the migration succeeds and your worlds, packs and settings are available.
+The launcher may migrate older data directories before continuing. Do not delete the old directory until the migration succeeds and your worlds, packs, and settings are available.
 
 ## Safe recovery steps
 
 1. Back up important worlds.
 2. Remove recent mods or packs.
-3. Test with a clean isolated version.
+3. Test with a clean, isolated version.
 4. Reinstall the affected version if necessary.
 
 ## Self-update behavior <Badge platform="windows" />
 
-LeviLauncher can check, download, and install app updates. Some environments may require elevated permission if the installation directory is not writable.
+LeviLauncher can check for, download, and install app updates. If the installation directory is not writable, the update may require elevated permissions.
 
 ## When to report a bug
 
@@ -84,8 +84,8 @@ When reporting, include:
 - Windows version
 - LeviLauncher version
 - the exact steps you followed
-- screenshots or logs if available
+- screenshots or logs, if available
 
 Open issues here: [GitHub Issues](https://github.com/LiteLDev/LeviLauncher/issues)
 
-For the Android version, include the Android version, the device model and the launch log, and open the issue in [LiteLDev/LeviLauncher-Android](https://github.com/LiteLDev/LeviLauncher-Android/issues).
+For the Android version, include the Android version, device model, and launch log, and open the issue in [LiteLDev/LeviLauncher-Android](https://github.com/LiteLDev/LeviLauncher-Android/issues).

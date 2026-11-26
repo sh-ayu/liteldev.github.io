@@ -1,12 +1,12 @@
 # 💻 Server Settings API
 
-The following APIs provide interfaces for customizing some server settings:
+The following APIs customize server settings:
 
 ### Get the Version Number of the BDS Server
 
 `mc.getBDSVersion()`
 
-- Return value: The server version number string, formatted like this: `v1.17.10`
+- Return value: The server version string, formatted as `v1.17.10`
 - Return value type: `String`
 
 
@@ -15,7 +15,7 @@ The following APIs provide interfaces for customizing some server settings:
 
 `mc.getServerProtocolVersion()`
 
-- Return value: Server protocol version 
+- Return value: Server protocol version
 - Return value type: `Number`
 
 
@@ -36,10 +36,10 @@ The following APIs provide interfaces for customizing some server settings:
 
 `mc.setMotd(motd)`
 
-- Parameters: 
+- Parameters:
   - motd : `String`  
-    The desired Motd string.  
-- Return value: Whether the setting was successful.
+    The Motd string to set.
+- Return value: Whether the setting succeeded.
 - Return value type: `Boolean`
 
 
@@ -48,10 +48,10 @@ The following APIs provide interfaces for customizing some server settings:
 
 `mc.setMaxPlayers(num)`
 
-- Parameters: 
+- Parameters:
   - num : `Number`  
-    The maximum number of players.  
-- Return value: Whether the setting was successful.
+    The maximum number of players.
+- Return value: Whether the setting succeeded.
 - Return value type: `Boolean`
 
 
@@ -89,11 +89,11 @@ The following APIs provide interfaces for customizing some server settings:
 
 - Parameters:
   - TimeID : `Integer`  
-    Specifies the time to get. Must be 0, 1 or 2. (0 represents daytime, 1 represents gametime, 2 represents day)
+    The time value to retrieve. Must be 0, 1, or 2 (0: daytime, 1: gametime, 2: day)
 - Return value: Current time
 - Return value type: `Integer`
 
-Among them, daytime is the number of game ticks since dawn, gametime is the age of the world in game ticks, day is the number of in-game days passed.
+Here, daytime is the number of game ticks since dawn, gametime is the age of the world in game ticks, and day is the number of elapsed in-game days.
 
 
 
@@ -103,8 +103,8 @@ Among them, daytime is the number of game ticks since dawn, gametime is the age 
 
 - Parameters:
   - tick : `Integer`  
-    The time you want to set
-- Return value: Whether the setting was successful.
+    The time to set
+- Return value: Whether the setting succeeded.
 - Return value type: `Boolean`
 
 
@@ -113,7 +113,7 @@ Among them, daytime is the number of game ticks since dawn, gametime is the age 
 
 `mc.getWeather()`
 
-- Return value: Current weather (0 represents Clear, 1 represents Rain, 2 represents Thunder)
+- Return value: Current weather (0: Clear, 1: Rain, 2: Thunder)
 - Return value type: `Integer`
 
 
@@ -124,10 +124,10 @@ Among them, daytime is the number of game ticks since dawn, gametime is the age 
 
 - Parameters:
   - WeatherID : `Integer`  
-    The weather you want to set (0 represents Clear, 1 represents Rain, 2 represents Thunder)
+    The weather to set (0: Clear, 1: Rain, 2: Thunder)
   - duration : `Integer`  
     (Optional) How long the weather lasts, in game ticks. Defaults to a random duration of 300 to 900 seconds
-- Return value: Whether the setting was successful.
+- Return value: Whether the setting succeeded.
 - Return value type: `Boolean`
 
 
@@ -142,7 +142,7 @@ Among them, daytime is the number of game ticks since dawn, gametime is the age 
 - Parameters:
   - name : `String`  
     Dimension name
-- Return value: Dimension ID corresponding to the dimension name, or `null` if the dimension name is invalid
+- Return value: The dimension ID for the given name, or `null` if the name is invalid
 - Return value type: `Number`
 
 
@@ -157,7 +157,7 @@ Among them, daytime is the number of game ticks since dawn, gametime is the age 
 - Parameters:
   - dimid : `Integer`  
     Dimension ID
-- Return value: Dimension name corresponding to the dimension ID, or `null` if the dimension ID is invalid
+- Return value: The dimension name for the given ID, or `null` if the ID is invalid
 - Return value type: `String`
 
 

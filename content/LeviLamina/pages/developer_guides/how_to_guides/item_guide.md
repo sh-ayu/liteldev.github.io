@@ -2,19 +2,19 @@
 
 ## Basic Introduction
 
-Items are an essential component in Minecraft, with common internal classes including:
+Items are an essential part of Minecraft. Common internal classes include:
 
-ItemStack -> ItemStackBase: An ItemStack, which stores the item and its related data.
+ItemStack -> ItemStackBase: Stores an item and its associated data.
 
-Item: Represents the concept of an item, storing its basic information.
+Item: Represents the concept of an item and stores its basic properties.
 
 ## ItemStack
 
-Roughly speaking, an ItemStack is the information of the item in a slot, including the number of items, enchantments, durability, etc.
+Roughly speaking, an ItemStack holds the data for an item in a slot, including its count, enchantments, durability, and so on.
 
 ### Creating an ItemStack
 
-There are several ways to create an ItemStack:
+You can create an ItemStack in several ways:
 
 ```cpp
 // Create an ItemStack from an item name, count and aux value:
@@ -24,16 +24,16 @@ stack.reinit("minecraft:diamond", 1, 0);
 // Create an ItemStack from an NBT CompoundTag:
 ItemStack::fromTag(tag);
 ```
-For more, please refer to the header file provided by LeviLamina [ItemStack.h](https://github.com/LiteLDev/LeviLamina/blob/main/src/mc/world/item/ItemStack.h)
+For more details, see the [ItemStack.h](https://github.com/LiteLDev/LeviLamina/blob/main/src/mc/world/item/ItemStack.h) header file provided by LeviLamina.
 
 ## Item
 
-An item is the basic information of an ItemStack, including the item's name, maximum stack size, etc.
+An Item holds the basic properties of an ItemStack, such as the item's name and maximum stack size.
 
-LeviLamina currently does not provide an interface for registering custom items. This content will be provided in future versions.
+LeviLamina does not yet provide an interface for registering custom items. This will be added in a future version.
 
 ## Some Notes
 
-After modifying an ItemStack, since it is a server-side ItemStack, it needs to be synchronized to the client. Otherwise, inconsistency between the client and server can lead to some issues.
+Because you are modifying a server-side ItemStack, you need to synchronize any changes to the client. Otherwise, the client and server will fall out of sync, which can cause issues.
 
-If the ItemStack is stored in an entity, you can use `Mob::refreshInventory()` to refresh the entity's inventory.
+If the ItemStack is stored in an entity, you can call `Mob::refreshInventory()` to refresh the entity's inventory.

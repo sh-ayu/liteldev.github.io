@@ -1,22 +1,22 @@
 # 📃 Normal Form Builder API
 
-> These APIs can assist developers to easily construct a common form.
+> These APIs help developers easily build common forms.
 
 LSE provides a **normal form object** to easily create a custom form and send it to a specific player.
 
 ### Create Form Object
 
-Before using these APIs, you need to use this function to create a blank normal form object:
+Before using these APIs, call this function to create a blank normal form object:
 
 `mc.newSimpleForm()`
 
-- Return value: Newly created blank form object.
+- Return value: The newly created blank form object.
 - Return value type: `SimpleForm`
 
 ### Add Form Elements
 
-Once created, you can use the following member functions (member methods) to add new form elements to the object.  
-For a specific form object `fm`, the following functions are available:
+Once created, you can use the following member functions (methods) to add form elements to the object.  
+For a given form object `fm`, the following functions are available:
 
 #### Set the Title of the Form
 
@@ -25,7 +25,7 @@ For a specific form object `fm`, the following functions are available:
 - Parameter:
     - title : `String`  
       Title of the form.
-- Return value: The processed form object (for other operations in the chain).
+- Return value: The updated form object (for method chaining).
 - Return value type: `SimpleForm`
 
 #### Set the Content of the Form
@@ -35,7 +35,7 @@ For a specific form object `fm`, the following functions are available:
 - Parameter:
     - content: `String`  
       Text content of the form.
-- Return value: The processed form object (for other operations in the chain).
+- Return value: The updated form object (for method chaining).
 - Return value type: `SimpleForm`
 
 #### Add a Row of Buttons to the Form
@@ -44,18 +44,18 @@ For a specific form object `fm`, the following functions are available:
 
 - Parameters:
     - text : `String`  
-      String of button text.
+      The button text.
     - image: `String`  
-      (Optional parameter) the path where the button image is located.
-- Return value: The processed form object (for other operations in the chain).
+      (Optional) The path to the button image.
+- Return value: The updated form object (for method chaining).
 - Return value type: `SimpleForm`
 
-Use the texture pack path or URL `image` to identify the icon corresponding to the button.  
-For each button on the form, set the corresponding icon as follows:
+Use a texture pack path or URL in `image` to specify the button's icon.  
+For each button on the form, set its icon as follows:
 
-1. If using a texture pack path, the image path should look like `textures/items/apple`
-2. If you use a URL path, you can put the full URL here, like `https://www.baidu.com/img/flexible/logo/pc/result.png`
-3. If you don't need to display an image for this button, just don't pass in this parameter.
+1. For a texture pack path, use a path like `textures/items/apple`.
+2. For a URL, provide the full URL, such as `https://www.baidu.com/img/flexible/logo/pc/result.png`.
+3. If the button does not need an image, omit this parameter.
 
 #### Add a Header to the Form
 
@@ -64,7 +64,7 @@ For each button on the form, set the corresponding icon as follows:
 - Parameters:
     - text : `String`  
       Header.
-- Return value: The processed form object (for other operations in the chain).
+- Return value: The updated form object (for method chaining).
 - Return value type: `SimpleForm`
 
 #### Add a Line of Text to the Form
@@ -74,24 +74,22 @@ For each button on the form, set the corresponding icon as follows:
 - Parameters:
     - text : `String`  
       Line of text.
-- Return value: The processed form object (for other operations in the chain).
+- Return value: The updated form object (for method chaining).
 - Return value type: `SimpleForm`
 
 #### Add a Divider to the Form
 
 `fm.addDivider()`
 
-- Return value: The processed form object (for other operations in the chain).
+- Return value: The updated form object (for method chaining).
 - Return value type: `SimpleForm`
 
 ### Send Form
 
-Finally, when everything is in place, you can send the configured form object to the player and listen for player
-interaction messages.  
-Form objects can be sent repeatedly, each time a different form ID is returned, and the respective callback functions
-are called when there is player interaction, without fighting.
+Once the form object is configured, you can send it to a player and listen for their interaction.  
+You can send the same form object repeatedly. Each call returns a different form ID and invokes its own callback function upon player interaction without conflict.
 
-For a player object `pl`, using the function:
+For a player object `pl`, use the following function:
 
 `pl.sendForm(fm,callback[,forUpdating])`
 
@@ -99,43 +97,43 @@ For a player object `pl`, using the function:
     - fm : `SimpleForm`  
       The configured form object.
     - callback : `Function`  
-      Callback function to be called after the player interacts with the form element.
+      The callback function called after the player interacts with the form.
     - forUpdating : `Boolean`
-      (Optional parameter, added in 0.11.0) Whether the form is sent for updating. The default value is false, meaning it is not for form updating.
-- Return value: The sent form ID.
+      (Optional, added in 0.11.0) Whether the form is sent to update an existing form. Defaults to false.
+- Return value: The ID of the sent form.
 - Return value type: `Integer`
-    - If the return value is `Null`, it means the sending failed.
+    - A return value of `Null` indicates that sending failed.
 
-Parameter `callback` The callback function prototype: `function(player,id,reason)`
+Prototype of the `callback` function: `function(player,id,reason)`
 - player : `Player`  
-The player object that interacts with the form
+The player who interacted with the form.
 - id : `Integer`    
-The serial number of the form button that the player clicked, starting from 0.  
+The 0-based index of the form button the player clicked.  
 If id is `Null`, the player canceled the form.
 - reason : `Integer`
-The reason why the form is closed.
+The reason the form was closed:
 0 = UserClosed, 1 = UserBusy
 The reason may be `null`.
 
 ## 📰 Custom Form Builder API
 
-> These APIs can assist developers to easily construct a custom form, no longer need to worry about writing JSON
+> These APIs help developers easily build custom forms without having to write JSON manually.
 
 LSE provides a **Custom Form Object** to easily create a custom form and send it to a specific player.
 
 ### Create Form Object
 
-Before using these APIs, you need to use this function to create a blank custom form object.
+Before using these APIs, call this function to create a blank custom form object.
 
 `mc.newCustomForm()`
 
-- Return value: Newly created blank form object.
+- Return value: The newly created blank form object.
 - Return value type: `CustomForm`
 
 ### Add Form Elements
 
-Once created, you can use the following member functions (member methods) to add new form elements to the object.  
-For a specific form object `fm`, the following functions are available:
+Once created, you can use the following member functions (methods) to add form elements to the object.  
+For a given form object `fm`, the following functions are available:
 
 #### Set the Title of the Form
 
@@ -144,7 +142,7 @@ For a specific form object `fm`, the following functions are available:
 - Parameters:
     - title : `String`  
       Title of the form.
-- Return value: The processed form object (for other operations in the chain).
+- Return value: The updated form object (for method chaining).
 - Return value type: `CustomForm`
 
 #### Add a Header to the Form
@@ -154,7 +152,7 @@ For a specific form object `fm`, the following functions are available:
 - Parameters:
     - text : `String`  
       Header.
-- Return value: The processed form object (for other operations in the chain).
+- Return value: The updated form object (for method chaining).
 - Return value type: `CustomForm`
 
 #### Add a Line of Text to the Form
@@ -163,15 +161,15 @@ For a specific form object `fm`, the following functions are available:
 
 - Parameters:
     - text : `String`  
-      Line of text.
-- Return value: The processed form object (for other operations in the chain).
+      The line of text.
+- Return value: The updated form object (for method chaining).
 - Return value type: `CustomForm`
 
 #### Add a Divider to the Form
 
 `fm.addDivider()`
 
-- Return value: The processed form object (for other operations in the chain).
+- Return value: The updated form object (for method chaining).
 - Return value type: `CustomForm`
 
 #### Add a Row of Input Boxes to the Form
@@ -181,14 +179,14 @@ For a specific form object `fm`, the following functions are available:
 - Parameters:
 
     - title : `String`  
-      Description text in an input box.
+      Description text for the input box.
     - placeholder : `String`  
-      (Optional parameter) The default prompt in the input box.
+      (Optional) Placeholder text shown in the input box.
     - default : `String`  
-      (Optional parameter) The default input in the input box.
+      (Optional) Default text in the input box.
     - tooltip : `String`
-      (Optional parameter, added in 0.12.0) The text of tooltip
-- Return value: The processed form object (for other operations in the chain).
+      (Optional, added in 0.12.0) Tooltip text.
+- Return value: The updated form object (for method chaining).
 - Return value type: `CustomForm`
 
 #### Add a Row of Switch Options to the Form
@@ -197,12 +195,12 @@ For a specific form object `fm`, the following functions are available:
 
 - Parameters:
     - title : `String`  
-      Description text for a switch option.
+      Description text for the switch.
     - default : `Boolean`  
-      (Optional parameter) Default state of the switch on/off.
+      (Optional) Default on/off state of the switch.
     - tooltip : `String`
-      (Optional parameter, added in 0.12.0) The text of tooltip
-- Return value: The processed form object (for other operations in the chain).
+      (Optional, added in 0.12.0) Tooltip text.
+- Return value: The updated form object (for method chaining).
 - Return value type: `CustomForm`
 
 #### Add a Drop-Down Menu to the Form
@@ -212,18 +210,18 @@ For a specific form object `fm`, the following functions are available:
 - Parameters:
 
     - title : `String`  
-      Description text for a dropdown menu.
+      Description text for the drop-down menu.
 
     - items : `Array<String,String,...>`  
-      List of option texts in the drop down menu.
+      List of option labels in the drop-down menu.
 
     - default : `Integer`  
-      (Optional parameter) The number of the list item selected by default in the drop-down menu.  
-      The sequence number starts from 0. The default is 0, that is, the first item in the list is selected by default.
+      (Optional) The 0-based index of the item selected by default in the drop-down menu.  
+      Defaults to 0 (the first item in the list).
 
     - tooltip : `String`
-      (Optional parameter, added in 0.12.0) The text of tooltip
-- Return value: The processed form object (for other operations in the chain).
+      (Optional, added in 0.12.0) Tooltip text.
+- Return value: The updated form object (for method chaining).
 - Return value type: `CustomForm`
 
 #### Add a Row of Cursor Sliders to the Form
@@ -232,20 +230,19 @@ For a specific form object `fm`, the following functions are available:
 
 - Parameters:
     - title : `String`  
-      Description text for a Slider.
+      Description text for the slider.
     - min : `Integer`  
-      Slider minimum value.
+      Minimum slider value.
     - max : `Integer`  
-      Slider maximum value.
+      Maximum slider value.
     - step : `Integer`  
-      (Optional parameter) The minimum division value of the cursor slider adjustment, the default is 1.
+      (Optional) Step size for each slider increment. Defaults to 1.
     - default : `Integer`  
-      (Optional parameter) The default initial grid number of the cursor slider, the value must be between the minimum
-      and maximum grid number.  
-      Defaults to 0, i.e. the slider is at the beginning of the slider row.
+      (Optional) Initial value of the slider. Must be between the minimum and maximum values.  
+      Defaults to 0 (the start of the slider).
     - tooltip : `String`
-      (Optional parameter, added in 0.12.0) The text of tooltip
-- Return value: The processed form object (for other operations in the chain).
+      (Optional, added in 0.12.0) Tooltip text.
+- Return value: The updated form object (for method chaining).
 - Return value type: `CustomForm`
 
 #### Add a Row of Step Sliders to the Form
@@ -254,66 +251,63 @@ For a specific form object `fm`, the following functions are available:
 
 - Parameters:
     - title : `String`  
-      Description text for a step slider.
+      Description text for the step slider.
 
     - items : `Array<String,String,...>`  
-      List of option texts for the step slider.
+      List of option labels for the step slider.
 
     - default : `Integer`  
-      (Optional parameter) Default initial options for step slider. Serial numbers start from 0.  
-      Defaults to 0, i.e. the slider is at the beginning of the slider row.
+      (Optional) The 0-based index of the option selected by default.  
+      Defaults to 0 (the start of the slider).
 
     - tooltip : `String`
-      (Optional parameter, added in 0.12.0) The text of tooltip
-- Return value: The processed form object (for other operations in the chain).
+      (Optional, added in 0.12.0) Tooltip text.
+- Return value: The updated form object (for method chaining).
 - Return value type: `CustomForm`
 
 #### Set the Text of the Submit Button
 
 !!! warning
-    This API is only available in 0.11.0 and later versions.
+    This API is only available in 0.11.0 and later.
 
 `fm.setSubmitButton(text)`
 
 - Parameters:
     - text : `String`  
       Text of the submit button.
-- Return value: The processed form object (for other operations in the chain).
+- Return value: The updated form object (for method chaining).
 - Return value type: `CustomForm`
 
 ### Send Form
 
-Finally, when everything is in place, you can send the configured form object to the player and listen for player
-interaction messages.
-Form objects can be sent repeatedly, each time a different form ID is returned, and the respective callback functions
-are called when there is player interaction, without fighting.
+Once the form is configured, you can send it to the player and listen for their interaction. You can send the same form object repeatedly: each call returns a different form ID, and each interaction triggers its own callback without conflict.
 
-For a player object `pl`, using the function:
+For a player object `pl`, call:
 
 `pl.sendForm(fm,callback[,forUpdating])`
 
 - Parameters:
     - fm : `CustomForm`  
-      Configured custom form object.
+      The configured custom form object.
     - callback : `Function`  
-      Callback function to be called after the player submits the form.
+      The callback function invoked after the player submits the form.
     - forUpdating : `Boolean`
-      (Optional parameter, added in 0.11.0) Whether the form is sent for updating. The default value is false, meaning it is not for form updating.
-- Return value: The sent form ID.
+      (Optional, added in 0.11.0) Whether the form is sent as an update. Defaults to false (not an update).
+- Return value: The ID of the sent form.
 - Return value type: `Integer`
-    - If the return value is `Null`, it means the sending failed.
+    - A return value of `Null` indicates that sending failed.
 
-Parameter `callback` The callback function prototype: `function(player,data,reason)`
+The `callback` parameter has the prototype `function(player,data,reason)`:
 
 - player : `Player`  
-  The player object that interacts with the form.
+  The player who interacted with the form.
 - data : `Array<...>`    
-  The returned form content array.  
-  The contents of each control are stored in the array in the order of the controls on the form.  
-  if data is `Null`, the player cancels the form.
+  An array of the returned form values.  
+  The value of each control is stored in the array in the order the controls appear on the form.  
+  If data is `Null`, the player canceled the form.
 - reason : `Integer`
-  The reason why the form is closed.
+  The reason the form was closed.
   0 = UserClosed, 1 = UserBusy
-  The reason may be `null`.
+  This value may be `null`.
 
 

@@ -1,47 +1,46 @@
 # 🏃‍♂️ 玩家对象 API
 
-在脚本引擎中，使用「玩家对象」来操作和获取某一个玩家的相关信息。
+脚本引擎使用「玩家对象」来操作和获取特定玩家的相关信息。
 
 ### 获取一个玩家对象
 
 #### 从事件或API获取
 
-通过注册**事件监听**函数，获取到BDS给出的与相关事件有关的玩家对象  
+注册**事件监听**函数即可获取 BDS 提供的与相关事件关联的玩家对象。  
 详见 [事件监听文档 - EventAPI](../EventAPI/Listen.zh.md)
 
 #### 从现有玩家获取
 
-通过**玩家信息**手动生成玩家对象  
-通过此函数来手动生成对象，注意，你要获取的玩家必须是在线状态，否则会生成失败
+调用以下函数可通过**玩家信息**手动生成玩家对象。注意：目标玩家必须处于在线状态，否则生成会失败。
 
 `mc.getPlayer(info)`
 
 !!! warning
-    0.8.13之前的版本无法使用UUID获取玩家  
-    0.9.5之前的版本无法使用RuntimeId获取玩家
+    0.8.13 之前的版本不支持通过 UUID 获取玩家。  
+    0.9.5 之前的版本不支持通过 RuntimeId 获取玩家。
 
 - 参数：
     - info : `String`  
-      玩家的名字、XUID、UniqueId、RuntimeId或者UUID
+      玩家的名字、XUID、UniqueId、RuntimeId 或 UUID
 - 返回值：生成的玩家对象
 - 返回值类型：`Player`
-    - 如返回值为 `Null` 则表示获取玩家失败
+    - 返回 `Null` 表示获取玩家失败
 
 #### 获取所有在线玩家
 
-此函数会返回一个玩家对象的数组，其中每个对象都对应了一个服务器中的玩家
+此函数返回一个包含玩家对象的数组，每个对象对应服务器中的一名在线玩家。
 
 `mc.getOnlinePlayers()`
 
-- 返回值：在线的玩家对象列表
+- 返回值：在线玩家对象列表
 - 返回值类型：`Array<Player,Player,...>`
 
-> 注意：不要**长期保存**一个玩家对象  
-> 当玩家退出服务器时，对应的玩家对象将同时释放。因此，如果有长期操作某个玩家的需要，请通过上述途径获取实时的玩家对象
+> 注意：切勿**长期保存**玩家对象。  
+> 玩家退出服务器时，对应的玩家对象会随之释放。如需长期操作某个玩家，请通过上述途径实时获取对应的玩家对象。
 
 ### 玩家对象 - 属性
 
-每一个玩家对象都包含一些固定的对象属性。对于某个特定的玩家对象`pl`，有以下这些属性
+每个玩家对象都包含一组固定的对象属性。对于特定的玩家对象`pl`，包含以下属性：
 
 | 属性                       | 含义                          | 类型               |
 |--------------------------|-----------------------------|------------------|
@@ -104,13 +103,13 @@
 | pl.isSwimming            | 玩家是否正在游泳（在 0.19.1 时被加入）         | `Boolean`        |
 | pl.isCrawling            | 玩家是否正在爬行（在 0.19.1 时被加入）         | `Boolean`        |
 
-这些对象属性都是只读的，无法被修改。其中：
+这些对象属性均为只读，无法修改。其中：
 
-- **坐标** 和 **腿部坐标**：玩家为两格高，`pos`为玩家视角高度的坐标，`feetPos`为游戏内显示的方块坐标
-- **玩家游戏模式** 属性的取值为：`0` 代表生存模式，`1` 代表创造模式，`2` 代表冒险模式，`6` 代表旁观者模式
-- **玩家真实名字** 属性储存的字符串可以被认为是可靠的，他们不会被改名而变动
-- **玩家设备IP地址** 属性储存了玩家的设备IP以及端口号，格式类似`12.34.567.89:1111`
-- **玩家当前朝向** 属性的详细解释见  [基础游戏接口文档](./Basic.zh.md)
+- **坐标** 和 **腿部坐标**：玩家为两格高，`pos`为玩家视角高度的坐标，`feetPos`为游戏内显示的方块坐标。
+- **玩家游戏模式** 属性的取值：`0` 代表生存模式，`1` 代表创造模式，`2` 代表冒险模式，`6` 代表旁观者模式。
+- **玩家真实名字** 属性储存的字符串是可靠的，不会因玩家改名而变动。
+- **玩家设备IP地址** 属性储存了玩家的设备 IP 和端口号，格式如`12.34.567.89:1111`。
+- **玩家当前朝向** 属性的详细说明见 [基础游戏接口文档](./Basic.zh.md)。
 - **操作权限等级** 属性的对照表如下：
 
 | 操作权限等级 | 对应操作权限     |
@@ -121,7 +120,7 @@
 
 ### 玩家对象 - 函数
 
-每一个玩家对象都包含一些可以执行的成员函数（成员方法）。对于某个特定的玩家对象`pl`，可以通过以下这些函数对这个玩家进行一些操作
+每个玩家对象都包含一些可调用的成员函数（成员方法）。对于特定的玩家对象`pl`，你可以通过以下函数对该玩家执行操作。
 
 #### 判断玩家是否为OP
 
@@ -149,8 +148,8 @@
 
 - 参数：
     - msg : `String`  
-      （可选参数）被踢出玩家出显示的断开原因。  
-      如果不传入，默认为“正在从服务器断开连接”
+      （可选参数）向被踢出玩家显示的断开原因。  
+      如不传入，默认为“正在从服务器断开连接”。
 - 返回值：是否成功断开连接
 - 返回值类型：`Boolean`
 
@@ -210,7 +209,7 @@
 - 参数：
 
     - content : `String`  
-      欲设置标题内容
+      要设置的标题内容
 
     - type : `Integer`  
       （可选参数）设置的标题类型，默认为2
@@ -228,11 +227,11 @@
     | 8      | Json型Actionbar（ActionbarTextObject） |
 
     - fadeInTime : `Integer`  
-      （可选参数）淡入时间，单位为 `Tick` ，默认为10
+      （可选参数）淡入时间，单位为 `Tick`，默认为10
 
     - stayTime: `Integer`
 
-      （可选参数）停留时间，单位为 `Tick` ，默认为70
+      （可选参数）停留时间，单位为 `Tick`，默认为70
 
     - fadeOutTime:`Integer`
 
@@ -333,7 +332,7 @@
 
 - 参数：
     - text : `String`  
-      模拟说话内容
+      模拟说话的内容
 - 返回值：是否执行成功
 - 返回值类型： `Boolean`
 
@@ -354,13 +353,13 @@
 `pl.distanceTo(pos)`
 `pl.distanceToSqr(pos)`
 
-- 参数:
+- 参数：
     - pos : `Entity` / `Player` / `IntPos` / `FloatPos`
       目标位置
-- 返回值: 到坐标的距离(方块)
-- 返回值类型:  `Number`
+- 返回值：到目标坐标的距离（方块）
+- 返回值类型： `Number`
 
-> **注意** 若玩家的坐标与目标的坐标不在同一维度，将返回整数最大值。
+> **注意** 若玩家坐标与目标坐标不在同一维度，则返回整数最大值。
 
 #### 以某个玩家身份向某玩家说话
 
@@ -368,9 +367,9 @@
 
 - 参数：
     - text : `String`  
-      模拟说话内容
+      模拟说话的内容
     - target : `Player`  
-      模拟说话对象
+      模拟说话的目标玩家
 - 返回值：是否执行成功
 - 返回值类型： `Boolean`
 
@@ -393,11 +392,11 @@
 
 - 参数：
     - pos: `IntPos `/ `FloatPos`
-      目标位置坐标 （或者使用x, y, z, dimid来确定玩家位置）
+      目标位置坐标（或者使用 x、y、z、dimid 来指定玩家位置）
 
     - rot: `DirectionAngle`
 
-      （可选参数）传送后玩家的朝向，若缺省则与传送前朝向相同
+      （可选参数）传送后玩家的朝向；若省略，则保持传送前的朝向
 
 - 返回值：是否成功传送
 
@@ -447,7 +446,7 @@
 - 返回值：是否造成伤害
 - 返回值类型：`Boolean`
 
-注意，此处造成的伤害为真实伤害，无法被盔甲等保护装备减免
+注意：此处造成的伤害为真实伤害，无法被盔甲等保护装备减免。
 
 | `ActorDamageCause` 枚举            | 值 |
 | ---------------------------------- | --- |
@@ -507,131 +506,131 @@
 
 `pl.heal(health)`
 
-- 参数:
+- 参数：
     - health : `Integer`  
       治疗的心数
-- 返回值: 治疗是否成功
-- 返回值类型: `Boolean`
+- 返回值：治疗是否成功
+- 返回值类型：`Boolean`
 
 #### 设置玩家的生命值
 
 `pl.setHealth(health)`
 
-- 参数:
+- 参数：
     - health : `Integer`  
-      生命值数
-- 返回值: 是否成功
-- 返回值类型: `Boolean`
+      生命值
+- 返回值：是否成功
+- 返回值类型：`Boolean`
 
 #### 为玩家设置伤害吸收属性
 
 `pl.setAbsorption(value)`
 
-- 参数:
+- 参数：
     - value : `Integer`  
       新的值
-- 返回值: 为玩家设置属性值是否成功
-- 返回值类型: `Boolean`
+- 返回值：是否成功设置属性值
+- 返回值类型：`Boolean`
 
 #### 为玩家设置攻击伤害属性
 
 `pl.setAttackDamage(value)`
 
-- 参数:
+- 参数：
     - value : `Integer`  
       新的值
-- 返回值: 为玩家设置属性值是否成功
-- 返回值类型: `Boolean`
+- 返回值：是否成功设置属性值
+- 返回值类型：`Boolean`
 
 #### 为玩家设置最大攻击伤害属性
 
 `pl.setMaxAttackDamage(value)`
 
-- 参数:
+- 参数：
     - value : `Integer`  
       新的值
-- 返回值: 为玩家设置属性值是否成功
-- 返回值类型: `Boolean`
+- 返回值：是否成功设置属性值
+- 返回值类型：`Boolean`
 
 #### 为玩家设置跟随范围
 
 `pl.setFollowRange(value)`
 
-- 参数:
+- 参数：
     - value : `Integer`  
       新的值
-- 返回值: 为玩家设置属性值是否成功
-- 返回值类型: `Boolean`
+- 返回值：是否成功设置属性值
+- 返回值类型：`Boolean`
 
 #### 为玩家设置击退抵抗属性
 
 `pl.setKnockbackResistance(value)`
 
-- 参数:
+- 参数：
     - value : `Integer`  
-      新的值 (0 or 1)
-- 返回值: 为玩家设置属性值是否成功
-- 返回值类型: `Boolean`
+      新的值（0 或 1）
+- 返回值：是否成功设置属性值
+- 返回值类型：`Boolean`
 
 #### 为玩家设置幸运属性
 
 `pl.setLuck(value)`
 
-- 参数:
+- 参数：
     - value : `Integer`  
       新的值
-- 返回值: 为玩家设置属性值是否成功
-- 返回值类型: `Boolean`
+- 返回值：是否成功设置属性值
+- 返回值类型：`Boolean`
 
 #### 为玩家设置移动速度属性
 
 `pl.setMovementSpeed(value)`
 
-- 参数:
+- 参数：
     - value : `Integer`  
       新的值
-- 返回值: 为玩家设置属性值是否成功
-- 返回值类型: `Boolean`
+- 返回值：是否成功设置属性值
+- 返回值类型：`Boolean`
 
 #### 为玩家设置水下移动速度属性
 
 `pl.setUnderwaterMovementSpeed(value)`
 
-- 参数:
+- 参数：
     - value : `Integer`  
       新的值
-- 返回值: 为玩家设置属性值是否成功
-- 返回值类型: `Boolean`
+- 返回值：是否成功设置属性值
+- 返回值类型：`Boolean`
 
 #### 为玩家设置岩浆上移动速度属性
 
 `pl.setLavaMovementSpeed(value)`
 
-- 参数:
+- 参数：
     - value : `Integer`  
       新的值
-- 返回值: 为玩家设置属性值是否成功
-- 返回值类型: `Boolean`
+- 返回值：是否成功设置属性值
+- 返回值类型：`Boolean`
 
 #### 设置玩家最大生命值
 
 `pl.setMaxHealth(health)`
 
-- 参数:
+- 参数：
     - health : `Integer`  
-      生命值数
-- 返回值: 是否成功
-- 返回值类型: `Boolean`
+      生命值
+- 返回值：是否成功
+- 返回值类型：`Boolean`
 
 #### 设置玩家饥饿值
 
 `pl.setHungry(hunger)`
 
-- 参数:
+- 参数：
     - hunger : `Integer`  
-      饥饿值数
-- 返回值: 是否成功
-- 返回值类型: `Boolean`
+      饥饿值
+- 返回值：是否成功
+- 返回值类型：`Boolean`
 
 #### 使指定玩家着火
 
@@ -639,9 +638,9 @@
 
 - 参数：
     - time : `Integer`  
-      着火时长，单位秒
+      着火时长，单位为秒
     - isEffect : `Boolean`
-      会不会有火的效果
+      是否显示火焰效果
 - 返回值：是否成功着火
 - 返回值类型：`Boolean`
 
@@ -661,18 +660,18 @@
 
 `pl.stopFire()`
 
-- 返回值: 是否已被熄灭
-- 返回值类型: `Boolean`
+- 返回值：是否已熄灭
+- 返回值类型：`Boolean`
 
 #### 缩放玩家
 
 `pl.setScale(scale)`
 
-- 参数:
+- 参数：
     - scale : `Float`  
       新的玩家体积
-- 返回值: 玩家是否成功地被缩放
-- 返回值类型: `Boolean`
+- 返回值：是否成功缩放玩家
+- 返回值类型：`Boolean`
 
 #### 重命名玩家
 
@@ -700,7 +699,7 @@
 
 `pl.getBlockStandingOn()`
 
-- 返回值：当前站立在的方块对象
+- 返回值：当前站立所在的方块对象
 - 返回值类型：`Block`
 
 - 示例：
@@ -722,8 +721,8 @@
 - 返回值：玩家对应的设备信息对象
 - 返回值类型：`Device`
 
-设备信息对象储存了与玩家设备有关的某些信息，如设备IP地址、设备类型、网络延迟等信息。  
-关于设备信息对象的其他信息请参考 [设备信息对象 API](./Device.zh.md)
+设备信息对象存储了玩家设备的相关信息，如设备 IP 地址、设备类型、网络延迟等。  
+有关设备信息对象的更多信息，请参考 [设备信息对象 API](./Device.zh.md)。
 
 - 示例：
     - JavaScript
@@ -744,7 +743,7 @@
 - 返回值：玩家主手中的物品对象
 - 返回值类型：`Item`
 
-此处获取的物品对象为引用。也就是说，修改此处返回的物品对象，或使用其API，就相当于直接操作玩家主手中对应的物品
+此处获取的物品对象为引用。修改返回的物品对象或调用其 API，即直接操作玩家主手中的对应物品。
 
 - 示例：
     - JavaScript
@@ -765,7 +764,7 @@
 - 返回值：玩家副手中的物品对象
 - 返回值类型：`Item`
 
-此处获取的物品对象为引用。也就是说，修改此处返回的物品对象，或使用其API，就相当于直接操作玩家副手中对应的物品
+此处获取的物品对象为引用。修改返回的物品对象或调用其 API，即直接操作玩家副手中的对应物品。
 
 - 示例：
     - JavaScript
@@ -786,7 +785,7 @@
 - 返回值：玩家物品栏对应的容器对象
 - 返回值类型：`Container`
 
-关于容器对象的更多使用，请参考 [容器对象 API文档](./Container.zh.md)
+关于容器对象的更多用法，请参考[容器对象 API文档](./Container.zh.md)。
 
 - 示例：
     - JavaScript
@@ -807,7 +806,7 @@
 - 返回值：玩家盔甲栏对应的容器对象
 - 返回值类型：`Container`
 
-关于容器对象的更多使用，请参考 [容器对象 API文档](./Container.zh.md)
+关于容器对象的更多用法，请参考[容器对象 API文档](./Container.zh.md)。
 
 - 示例：
     - JavaScript
@@ -828,7 +827,7 @@
 - 返回值：玩家末影箱对应的容器对象
 - 返回值类型：`Container`
 
-关于容器对象的更多使用，请参考 [容器对象 API文档](./Container.zh.md)
+关于容器对象的更多用法，请参考[容器对象 API文档](./Container.zh.md)。
 
 - 示例：
     - JavaScript
@@ -868,7 +867,7 @@
 
 - 参数：
     - pos : `IntPos`或`FloatPos`  
-      重生坐标（或者使用x, y, z, dimid来确定重生位置）
+      重生坐标（也可传入 x, y, z, dimid 指定重生位置）
 - 返回值：是否成功修改
 - 返回值类型：`Boolean`
 
@@ -892,11 +891,11 @@
 
     - amount: `Integer`
 
-      （可选参数）给予物品对象的数量，若提供此参数则物品对象自身的Count属性将被忽略
+      （可选参数）给予物品的数量；提供此参数时将忽略物品对象自身的 Count 属性
 - 返回值：是否成功给予
 - 返回值类型：`Boolean`
 
-如果玩家物品栏已满，将抛出多余物品
+如果玩家物品栏已满，多余的物品会被抛出。
 
 - 示例：
     - JavaScript
@@ -916,14 +915,13 @@
 
 - 参数：
     - type : `String`  
-      要清除的物品对象类型名
+      要清除的物品类型名
     - count : `Integer`  
-      （可选参数）要清除的物品数量，默认为1
+      （可选参数）要清除的物品数量，默认为 1
 - 返回值：清除的物品个数
 - 返回值类型：`Integer`
 
-将玩家物品栏、主手、副手、盔甲栏中所有物品的type属性与此字符串进行比较  
-如果相等，则清除此物品
+将玩家物品栏、主手、副手及盔甲栏中所有物品的 type 属性与此字符串比较，若相同则清除该物品。
 
 - 示例：
     - JavaScript
@@ -946,7 +944,7 @@
 - 返回值：是否成功刷新
 - 返回值类型：`Boolean`
 
-在修改玩家物品之后，为了促使客户端生效，需要刷新玩家所有的物品
+修改玩家物品后，需要刷新玩家的所有物品以使改动在客户端生效。
 
 - 示例：
     - JavaScript
@@ -1017,7 +1015,7 @@
 - 参数：
 
     - mode : `Integer`  
-      目标游戏模式，0为生存模式，1为创造模式，2为冒险模式, 6为观察者模式
+      目标游戏模式：0 为生存模式，1 为创造模式，2 为冒险模式，6 为观察者模式
 
 - 返回值：是否成功修改
 
@@ -1272,7 +1270,7 @@
 - 返回值：玩家升级所需的经验值
 - 返回值类型：`Integer`
 
-注意，此方法在计算时会忽略当前经验值
+注意：此方法计算时会忽略当前经验值。
 
 - 示例：
     - JavaScript
@@ -1292,7 +1290,7 @@
 
 - 参数：
     - server : `String`  
-      目标服务器IP / 域名
+      目标服务器 IP 或域名
 
     - port : `Integer`  
       目标服务器端口
@@ -1339,10 +1337,10 @@
     - title : `String`  
       侧边栏标题
     - data : `Object<String-Integer>`  
-      侧边栏对象内容对象  
-      对象中的每个键 - 值对将被设置为侧边栏内容的一行
+      侧边栏内容对象  
+      对象中的每个键值对对应侧边栏中的一行内容
     - sortOrder : `Number`  
-      （可选参数）侧边栏内容的排序顺序。`0`为按分数升序，`1`为按分数降序。默认值为`1`
+      （可选参数）侧边栏内容的排序方式：`0` 为按分数升序，`1` 为按分数降序，默认值为 `1`
 
 - 返回值：是否成功设置
 
@@ -1393,11 +1391,11 @@
 
 - 参数：
     - uid : `Number`   
-      唯一标识符，不可冲突重复！一个uid对于一行bar
+      唯一标识符，不可重复！一个 uid 对应一行血条
     - title : `String`  
       自定义血条标题
     - percent : `Integer`  
-      血条中的血量百分比，有效范围为0~100。0为空血条，100为满
+      血条的血量百分比，有效范围为 0~100。0 为空血条，100 为满血条
     - colour : `Integer`  
       血条颜色（例如 `2` 为 RED）
 - 返回值：是否成功设置
@@ -1421,7 +1419,7 @@
 
 - 参数：
     - uid : `Number`   
-      标识符，与setBossBar对应！
+      标识符，与 setBossBar 对应！
 
 - 返回值：是否成功移除
 - 返回值类型：`Boolean`
@@ -1442,7 +1440,7 @@
 
 `pl.getNbt()`
 
-- 返回值：玩家的NBT对象
+- 返回值：玩家的 NBT 对象
 - 返回值类型：`NbtCompound`
 
 #### 写入在线玩家对应的NBT对象
@@ -1451,11 +1449,11 @@
 
 - 参数：
     - nbt : `NbtCompound`  
-      NBT对象
+      NBT 对象
 - 返回值：是否成功写入
 - 返回值类型：`Boolean`
 
-关于NBT对象的更多使用，请参考 [NBT接口文档](../NbtAPI/NBT.zh.md)
+有关 NBT 对象的更多用法，请参考 [NBT接口文档](../NbtAPI/NBT.zh.md)
 
 #### 获取玩家对应的NBT对象
 
@@ -1463,10 +1461,10 @@
 
 - 参数：
     - uuid : `String`  
-      玩家的UUID
-- 返回值：玩家的NBT对象
+      玩家的 UUID
+- 返回值：玩家的 NBT 对象
 - 返回值类型：`NbtCompound`
-    - 如果玩家不存在或没有存档数据，则返回值为 `Null`
+    - 如果玩家不存在或没有存档数据，则返回 `Null`
 
 #### 写入玩家对应的NBT对象
 
@@ -1474,9 +1472,9 @@
 
 - 参数：
     - uuid : `String`  
-      玩家的UUID
+      玩家的 UUID
     - nbt : `NbtCompound`  
-      NBT对象
+      NBT 对象
     - forceCreate : `Boolean` 可选参数  
       当该 UUID 没有对应存档记录时，是否创建离线玩家数据。默认值为 `false`
     - isOnlineMode : `Boolean` 可选参数  
@@ -1490,12 +1488,12 @@
 
 - 参数：
     - uuid : `String`  
-      玩家的UUID
+      玩家的 UUID
     - nbt : `NbtCompound`  
-      NBT对象
+      NBT 对象
     - tags : `Array<String>`
-      需要覆盖的NbtTag
-- 返回值：是否成功覆盖对应的Tag
+      需要覆盖的 NbtTag
+- 返回值：是否成功覆盖对应的 Tag
 - 返回值类型：`Boolean`
 
 #### 从存档中删除玩家对应的NBT对象的全部内容
@@ -1504,7 +1502,7 @@
 
 - 参数：
     - uuid : `String`  
-      玩家的UUID
+      玩家的 UUID
 - 返回值：是否删除成功
 - 返回值类型：`Boolean`
 
@@ -1514,7 +1512,7 @@
 
 - 参数：
     - isOnlineMode : `Boolean` 可选参数  
-      为 `true` 时返回登录了微软账号玩家的 UUID；为 `false` 时返回离线模式玩家的 UUID，默认为 `true`
+      为 `true` 时返回登录了微软账号的玩家 UUID；为 `false` 时返回离线模式玩家的 UUID，默认为 `true`
 - 返回值：已保存玩家 UUID 字符串列表
 - 返回值类型：`Array<String,String,...>`
 
@@ -1524,7 +1522,7 @@
 
 - 参数：
     - tag: `String`  
-      要增加的tag字符串
+      要增加的 tag 字符串
 - 返回值：是否设置成功
 - 返回值类型：`Boolean`
 
@@ -1534,7 +1532,7 @@
 
 - 参数：
     - tag: `String`  
-      要移除的tag字符串
+      要移除的 tag 字符串
 - 返回值：是否移除成功
 - 返回值类型：`Boolean`
 
@@ -1544,8 +1542,8 @@
 
 - 参数：
     - tag: `String`  
-      要检查的tag字符串
-- 返回值：是否拥有这个Tag
+      要检查的 tag 字符串
+- 返回值：是否拥有这个 Tag
 - 返回值类型：`Boolean`
 
 #### 获取玩家拥有的所有Tag列表
@@ -1559,10 +1557,10 @@
 
 `pl.getAbilities()`
 
-- 返回值：玩家所有能力信息的键 - 值对列表对象
+- 返回值：包含玩家所有能力信息的键值对对象
 - 返回值类型：`Object<String-任意类型>`
 
-键 - 值对列表中的每一项形如：`"mayfly": 1`  等等
+键值对列表中的每一项形如：`"mayfly": 1` 等
 
 #### 获取玩家的Attributes属性列表（来自玩家NBT）
 
@@ -1571,8 +1569,7 @@
 - 返回值：玩家所有属性对象的数组
 - 返回值类型：`Array<Object,Object,...>`
 
-数组中的每一项为一个键 - 值对列表对象`Object`，Attributes对象默认含有`Base` `Current` `DefaultMax` `DefaultMin` `Max`
-`Min` `Name` 等几种内容 。其内容形如：
+数组中的每一项为一个键值对列表对象 `Object`，Attributes 对象默认包含 `Base`、`Current`、`DefaultMax`、`DefaultMin`、`Max`、`Min`、`Name` 等字段。其内容形如：
 
 ```json
 {
@@ -1609,8 +1606,8 @@
 
 - 参数：
     - maxDistance : `Float`  
-      查找最大距离
-- 返回值：视线方向实体，如果获取失败，返回 `Null`
+      最大查找距离
+- 返回值：视线方向的实体；如果获取失败，返回 `Null`
 - 返回值类型：`Entity`
 
 #### 获取视线方向方块
@@ -1623,10 +1620,10 @@
     - solidOnly : `Boolean`  
       是否仅允许 `Solid` 类型的方块
     - maxDistance : `Float`  
-      查找最大距离
+      最大查找距离
     - fullOnly : `Boolean`  
       是否仅允许完整方块
-- 返回值：视线方向方块，如果获取失败，返回 `Null`
+- 返回值：视线方向的方块；如果获取失败，返回 `Null`
 - 返回值类型：`Block`
 
 #### 向玩家发送数据包
@@ -1636,14 +1633,14 @@
 - 参数：
     - packet : `Packet`  
       数据包
-- 返回值：是否成功，如果pl不存在，返回Null
+- 返回值：是否成功；如果 pl 不存在，返回 Null
 - 返回值类型：`Boolean`
 
 #### 获取玩家所在群系ID
 
 `pl.getBiomeId()`
 
-- 返回值：群系ID
+- 返回值：群系 ID
 - 返回值类型：`Integer`
 
 #### 获取玩家所在群系名称
@@ -1659,7 +1656,7 @@
 
 - 参数：
     - AbilityID : `Integer`  
-      Ability的ID
+      Ability 的 ID
     - value : `Boolean`  
       是否开启
 - 返回值：无作用
@@ -1669,7 +1666,7 @@
 
 `pl.getAllEffects()`
 
-- 返回值：玩家所有的药水效果id（见下表）
+- 返回值：玩家所有的药水效果 ID（见下表）
 - 返回值类型：`Array<Integer,Integer,...>`
 
 #### 为玩家添加一个药水效果
@@ -1678,7 +1675,7 @@
 
 - 参数：
     - id : `Number`
-      药水效果的id（见下表）
+      药水效果的 ID（见下表）
     - tick : `Number`
       持续时间
     - level : `Number`
@@ -1694,7 +1691,7 @@
 
 - 参数：
     - id : `Number`
-      药水效果的id（见下表）
+      药水效果的 ID（见下表）
 - 返回值：操作是否成功
 - 返回值类型：`Boolean`
 
@@ -1744,19 +1741,19 @@
 
 - 参数：
     - str : `String`  
-      Molang表达式
+      Molang 表达式
 - 返回值：表达式执行结果
 - 返回值类型：`Float`
 
-关于Molang的详细使用方法，请参考 [MOLANG文档 bedrock.dev](https://bedrock.dev/zh/docs/stable/Molang)
+关于 Molang 的详细用法，请参考 [MOLANG文档 bedrock.dev](https://bedrock.dev/zh/docs/stable/Molang)。
 
 #### 将玩家对象转换实体对象
 
 `pl.toEntity()`
 
-- 返回值：转换成的实体对象
+- 返回值：转换后的实体对象
 - 返回值类型：`Entity`
-    - 如果转换失败，则返回 `Null`
+    - 如转换失败，则返回 `Null`
 
 #### 判断是否为模拟玩家
 
@@ -1776,20 +1773,20 @@
     - name : `String`  
       模拟玩家名称
     - pos : `IntPos `/ `FloatPos`  
-      （可选参数）生成生物的位置的坐标对象（或者使用x, y, z, dimid来确定生成位置），默认为世界出生点
-- 返回值：生成的（模拟）玩家对象
+      （可选参数）生成位置的坐标对象（也可使用 x, y, z, dimid 指定生成位置），默认为世界出生点
+- 返回值：生成的模拟玩家对象
 - 返回值类型：`Player`
-    - 如返回值为 `Null` 则表示生成失败
+    - 如返回值为 `Null`，则表示生成失败
 
 ### 模拟玩家 - 函数
 
-每一个模拟玩家对象都包含一些可以执行的成员函数（成员方法）。对于某个特定的模拟玩家对象`sp`，可以通过以下这些函数对这个模拟玩家进行一些操作
+每个模拟玩家对象都包含一系列成员函数（成员方法）。对于特定的模拟玩家对象 `sp`，可通过以下函数对其进行操作：
 
 #### 模拟重生
 
 `sp.simulateRespawn()`
 
-- 返回值：是否成功模拟操作
+- 返回值：模拟操作是否成功
 - 返回值类型：'Boolean'
 
 参考：[mojang-gametest docs](https://learn.microsoft.com/zh-cn/minecraft/creator/scriptapi/minecraft/server-gametest/simulatedplayer?view=minecraft-bedrock-experimental#respawn)
@@ -1803,7 +1800,7 @@
     - target : `Entity`  
       （可选参数）攻击目标，默认为视线方向上的实体
 
-- 返回值：是否成功模拟操作
+- 返回值：模拟操作是否成功
 - 返回值类型：`Boolean`
 
 参考：[mojang-gametest docs](https://learn.microsoft.com/zh-cn/minecraft/creator/scriptapi/minecraft/server-gametest/simulatedplayer?view=minecraft-bedrock-experimental#attack)
@@ -1816,13 +1813,13 @@
 - 参数：
 
     - pos :`IntPos`  
-      （可选参数）要破坏的方块的坐标，默认为视线方向上的方块
+      （可选参数）要破坏的方块坐标，默认为视线方向上的方块
     - block :`Block`  
       （可选参数）要破坏的方块，默认为视线方向上的方块
     - face :`Integer`  
-      （可选参数）从哪面破坏，
+      （可选参数）从哪一面破坏
 
-- 返回值：是否成功模拟操作
+- 返回值：模拟操作是否成功
 - 返回值类型：`Boolean`
 
 参考：[mojang-gametest docs](https://learn.microsoft.com/zh-cn/minecraft/creator/scriptapi/minecraft/server-gametest/simulatedplayer?view=minecraft-bedrock-experimental#breakblock)
@@ -1831,7 +1828,7 @@
 
 `sp.simulateDisconnect()`
 
-- 返回值：是否成功模拟操作
+- 返回值：模拟操作是否成功
 - 返回值类型：`Boolean`
 
 #### 模拟交互
@@ -1843,15 +1840,15 @@
 - 参数：
 
     - target : `Entity`  
-      （可选参数）模拟交互目标，默认为视线方向上的方块或实体
+      （可选参数）交互目标，默认为视线方向上的方块或实体
     - pos :`IntPos`  
-      （可选参数）模拟交互目标，默认为视线方向上的方块或实体
+      （可选参数）交互目标，默认为视线方向上的方块或实体
     - block :`Block`  
-      （可选参数）模拟交互目标，默认为视线方向上的方块或实体
+      （可选参数）交互目标，默认为视线方向上的方块或实体
     - face :`Number`  
-      （可选参数）模拟交互目标方块的面
+      （可选参数）交互目标方块的面
 
-- 返回值：是否成功模拟操作
+- 返回值：模拟操作是否成功
 - 返回值类型：`Boolean`
 
 参考：[mojang-gametest docs](https://learn.microsoft.com/zh-cn/minecraft/creator/scriptapi/minecraft/server-gametest/simulatedplayer?view=minecraft-bedrock-experimental#interact)
@@ -1860,7 +1857,7 @@
 
 `sp.simulateJump()`
 
-- 返回值：是否成功模拟操作
+- 返回值：模拟操作是否成功
 - 返回值类型：`Boolean`
 
 参考：[mojang-gametest docs](https://learn.microsoft.com/zh-cn/minecraft/creator/scriptapi/minecraft/server-gametest/simulatedplayer?view=minecraft-bedrock-experimental#jump)
@@ -1869,7 +1866,7 @@
 
 `sp.simulateSneak()`
 
-- 返回值：是否成功模拟操作
+- 返回值：模拟操作是否成功
 - 返回值类型：`Boolean`
 
 #### 模拟看向某方块或实体
@@ -1879,7 +1876,7 @@
 `sp.simulateLookAt(block, [lookDuration])`
 
 !!! warning
-    `lookDuration`仅在0.8.13以及之后的版本中可用
+    `lookDuration` 仅在 0.8.13 及更高版本中可用。
 
 - 参数：
 
@@ -1890,10 +1887,10 @@
     - block :`Block`  
       要看向的方块
     - lookDuration: `Integer`  
-      模拟玩家看向目标的持续时间  
-      0 = 立刻, 1 = 持续, 2 = 不变直到移动
+      看向目标的持续时间  
+      0 = 立刻，1 = 持续，2 = 保持不变直到移动
 
-- 返回值：是否成功模拟操作
+- 返回值：模拟操作是否成功
 - 返回值类型：`Boolean`
 
 参考：[mojang-gametest docs](https://learn.microsoft.com/zh-cn/minecraft/creator/scriptapi/minecraft/server-gametest/simulatedplayer?view=minecraft-bedrock-experimental#lookatblock)
@@ -1922,7 +1919,7 @@
     - speed : `Number`  
       （可选参数）移动速度，默认为1
 
-- 返回值：是否请求移动成功
+- 返回值：是否成功请求移动
 - 返回值类型：`Boolean`
 
 #### 相对世界坐标系移动
@@ -1935,7 +1932,7 @@
     - speed : `Number`  
       （可选参数）移动速度，默认为1
 
-- 返回值：是否请求移动成功
+- 返回值：是否成功请求移动
 - 返回值类型：`Boolean`
 
 #### 直线移动到坐标
@@ -1948,11 +1945,11 @@
     - speed : `Number`  
       （可选参数）移动速度，默认为1
 
-- 返回值：是否请求移动成功
+- 返回值：是否成功请求移动
 - 返回值类型：`Boolean`
 
 参考：[mojang-gametest docs](https://learn.microsoft.com/zh-cn/minecraft/creator/scriptapi/minecraft/server-gametest/simulatedplayer?view=minecraft-bedrock-experimental#movetolocation)  
-注：如需自动寻路，请考虑使用 `模拟导航移动`
+注：如需自动寻路，请使用 `模拟导航移动`。
 
 #### 模拟导航移动
 
@@ -2022,7 +2019,7 @@
 }
 ```
 
-此数据的目标坐标为(0,2,0)，路径终点为(-1,0,0)，所以isFullPath为false，但由于路径不为空，所以模拟玩家将会移动至(-1,0,0)坐标
+此例中，目标坐标为(0,2,0)，而路径终点为(-1,0,0)，因此isFullPath为false；但由于路径不为空，模拟玩家仍会移动至(-1,0,0)。
 
 #### 模拟导航移动（多目标）
 
@@ -2048,15 +2045,15 @@
 - 参数：
 
     - item : `Item`  
-      （可选参数）要使用的物品，默认为选中物品
+      （可选参数）要使用的物品，默认为当前选中的物品
     - slot : `Number`  
-      （可选参数）要使用的物品所在的槽，默认为选中物品
+      （可选参数）要使用的物品所在的槽位，默认为当前选中物品的槽位
     - pos : `IntPos`  
-      （可选参数）目标坐标，默认为朝向方块坐标
+      （可选参数）目标坐标，默认为朝向方块的坐标
     - face : `Number`  
       （可选参数）目标方块的面，默认为0
     - relative : `FloatPos`  
-      （可选参数）相对方块偏移坐标，默认为{0.5,0.5,0.5}
+      （可选参数）相对方块的偏移坐标，默认为{0.5,0.5,0.5}
 
 - 返回值：是否成功模拟操作
 - 返回值类型：`Boolean`

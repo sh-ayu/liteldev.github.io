@@ -4,7 +4,7 @@
 
 ## Overview
 
-The Memory module provides low-level memory manipulation, function hooking with priority control, signature scanning, and symbol resolution. It enables mods to intercept and modify game behavior at the binary level.
+The Memory module provides low-level memory manipulation, function hooking with priority control, signature scanning, and symbol resolution. It lets mods intercept and modify game behavior at the binary level.
 
 ## Headers
 
@@ -73,7 +73,7 @@ LL_AUTO_TYPE_INSTANCE_HOOK(HookName, HookPriority::Normal, ClassName, &ClassName
 }
 ```
 
-`Identifier` can be a function pointer, a symbol, an address or a signature. `LL_INSTANCE_HOOK` / `LL_AUTO_INSTANCE_HOOK` and `LL_AUTO_TYPE_STATIC_HOOK` follow the same patterns, and every macro has an `_EX` variant (e.g. `LL_TYPE_INSTANCE_HOOK_EX`) that takes a `RegisterSaveOptions` argument after the priority.
+`Identifier` can be a function pointer, a symbol, an address, or a signature. `LL_INSTANCE_HOOK` / `LL_AUTO_INSTANCE_HOOK` and `LL_AUTO_TYPE_STATIC_HOOK` follow the same patterns, and every macro has an `_EX` variant (for example, `LL_TYPE_INSTANCE_HOOK_EX`) that takes a `RegisterSaveOptions` argument after the priority.
 
 ### Memory Utilities
 
@@ -186,7 +186,7 @@ void callVirtual(void* obj) {
 
 ## Platform Notes
 
-- Prefer function pointers (`&ClassName::method`, or `&ClassName::$method` for a virtual function's implementation) over symbol names, addresses or signatures
+- Prefer function pointers (`&ClassName::method`, or `&ClassName::$method` for a virtual function's implementation) over symbol names, addresses, or signatures
 - Hook priority determines execution order (lower number = earlier)
 
 ## Related

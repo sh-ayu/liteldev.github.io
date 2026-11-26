@@ -1,7 +1,7 @@
 # 🌏 网络接口 API
 
-下面这些API为脚本提供了基本的网络接口。  
-如果有更复杂的需求，可以使用各自语言平台的网络库来完成任务  
+以下 API 为脚本提供了基本的网络接口。  
+如有更复杂的需求，可以使用相应语言平台的网络库。  
 
 ## 目录
 - 🔌 [WebSocket 客户端对象 API](#-websocket-客户端对象-api)
@@ -15,22 +15,22 @@
 
 - 参数：
   - url : `String`  
-    请求的目标地址（包括 Get 请求附带的参数）
+    请求的目标地址（包含 GET 请求附带的参数）。
   - header : `Object`  
-    （可选参数）请求头  
+    （可选参数）请求头。  
   - callback : `Function`  
-    当请求返回时执行的回调函数，用于回传HTTP(s)响应结果。
-- 返回值：是否成功发送请求
+    请求返回时执行的回调函数，用于回传 HTTP(S) 响应结果。
+- 返回值：是否成功发送请求。
 - 返回值类型：`Boolean`
 
-注：参数callback的回调函数原型：`function(status,result)`  
+注：参数 callback 的回调函数原型：`function(status,result)`  
 
 - status : `Integer`    
-  返回的HTTP(s)响应码，如200代表请求成功
+  返回的 HTTP(S) 响应码，如 200 代表请求成功。
 - result : `String`  
-  返回的具体数据
+  返回的具体数据。
 
-如果请求执行失败，status值将为 -1
+如果请求执行失败，status 的值为 -1。
 
 
 
@@ -40,26 +40,26 @@
 
 - 参数：
   - url : `String`  
-    请求的目标地址
+    请求的目标地址。
   - header : `Object`  
-    （可选参数）请求头  
+    （可选参数）请求头。  
   - data : `String`  
-    发送的数据
+    要发送的数据。
   - type : `String`  
-    发送的 Post 数据类型，形如 `text/plain` `application/x-www-form-urlencoded` 等
+    要发送的 POST 数据类型，形如 `text/plain`、`application/x-www-form-urlencoded` 等。
   - callback : `Function`  
-    当请求返回时执行的回调函数，用于回传HTTP(s)响应结果。
-- 返回值：是否成功发送请求
+    请求返回时执行的回调函数，用于回传 HTTP(S) 响应结果。
+- 返回值：是否成功发送请求。
 - 返回值类型：`Boolean`
 
-注：参数callback的回调函数原型：`function(status,result)`  
+注：参数 callback 的回调函数原型：`function(status,result)`  
 
 - status : `Integer`    
-  返回的HTTP(s)响应码，如200代表请求成功
+  返回的 HTTP(S) 响应码，如 200 代表请求成功。
 - result : `String`  
-  返回的具体数据
+  返回的具体数据。
 
-如果请求执行失败，status值将为 -1
+如果请求执行失败，status 的值为 -1。
 
 
 
@@ -69,43 +69,43 @@
 
 - 参数：
   - url : `String`  
-    请求的目标地址（包括 Get 请求附带的参数）
-- 返回值：响应结果，一个包含以下成员的对象：
+    请求的目标地址（包含 GET 请求附带的参数）。
+- 返回值：响应结果，包含以下成员的对象：
   - status : `Integer`  
-    返回的HTTP(s)响应码
+    返回的 HTTP(S) 响应码。
   - data : `String`  
-    返回的具体数据
+    返回的具体数据。
 - 返回值类型：`Object`
 
-此函数会阻塞直到请求返回，能用 `network.httpGet` 时请优先使用它
+此函数会阻塞，直到请求返回。若可使用 `network.httpGet`，请优先使用它。
 
 
 
 ## 🔌 WebSocket 客户端对象 API
 
-在脚本引擎中，使用「WebSocket 对象」来操作某个 WebSocket 客户端的连接和工作
+在脚本引擎中，使用「WebSocket 对象」来管理单个 WebSocket 客户端的连接与通信。
 
 ### 创建一个新的WebSocket 客户端对象
 
 [JavaScript] `new WSClient()`  
 [Lua] `WSClient()`
 
-- 返回值：一个新的 websocket 客户端对象
+- 返回值：一个新的 WebSocket 客户端对象。
 - 返回值类型：`WSClient`
 
 
 
 ### WebSocket 客户端对象 - 属性
 
-每一个WS客户端对象都包含一些固定的对象属性。对于某个特定的客户端对象`wsc`，有以下这些属性
+每个 WS 客户端对象都包含一些固定的对象属性。特定的客户端对象 `wsc` 具有以下属性：
 
 | 属性       | 含义           | 类型   |
 | ---------- | -------------- | ------ |
 | wsc.status | 当前的连接状态 | `Enum` |
 
-这些对象属性都是只读的，无法被修改
+这些对象属性均为只读，无法修改。
 
-其中，wsc.status 枚举有如下几种情况：
+其中，wsc.status 枚举包含以下几种值：
 
 `WSClient.Open` - 处于正常连接中  
 `WSClient.Closing` - 正在断开连接  
@@ -115,7 +115,7 @@
 
 ### WebSocket 客户端对象 - 函数
 
-每一个WS客户端对象都包含一些可以执行的成员函数（成员方法）。对于某个特定的客户端对象`wsc`，可以通过以下这些函数对这个客户端进行一些操作
+每个 WS 客户端对象都包含一些可调用的成员函数（成员方法）。对于特定的客户端对象 `wsc`，可以通过以下函数对其进行操作：
 
 #### 创建连接
 
@@ -123,8 +123,8 @@
 
 - 参数：
   - target : `String`  
-    要连接的目标地址，形如`ws://hostname[:port][/path/path][?query=value]`
-- 返回值：是否成功连接
+    要连接的目标地址，形如 `ws://hostname[:port][/path/path][?query=value]`。
+- 返回值：是否成功连接。
 - 返回值类型：`Boolean` 
 
 
@@ -135,16 +135,16 @@
 
 - 参数：
   - target : `String`  
-    要连接的目标地址，形如`ws://hostname[:port][/path/path][?query=value]`
+    要连接的目标地址，形如 `ws://hostname[:port][/path/path][?query=value]`。
   - callback : `Function`
-    当连接成功或者失败时执行的回调函数。
-- 返回值：是否成功开始尝试连接
+    连接成功或失败时执行的回调函数。
+- 返回值：是否成功开始尝试连接。
 - 返回值类型：`Boolean` 
 
-注：参数callback的回调函数原型：`function(success)`  
+注：参数 callback 的回调函数原型：`function(success)`  
 
 - success : `Boolean`    
-  WebSocket 连接是否成功
+  WebSocket 连接是否成功。
 
 
 
@@ -154,29 +154,29 @@
 
 - 参数：
   - msg : `String` / `ByteBuffer`  
-    要发送的文本 / 二进制数据
-- 返回值：是否成功发送
+    要发送的文本或二进制数据。
+- 返回值：是否成功发送。
 - 返回值类型：`Boolean` 
 
-如果传入的参数类型是`String`，会按照文本发送，如果是`ByteBuffer`将按照二进制数据发送
+传入 `String` 类型参数时按文本发送，传入 `ByteBuffer` 类型参数时按二进制数据发送。
 
 
 
 #### 监听WebSocket事件
 
-在WS工作的过程中，当收到消息或发生错误时，需要对相关信息进行处理。这里给出了监听事件的接口
+在 WS 运行过程中，收到消息或发生错误时需要对相关信息进行处理。下方提供了用于监听事件的接口：
 
 `wsc.listen(event,callback)`
 
 - 参数：
 
   - event : `String`  
-    要监听的事件名（见下方监听事件列表）
+    要监听的事件名（见下方监听事件列表）。
 
   - callback : `Function`  
-    注册的监听函数（函数相关参数见下）  
-    当指定的事件发生时，脚本引擎会调用你给出的监听函数，并传入相应的参数
-- 返回值：是否成功监听事件
+    注册的监听函数（函数参数见下文）。  
+    指定事件发生时，脚本引擎会调用该监听函数，并传入相应的参数。
+- 返回值：是否成功监听事件。
 - 返回值类型：`Boolean` 
 
 
@@ -189,7 +189,7 @@
   `function(msg)`
 - 参数：
   - msg : `String`  
-    收到的文本消息
+    收到的文本消息。
 
 **`"onBinaryReceived"` - 收到二进制消息**
 
@@ -197,7 +197,7 @@
   `function(data)`
 - 参数：
   - data : `ByteBuffer`  
-    收到的二进制消息
+    收到的二进制消息。
 
 **`"onError"` - 发生错误**
 
@@ -205,7 +205,7 @@
   `function(msg)`
 - 参数：
   - msg : `String`  
-    错误的提示信息
+    错误提示信息。
 
 **`"onLostConnection"` - 连接丢失**
 
@@ -213,7 +213,7 @@
   `function(code)`
 - 参数：
   - code : `Integer`  
-    错误码
+    错误码。
 
 
 
@@ -221,10 +221,10 @@
 
 `wsc.close()`
 
-- 返回值：是否成功关闭连接
+- 返回值：是否成功关闭连接。
 - 返回值类型：`Boolean` 
 
-在处于关闭状态时，请勿继续使用此客户端对象！
+客户端对象处于关闭状态时，请勿继续使用！
 
 
 
@@ -232,10 +232,10 @@
 
 `wsc.shutdown()`
 
-- 返回值：是否成功断开连接
+- 返回值：是否成功断开连接。
 - 返回值类型：`Boolean` 
 
-在处于关闭状态时，请勿继续使用此客户端对象！
+客户端对象处于关闭状态时，请勿继续使用！
 
 
 
@@ -243,22 +243,22 @@
 
 `wsc.errorCode()`
 
-- 返回值：上一次错误产生的错误码
+- 返回值：上一次错误产生的错误码。
 - 返回值类型：`Integer`
 
-如果在上述接口使用中遇到了失败，可以从这里获取上一个错误码
+如果调用上述接口失败，可通过此函数获取上一次的错误码。
 
 ## 📡 Http 服务端对象 API
 
-脚本引擎提供了简易的Http服务端服务，可以用于Webhook等**数据传输量较小**的Web服务。  
-如果您想搭建网站，更推荐使用老牌Web服务软件如Apache, Nginx等。
+脚本引擎提供了简易的 HTTP 服务端，可用于 Webhook 等**数据传输量较小**的 Web 服务。  
+如需搭建网站，更推荐使用 Apache、Nginx 等成熟的 Web 服务器软件。
 
 ### 创建一个新的服务器对象
 
 [JavaScript]  `new HttpServer()`  
 [Lua] `HttpServer()`
 
-- 返回值：新的服务器对象
+- 返回值：新的服务器对象。
 - 返回值类型：`HttpServer`
 
 
@@ -269,10 +269,10 @@
 
 - 参数：
   - path : `String`  
-    请求目录，以`/`开头，可以包含正则表达式。如: `/test/(.+)`
+    请求路径，以 `/` 开头，可包含正则表达式，如：`/test/(.+)`。
   - callback : `Function<(HttpRequest, HttpResponse)>`  
-    回调函数，在收到符合path的GET请求回调
-- 返回值：处理完毕的服务器对象（便于连锁进行其他操作）
+    收到匹配 path 的 GET 请求时执行的回调函数。
+- 返回值：处理完毕的服务器对象（便于链式调用其他操作）。
 - 返回值类型：`HttpServer`
 
 
@@ -283,10 +283,10 @@
 
 - 参数：
   - path : `String`  
-    请求目录，以`/`开头，可以包含正则表达式。如: `/test/(.+)`
+    请求路径，以 `/` 开头，可包含正则表达式，如：`/test/(.+)`。
   - callback : `Function<(HttpRequest, HttpResponse)>`  
-    回调函数，在收到符合path的PUT请求回调
-- 返回值：处理完毕的服务器对象（便于连锁进行其他操作）
+    收到匹配 path 的 PUT 请求时执行的回调函数。
+- 返回值：处理完毕的服务器对象（便于链式调用其他操作）。
 - 返回值类型：`HttpServer`
 
 
@@ -297,10 +297,10 @@
 
 - 参数：
   - path : `String`  
-    请求目录，以`/`开头，可以包含正则表达式。如: `/test/(.+)`
+    请求路径，以 `/` 开头，可包含正则表达式，如：`/test/(.+)`。
   - callback : `Function<(HttpRequest, HttpResponse)>`  
-    回调函数，在收到符合path的POST请求回调
-- 返回值：处理完毕的服务器对象（便于连锁进行其他操作）
+    收到匹配 path 的 POST 请求时执行的回调函数。
+- 返回值：处理完毕的服务器对象（便于链式调用其他操作）。
 - 返回值类型：`HttpServer`
 
 
@@ -311,10 +311,10 @@
 
 - 参数：
   - path : `String`  
-    请求目录，以`/`开头，可以包含正则表达式。如: `/test/(.+)`
+    请求路径，以 `/` 开头，可包含正则表达式，如：`/test/(.+)`。
   - callback : `Function<(HttpRequest, HttpResponse)>`  
-    回调函数，在收到符合path的PATCH请求回调
-- 返回值：处理完毕的服务器对象（便于连锁进行其他操作）
+    收到匹配 path 的 PATCH 请求时执行的回调函数。
+- 返回值：处理完毕的服务器对象（便于链式调用其他操作）。
 - 返回值类型：`HttpServer`
 
 
@@ -325,10 +325,10 @@
 
 - 参数：
   - path : `String`  
-    请求目录，以`/`开头，可以包含正则表达式。如: `/test/(.+)`
+    请求路径，以`/`开头，可包含正则表达式，如 `/test/(.+)`
   - callback : `Function<(HttpRequest, HttpResponse)>`  
-    回调函数，在收到符合path的DELETE请求回调
-- 返回值：处理完毕的服务器对象（便于连锁进行其他操作）
+    回调函数，在收到匹配 path 的 DELETE 请求时触发
+- 返回值：处理完毕的服务器对象（便于链式调用其他操作）
 - 返回值类型：`HttpServer`
 
 
@@ -339,18 +339,18 @@
 
 - 参数：
   - path : `String`  
-    请求目录，以`/`开头，可以包含正则表达式。如: `/test/(.+)`
+    请求路径，以`/`开头，可包含正则表达式，如 `/test/(.+)`
   - callback : `Function<(HttpRequest, HttpResponse)>`  
-    回调函数，在收到符合path的OPTIONS请求回调
-- 返回值：处理完毕的服务器对象（便于连锁进行其他操作）
+    回调函数，在收到匹配 path 的 OPTIONS 请求时触发
+- 返回值：处理完毕的服务器对象（便于链式调用其他操作）
 - 返回值类型：`HttpServer`
 
 
 
 ### 监听请求 - 说明
 
-请注意，请求监听是有优先级的。  
-如果有多个路径同时满足正则表达式，则选择先定义的路径。  
+请求监听具有优先级。  
+如果多个路径的正则表达式同时匹配，则优先选择先定义的路径。  
 例如：  
 ```js
 svr.onGet('/test/123', (req, res) => {
@@ -369,8 +369,8 @@ svr.onGet('/test/123', (req, res) => {
 
 - 参数：
   - callback : `Function<bool(HttpRequest, HttpResponse)>`  
-    回调函数，在收到请求时调用。在回调函数中可以修改响应，如果返回`false`，则不会继续路由至对应路径的回调函数(但仍然会触发PostRouting事件)。
-- 返回值：处理完毕的服务器对象（便于连锁进行其他操作）
+    回调函数，在收到请求时调用。可在回调函数中修改响应；若返回`false`，则不再继续路由至对应路径的回调函数（但仍会触发 PostRouting 事件）。
+- 返回值：处理完毕的服务器对象（便于链式调用其他操作）
 - 返回值类型：`HttpServer`
 
 
@@ -381,8 +381,8 @@ svr.onGet('/test/123', (req, res) => {
 
 - 参数：
   - callback : `Function<(HttpRequest, HttpResponse)>`  
-    回调函数，在对应目录的回调函数(或PreRouting事件)执行完毕后调用，在回调函数中可以修改响应
-- 返回值：处理完毕的服务器对象（便于连锁进行其他操作）
+    回调函数，在对应路径的回调函数（或 PreRouting 事件）执行完毕后调用，可在其中修改响应
+- 返回值：处理完毕的服务器对象（便于链式调用其他操作）
 - 返回值类型：`HttpServer`
 
 
@@ -393,8 +393,8 @@ svr.onGet('/test/123', (req, res) => {
 
 - 参数：
   - callback : `Function<(HttpRequest, HttpResponse)>`  
-    回调函数，在错误(状态码 >= 400)时调用
-- 返回值：处理完毕的服务器对象（便于连锁进行其他操作）
+    回调函数，在发生错误（状态码 >= 400）时调用
+- 返回值：处理完毕的服务器对象（便于链式调用其他操作）
 - 返回值类型：`HttpServer`
 
 
@@ -405,8 +405,8 @@ svr.onGet('/test/123', (req, res) => {
 
 - 参数：
   - callback : `Function<(HttpRequest, HttpResponse, String)>`  
-    回调函数，在handler中有抛出异常时调用，参数3为异常信息
-- 返回值：处理完毕的服务器对象（便于连锁进行其他操作）
+    回调函数，在 handler 抛出异常时调用，第 3 个参数为异常信息
+- 返回值：处理完毕的服务器对象（便于链式调用其他操作）
 - 返回值类型：`HttpServer`
 
 
@@ -418,10 +418,10 @@ svr.onGet('/test/123', (req, res) => {
 
 - 参数：
   - addr : `String`  
-    （可选参数）监听地址，可以是IP地址或域名，默认为 `127.0.0.1`
+    （可选参数）监听地址，可为 IP 地址或域名，默认为 `127.0.0.1`
   - port : `Integer`  
     监听端口
-- 返回值：处理完毕的服务器对象（便于连锁进行其他操作）
+- 返回值：处理完毕的服务器对象（便于链式调用其他操作）
 - 返回值类型：`HttpServer`
 
 
@@ -439,7 +439,7 @@ svr.onGet('/test/123', (req, res) => {
 
 `svr.isRunning()`
 
-- 返回值：服务器正在运行与否
+- 返回值：服务器是否正在运行
 - 返回值类型：`Boolean`
 
 
@@ -460,7 +460,7 @@ svr.onGet('/test/123', (req, res) => {
 | `req.version`    | 请求版本             | `String` | `'HTTP/1.1'`                |
 | `req.matches`    | 请求路径正则匹配结果 | `Array`  | `['/test11', '11']`         |
 
-这些对象属性都是只读的，无法被修改，并且只能在请求回调函数中使用(理论上复制到外部也可以，但不推荐)。  
+这些属性均为只读，不可修改，且只能在请求回调函数中使用（理论上也可复制到外部使用，但不推荐）。  
 
 ***注意：***
 1. **`req.matches[0]` 为原始文本，其后面的元素才是匹配结果**
@@ -479,7 +479,7 @@ svr.onGet('/test/123', (req, res) => {
 - 参数：
   - name : `String`  
     请求头名称
-- 返回值：请求头的值数组(如果没有该请求头，则返回`[]`空数组)
+- 返回值：请求头的值数组（若该请求头不存在，则返回空数组`[]`）
 - 返回值类型：`Array<String>`
 
 
@@ -495,7 +495,7 @@ svr.onGet('/test/123', (req, res) => {
 | `res.version` | 响应版本   | `String` | `'HTTP/1.1'`                |
 | `res.reason`  | 错误原因   | `String` | `'OK'`                      |
 
-这些属性可以修改且应当被修改，但只有在回调函数中修改才有效
+这些属性均可修改且用于设置响应，但仅在回调函数中修改才有效。
 
 
 
@@ -506,7 +506,7 @@ svr.onGet('/test/123', (req, res) => {
 - 参数：
   - name : `String`  
     响应头名称
-- 返回值：响应头的值数组(如果没有该响应头，则返回`[]`空数组)
+- 返回值：响应头的值数组（若该响应头不存在，则返回空数组`[]`）
 - 返回值类型：`Array<String>`
 
 
@@ -534,7 +534,7 @@ svr.onGet('/test/123', (req, res) => {
     响应内容
 - 返回值：处理完毕的响应对象
 - 返回值类型：`HttpResponse`
-- 注：本函数在目前相当于`res.body += content1 + content2 + ...`
+- 注：此函数目前等价于 `res.body += content1 + content2 + ...`
 
 
 

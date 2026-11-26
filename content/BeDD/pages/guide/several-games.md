@@ -1,6 +1,6 @@
 # Several games at once
 
-Each game has its own clone (~90 MB, seconds) and WebSocket; a run that needs a [server](/guide/modes) starts its own.
+Each game gets its own clone (~90 MB, created in seconds) and WebSocket; a run that needs a [server](/guide/modes) starts its own.
 
 <video controls muted playsinline preload="none" poster="/BeDD/showcase/desktop-poster.webp" src="/BeDD/showcase/desktop.mp4" width="1280" height="720" style="width:100%;height:auto"></video>
 
@@ -12,37 +12,25 @@ BeDD.exe ps
 
 ## Slots and clones
 
-Slot N is clone `<gameVersion>-<N>` ([Clones](/guide/installs#clones)); slot 1 too, the base never runs. No upper
-limit. Give each parallel run (worktree, CI job) its own slot: one slot means one shared clone and its worlds.
+Slot N maps to the clone `<gameVersion>-<N>` ([Clones](/guide/installs#clones)). Even slot 1 uses a clone; the base never runs. There is no upper limit. Give each parallel run (such as a worktree or CI job) its own slot, because one slot means one shared clone and its worlds.
 
 ## Rules for parallel runs
 
-- Find your game by **instance** (`ps --json`, `run\<pid>.json`), never by process name `Minecraft.Windows`; close it
-  with `BeDD.exe stop --pid <pid>`.
+- Find your game by its **instance** (`ps --json`, `run\<pid>.json`), never by the process name `Minecraft.Windows`, and close it with `BeDD.exe stop --pid <pid>`.
 - Start games only with `BeDD.exe launch` (otherwise your normal profile's data is used).
-- Run `BeDD.exe world singleplayer <instance> [<world folder>]` after restoring a test world: games share one online sign-in, and
-  simultaneous multiplayer worlds fail with "Blaze".
-- Runs that join a server online use `launch --exclusive-signaling`: every game holds the signaling lock
-  (`locks`) shared for its life; this one waits for the others to close and holds it alone. The game process holds
-  it, so a crashed script does not leak it.
+- After restoring a test world, run `BeDD.exe world singleplayer <instance> [<world folder>]`: all games share one online sign-in, so running multiplayer worlds at the same time fails with "Blaze".
+- For runs that join a server online, use `launch --exclusive-signaling`. Normally, every game holds a shared signaling lock (`locks`) for its lifetime; with this flag, the game waits for all other games to close and holds the lock alone. Because the game process itself holds the lock, a crashed script does not leak it.
 
 ## The manager window
 
-Games show only in the manager window: off screen, no taskbar button, not in Alt+Tab; the window never takes focus.
-Double-click `BeDD.exe`, or `launch` opens it; later runs reuse it.
+Games appear only inside the manager window—they run off-screen, have no taskbar button, and do not show up in Alt+Tab—and the manager window itself never takes focus. Double-click `BeDD.exe` to open it, or let `launch` open it automatically; later runs reuse the same window.
 
 ![Look at the title bars: only the terminal is active](/showcase/desktop-poster.webp)
 
-- Each game: live picture, `--label`, instance, pid, input activity. Double-click its title: show only it. Right-click:
-  control it, play its sound, close, open `latest.log` or the instance folder, copy the WebSocket URL.
-- Click a game's picture to **control it**, as in a virtual machine: keyboard, mouse, wheel and camera go to that game;
-  the pointer stays in the picture; the Windows key and Alt+Tab go to the game too. **Ctrl+Left Alt** releases them
-  (AltGr still types), and so does switching to another window. Alt+F4 does nothing meanwhile.
-- **Play its sound on this PC** (right-click): that game's sound on the speakers, until unchecked or the window
-  closes. Games are silent otherwise.
-- Closing it (asks first) or killing it closes every game.
-- CLI: `BeDD.exe ps`, `stop --pid <pid>`, `manager status`, `manager stop --yes` (closes all without asking).
+- Each game pane shows a live picture, `--label`, the instance, the pid, and input activity. Double-click a game's title to show only that game. Right-click to control it, play its sound, close it, open `latest.log` or the instance folder, or copy the WebSocket URL.
+- Click a game's picture to **control it**, just as in a virtual machine: keyboard, mouse, scroll wheel, and camera input all go to that game, the pointer stays inside the picture, and the Windows key and Alt+Tab are sent to the game as well. Press **Ctrl+Left Alt** (AltGr still types) or switch to another window to release them. Meanwhile, Alt+F4 does nothing.
+- **Play its sound on this PC** (in the right-click menu) routes that game's sound to the speakers until you uncheck the option or close the window. Otherwise, games are silent.
+- Closing the manager window (which asks first) or killing it closes every game.
+- CLI: `BeDD.exe ps`, `stop --pid <pid>`, `manager status`, and `manager stop --yes` (closes all games without asking).
 
-A game with no manager attached within 30 s, or that loses it, closes (reason in `latest.log`). Headless CI: config
-`manager=false` ([Configuration](/guide/configuration#keys)); the game stays hidden, never closes itself; use
-`BeDD.exe stop`.
+A game that has no manager attached within 30 s, or that loses its manager, closes automatically (logging the reason in `latest.log`). For headless CI, set `manager=false` in the config ([Configuration](/guide/configuration#keys)); the game stays hidden and never closes itself, so stop it with `BeDD.exe stop`.

@@ -4,7 +4,7 @@
 
 ### Minecraft Bedrock の正規版が必要ですか？
 
-はい。LeviLauncher は **Minecraft Bedrock Edition (GDK / UWP)** の**正規版**との連携を目的として設計されています。
+はい。LeviLauncher は **Minecraft Bedrock Edition (GDK / UWP)** の**正規版**と連携するように設計されています。
 
 ### macOS や Linux でも使えますか？
 
@@ -12,35 +12,35 @@ LeviLauncher には **Windows 版**と **Android 版**（[Android 版ガイド](
 
 ### iOS 版はありますか？
 
-ありません。iOS 版 LeviLauncher を開発する予定はありません。
+ありません。iOS 版 LeviLauncher の開発予定もありません。
 
 ### Release と Preview、どちらを選ぶべきですか？
 
-日常的なプレイでは、**正式版（Release）** を優先的に選択してください。どうしても近未来的コンテンツを体験したい場合、または不安定さを許容できる場合にのみ、**プレビュー版（Preview）** を検討してください。
+日常的なプレイでは、**正式版（Release）** を選んでください。**プレビュー版（Preview）** は、今後のコンテンツをいち早く体験したい場合や、不安定さを許容できる場合にのみ検討してください。
 
 ### 隔離（Isolation）は必須ですか？
 
-必須ではありませんが、テスト環境、Minecraft **プレビュー版（Preview）** 環境、Mod 環境では非常に推奨されます。隔離は GDK バージョンと、1.19.70.2 以降の UWP x64 バージョンで利用できます。
+必須ではありませんが、テスト環境、Minecraft **プレビュー版（Preview）** 環境、Mod 環境では強く推奨します。隔離は GDK バージョンと、1.19.70.2 以降の UWP x64 バージョンで利用できます。
 
 ### ランチャー内でワールドやリソースパックを管理できますか？
 
-可能です。LeviLauncher はワールド、リソースパック、ビヘイビアパック、スキンパック、スクリーンショット、サーバーリストなどのコンテンツビューを提供しています。
+はい。LeviLauncher には、ワールド、リソースパック、ビヘイビアパック、スキンパック、スクリーンショット、サーバーリストなどのコンテンツを管理する画面が用意されています。
 
 ### Mod をインストールできますか？
 
-可能です。ただし、これは高度なワークフローに該当します。まずはクリーンな隔離バージョンから始め、段階的にテストすることを推奨します。
+はい。ただし、これは高度な操作にあたります。まずはクリーンな隔離バージョンを用意し、段階的にテストしていくことを推奨します。
 
 ### LeviLauncher をコマンドラインから使えますか？
 
-はい、Windows 版で使えます。引数なしの `LeviLauncher.exe` はウィンドウを開きます。`install latest`、`play`、`instance list`、`mod install <Mod>` などのコマンドを付けると、ターミナルで実行して終了します。すべてのコマンドは `LeviLauncher.exe help`、各コマンドのオプションと例は `LeviLauncher.exe help <コマンド>` で確認できます。
+はい、Windows 版で使えます。引数なしで `LeviLauncher.exe` を実行するとウィンドウが開きます。`install latest`、`play`、`instance list`、`mod install <Mod>` などのコマンドを指定すると、ターミナル上で処理を実行して終了します。すべてのコマンドは `LeviLauncher.exe help` で、各コマンドのオプションや使用例は `LeviLauncher.exe help <コマンド>` で確認できます。
 
 ### Android 版に必要なものは？
 
-ARM64 デバイス上の Android 9.0 以降と、Google Play からインストールした Minecraft 統合版 1.21.80 以降です。[インストール](../install?platform=android)を参照してください。
+ARM64 デバイス上の Android 9.0 以降と、Google Play からインストールした Minecraft 統合版 1.21.80 以降が必要です。詳しくは[インストール](../install?platform=android)を参照してください。
 
 ### Android で複数の Minecraft バージョンを使えますか？
 
-はい。公式の Minecraft APK をインポートすればランチャー内で別のバージョンを実行でき、バージョン分離でデータを分けられます。
+はい。公式の Minecraft APK をインポートすればランチャー内で別のバージョンを実行でき、バージョン分離機能でデータを個別に管理できます。
 
 ## コミュニティ
 
@@ -50,18 +50,18 @@ ARM64 デバイス上の Android 9.0 以降と、Google Play からインスト�
 
 ## 問題や機能要望の報告方法
 
-[GitHub Issues](https://github.com/LiteLDev/LeviLauncher/issues) を使用して以下の内容を報告してください：
+以下の内容は [GitHub Issues](https://github.com/LiteLDev/LeviLauncher/issues) から報告してください。
 
 - 再現可能なバグ
 - LeviLauncher に関連する明確なインストール問題
-- ドキュメントの分かりにくさに関する改善提案
-- 明確な使用シナリオがある機能リクエスト
+- ドキュメントの分かりにくい箇所の改善提案
+- 具体的な利用シーンが明確な機能リクエスト
 
 Android 版の問題は [LiteLDev/LeviLauncher-Android Issues](https://github.com/LiteLDev/LeviLauncher-Android/issues) に報告してください。
 
 ## Issue を作成する前に確認すること
 
 - 最新バージョンに更新する
-- クリーンな隔離バージョンで対照テストを行う
+- クリーンな隔離バージョンで比較テストを行う
 - 追加した Mod やリソースパックを一時的に無効化する
 - 問題が発生する正確な手順を記録する

@@ -1,26 +1,26 @@
 # 找函数指南
 
-本篇将介绍如何理解 BDS 中的函数的作用，以及如何在 BDS 中找到你想要的函数。
+本篇将介绍如何理解 BDS 中函数的作用，以及如何在 BDS 中找到所需的函数。
 
 ## 如何开始？
 
-在开始之前，你最好已经阅读了[Hook指南](hook_guide.zh.md)。并且对 C++ 和底层知识有一定的了解。
+在开始之前，建议先阅读[Hook指南](hook_guide.zh.md)，并对 C++ 和底层知识有一定了解。
 
 ### 需要的工具
 
 `IDA Pro`：用于反编译 BDS 的二进制文件。
 !!! Note
-    如果你没有购买 IDA Pro，可以使用[IDA Free](https://hex-rays.com/ida-free)，但是 IDA Free 没有将函数反编译为C语言的功能。
+    如果你没有购买 IDA Pro，可以使用 [IDA Free](https://hex-rays.com/ida-free)，但 IDA Free 没有将函数反编译为 C 语言的功能。
 
 ## 为什么要理解BDS的函数？
 
-试想一个场景，你需要获取玩家的坐标，你会怎么做？
+试想一个场景：你需要获取玩家的坐标，你会怎么做？
 
-很明显，如果你打开过 IDA Pro，查看过生成的函数列表，你会发现 BDS 是高度面向对象的，而如果你搜索过 `Player`, 这个关键词，你会发现这个类里有很多的函数，但是却没看到 `getPos`，`getPosition` 这样的函数。
+如果你用 IDA Pro 查看过生成的函数列表，会发现 BDS 是高度面向对象的。但搜索关键词 `Player` 时，尽管这个类里有许多函数，却找不到 `getPos`、`getPosition` 这样的函数。
 
 为什么呢？
 
-这时候，我们打开 LeviLamina 关于 Player 类的 [`Fake Header`](https://github.com/LiteLDev/LeviLamina/blob/53135ef92ccc4ee5cda12772651e1d7e319300e8/src/mc/world/actor/player/Player.h#L129) 文件，你会发现这个类的定义是这样的：
+打开 LeviLamina 中 Player 类的 [`Fake Header`](https://github.com/LiteLDev/LeviLamina/blob/53135ef92ccc4ee5cda12772651e1d7e319300e8/src/mc/world/actor/player/Player.h#L129) 文件，可以看到该类的定义如下：
 
 ```cpp
 class Player : public ::Mob {
@@ -28,19 +28,19 @@ class Player : public ::Mob {
 };
 ```
 
-很明显，Player 继承了 Mob 类，而依次类推，Mob 又是继承的 Actor，在 Actor 类中，我们终于找到了
+可以看到，Player 继承自 Mob 类，而 Mob 又继承自 Actor 类。在 Actor 类中，我们终于找到了这样一个函数：
 
 ```cpp
 class Vec3 const& getPosition() const;
 ```
 
-这样一个函数，我们依靠函数的名称猜测出这个函数可能的作用，并且返回值是一个 `Vec3` 类型的引用，这更符合我们的预期。
+从函数名可以推测出它的作用，而且它返回 `Vec3` 类型的引用，这也很符合预期。
 
-但是，为了更加确信这个函数的作用，我们还需要查看这个函数的实现。
+为了进一步确认该函数的作用，我们还需要查看它的实现。
 
-我们打开IDA Pro，搜索 `Actor::getPosition`
+打开 IDA Pro，搜索 `Actor::getPosition`
 
-IDA Pro给出这样的结果：
+IDA Pro 给出了如下结果：
 
 === "汇编"
     ```ASM
@@ -76,42 +76,42 @@ IDA Pro给出这样的结果：
     }
     ```
 
-这个函数的实现非常简单，它返回了一个 `Vec3` 类型的指针，这个指针是 `this` 指针加上偏移量 `84` 的值。
+该函数的实现非常简单：返回 `this` 指针加上偏移量 `84` 后的 `Vec3` 类型指针。
 
-根据经验，一个对象指针加上一个偏移量，那么这个多半是一个成员变量。
+根据经验，对象指针加上偏移量，指向的多半是成员变量。
 
-而后续我们的实践证明了，这个函数确实是返回了玩家的坐标（或者说这个函数用于返回一个实体的坐标）。
+后续实践证明，该函数确实返回了玩家的坐标（准确地说，是返回实体的坐标）。
 
-事实上，这个函数非常简单，函数的命名也十分直观，寻找到它的过程也非常简单，而在我们的开发中，依靠这样的方法来寻找目标是最基本的技能。
+这个函数命名直观，实现和查找过程都很简单。在实际开发中，通过这种方式寻找目标函数是最基本的技能。
 
 ## 确定模组目的后，如何寻找函数？
 
-有时候，我们寻找函数的目的不是为了调用，而是为了修改函数的行为，使其符合我们的需求。
+有时，寻找函数不是为了调用它，而是为了修改其行为以满足需求。
 
-例如，如果我们想要实现一个功能，玩家聊天的内容转发到控制台，我们就需要找到BDS中处理玩家聊天的函数。（是的，原生BDS并没有这个功能）
+例如，若想将玩家的聊天内容转发到控制台，就需要找到 BDS 中处理玩家聊天的函数（原生 BDS 并没有这个功能）。
 
-那么，我们该如何寻找这个函数呢？
+那么，该如何寻找这个函数呢？
 
-通过查阅资料，我们知道 Minecraft 基岩版客户端与服务端之间的通信使用的是 `RakNet` 协议，而 `RakNet` 协议使用的是 `UDP` 协议。
+查阅资料可知，Minecraft 基岩版客户端与服务端之间使用 `RakNet` 协议进行通信，而 `RakNet` 协议底层使用的是 `UDP` 协议。
 
-这就意味着，BDS 中会收到来自客户端的数据包。
+这意味着 BDS 会接收来自客户端的数据包。
 
-查阅资料可知，处理聊天的数据包是 `TextPacket` ，我们打开 IDA Pro，搜索 `TextPacket` 。
+查阅资料可知，处理聊天的数据包是 `TextPacket`。打开 IDA Pro，搜索 `TextPacket`。
 
-顺利的找到了收取 `TextPacket` 的函数：
+我们顺利找到了接收 `TextPacket` 的函数：
 
 ```cpp
 public: virtual void __cdecl ServerNetworkHandler::handle(class NetworkIdentifier const & __ptr64,class TextPacket const & __ptr64) __ptr64
 //symbol: ?handle@ServerNetworkHandler@@UEAAXAEBVNetworkIdentifier@@AEBVTextPacket@@@Z
 ```
 
-利用我们在[Hook指南](hook_guide.zh.md)中学到的知识，我们可以很容易的 Hook 这个函数，实现我们的功能。（吗？）
+利用在[Hook指南](hook_guide.zh.md)中学到的知识，我们可以轻松地 Hook 这个函数来实现功能。（真的吗？）
 
-好吧，事实上我们遇到第二个问题，这里似乎没有一个 `std::string` 类型的参数，我们似乎无法获取到玩家的聊天内容。
+但很快就会遇到第二个问题：参数中似乎没有 `std::string` 类型，我们好像无法获取玩家的聊天内容。
 
-但是真的如此吗？
+真是如此吗？
 
-我们打开 IDA Pro，观察这个函数的伪代码：
+打开 IDA Pro，查看该函数的伪代码：
 
 ```cpp
 void __fastcall ServerNetworkHandler::handle(
@@ -195,11 +195,11 @@ void __fastcall ServerNetworkHandler::handle(
 }
 ```
 
-看起来很复杂哈？
+看起来是不是很复杂？
 
-但是我们并不需要一次性全部理解，我们只需要明确我们需要获取的信息：`玩家`，`聊天内容`。
+但我们不需要一次性全部看懂，只需明确要获取的信息：`玩家`和`聊天内容`。
 
-而，聊天内容大抵是`std::string`类型的，我们可以在这个函数中搜索`std::string`，找到这样一段代码：
+聊天内容大概率是 `std::string` 类型。在该函数中搜索 `std::string`，可以找到如下代码：
 
 ```cpp
 std::string::string(v17, (char *)a3 + 88);
@@ -209,9 +209,9 @@ std::string::string(v17, (char *)a3 + 88);
 std::string::string(v23, (char *)a3 + 56);
 ```
 
-好吧，光是字符串的构造函数有这么多，但是我们观察到 v23 并没有后续的调用，而 v17 却有，我们可以猜测 v17 是我们想要的字符串。
+光是字符串的构造函数就有这么多。不过观察发现，v23 在后续并未被调用，而 v17 被调用了，因此可以推测 v17 就是目标字符串。
 
-而下文的代码：
+下文的代码：
 
 ```cpp
 if ( (unsigned int)ServerNetworkEventCoordinator::sendEvent(v10, &v13) == 1 )
@@ -221,9 +221,9 @@ if ( (unsigned int)ServerNetworkEventCoordinator::sendEvent(v10, &v13) == 1 )
             (struct ChatEvent *)v17);
 ```
 
-也极大的支持了我们的猜测。
+也极大地支持了这一猜测。
 
-而 Player 也很容易的从第一行可以得到：
+至于 Player，也很容易从第一行代码中得到：
 
 ```cpp
 v5 = (const struct Player *)(*(__int64 (__fastcall **)(char *, const struct NetworkIdentifier *, _QWORD))(*((_QWORD *)this - 2) + 8i64))(
@@ -232,12 +232,11 @@ v5 = (const struct Player *)(*(__int64 (__fastcall **)(char *, const struct Netw
                                 *((unsigned __int8 *)a3 + 16));
 ```
 
-这很明显是一个虚函数的调用，最终返回了一个 Player 指针。
+这显然是一次虚函数调用，最终返回了一个 Player 指针。
 
-我们可以直接抄下来，但是这样很不优雅。
+我们可以直接照抄这段代码，但这样很不优雅。
 
-而查阅 LeviLamina 提供的有关 [ServerNetworkHandler](https://github.com/LiteLDev/LeviLamina/blob/53135ef92ccc4ee5cda12772651e1d7e319300e8/src/mc/network/ServerNetworkHandler.h#L625) 的内容
-我们可以得知，ServerNetworkHandler 类提供了一个虚函数 `_getServerPlayer`，这个函数的作用是获取一个玩家的指针。但是，从前面的伪代码和上下文可以看出，直接调用 _getServerPlayer 并不可行，我们需要对 `this` 指针做一个 -16 的偏移才能正确的获取玩家指针。为了方便开发，LeviLamina 的 Hook 宏提供了 `thisFor<T>()`，它会替你完成这个偏移，所以在 Hook 中可以直接获取玩家的指针（LeviLamina 自己的 `PlayerChatEvent` 就是这样做的）：
+查阅 LeviLamina 中 [ServerNetworkHandler](https://github.com/LiteLDev/LeviLamina/blob/53135ef92ccc4ee5cda12772651e1d7e319300e8/src/mc/network/ServerNetworkHandler.h#L625) 的定义可知，ServerNetworkHandler 类提供了虚函数 `_getServerPlayer` 用于获取玩家指针。但从前面的伪代码和上下文来看，直接调用 _getServerPlayer 并不可行，必须先对 `this` 指针做 -16 的偏移才能正确获取玩家指针。为方便开发，LeviLamina 的 Hook 宏提供了 `thisFor<T>()` 来自动完成这一偏移。因此在 Hook 中可以直接获取玩家指针（LeviLamina 自身的 `PlayerChatEvent` 就是这样实现的）：
 
 ```cpp
 // 在 LL_TYPE_INSTANCE_HOOK(..., ServerNetworkHandler, &ServerNetworkHandler::$handle, void,
@@ -245,26 +244,26 @@ v5 = (const struct Player *)(*(__int64 (__fastcall **)(char *, const struct Netw
 auto player = thisFor<NetEventCallback>()->_getServerPlayer(identifier, packet.mSenderSubId);
 ```
 
-就此，我们已经实现了我们的目标，我们可以Hook这个函数，实现我们的功能。
+至此，目标已经达成，我们可以 Hook 这个函数来实现所需功能。
 
-具体的代码实现，限于篇幅，不再赘述。
+受篇幅所限，具体代码实现不再赘述。
 
-而LeviLamina在新版本提供了部分数据包的结构体信息，你可以在 [TextPacket.h](https://github.com/LiteLDev/LeviLamina/blob/19e0aeb44c13967307bb1ed0795325fca41e0e48/src/mc/network/packet/TextPacket.h#L13) 中看到，LeviLamina 开发者已经补全了这个数据包的结构体信息。
+此外，新版本的 LeviLamina 提供了部分数据包的结构体信息。从 [TextPacket.h](https://github.com/LiteLDev/LeviLamina/blob/19e0aeb44c13967307bb1ed0795325fca41e0e48/src/mc/network/packet/TextPacket.h#L13) 中可以看到，LeviLamina 开发者已经补全了该数据包的结构体信息。
 
 ```cpp
 std::string              mMessage;    // this+0x58
 ```
 
-利用这个，我们可以直接使用 `textPacket.mMessage` 代替偏移来获取玩家的聊天内容。
+借助该结构体，我们可以直接使用 `textPacket.mMessage` 代替指针偏移来获取玩家的聊天内容。
 
 !!! Danger
-    但是我们不是官方，提供的结构体信息并不一定完全正确，可能随着版本的更新，这个结构体会发生变化，而我们可能没有及时更新，所以，使用结构体替代偏移的时候，一定要注意！
-    当然，如果你发现了这样的问题，欢迎提交PR。
+    但我们并非官方，提供的结构体信息不一定完全准确。随着版本更新，结构体可能会发生变化，而我们未必能及时更新。因此，使用结构体替代偏移时一定要多加注意！
+    当然，如果你发现了这类问题，欢迎提交 PR。
 
 ## 总结
 
-本篇介绍了如何理解 BDS 中的函数的作用，以及如何在 BDS 中找到你想要的函数。
+本篇介绍了如何理解 BDS 中函数的作用，以及如何在 BDS 中找到所需的函数。
 
-事实上，本教程只能是一个入门教程，实际开发中你会遇到更加困难的条件和情况，这就需要你付出更多的努力，去学习更多的知识，去解决更多的问题。
+本教程仅作为入门指南。在实际开发中，你会遇到更复杂的条件和情况，这需要你付出更多努力，不断学习新知识来解决问题。
 
-希望本教程能够帮助到你，祝你开发愉快！
+希望本教程能对你有所帮助，祝你开发愉快！

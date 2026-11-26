@@ -1,42 +1,42 @@
 # Versionsverwaltung
 
-LeviLauncher behandelt jede installierte Umgebung als eine eigenständig verwaltbare Version. In der App heißen installierte Versionen Instanzen und werden auf der Seite **Instanzen** aufgelistet.
+LeviLauncher verwaltet jede installierte Umgebung als eigenständige Version. In der App heißen installierte Versionen Instanzen und sind auf der Seite **Instanzen** aufgelistet.
 
 ## Was du tun kannst
 
 === "Windows"
 
-    - Installieren von Release- oder Preview-Versionen
-    - Festlegen eines leicht erkennbaren Namens für die Version
-    - Schnelles Starten einer bestimmten Version
-    - Löschen nicht mehr benötigter Versionen
-    - Öffnen versionsspezifischer Einstellungen
-    - Erstellen einer Desktop-Verknüpfung für die Version
+    - Release- oder Preview-Versionen installieren
+    - Einen leicht erkennbaren Namen für die Version festlegen
+    - Eine bestimmte Version schnell starten
+    - Nicht mehr benötigte Versionen löschen
+    - Versionsspezifische Einstellungen öffnen
+    - Eine Desktop-Verknüpfung für die Version erstellen
 
 === "Android"
 
-    - offizielle Minecraft-APKs importieren und im Launcher starten, ohne jede Version im System zu installieren
-    - mehrere Versionen und ihre Daten getrennt halten
-    - die Version wählen, die die Startansicht startet
+    - Offizielle Minecraft-APKs importieren und im Launcher starten, ohne jede Version im System zu installieren
+    - Mehrere Versionen und ihre Daten getrennt halten
+    - Auswählen, welche Version über die Startansicht gestartet wird
 
 ## Der Unterschied zwischen Release und Preview <Badge platform="windows" />
 
 | Typ | Geeignet für | Beschreibung |
 | --- | --- | --- |
 | Release | Stabiles, tägliches Spielen | Geeignet für die meisten Spieler |
-| Preview | Vorab-Testen neuer Inhalte | Anfälliger für Änderungen bei Welt-, Paket- oder Mod-Kompatibilität |
+| Preview | Vorab-Testen neuer Inhalte | Anfälliger für Änderungen bei der Welt-, Paket- oder Mod-Kompatibilität |
 
 ## Was ist Isolierung?
 
 === "Windows"
 
-    Isolierung ist für GDK-Versionen und für UWP-x64-Versionen ab 1.19.70.2 verfügbar. Wenn die Isolierung aktiviert ist, speichert LeviLauncher die Spieldaten dieser Version in einem eigenen Arbeitsbereich, anstatt sie mit dem Standardspeicherort zu teilen.
+    Isolierung ist für GDK-Versionen sowie für UWP-x64-Versionen ab 1.19.70.2 verfügbar. Ist sie aktiviert, speichert LeviLauncher die Spieldaten dieser Version in einem eigenen Arbeitsbereich, statt sie mit dem Standardspeicherort zu teilen.
 
-    Isolierung ist für folgende Anforderungen geeignet:
+    Isolierung eignet sich für folgende Anforderungen:
 
     - Unterschiedliche Inhaltskombinationen für verschiedene Versionen
     - Sichereres Testen von Mods oder Minecraft Preview
-    - Verringerung des Risikos, dass eine Umgebung eine andere beeinträchtigt
+    - Geringeres Risiko, dass eine Umgebung eine andere beeinträchtigt
 
 === "Android"
 
@@ -46,25 +46,25 @@ LeviLauncher behandelt jede installierte Umgebung als eine eigenständig verwalt
 
 ### Neue Version installieren
 
-Führe die Installation auf der Seite **Herunterladen** durch und kehre anschließend zu **Starten** zurück, um zu starten.
+Führe die Installation auf der Seite **Herunterladen** durch und kehre anschließend zu **Starten** zurück, um das Spiel zu starten.
 
 Der Schalter **LeviLamina installieren** auf der Installationsseite ist anfangs eingeschaltet; schalte ihn aus, um das Spiel ohne LeviLamina zu installieren. Er gilt nur für Versionen, die LeviLamina unterstützt.
 
 ### Version umbenennen
 
-Lege unter **Instanzen** oder **Instanz-Einstellungen** einen aussagekräftigeren Namen für die Umgebung fest, z. B. `Release Survival` oder `Preview Test`.
+Vergib unter **Instanzen** oder **Instanz-Einstellungen** einen aussagekräftigeren Namen für die Umgebung, z. B. `Release Survival` oder `Preview Test`.
 
 ### Version löschen
 
 Entferne nicht mehr benötigte Versionen, insbesondere abgeschlossene Minecraft Preview-Umgebungen.
 
 ::: warning Vor dem Löschen prüfen
-Das Löschen einer Version kann die zugehörigen Inhalte in dieser verwalteten Umgebung entfernen. Sichere vorher wichtige Welten.
+Beim Löschen einer Version können die zugehörigen Inhalte in dieser verwalteten Umgebung entfernt werden. Sichere vorher wichtige Welten.
 :::
 
 ### Desktop-Verknüpfung erstellen
 
-Verwende **Desktop-Verknüpfung erstellen** im Menü neben der Schaltfläche **Starten**, um für eine bestimmte Version eine Verknüpfung zu erstellen, mit der du sie direkt starten kannst.
+Wähle im Menü neben der Schaltfläche **Starten** die Option **Desktop-Verknüpfung erstellen**, um für eine bestimmte Version eine Verknüpfung anzulegen, über die du sie direkt starten kannst.
 
 ## Empfohlene Versionsstrategie <Badge platform="windows" />
 

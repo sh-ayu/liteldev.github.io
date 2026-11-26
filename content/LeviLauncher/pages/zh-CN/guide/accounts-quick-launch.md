@@ -4,15 +4,15 @@ platforms: [android]
 
 # 账号与快速启动
 
-以下功能属于 Android 版 LeviLauncher。
+以下功能适用于 Android 版 LeviLauncher。
 
 ## Xbox 账号
 
-LeviLauncher 可以在启动器内管理多个 Xbox 账号。启动 Minecraft 前选择需要使用的账号，游戏就会以预期的身份启动。
+你可以在 LeviLauncher 内管理多个 Xbox 账号。启动 Minecraft 前选择要使用的账号，游戏就会以该账号身份启动。
 
 ## 快速启动
 
-快速启动使用 Minecraft URI 操作直接进入常用流程。根据不同操作，你可以：
+快速启动通过 Minecraft URI 操作直接执行常用任务。你可以使用它来：
 
 - 打开指定游戏页面
 - 连接或添加服务器

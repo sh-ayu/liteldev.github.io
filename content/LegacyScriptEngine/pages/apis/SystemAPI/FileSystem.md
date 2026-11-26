@@ -1,8 +1,8 @@
 # 📂 Directory and File API 
 
-The following APIs provide interfaces for manipulating files, directories, etc. to interact with the file system.
+These APIs let you manipulate files and directories on the file system.
 
-> Note: The relative paths of all incoming functions are based on the BDS root directory 
+> Note: All relative paths passed to these functions are resolved from the BDS root directory.
 
 ### Create Folder   
 
@@ -11,8 +11,8 @@ The following APIs provide interfaces for manipulating files, directories, etc. 
 
 - Parameter: 
   - dir : `String`  
-    The path to the destination folder.  
-    Multiple folders can be created directly, no need to create one at a time. 
+    Path to the destination folder.  
+    Can create nested folders in a single call, without creating them one level at a time.
 - Return value: Whether the folder or folders were created successfully.
 - Return value type: `Boolean`
 
@@ -24,8 +24,8 @@ The following APIs provide interfaces for manipulating files, directories, etc. 
 
 - Parameter: 
   - path : `String`  
-    Path to target file/folder
-- Return value: Whether the deletion was successful.
+    Path to the target file or folder.
+- Return value: Whether the deletion succeeded.
 - Return value type: `Boolean`
 
 
@@ -36,7 +36,7 @@ The following APIs provide interfaces for manipulating files, directories, etc. 
 
 - Parameter: 
   - path : `String`  
-    Path to target file/folder.
+    Path to the target file or folder.
 - Return value: Whether the target exists.
 - Return value type: `Boolean`
 
@@ -48,11 +48,11 @@ The following APIs provide interfaces for manipulating files, directories, etc. 
 
 - Parameters: 
   - from : `String`  
-    Path to source file/folder.
+    Path to the source file or folder.
 
   - to : `String`  
-    The location of the target file/folder.
-- Return value: Whether the copy is successful.
+    Destination path for the file or folder.
+- Return value: Whether the copy succeeded.
 - Return value type: `Boolean`
 
 
@@ -63,11 +63,11 @@ The following APIs provide interfaces for manipulating files, directories, etc. 
 
 - Parameters: 
   - from : `String`  
-    Path to source file/folder.
+    Path to the source file or folder.
 
   - to : `String`  
-    The location of the target file/folder.
-- Return value: Whether the copy is successful.
+    Destination path for the file or folder.
+- Return value: Whether the copy succeeded.
 - Return value type: `Boolean`
 
 
@@ -78,11 +78,11 @@ The following APIs provide interfaces for manipulating files, directories, etc. 
 
 - Parameters: 
   - from : `String`  
-    Current name of file/folder.
+    Current name of the file or folder.
 
   - to : `String`  
-    New name of the file/folder.
-- Return value: Whether the rename is successful.
+    New name of the file or folder.
+- Return value: Whether the rename succeeded.
 - Return value type: `Boolean`
 
 
@@ -93,12 +93,12 @@ The following APIs provide interfaces for manipulating files, directories, etc. 
 
 - Parameter: 
   - path : `String`  
-    The file path to be manipulated.
+    Path to the target file.
 
-- Return value: the size of the file (bytes).
+- Return value: File size in bytes.
 - Return value type: `Integer`
 
-If the path location passed in is a folder, returns `-1`.
+Returns `-1` if the specified path is a folder.
 
 
 
@@ -108,11 +108,11 @@ If the path location passed in is a folder, returns `-1`.
 
 - Parameter: 
   - path : `String`  
-    Determined path.
+    Path to check.
 - Return value: Whether the target path is a folder.
 - Return value type: `Boolean`
 
-If the target path does not exist, it will also return `false`
+Also returns `false` if the target path does not exist.
 
 
 
@@ -124,7 +124,7 @@ If the target path does not exist, it will also return `false`
   - dir: `String`  
     Folder path.
 
-- Return value: Array of file names, folder names.
+- Return value: Array of file and folder names.
 - Return value type: `Array<String,String,...>`
 
 

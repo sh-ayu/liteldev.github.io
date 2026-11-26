@@ -1,6 +1,6 @@
 # Coroutine Guide
 
-Starting from LeviLamina 1.0.0, coroutines replace the Scheduler.
+As of LeviLamina 1.0.0, coroutines replace the Scheduler.
 
 ## Usage
 
@@ -9,20 +9,19 @@ Starting from LeviLamina 1.0.0, coroutines replace the Scheduler.
    #include "ll/api/chrono/GameChrono.h"
    #include "ll/api/coro/CoroTask.h"
    ```
-2. Call `ll::coro::keepThis` in a function, passing a lambda function that returns `ll::coro::CoroTask`.
-3. Call the `launch` or `syncLaunch` method after `keepThis`, the latter will block server thread, passing an `Executor`
-   class, such as `ll::thread::ServerThreadExecutor`.
+2. Call `ll::coro::keepThis` in a function and pass it a lambda that returns `ll::coro::CoroTask`.
+3. Call `launch` or `syncLaunch` (which blocks the server thread) on the result of `keepThis`, passing an `Executor` class such as `ll::thread::ServerThreadExecutor`.
 
 !!! tip "Available Executors"
     `ll::thread::ServerThreadExecutor` (ll/api/thread/ServerThreadExecutor.h): Server thread
     `ll::thread::ThreadPoolExecutor` (ll/api/thread/ThreadPoolExecutor.h): Thread pool  
-    For more Executors, refer to `ll/api/thread/`.
+    See `ll/api/thread/` for more Executors.
 
 ## Examples
 
 ### ServerThreadExecutor
 
-The following function uses a coroutine to print a string to the console every 20 ticks on the server thread, for a total of 20 times.
+This function uses a coroutine on the server thread to print a string to the console every 20 ticks, 20 times in total.
 
 ```cpp
 #include "ll/api/chrono/GameChrono.h"
@@ -43,7 +42,7 @@ void createServerThreadCoro() {
 
 ### ThreadPoolExecutor
 
-The following function uses a coroutine to print a string to the console every second in the thread pool, for a total of 20 times.
+This function uses a coroutine in the thread pool to print a string to the console every second, 20 times in total.
 
 ```cpp
 #include "ll/api/chrono/GameChrono.h"

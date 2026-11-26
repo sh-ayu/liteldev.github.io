@@ -1,23 +1,23 @@
 # Configuration
 
-After this page you can read and change the settings of lip with `lip config`, and you know what to do when GitHub is slow or blocked where you are. In the interface, the same settings are on the [Settings](../interface/settings.md) page.
+After reading this page, you will be able to view and change lip's settings with `lip config`, and you will know what to do when GitHub is slow or blocked in your region. In the interface, the same settings are on the [Settings](../interface/settings.md) page.
 
 ## Two sets of settings
 
-lip has few settings. They come in two sets, called scopes:
+lip has only a few settings. They come in two sets, called scopes:
 
 | Scope | Applies to | Keys | Command |
 | --- | --- | --- | --- |
 | **User** | You, in every workspace | `github_proxy`, `language` | `lip config …` |
 | **Workspace** | One server folder | `restart` | `lip config … --workspace` |
 
-A command with `--workspace` works on the folder you are in. A command without it works on your user settings, wherever you are.
+With `--workspace`, a command applies to your current folder. Without it, the command applies to your user settings, regardless of where you run it.
 
 ## Read and change settings
 
-[`lip config`](../reference/commands/config.md) has four commands.
+[`lip config`](../reference/commands/config.md) has four subcommands.
 
-**See every setting** of a scope:
+**See every setting** in a scope:
 
 ```sh
 lip config list
@@ -44,7 +44,7 @@ lip config list --workspace
 └─────────┴───────┘
 ```
 
-`(not set)` means the key has no value. `(empty)` means it is set to nothing, which for `github_proxy` is a choice of its own (see below).
+`(not set)` means the key has no value. `(empty)` means it is set to an empty string, which is a distinct option for `github_proxy` (see below).
 
 **See one setting:**
 
@@ -62,9 +62,9 @@ lip config set language zh-Hans
 ✓ Config key 'language' set to 'zh-Hans'.
 ```
 
-lip refuses a value that the key does not allow, and changes nothing.
+If a value is not valid for the key, lip rejects it and changes nothing.
 
-**Remove a setting**, so that it goes back to its default:
+**Remove a setting** to reset it to its default:
 
 ```sh
 lip config delete language
@@ -74,23 +74,23 @@ lip config delete language
 ✓ Config key 'language' deleted.
 ```
 
-`lip config get` and `lip config list` take `--json` for scripts. A key used with the wrong scope fails, and the message tells you whether to add or drop `--workspace`.
+`lip config get` and `lip config list` accept `--json` for use in scripts. Using a key with the wrong scope fails with an error message telling you whether to add or remove `--workspace`.
 
 ## The keys
 
-The complete description of both files is in [Configuration files](../reference/configuration.md).
+For a complete description of both files, see [Configuration files](../reference/configuration.md).
 
 ### github_proxy
 
 Scope: user. Value: a URL, or empty. Default: not set.
 
-How lip reaches GitHub, where most packages are downloaded from.
+Controls how lip reaches GitHub, where most packages are downloaded from.
 
 | Value | lip |
 | --- | --- |
-| not set | connects to GitHub directly. The interface may ask you to choose when it cannot reach GitHub. |
-| empty | connects to GitHub directly, and the interface does not ask. |
-| a URL | sends requests for GitHub through that address first, and directly when that fails. |
+| not set | connects to GitHub directly. The interface may prompt you to choose a proxy if it cannot reach GitHub. |
+| empty | connects to GitHub directly, and the interface never prompts you. |
+| a URL | sends GitHub requests through that URL first, falling back to a direct connection if the proxy fails. |
 
 See [When GitHub is slow or blocked](#when-github-is-slow-or-blocked).
 
@@ -98,29 +98,29 @@ See [When GitHub is slow or blocked](#when-github-is-slow-or-blocked).
 
 Scope: user. Value: `en`, `zh-Hans` or `zh-Hant`. Default: not set.
 
-The language of the interface: English, Simplified Chinese or Traditional Chinese. Without a value, the interface follows the language of your system, and uses English when that is neither English nor Chinese.
+Sets the interface language: English, Simplified Chinese, or Traditional Chinese. If not set, the interface matches your system language, defaulting to English if your system is set to neither English nor Chinese.
 
 ```sh
 lip config set language zh-Hant
 ```
 
-This changes the interface only. What the commands write to the terminal is always English.
+This setting affects only the interface. Terminal output from commands is always in English.
 
 ### restart
 
 Scope: workspace. Value: `never` or `on-failure`. Default: `never`.
 
-Whether lip starts the server of this workspace again when it crashes, that is, exits with a code other than 0.
+Controls whether lip restarts the workspace's server when it crashes (that is, when it exits with a code other than 0).
 
 ```sh
 lip config set restart on-failure --workspace
 ```
 
-With `on-failure`, lip waits 5 seconds and starts the server again, at most 5 times within 10 minutes. See [Restarting](../reference/commands/run.md#restarting).
+With `on-failure`, lip waits 5 seconds before restarting the server, up to 5 times within 10 minutes. See [Restarting](../reference/commands/run.md#restarting).
 
 ## When GitHub is slow or blocked
 
-lip downloads most packages from GitHub. Where GitHub is slow or cannot be reached, installing fails with:
+lip downloads most packages from GitHub. If GitHub is slow or unreachable, installations fail with:
 
 ```text
 hint: lip could not reach the server. Check your network connection. If GitHub is slow or blocked where you are, set a GitHub proxy with 'lip config set github_proxy <URL>'.
@@ -128,7 +128,7 @@ hint: lip could not reach the server. Check your network connection. If GitHub i
 
 ### What a GitHub proxy is
 
-A GitHub proxy is a web service that fetches from GitHub on your behalf. You give lip its address, and lip puts that address, and a `/`, in front of the whole address it asks GitHub for.
+A GitHub proxy is a web service that fetches content from GitHub on your behalf. When you give lip the proxy's URL, lip prepends that URL and a `/` to the full GitHub URL it is requesting.
 
 With `github_proxy` set to `https://proxy.example.com`, a request for
 
@@ -142,13 +142,13 @@ is sent to
 https://proxy.example.com/https://github.com/LiteLDev/lip.git/info/refs
 ```
 
-So the address you set is the address of the service itself, the one before which you would paste a GitHub link in a browser. An address that already ends with `/github.com` or `/https://github.com`, as older versions of lip needed, still works: lip leaves that ending out. lip 0.41.1 and earlier need that ending.
+Set this to the base URL of the proxy service itself—the part that goes in front of a GitHub link when you paste it into a browser. A URL ending in `/github.com` or `/https://github.com`, which older versions of lip required, still works because lip strips that suffix automatically. lip 0.41.1 and earlier require that suffix.
 
-Three things to know:
+Three things to keep in mind:
 
-- **Only GitHub goes through it.** Requests to `github.com`, and to any address ending with `.github.com` or `.githubusercontent.com` (such as `raw.githubusercontent.com`), use the proxy: repositories, files, and the updates of lip itself. Downloads from other sites, such as the game from minecraft.net, do not.
-- **lip falls back.** When a request through the proxy fails, lip sends it to GitHub directly.
-- **lip does not recommend a proxy.** A proxy sees everything you download through it and could change it. Use one that you or someone you trust runs.
+- **Only GitHub goes through it.** Requests to `github.com` and any domain ending in `.github.com` or `.githubusercontent.com` (such as `raw.githubusercontent.com`) use the proxy. This includes repositories, files, and updates to lip itself. Downloads from other sites, such as the game from minecraft.net, bypass the proxy.
+- **lip falls back.** If a request through the proxy fails, lip retries it directly against GitHub.
+- **lip does not recommend a proxy.** A proxy can see and modify everything you download through it. Use one operated by you or someone you trust.
 
 ### Set a proxy
 
@@ -156,11 +156,11 @@ Three things to know:
 lip config set github_proxy https://proxy.example.com
 ```
 
-Replace the address with that of your proxy. The setting applies to every command from then on.
+Replace the URL with your proxy's address. All subsequent commands will use this setting.
 
 ### Test a proxy
 
-lip checks that it can reach GitHub by asking for the list of versions of lip. You can ask for the same through your proxy. A proxy that works answers `200`:
+lip checks whether it can reach GitHub by fetching the list of lip versions. You can make the same request through your proxy to test it. A working proxy returns `200`:
 
 ::: code-group
 
@@ -174,9 +174,9 @@ curl -s -o /dev/null -w "%{http_code}\n" "https://proxy.example.com/https://gith
 
 :::
 
-The interface does this test for you: when you enter a proxy on the Settings page, it tests it before it saves it. See [Settings](../interface/settings.md).
+The interface runs this test automatically: when you enter a proxy on the Settings page, it tests the address before saving it. See [Settings](../interface/settings.md).
 
-A command that works does not prove that the proxy works, because lip falls back to GitHub. If installs are still slow with a proxy set, test the proxy.
+Because lip falls back to connecting to GitHub directly, a successful command does not prove that your proxy works. If installations are still slow after you set a proxy, test the proxy directly.
 
 ### Remove a proxy
 
@@ -186,7 +186,7 @@ To stop using the proxy and have the interface ask again when GitHub cannot be r
 lip config delete github_proxy
 ```
 
-To stop using it and tell lip that you connect directly, so that the interface does not ask, set it to an empty value:
+To stop using the proxy and tell lip that you connect directly, so that the interface does not ask, set it to an empty value:
 
 ::: code-group
 
@@ -200,14 +200,14 @@ lip config set github_proxy ""
 
 :::
 
-In PowerShell, `--%` is needed: without it, Windows PowerShell leaves the empty value out. In the interface, choose "Connect directly" for the GitHub proxy on the Settings page.
+PowerShell requires `--%`; without it, Windows PowerShell drops the empty value. In the interface, select "Connect directly" for the GitHub proxy on the Settings page.
 
 ### Your system's proxy
 
-`github_proxy` is not an ordinary HTTP proxy. If your network has one, lip uses it without a setting of its own:
+`github_proxy` is not a standard HTTP proxy. If your network uses an HTTP proxy, lip uses it automatically without its own setting:
 
-- lip follows the environment variables `HTTPS_PROXY`, `HTTP_PROXY`, `ALL_PROXY` and `NO_PROXY` (or the same names in lower case) of the terminal you run it in.
-- Without them, it uses the proxy that your system is set up with.
+- lip reads the `HTTPS_PROXY`, `HTTP_PROXY`, `ALL_PROXY`, and `NO_PROXY` environment variables (or their lowercase equivalents) from the terminal where you run it.
+- If those variables are not set, it uses your system proxy.
 
 ::: code-group
 
@@ -222,7 +222,7 @@ HTTPS_PROXY=http://proxy.example.com:8080 lip install LegacyScriptEngine#lua
 
 :::
 
-Replace the address with that of your proxy. Such a proxy applies to every download, not only to GitHub.
+Replace the address with your proxy's address. This proxy applies to all downloads, not just GitHub.
 
 ## Where the settings are kept
 
@@ -232,6 +232,6 @@ Replace the address with that of your proxy. Such a proxy applies to every downl
 | User, on Linux and macOS | `$XDG_CONFIG_HOME/lip/config.toml`, by default `~/.config/lip/config.toml` |
 | Workspace | `.lip/config.toml` in the server folder |
 
-Both are small text files that you may edit by hand. A file that is missing or cannot be read counts as having no settings. The format is in [Configuration files](../reference/configuration.md), and every file lip uses is listed in [Files and directories](../reference/files.md).
+Both are small text files that you can edit by hand. If a file is missing or unreadable, lip treats it as having no settings. See [Configuration files](../reference/configuration.md) for the file format, and [Files and directories](../reference/files.md) for a list of all files that lip uses.
 
-The workspace settings travel with the server folder when you move or copy it. The user settings do not.
+Workspace settings travel with the server folder when you move or copy it. User settings do not.

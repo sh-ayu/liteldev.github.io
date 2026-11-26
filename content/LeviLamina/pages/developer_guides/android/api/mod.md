@@ -1,16 +1,11 @@
 # Mod API
 
 !!! note "Android, not LeviLamina"
-    These pages document the `pl::` API of **native mods for Minecraft Bedrock Edition on Android**. Such mods are
-    loaded by the Android version of [LeviLauncher](https://levimc.org/LeviLauncher/) through the Preloader SDK
-    ([LiteLDev/preloader-android](https://github.com/LiteLDev/preloader-android)), not by LeviLamina. New to them?
-    Start with the tutorial [Your first Android native mod](https://levimc.org/tutorials/develop/first-android-mod/).
+    These pages document the `pl::` API for **native mods for Minecraft Bedrock Edition on Android**. The Android version of [LeviLauncher](https://levimc.org/LeviLauncher/) loads these mods through the Preloader SDK ([LiteLDev/preloader-android](https://github.com/LiteLDev/preloader-android)), not LeviLamina. If you are new to Android native mods, start with the [Your first Android native mod](https://levimc.org/tutorials/develop/first-android-mod/) tutorial.
 
 ## Purpose
 
-The Mod API is the lifecycle entry point for native mods. It uses
-`<pl/Mod.hpp>`, `ll::mod::NativeMod::current()`, and a long-lived C++
-instance registered with `PL_REGISTER_MOD`.
+The Mod API is the lifecycle entry point for native mods. It uses `<pl/Mod.hpp>`, `ll::mod::NativeMod::current()`, and a long-lived C++ instance registered with `PL_REGISTER_MOD`.
 
 ## Header
 
@@ -47,13 +42,9 @@ PL_REGISTER_MOD(MyMod, MyMod::instance())
 MyMod::MyMod() : mSelf(*ll::mod::NativeMod::current()) {}
 ```
 
-`load()` is required. `enable()`, `disable()`, and `unload()` are optional; the
-registration helper treats missing optional phases as success. Each phase may
-instead take a `ll::mod::ModContext &` (for example `bool load(ll::mod::ModContext &context)`),
-which gives the Java VM, the manifest `info()`, the `logger()` and the
-`dataDir()` / `configDir()` / `resourceDir()` of the mod.
+`load()` is required. `enable()`, `disable()`, and `unload()` are optional; the registration helper treats omitted optional phases as successful. Any phase may instead accept a `ll::mod::ModContext &` (for example, `bool load(ll::mod::ModContext &context)`), which provides access to the Java VM and the mod's manifest `info()`, `logger()`, and `dataDir()` / `configDir()` / `resourceDir()`.
 
-Use `PL_REGISTER_MOD` once in a source file for each native mod library.
+Call `PL_REGISTER_MOD` once in a source file for each native mod library.
 
 ## Lifecycle
 
@@ -68,8 +59,7 @@ Each method returns `true` on success and `false` on failure.
 
 ## NativeMod
 
-`ll::mod::NativeMod` exposes manifest metadata, package paths, the Java VM,
-state, and a mod-scoped logger.
+`ll::mod::NativeMod` exposes manifest metadata, package paths, the Java VM, lifecycle state, and a mod-scoped logger.
 
 ```cpp
 bool MyMod::load() {
@@ -102,11 +92,10 @@ Common members:
 | `getState()` | Current native mod lifecycle state. |
 | `isLoaded()` / `isEnabled()` / `isDisabled()` / `isUnloaded()` | Convenience state checks. |
 
-Runtime UI, floating buttons, and HUD overlay drawing are documented in
-[Mod Menu API](./mod_menu.md).
+Runtime UI, floating buttons, and HUD overlay drawing are documented in [Mod Menu API](./mod_menu.md).
 
 ## Notes
 
-- Keep the registered instance alive for the process lifetime.
-- Do not throw across lifecycle boundaries; catch failures and return `false`.
-- Store user-editable config under `getSelf().getConfigDir()`.
+- Keep the registered instance alive for the lifetime of the process.
+- Do not throw exceptions across lifecycle boundaries; catch failures and return `false`.
+- Store user-editable configuration files under `getSelf().getConfigDir()`.

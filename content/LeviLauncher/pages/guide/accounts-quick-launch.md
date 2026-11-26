@@ -4,18 +4,18 @@ platforms: [android]
 
 # Accounts & Quick Launch
 
-These features belong to the Android version of LeviLauncher.
+These features are available in the Android version of LeviLauncher.
 
 ## Xbox accounts
 
-LeviLauncher can manage several Xbox accounts inside the launcher. Select the account you want before launching Minecraft, so the game starts with the expected identity.
+LeviLauncher can manage multiple Xbox accounts inside the launcher. Select the account you want to use before launching Minecraft so the game starts with the right identity.
 
 ## Quick Launch
 
 Quick Launch uses Minecraft URI actions to jump directly into common flows. Depending on the action, you can:
 
 - open a game screen
-- connect to a server or add one
+- connect to or add a server
 - join a Realm
 - load a local world
 - run a command

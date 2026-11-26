@@ -4,14 +4,14 @@
 
 ## 概述
 
-Base 模块提供了 LeviLamina API 的基础构建块：导出宏、C++20 概念（concepts）、类型萃取（type traits）、整数类型、编译期定长字符串、容器别名和元编程工具。
+Base 模块提供 LeviLamina API 的底层构建块，包括导出宏、C++20 概念（concepts）、类型萃取（type traits）、整数类型、编译期定长字符串、容器别名和元编程工具。
 
 ## 头文件
 
 | 头文件 | 说明 |
 |--------|------|
 | `ll/api/base/Macro.h` | 导出宏（`LLAPI`、`LLNDAPI`、`LLCAPI`） |
-| `ll/api/base/Concepts.h` | C++20 概念，用于类型约束 |
+| `ll/api/base/Concepts.h` | 用于类型约束的 C++20 概念 |
 | `ll/api/base/TypeTraits.h` | 类型内省萃取 |
 | `ll/api/base/StdInt.h` | 标准整数类型别名 |
 | `ll/api/base/FixedString.h` | 编译期定长字符串 |
@@ -21,11 +21,11 @@ Base 模块提供了 LeviLamina API 的基础构建块：导出宏、C++20 概�
 | `ll/api/base/ToString.h` | 转字符串工具 |
 | `ll/api/base/CompilerPredefine.h` | 编译器检测及 `LL_SHARED_EXPORT`/`LL_SHARED_IMPORT` |
 | `ll/api/base/Alias.h` | 游戏头文件使用的存储辅助类型（`UntypedStorage`、`TypedStorage`） |
-| `ll/api/base/ScopedValue.h` | `ScopedValue<T>`：在作用域内替换变量的值，退出时恢复 |
+| `ll/api/base/ScopedValue.h` | `ScopedValue<T>`：在作用域内替换变量值，退出时恢复 |
 
 ## 导出宏
 
-定义在 `Macro.h` 中，这些宏控制 LeviLamina 和模组之间的符号可见性：
+`Macro.h` 中定义的这些宏用于控制 LeviLamina 与模组之间的符号可见性：
 
 | 宏 | 构建 LeviLamina 时的展开 | 模组使用时的展开 |
 |----|------------------|------------------|
@@ -33,10 +33,10 @@ Base 模块提供了 LeviLamina API 的基础构建块：导出宏、C++20 概�
 | `LLNDAPI` | `[[nodiscard]] LLAPI` | `[[nodiscard]] LLAPI` |
 | `LLCAPI` | `extern "C" LLAPI` | `extern "C" LLAPI` |
 
-切换由 `LL_EXPORT` 宏定义控制，在 `xmake.lua` 中通过 `add_defines("LL_EXPORT")` 设置。
+导出与导入的切换由 `LL_EXPORT` 宏控制，在 `xmake.lua` 中通过 `add_defines("LL_EXPORT")` 设置。
 
 !!! tip "为你的模组创建导出宏"
-    在你的模组中定义类似的宏对：
+    在模组中定义类似的宏对：
     ```cpp
     #ifdef MY_MOD_EXPORT
     #define MY_MOD_API __declspec(dllexport)
@@ -44,11 +44,11 @@ Base 模块提供了 LeviLamina API 的基础构建块：导出宏、C++20 概�
     #define MY_MOD_API __declspec(dllimport)
     #endif
     ```
-    然后在你的 `xmake.lua` 中添加 `add_defines("MY_MOD_EXPORT")`。
+    然后在 `xmake.lua` 中添加 `add_defines("MY_MOD_EXPORT")`。
 
 ## 概念（Concepts）
 
-定义在 `Concepts.h` 中，这些 C++20 概念在整个 API 中提供类型约束：
+`Concepts.h` 中定义的这些 C++20 概念为整个 API 提供类型约束：
 
 | 概念 | 说明 |
 |------|------|
@@ -58,9 +58,9 @@ Base 模块提供了 LeviLamina API 的基础构建块：导出宏、C++20 概�
 | `IsExpected<T>` | `T` 是类似 expected 的类型，具有 `value()`、`error()`、`has_value()` |
 | `IsLeviExpected<T>` | `IsExpected<T>` 且 `error_type == ll::Error` |
 | `IsOptional<T>` | `T` 是类似 optional 的类型（非 expected） |
-| `RangeLoopable<T>` | `T` 可以使用范围 for 循环迭代 |
+| `RangeLoopable<T>` | `T` 可用范围 for 循环迭代 |
 | `Associative<T>` | `T` 是具有 `key_type` 和 `mapped_type` 的范围 |
-| `ArrayLike<T>` | `T` 是没有 `mapped_type` 的范围 |
+| `ArrayLike<T>` | `T` 是不含 `mapped_type` 的范围 |
 | `Specializes<T, Z>` | `T` 是模板 `Z` 的特化 |
 | `TupleLike<T>` | `T` 支持 `std::tuple_size` 和 `std::get` |
 | `Stringable<T>` | `T` 具有 `toString()` 或 `to_string()` 方法 |
@@ -87,7 +87,7 @@ void iterateOver(T const& range) {
 
 ## FixedString
 
-定义在 `FixedString.h` 中，`FixedString` 是一种编译期字符串类型，主要用于模板参数（例如 i18n 的 `_tr` 字面量）。
+`FixedString` 定义于 `FixedString.h` 中，是一种编译期字符串类型，主要用作模板参数（例如 i18n 的 `_tr` 字面量）。
 
 ```cpp
 #include "ll/api/base/FixedString.h"

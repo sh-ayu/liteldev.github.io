@@ -4,7 +4,7 @@
 
 ## 概述
 
-Expected 模块提供了 LeviLamina 的错误处理原语：`Expected<T>`（基于 `nonstd::expected` 的值或错误类型）、`Error`（多态错误容器）以及用于创建和传播错误的辅助函数。
+Expected 模块提供 LeviLamina 的错误处理原语，包括 `Expected<T>`（基于 `nonstd::expected` 的值或错误类型）、`Error`（多态错误容器），以及用于创建和传播错误的辅助函数。
 
 ## 头文件
 
@@ -28,7 +28,7 @@ using Expected = nonstd::expected<T, ll::Error>;
 
 ### Error
 
-仅可移动的错误容器，包装多态 `ErrorInfoBase`。
+仅支持移动的错误容器，包装了多态的 `ErrorInfoBase`。
 
 ```cpp
 namespace ll {
@@ -57,7 +57,7 @@ public:
 
 ### ErrorInfoBase
 
-错误详情的抽象基类。子类化并重写 `message(std::string_view locale)` 以创建自定义错误类型。
+错误详情的抽象基类。派生子类并重写 `message(std::string_view locale)` 即可创建自定义错误类型。
 
 ```cpp
 namespace ll {

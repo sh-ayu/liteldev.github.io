@@ -1,17 +1,17 @@
 # VanillaI18n API
 
-This API is used to modify Minecraft vanilla language data.
+This API modifies Minecraft's vanilla language data.
 
 !!! warning
     This API is only available in 0.19.1 and later.
 
-The actual registered class name in the script engine is `VaillanI18n`.
+The class name registered in the script engine is `VaillanI18n`.
 
 ## Get current language
 
 `VaillanI18n.getCurrentLanguage()`
 
-- Return value: current language code
+- Return value: Current language code.
 - Return value type: `String`
 
 ## Set current language
@@ -20,15 +20,15 @@ The actual registered class name in the script engine is `VaillanI18n`.
 
 - Parameters:
   - language: `String`
-    Language code, such as `en_US` or `zh_CN`
-- Return value: success or not
+    Language code, such as `en_US` or `zh_CN`.
+- Return value: Whether the operation succeeded.
 - Return value type: `Boolean`
 
 ## Get supported languages
 
 `VaillanI18n.getSupportedLanguages()`
 
-- Return value: supported language code list
+- Return value: List of supported language codes.
 - Return value type: `Array<String>`
 
 ## Translate vanilla text
@@ -37,12 +37,12 @@ The actual registered class name in the script engine is `VaillanI18n`.
 
 - Parameters:
   - key: `String`
-    Translation key
+    Translation key.
   - params: `Array<String>` (Optional)
-    Translation parameters
+    Translation parameters.
   - language: `String` (Optional)
-    Target language. If not provided, the current language is used
-- Return value: translated text
+    Target language. Defaults to the current language if omitted.
+- Return value: Translated text.
 - Return value type: `String`
 
 ## Load language data from object
@@ -51,10 +51,10 @@ The actual registered class name in the script engine is `VaillanI18n`.
 
 - Parameters:
   - language: `String`
-    Language code
+    Language code.
   - data: `Object`
-    Translation data. Each key and value must be `String`
-- Return value: success or not
+    Translation data. Every key and value must be a `String`.
+- Return value: Whether the operation succeeded.
 - Return value type: `Boolean`
 
 ## Load language data from file
@@ -63,10 +63,10 @@ The actual registered class name in the script engine is `VaillanI18n`.
 
 - Parameters:
   - language: `String`
-    Language code
+    Language code.
   - path: `String`
-    Language file path
-- Return value: success or not
+    Path to the language file.
+- Return value: Whether the operation succeeded.
 - Return value type: `Boolean`
 
 ## Load language data from directory
@@ -75,9 +75,9 @@ The actual registered class name in the script engine is `VaillanI18n`.
 
 - Parameters:
   - path: `String`
-    Directory path
-- Return value: success or not
+    Directory path.
+- Return value: Whether the operation succeeded.
 - Return value type: `Boolean`
 
 This function loads all `.lang` files in the directory.  
-The file name without the `.lang` extension is used as the language code.
+Each file name (without the `.lang` extension) is used as the language code.

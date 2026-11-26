@@ -1,10 +1,6 @@
 # Bedrock differences
 
-bedboo behaves like mineflayer. The only deviations are inherent Java/Bedrock differences: things the Bedrock
-protocol, data or game rules make impossible or different. Each of them is documented in the topic pages of this
-section, entry by entry (what mineflayer does on Java, what Bedrock does instead, what bedboo does). Facts were
-observed on BDS 1.26.51.1 (protocol 2193), the default version; what differs on the other supported versions is on
-their [version pages](../versions/index.md).
+bedboo behaves like mineflayer. The only deviations stem from inherent differences between Java and Bedrock: things the Bedrock protocol, data, or game rules make impossible or handle differently. The topic pages in this section document each difference entry by entry—what mineflayer does on Java, what Bedrock does instead, and what bedboo does. These facts were observed on BDS 1.26.51.1 (protocol 2193), the default version; differences on other supported versions are covered on their [version pages](../versions/index.md).
 
 | page | covers |
 |---|---|
@@ -32,13 +28,13 @@ What a bot author may notice. Everything not listed behaves like mineflayer on J
 - No `connect` before login: it fires when the login packet is sent ([client](connection.md#client)); `kicked`
   reasons are Bedrock disconnect messages or reason codes ([kick reason](connection.md#kick-reason)).
 - `bot.game.serverBrand` is `'vanilla'` ([server brand](connection.md#server-brand)); `bot.game.maxPlayers` is
-  undefined ([max players](connection.md#max-players)); of `bot.settings` only the view distance reaches the server
+  undefined ([max players](connection.md#max-players)); of `bot.settings`, only the view distance reaches the server
   ([settings](connection.md#settings)).
 
 **Names, ids and data**
-- `bot.registry` is the Bedrock registry of the bot's version: Bedrock block, item, entity, effect, biome and
+- `bot.registry` is the Bedrock registry for the bot's version: Bedrock block, item, entity, effect, biome and
   enchantment names and ids (`grass_block`, `oak_log`, `villager_v2`, …) ([registry](data.md#registry)). Recipes come from the server
-  ([recipes](crafting.md#recipes)); item tags from pmmp/BedrockData ([item tags](data.md#item-tags)).
+  ([recipes](crafting.md#recipes)); item tags come from pmmp/BedrockData ([item tags](data.md#item-tags)).
 - `block.stateId` is the index into `registry.blockStates`, not the network runtime id (a hash on Bedrock)
   ([state ids](data.md#state-ids)).
 - Entities: `entity.id` is the runtime id as a number, `entity.uniqueId` / `entity.runtimeId` are BigInts
@@ -56,7 +52,7 @@ What a bot author may notice. Everything not listed behaves like mineflayer on J
 **Chat, commands, HUD**
 - `bot.chat('/…')` sends a command request; its output arrives as `message` events, one per line
   ([commands](chat.md#commands)). A player cannot `/op` itself on BDS ([op](chat.md#op-command)).
-- `bot.tabComplete` completes from the server's command list, client side ([tab complete](chat.md#tab-complete)).
+- `bot.tabComplete` completes from the server's command list on the client side ([tab complete](chat.md#tab-complete)).
 - No teams (`bot.teams` stays `{}`) and no tab-list header/footer ([no teams](chat.md#no-teams),
   [no header](chat.md#no-tablist-header)); boss bars only exist for bosses ([boss bars](chat.md#boss-bars)).
 
@@ -71,13 +67,13 @@ What a bot author may notice. Everything not listed behaves like mineflayer on J
 **Entities and combat**
 - `entityHurt(entity)` has no source entity ([hurt and death](entities.md#hurt-death),
   [hurt source](entities.md#hurt-source)); `entityHandSwap` never fires ([hand swap](entities.md#hand-swap)).
-- `bot.attack()` does not turn the bot (like upstream); Bedrock has no attack cooldown, a hurt mob is invulnerable for
+- `bot.attack()` does not turn the bot (like upstream); Bedrock has no attack cooldown, and a hurt mob is invulnerable for
   10 ticks ([combat](entities.md#combat)).
 
 **Inventory and windows**
 - The inventory is server-authoritative: `clickWindow` and everything built on it (`equip`, `transfer`, `craft`, …)
   are item stack requests, with the same results and errors as on Java ([click window](inventory.md#click-window)).
-- `bot.creative.setInventorySlot` can create only items of the server's creative catalogue, no arbitrary NBT
+- `bot.creative.setInventorySlot` can only create items from the server's creative catalogue, with no arbitrary NBT
   ([creative](inventory.md#creative)). The off-hand takes only off-hand items ([off-hand](inventory.md#offhand)).
 - Using a shield is sneaking (`activateItem` raises it) ([item use](inventory.md#item-use)); windows are reported
   with Java window types ([window types](inventory.md#window-types)).
@@ -90,11 +86,5 @@ What a bot author may notice. Everything not listed behaves like mineflayer on J
   interactive block sneaks ([sneak placing](digging.md#sneak-placing)).
 
 **Stations and survival**
-- Furnaces, enchanting tables, anvils and villagers work through Bedrock requests with mineflayer's window API
-  ([furnace](crafting.md#furnace), [enchanting](crafting.md#enchanting), [anvil](crafting.md#anvil),
-  [trading](crafting.md#trading)); fishing, books, beds and riding as upstream with Bedrock packets
-  ([fishing](survival.md#fishing), [books](survival.md#books), [beds](survival.md#beds),
-  [riding](movement.md#riding-control)).
-- Respawn, dimension changes and the End credits follow Bedrock's handshakes with mineflayer's events
-  ([respawn](survival.md#respawn), [dimension change](survival.md#dimension-change)); creative players cannot die
-  ([creative death](survival.md#creative-death)).
+- Furnaces, enchanting tables, anvils, and villagers use Bedrock requests through mineflayer's window API ([furnace](crafting.md#furnace), [enchanting](crafting.md#enchanting), [anvil](crafting.md#anvil), [trading](crafting.md#trading)). Fishing, books, beds, and riding work as upstream using Bedrock packets ([fishing](survival.md#fishing), [books](survival.md#books), [beds](survival.md#beds), [riding](movement.md#riding-control)).
+- Respawning, dimension changes, and the End credits follow Bedrock's handshakes using mineflayer's events ([respawn](survival.md#respawn), [dimension change](survival.md#dimension-change)). Players in Creative mode cannot die ([creative death](survival.md#creative-death)).

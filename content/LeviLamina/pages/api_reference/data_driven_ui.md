@@ -6,13 +6,13 @@
 
 The `ll::ui` module is LeviLamina's typed C++ interface to Minecraft Bedrock's data-driven UI (DDUI) framework. DDUI keeps form data in a synchronized data store, so text, visibility, disabled states, ranges, and input values can change while a screen remains open.
 
-The high-level API provides `CustomForm` and `MessageBox` without exposing a layout document or property path. `ScreenSession`, `Property`, and `Binding<T>` remain available for custom resource-pack screens that need direct access to the underlying DDUI data store.
+The high-level API provides `CustomForm` and `MessageBox` without exposing layout documents or property paths. `ScreenSession`, `Property`, and `Binding<T>` remain available for custom resource-pack screens that need direct access to the underlying DDUI data store.
 
 This API follows the stable feature set introduced by [`@minecraft/server-ui` 2.1.0](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-ui/changelog?view=minecraft-bedrock-stable). Microsoft describes the reactive model in [Introduction to the Data-Driven UI framework](https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/intro-to-ddui?view=minecraft-bedrock-stable). The exact compatibility baseline is Mojang's [`@minecraft/server-ui` 2.1.0 binding metadata](https://github.com/Mojang/bedrock-samples/blob/main/metadata/script_modules/%40minecraft/server-ui-bindings_2.1.0.json).
 
 !!! note "Stable scope"
 
-    Later preview additions are not implied by this API. In particular, `CustomForm::image()` and related image options are not part of the current C++ surface, even if a Microsoft Learn stable-view page displays them with a pre-release warning.
+    This API does not include later preview additions. In particular, `CustomForm::image()` and related image options are not part of the current C++ surface, even if a Microsoft Learn stable-view page displays them with a pre-release warning.
 
 ## Headers
 
@@ -41,11 +41,11 @@ Prefer the high-level form classes for the vanilla custom-form and message-box p
 
 ## Thread and lifetime rules
 
-Form, session, property, binding, and subscription operations must run on the server thread. This includes destroying the final handle that owns a live session. A task returned by `showAsync()` must therefore be awaited or launched on the server thread.
+Form, session, property, binding, and subscription operations must run on the server thread, including destroying the final handle that owns a live session. You must therefore await or launch a task returned by `showAsync()` on the server thread.
 
-The UI observable classes are copied into forms by value, but their `ll::data::Observable<T>` base shares state between copies. Keeping an external copy is the intended way to read or update a form value. While an observable is bound to a visible form, call `setData()` on the server thread because the update writes to the player's DDUI data store.
+Forms copy UI observable classes by value, but their `ll::data::Observable<T>` base shares state across copies. Keep an external copy to read or update a form value. While an observable is bound to a visible form, call `setData()` on the server thread because the update writes to the player's DDUI data store.
 
-`CustomForm` and `MessageBox` are move-only. After a successful `show()`, the internal runtime keeps itself alive until Bedrock completes the screen, so the wrapper does not have to remain in the calling stack frame. Retain the wrapper if later code needs to call its targeted `close()` method.
+`CustomForm` and `MessageBox` are move-only. After a successful `show()` call, the internal runtime keeps itself alive until Bedrock completes the screen, so the wrapper does not need to stay in the calling stack frame. Retain the wrapper only if later code needs to call its targeted `close()` method.
 
 ## Text values
 
@@ -64,7 +64,7 @@ A `std::string` or `UIRawMessage` is static. `ObservableString` and `ObservableU
 
 ### UIRawMessage
 
-`UIRawMessage` is a typed representation of the stable `text`, `translate`, `with`, and `rawtext` fields described by Microsoft's [UIRawMessage reference](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-ui/uirawmessage?view=minecraft-bedrock-stable).
+`UIRawMessage` is a typed representation of the stable `text`, `translate`, `with`, and `rawtext` fields described in Microsoft's [UIRawMessage reference](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-ui/uirawmessage?view=minecraft-bedrock-stable).
 
 ```cpp
 class UIRawMessage {
@@ -100,7 +100,7 @@ auto combined = UIRawMessage::rawText({
 });
 ```
 
-Translation happens on the client using the player's language. The high-level API does not accept or expose JSON for text values.
+The client translates text using the player's language. The high-level API does not accept or expose JSON for text values.
 
 ## UI observables
 
@@ -135,7 +135,7 @@ These correspond to Microsoft's stable [ObservableBoolean](https://learn.microso
 
 The value observable passed to `dropdown()`, `slider()`, `textField()`, or `toggle()` must be client-writable. Passing a read-only observable to one of these input controls throws `std::invalid_argument` while the form is being built.
 
-Use read-only observables for labels, descriptions, visibility, disabled states, slider bounds, and other values controlled exclusively by the server. Granting client write access to such values unnecessarily expands the data the client is allowed to submit.
+Use read-only observables for labels, descriptions, visibility, disabled states, slider bounds, and other values controlled exclusively by the server. Making these values client-writable unnecessarily expands the data the client is allowed to submit.
 
 ```cpp
 ll::ui::ObservableString status{"Waiting"};
@@ -146,11 +146,11 @@ auto const id = name.subscribe([status](std::string const& value) mutable {
 });
 ```
 
-Calling `setData()` on either a read-only or client-writable observable updates every bound UI location. Client-originated writes are accepted only for paths explicitly marked writable, with type, finite-number, and replay validation performed by the low-level binding layer.
+Calling `setData()` on either a read-only or client-writable observable updates every bound UI location. The server accepts client-originated writes only for paths explicitly marked writable, after the low-level binding layer validates the type, finite-number status, and replay state.
 
 ## CustomForm
 
-Microsoft's corresponding type is documented as [CustomForm](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-ui/customform?view=minecraft-bedrock-stable).
+This type corresponds to Microsoft's [CustomForm](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-ui/customform?view=minecraft-bedrock-stable).
 
 ```cpp
 class CustomForm {
@@ -191,7 +191,7 @@ public:
 };
 ```
 
-All component methods return `*this`, so construction supports chaining. The component order is the call order.
+All component methods return `*this` for method chaining, and components appear in the order you add them.
 
 ### Components
 
@@ -208,13 +208,13 @@ All component methods return `*this`, so construction supports chaining. The com
 | `textField(label, text, options)` | Adds a text input | Client-writable `ObservableString` |
 | `toggle(label, toggled, options)` | Adds an on/off input | Client-writable `ObservableBoolean` |
 
-`NumberValue` is `double` or `ObservableNumber`. It is used for slider bounds and step values, allowing the server to change them while the form is open. All numbers written through the high-level form and binding layers must be finite.
+`NumberValue` is `double` or `ObservableNumber`. It specifies slider bounds and step values, allowing the server to change them while the form is open. All numbers written through the high-level form and binding layers must be finite.
 
-Each `DropdownItemData` has a `label`, numeric `value`, and optional `description`. The dropdown's observable is bound to the control's numeric value; use values that match the item values expected by the resource-pack control.
+Each `DropdownItemData` has a `label`, a numeric `value`, and an optional `description`. The dropdown's observable binds to the control's numeric value; use values that match the item values expected by the resource-pack control.
 
 ### Options
 
-Every option member is optional. Omitted values use the defaults shown below. A `TextValue`, `BooleanValue`, or `NumberValue` member can itself be observable, making that option reactive.
+Every option member is optional; omitted values use the defaults shown below. A `TextValue`, `BooleanValue`, or `NumberValue` member can itself be an observable, making that option reactive.
 
 ```cpp
 using BooleanValue = std::variant<bool, ObservableBoolean>;
@@ -242,19 +242,19 @@ struct DropdownItemData {
 
 ### Show and close behavior
 
-`show(callback)` is the direct callback path. Its `Expected<>` reports whether the form was prepared and successfully handed to Bedrock. It does not contain the eventual close reason. The callback receives the final `Expected<ScreenCloseReason>`.
+`show(callback)` is the direct callback path. Its `Expected<>` reports whether the form was prepared and handed to Bedrock, not why the form eventually closed. The callback receives the final `Expected<ScreenCloseReason>`.
 
-`showAsync()` returns a coroutine task whose value is the same final result. No callback-style `show()` overload starts a coroutine internally.
+`showAsync()` returns a coroutine task that resolves to the same final result. None of the callback-based `show()` overloads start a coroutine internally.
 
 A form can be shown only once. Calling any structural method after the first `show()` or `showAsync()` call throws `std::logic_error`, even if preparation or startup later fails. Calling `show()` again returns an error.
 
-`close()` targets this form. It returns an error if the form has not reached the showing state. Once a close has been requested or the form is already closed, another `close()` succeeds without sending another request. `isShowing()` remains true while a close request is waiting for Bedrock's completion notification.
+`close()` closes this specific form and returns an error if the form has not yet reached the showing state. If a close has already been requested or the form is already closed, calling `close()` again succeeds without sending another request. `isShowing()` remains true while a close request awaits Bedrock's completion notification.
 
-When the form completes, all internal Observable bridges, client-write permissions, native subscriptions, and the owned data-store property are released.
+When the form completes, it releases all internal Observable bridges, client-write permissions, native subscriptions, and its owned data-store property.
 
 ## MessageBox
 
-Microsoft's corresponding type is documented as [MessageBox](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-ui/messagebox?view=minecraft-bedrock-stable), with its result described by [MessageBoxResult](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-ui/messageboxresult?view=minecraft-bedrock-stable).
+Microsoft's corresponding type is documented under [MessageBox](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-ui/messagebox?view=minecraft-bedrock-stable), and its result under [MessageBoxResult](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server-ui/messageboxresult?view=minecraft-bedrock-stable).
 
 ```cpp
 struct MessageBoxResult {
@@ -295,7 +295,7 @@ The callback, coroutine, single-show, structural-lock, `close()`, and cleanup ru
 
 ## Screen results
 
-`ScreenCloseReason` is an alias of Bedrock's existing `DataDrivenScreenClosedReason`; LeviLamina does not define a second close-reason enum.
+`ScreenCloseReason` is an alias for Bedrock's `DataDrivenScreenClosedReason`; LeviLamina does not define a separate close-reason enum.
 
 | Enumerator | Value | Meaning |
 |------------|-------|---------|
@@ -305,7 +305,7 @@ The callback, coroutine, single-show, structural-lock, `close()`, and cleanup ru
 | `UserBusy` | `3` | The player was busy with another UI |
 | `InvalidForm` | `4` | Bedrock rejected the screen data or layout |
 
-Player departure and server shutdown complete the C++ result with an `ll::Error`, rather than manufacturing another close reason.
+If the player leaves or the server shuts down, the C++ result completes with an `ll::Error` rather than a synthetic close reason.
 
 ## Closing every DDUI screen
 
@@ -315,13 +315,13 @@ Player departure and server shutdown complete the C++ result with an `ll::Error`
 ll::ui::closeScreen(player);
 ```
 
-`closeScreen(Player&)` asks the client to close all DDUI screens for that player. It is the C++ counterpart of the stable Script API manager's close-all operation. It returns `void` because it sends a global close request and has no individual session result to report. Active sessions complete separately with `ScreenCloseReason::ProgrammaticCloseAll`.
+`closeScreen(Player&)` asks the client to close all DDUI screens for that player. It is the C++ counterpart to the close-all operation in the stable Script API manager. Because it sends a global close request rather than targeting a specific session, it returns `void`. Active sessions then complete individually with `ScreenCloseReason::ProgrammaticCloseAll`.
 
-Use `CustomForm::close()`, `MessageBox::close()`, or `ScreenSession::close()` when only one known screen should close.
+To close a single known screen, use `CustomForm::close()`, `MessageBox::close()`, or `ScreenSession::close()`.
 
 ## Low-level ScreenSession
 
-`ScreenSession` is intended for a custom DDUI screen supplied by a resource pack. The high-level forms already manage their own session and data property, so normal form code does not need this class.
+`ScreenSession` is for custom DDUI screens supplied by a resource pack. Because high-level forms manage their own session and data property, standard form code does not need this class.
 
 ```cpp
 enum class ScreenSessionState : std::uint8_t {
@@ -364,11 +364,11 @@ public:
 };
 ```
 
-The default two-argument constructor generates an instance ID. Supply an explicit ID when a custom screen contract requires one, or `NoInstanceId` when it requires no instance ID. The Bedrock form ID is assigned only after showing begins.
+The default two-argument constructor generates an instance ID. Pass an explicit ID if your custom screen contract requires one, or `NoInstanceId` if it requires none. Bedrock assigns the form ID only after the screen begins showing.
 
-`createProperty()` creates or replaces session-owned data. Owned data is cleared when the session closes. `borrowProperty()` attaches a non-owning handle to an existing player data-store property and does not clear that property during session cleanup.
+`createProperty()` creates or replaces session-owned data, which is cleared when the session closes. `borrowProperty()` attaches a non-owning handle to an existing player data-store property and leaves it intact during session cleanup.
 
-Prefer the `cereal::DynamicValue` overload for structured C++ construction. The string overload exists for low-level compatibility; high-level form APIs neither use nor expose JSON.
+Prefer the `cereal::DynamicValue` overload for structured C++ construction. The string overload is provided for low-level compatibility; high-level form APIs neither use nor expose JSON.
 
 ```cpp
 auto data = cereal::DynamicValue::object({
@@ -385,7 +385,7 @@ if (!property) {
 }
 ```
 
-Like a high-level form, a session can be shown only once. Copies of `ScreenSession` share one implementation and one lifecycle.
+Like a high-level form, a session can be shown only once. Copies of a `ScreenSession` share the same underlying implementation and lifecycle.
 
 ## Property and Binding
 
@@ -444,9 +444,9 @@ public:
 
 A binding path uses Bedrock DDUI path syntax and is interpreted relative to its property. Binding the same path with a different C++ type returns an error. Number bindings and every number nested in a `DynamicValue` reject NaN and infinity.
 
-`bindClientWritable<T>()` is shorthand for `bind<T>()` followed by `setClientWritable(true)`. Only grant this permission to paths the client must edit. Incoming updates are checked against the binding type and version; invalid or replayed writes do not reach listeners, and the last valid value is restored when possible.
+`bindClientWritable<T>()` is shorthand for `bind<T>()` followed by `setClientWritable(true)`. Grant this permission only to paths that the client must edit. Incoming updates are checked against the binding type and version; invalid or replayed writes do not reach listeners, and the last valid value is restored when possible.
 
-`listen()` returns a move-only RAII `Subscription`. Keep it alive for as long as notifications are needed. Destroying it or calling `reset()` cancels that listener. This differs deliberately from `ll::data::Observable<T>::SubscriptionId`, whose lifetime has no cancellation effect.
+`listen()` returns a move-only RAII `Subscription`. Keep it alive for as long as you need notifications; destroying it or calling `reset()` cancels the listener. By design, this differs from `ll::data::Observable<T>::SubscriptionId`, whose lifetime does not affect cancellation.
 
 ```cpp
 auto binding = property->bindClientWritable<double>("count");
@@ -464,24 +464,24 @@ if (!subscription) {
 auto write = binding->set(42.0);
 ```
 
-`Property` and `Binding<T>` are non-owning handles. They become unavailable when their `ScreenSession` expires. `Subscription` also becomes inactive when its session closes.
+`Property` and `Binding<T>` are non-owning handles that become unavailable when their `ScreenSession` expires. A `Subscription` also becomes inactive when its session closes.
 
 ## Error model
 
 Operations that interact with Bedrock return `Expected<T>` or `Expected<>`. Check the result before using its value; errors include invalid handles, expired players, wrong binding types, invalid paths, unavailable DDUI services, invalid lifecycle transitions, and rejected screen data.
 
-Form construction has two programmer-error exceptions:
+Form construction throws two exceptions for programmer errors:
 
 | Condition | Exception |
 |-----------|-----------|
 | Modifying a `CustomForm` or `MessageBox` after showing has started | `std::logic_error` |
 | Passing a read-only Observable to an input control, or a non-finite high-level number | `std::invalid_argument` |
 
-Generic Observable callback exceptions propagate as documented under [Data](data.md#observable). DDUI completion callbacks and low-level binding listeners are engine callback boundaries: exceptions escaping them are caught and logged by LeviLamina.
+Exceptions thrown by generic Observable callbacks propagate as documented under [Data](data.md#observable). DDUI completion callbacks and low-level binding listeners act as engine callback boundaries: LeviLamina catches and logs any exceptions that escape them.
 
 ## Differences from the Script API
 
-The C++ API preserves the stable DDUI behavior but is not a source-level translation of TypeScript:
+The C++ API preserves the stable DDUI behavior, though it is not a direct source-level translation of TypeScript:
 
 | Microsoft Script API | LeviLamina C++ API |
 |----------------------|--------------------|

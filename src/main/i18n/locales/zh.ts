@@ -39,7 +39,7 @@ const zh: typeof en = {
     installLauncher: "安装 LeviLauncher",
     playTutorial: "教程：玩模组",
     browseMods: "浏览模组",
-    hostDesc: "带 LeviLamina、模组和插件的基岩版专用服务器，由 lip 安装和运行。",
+    hostDesc: "带 LeviLamina、模组和插件的基岩版专用服务器，由 lip 安装并运行。",
     hostPlatforms: "Windows · Linux · macOS",
     installLip: "安装 lip",
     hostTutorial: "教程：开你的第一个服务器",
@@ -55,7 +55,7 @@ const zh: typeof en = {
       { title: "账户", desc: "游戏前切换 Xbox 账户。" },
     ],
     lipFeatures: [
-      { title: "游戏与加载器", desc: "选一个游戏版本，lip 装好基岩版专用服务器和 LeviLamina。" },
+      { title: "游戏与加载器", desc: "选一个游戏版本，lip 便会装好基岩版专用服务器和 LeviLamina。" },
       { title: "模组与插件", desc: "安装、更新、卸载，依赖一并处理。" },
       { title: "启动服务器", desc: "在 Windows、Linux 或 macOS 上用 lip 启动服务器。" },
       { title: "交互界面", desc: "直接运行 lip，界面带你一步步完成。" },
@@ -70,10 +70,10 @@ const zh: typeof en = {
       "LeviMC(原LiteLDev)起始于2021年1月27日，最初的目的是开发一款替代BedrockX的基岩版专用服务器（Bedrock Dedicated Server）插件加载器，也就是LiteLoaderBDS，起初只有三人。\n\n后来LiteXLoader开发团队的成员也加入了LeviMC，随着时间的推移，团队逐渐壮大。\n\n在2021年12月9日，LiteLoaderBDS迭代到了v2.0版本，将LiteXLoader并入了LiteLoaderBDS，开始从BedrockX的技术路线上开始发展创新，首次引入了延迟加载机制实现了无需在头文件中调用符号查找函数实现函数的调用，以及完成了自研的头文件生成系统。\n\n后来由于LiteLoaderBDS的代码库中的历史遗留问题，LeviMC决定从头开始开发一款全新的模组加载器，2023年12月1日，LeviLamina发布了，吸取了LiteLoaderBDS过于耦合的经验教训，采用了模块化的设计理念，极大的提升了加载器的可维护性和扩展性，并且进一步优化了头文件生成，进一步优化了钩子（Hook），引入了诸多新特性。",
     question1Title: "LeviLamina来自哪里？",
     question1Body:
-      "LeviLamina从基岩版专用服务器的深处出现，从LiteLoaderBDS项目的种子中发芽。\n\nMinecraft 基岩版的最初版本缺乏Minecraft Java版中存在的广泛的模组和服务器插件生态系统，从而限制了其游戏可能性。一群精通基岩版专用服务器的C++爱好者，进行了分析，并利用逆向工程技术和钩子注入机制，干预了游戏服务器的运行，从而开创了第一套服务器模组的开发。\n\n然而，这种开发范式遇到了一些挑战。首先，缺乏底层框架的支持，使得模组开发过程中需要依赖各种低级工具来进行符号分析、注入实现、钩子注册等功能。这导致了不同模组之间的代码冗余和重复，以及潜在的冲突。其次，缺乏明确的类型定义，迫使开发者在创建模组时进行逆向工程分析，导致了开发门槛的提高和效率的降低。\n\n为了应对这些困境，前期项目LiteLoaderBDS的维护者，构建了一个基于注入的模组加载引擎和一个模组开发框架。此外，他们还提供了类型信息，使模组开发者无需深入了解底层原理就能创建模组。这大大降低了模组开发的入门难度，促进了模组生态系统的繁荣。\n\n然而，随着LiteLoaderBDS的进展，一些问题也暴露出来。早期的设计没有考虑到未来的发展，使得许多方面过时和难以使用现代化的工具，从而无法满足最新的性能要求。此外，它的紧耦合设计在适应新版本的基岩版专用服务器时也需要付出巨大的努力。因此，LeviMC决定从头开始，利用现有的专业知识，进行全面的框架重设计，培育一个对维护者、开发者和用户都友好的模组引擎。",
+      "LeviLamina诞生于基岩版专用服务器的深处，由LiteLoaderBDS项目的种子萌发而来。\n\nMinecraft 基岩版最初缺乏Minecraft Java版那样丰富的模组与服务器插件生态，玩法潜力受限。一群精通基岩版专用服务器的C++爱好者对其展开分析，利用逆向工程技术和钩子注入机制介入游戏服务器的运行，开创了首批服务器模组的开发。\n\n然而，这种开发方式面临不少挑战。首先，由于缺乏底层框架支持，开发模组时不得不依赖各类底层工具来完成符号分析、注入实现、钩子注册等工作，导致不同模组之间代码冗余重复，且容易发生冲突。其次，缺乏明确的类型定义，迫使开发者在编写模组时自行逆向分析，抬高了开发门槛，也拉低了效率。\n\n为解决这些困境，前身项目LiteLoaderBDS的维护者构建了基于注入的模组加载引擎与模组开发框架，并提供类型信息，使开发者无需深究底层原理即可编写模组。这大大降低了入门门槛，推动了模组生态的繁荣。\n\n然而，随着LiteLoaderBDS的演进，一些问题逐渐显现。早期设计未能充分考虑长远发展，许多部分日渐陈旧，难以配合现代工具使用，也无法满足新的性能要求；其紧耦合的设计更让适配新版本基岩版专用服务器耗费大量精力。为此，LeviMC决定重起炉灶，结合既有经验全面重新设计框架，打造一款对维护者、开发者和用户都友好的模组引擎。",
     question2Title: "为什么LiteLoaderBDS更名为LeviLamina？",
     question2Body:
-      "哦，这真是一个故事！您看，LiteLoaderBDS一开始只是一个小笑话，一个有趣的实验。但你瞧，它的生长速度比服用类固醇的苦力怕还要快！\n\n起初，我们注意到LiteLoaderBDS这个名字听起来与Minecraft Java版的模组加载器LiteLoader惊人地相似。因此，我们灵机一动，在其上加上了“BDS”后缀，以凸显自己的特色。聪明吧？\n\n但随着LiteLoaderBDS2.0的扩展，它开始像自助餐上的小猪一样膨胀起来。它的性能急剧下降，让我们摸不着头脑。\n\n就在那时，我们做出了一个大胆的决定，从头开始重建整个项目。随着我们更深入地研究改造过程，很明显，一个新的开始值得一个全新的绰号。因此，我们涉足了拉丁语根源的古老艺术，保留了人们喜爱的缩写“ll”，瞧！LeviLamina诞生了，这个名字与我们宏伟的创造相称。",
+      "这可真有故事可讲！起初，LiteLoaderBDS不过是个玩笑般的小尝试、一次有趣的实验。可谁能想到，它的成长速度比打了兴奋剂的苦力怕还要快！\n\n一开始，我们发现LiteLoaderBDS这个名字和Minecraft Java版的模组加载器LiteLoader出奇地像。于是我们灵机一动，在后面加上了“BDS”后缀，好突出自己的特色。聪明吧？\n\n但随着LiteLoaderBDS2.0不断扩充，它像自助餐厅里的小猪一样越发臃肿，性能急剧下滑，让我们一筹莫展。\n\n就在这时，我们做出了一个大胆的决定：从头重构整个项目。随着改造不断深入，我们越来越觉得，全新的开始应当配上一个全新的名字。于是我们翻开古老的拉丁语词源，保留了大家喜爱的缩写“ll”——瞧！LeviLamina就此诞生，这个名字终于配得上我们这件宏伟的作品。",
     valueOneTitle: "开发者优先",
     teamTitle: "团队成员",
     teamSubtitle: "认识我们的团队成员。",
@@ -124,13 +124,13 @@ const zh: typeof en = {
       "LeviLauncher 在电脑和手机上都能玩；LeviLamina 在 Windows 服务器和客户端上运行模组。",
     oneCommand: "一条命令安装",
     oneCommandDesc:
-      "lip 连同依赖一起安装模组，LeviMC Mods 收录每个模组及其安装命令。",
+      "lip 会连同依赖一起安装模组，LeviMC Mods 则收录了每个模组及其安装命令。",
     multiLang: "你熟悉的语言",
     multiLangDesc:
       "用现代 C++ 编写原生模组，或通过 LegacyScriptEngine 用 JavaScript、Node.js、Lua、Python 编写插件。",
     openSource: "开源",
     openSourceDesc:
-      "在 GitHub 上开放开发，Discord、Telegram 和 QQ 群里有活跃的社区随时帮忙。",
+      "在 GitHub 上开源开发，Discord、Telegram 和 QQ 群里也有活跃的社区随时提供帮助。",
   },
 
   // Community section
@@ -138,7 +138,7 @@ const zh: typeof en = {
     title1: "加入",
     title2: "社区。",
     description:
-      "与构建基岩版模组未来的开发者们交流。获取帮助、分享你的模组、为生态做贡献。",
+      "与构筑基岩版模组未来的开发者交流。获取帮助、分享模组、共建生态。",
     joinDiscord: "加入 Discord",
     coreProjects: "核心项目",
     // Community page
@@ -147,12 +147,12 @@ const zh: typeof en = {
     discordTitle: "Discord",
     discordDesc: "获取实时帮助，分享你的模组，与核心团队和社区成员交流。",
     telegramTitle: "Telegram",
-    telegramDesc: "加入我们的 Telegram 群组参与讨论和获取更新。",
+    telegramDesc: "加入我们的 Telegram 群组，参与讨论并获取更新。",
     discordLabel: "社区服务器",
     telegramLabel: "社区群组",
     joinTelegram: "加入 Telegram",
     githubTitle: "GitHub",
-    githubDesc: "为项目做贡献、报告问题、浏览源代码。",
+    githubDesc: "贡献代码、反馈问题、浏览源码。",
     viewOnGitHub: "在 GitHub 查看",
     qqTitle: "QQ 群组",
     qqDesc: "加入我们的 QQ 群与中文社区交流。",
@@ -162,18 +162,18 @@ const zh: typeof en = {
   // Support page
   support: {
     pageTitle: "支持 LeviMC",
-    pageDesc: "帮助我们建设基岩版模组生态——贡献代码或资助项目。",
+    pageDesc: "参与共建基岩版模组生态——贡献代码或赞助项目。",
     contributeTitle: "贡献代码",
     contributeDesc:
-      "挑选一个 Issue、完善文档或添加新特性。每个 PR 都能帮助社区。",
+      "认领 Issue、完善文档或开发新功能。每一个 PR 都在助力社区。",
     contributeCta: "挑选一个 Issue",
     donateTitle: "捐助项目",
-    donateDesc: "你的支持能帮助我们维持基础设施，并投入更多时间开发新功能。",
+    donateDesc: "你的支持能帮助我们维护基础设施，并投入更多时间开发新功能。",
     donateChannels: "捐助渠道",
     channelAfdian: "爱发电",
     channelOpenCollective: "OpenCollective",
     donorsSectionTitle: "支持者",
-    donorsSectionDesc: "十分感谢以下支持者对 LeviMC 的慷慨支持。",
+    donorsSectionDesc: "衷心感谢以下支持者对 LeviMC 的慷慨支持。",
     donorsLoading: "正在从 CSV 加载捐赠者...",
     donorsErrorTitle: "无法加载捐赠数据",
     donorsError: "无法从 donors.csv 读取捐赠者列表。",
@@ -186,14 +186,14 @@ const zh: typeof en = {
   // Project descriptions
   projects_desc: {
     levilamina: "轻量、模块化、多功能的 Minecraft 基岩版模组加载器。",
-    legacyscriptengine: "在 LeviLamina 上运行以 JavaScript、Node.js、Lua 或 Python 编写的 LLSE 插件。",
-    lip: "运行 LeviLamina 服务器并管理它的包：搭建服务器、安装和更新模组、启动服务器。",
+    legacyscriptengine: "在 LeviLamina 上运行用 JavaScript、Node.js、Lua 或 Python 编写的 LLSE 插件。",
+    lip: "运行 LeviLamina 服务器并管理包：搭建并启动服务器、安装和更新模组。",
     levilauncher: "适用于 Windows（GDK / UWP）与 Android 的 Minecraft 基岩版启动器。",
-    levioptimize: "为 LeviLamina 服务器和客户端提供性能优化的模组。",
+    levioptimize: "优化 LeviLamina 服务端与客户端性能的模组。",
     levianticheat: "为 LeviLamina 服务器提供反作弊解决方案。",
-    moredimensions: "供 LeviLamina 模组为基岩版专用服务器添加自定义维度的 API。",
+    moredimensions: "供 LeviLamina 模组向基岩版专用服务器添加自定义维度的 API。",
     levistone: "在 LeviLamina 上运行 Endstone 插件的运行时。",
-    bedd: "让 LeviLamina 客户端模组的端到端测试在后台跑：脚本或 agent 同时玩多个游戏，你的鼠标和键盘照常归你用。",
+    bedd: "让 LeviLamina 客户端模组的端到端测试在后台运行：脚本或 agent 同时操控多个游戏，键鼠照常归你使用。",
     bedboo: "兼容 mineflayer API 的 Minecraft 基岩版机器人库：让机器人和 mineflayer 插件直接连上基岩版专用服务器（BDS）。",
   },
   // 博客
@@ -237,8 +237,8 @@ const zh: typeof en = {
     loading: "正在召唤 LeviChan…",
     loadFailed: "LeviChan 加载失败。",
     menuTitle: "LeviChan",
-    hint: "网页散成了一块块，她就住在上面。像 Minecraft 一样飞来飞去：WASD 移动，空格上升，Shift 下降，Ctrl 加速，滚轮前后，拖动转视角，F 找到她。点一块她就想办法过去（跳、爬）并和它玩；双击小块她会把它搬到别处；拖起她、扔方块、摸头、戳戳……这里的链接只会亮一下，不会跳转。",
-    hintTouch: "网页散成了一块块，她就住在上面。单指拖动转视角，双指捏合前后移动，双指拖动平移。点一块她就想办法过去并和它玩；双击小块她会把它搬到别处；按住她可以拎起来，还能扔方块、摸头、戳戳……这里的链接只会亮一下，不会跳转。",
+    hint: "网页散成了一块块，她就住在上面。像 Minecraft 一样飞来飞去：WASD 移动，空格上升，Shift 下降，Ctrl 加速，滚轮前后，拖动转视角，F 找到她。点一下方块，她就会跳着、爬着想办法过去跟它玩；双击小块，她会把它搬到别处；拖起她、扔方块、摸头、戳戳……这里的链接只会亮一下，不会跳转。",
+    hintTouch: "网页散成了一块块，她就住在上面。单指拖动转视角，双指捏合前后移动，双指拖动平移。点一下方块，她就会想办法过去跟它玩；双击小块，她会把它搬到别处；按住她可以拎起来，还能扔方块、摸头、戳戳……这里的链接只会亮一下，不会跳转。",
     lookLabel: "看向鼠标",
     look: { auto: "随她心情", always: "一直看", never: "不看" },
     quiet: "少些小动作",

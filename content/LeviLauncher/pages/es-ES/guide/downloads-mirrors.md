@@ -3,49 +3,49 @@ platforms: [windows]
 ---
 # Descargas y espejos
 
-LeviLauncher ofrece funciones como la selección de mirror, el progreso de tareas y la importación de paquetes locales para ayudarte a completar la instalación de forma más estable.
+LeviLauncher incluye selección de servidor espejo (mirror), seguimiento del progreso de las tareas e importación de paquetes locales para ofrecer una instalación más estable.
 
 ## Para qué sirve esta sección
 
 - Explorar las versiones disponibles para instalar
-- Probar la velocidad o cambiar la fuente del mirror
+- Probar la velocidad o cambiar el servidor espejo
 - Ver el progreso de descarga e instalación
-- Reintentar tareas fallidas con mayor facilidad
-- Importar paquetes de instalación locales en escenarios adecuados
+- Reintentar tareas fallidas fácilmente
+- Importar paquetes de instalación locales cuando corresponda
 
 ## Flujo de operación recomendado
 
 1. Abre **Descargar**.
-2. Selecciona la versión de Minecraft **Lanzamiento** (Release) o **Vista previa** (Preview) que deseas instalar.
-3. Deja que LeviLauncher pruebe la velocidad automáticamente o selecciona manualmente un mirror adecuado.
-4. Inicia la tarea de instalación.
-5. Si necesitas un progreso más detallado, entra en la vista de gestión de tareas o descargas.
+2. Selecciona la versión de Minecraft **Lanzamiento** (Release) o **Vista previa** (Preview) que quieras instalar.
+3. Deja que LeviLauncher pruebe la velocidad automáticamente o elige un servidor espejo de forma manual.
+4. Inicia la instalación.
+5. Para ver el progreso en detalle, abre la vista de gestión de tareas o de descargas.
 
 ## Cuándo deberías cambiar de mirror
 
-Se recomienda cambiar de fuente en los siguientes casos:
+Conviene cambiar de fuente en los siguientes casos:
 
-- La velocidad de descarga es anormalmente baja
-- Un mirror específico falla repetidamente al conectar
-- La tarea se atasca durante mucho tiempo en una fuente, mientras que otras son más estables
+- La velocidad de descarga es inusualmente baja
+- Un servidor espejo concreto falla repetidamente al conectar
+- La tarea se queda atascada mucho tiempo en una fuente mientras otras funcionan con mayor estabilidad
 
 ## Importación de paquetes locales
 
-Si ya dispones de un paquete de instalación local compatible, LeviLauncher puede utilizarlo en los flujos compatibles.
+Si ya cuentas con un paquete de instalación local compatible, LeviLauncher puede utilizarlo en los flujos admitidos.
 
-Esto es muy útil en los siguientes escenarios:
+Esto resulta muy útil cuando:
 
-- Conexión de red inestable
-- Deseas reutilizar recursos descargados anteriormente
-- Necesitas una fuente de instalación más controlada y fija
+- La conexión de red es inestable
+- Quieres reutilizar recursos descargados previamente
+- Necesitas una fuente de instalación fija y más controlada
 
 ## Si la tarea falla
 
-Antes de reintentar, confirma lo siguiente:
+Antes de reintentar, comprueba lo siguiente:
 
-- Espacio suficiente en disco
-- La ruta de destino es escribible
+- Hay suficiente espacio en disco
+- Tienes permisos de escritura en la ruta de destino
 - Los componentes necesarios de Windows están instalados
-- El mirror seleccionado sigue estando disponible
+- El servidor espejo seleccionado sigue disponible
 
-Si sigue fallando, consulta [Actualización y solución de problemas](./update-troubleshooting).
+Si el fallo persiste, consulta [Actualización y solución de problemas](./update-troubleshooting).

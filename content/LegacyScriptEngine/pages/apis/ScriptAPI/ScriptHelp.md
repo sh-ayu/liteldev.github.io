@@ -1,35 +1,34 @@
 # 💼 Script Helper API
 
-> Here are some commonly used **auxiliary functions** , such as plugin registration, output information and asynchronous
-> interfaces, etc.
+> This section covers commonly used **auxiliary functions** for tasks such as plugin registration, console output, and asynchronous execution.
 
-They make it easier and more natural for you to develop scripts and avoid a lot of unnecessary details.
+These functions simplify script development by handling many of the underlying details for you.
 
 ## 💼 Script Assist API
 
-The following APIs add necessary auxiliary interfaces to scripts.
+The following APIs provide essential helper interfaces for scripts.
 
 ### Output Information To The Console
 
 `log(data1,data2,...)`
 
-- Parameter:.,
-    - Variable or data to be output  
-      Can be of any type, and the number of parameters can be any number.
+- Parameter:
+    - Variables or data to output.  
+      Accepts any number of parameters of any type.
 - Return value: none
 
 ### Output Color Text
 
-This is an upgraded version of the above function; it supports color output.
+This is an enhanced version of the function above that supports colored output.
 
 `colorLog(color,data1,data2,...)`
 
 - Parameter:
     - color : `String`  
-      The color output by this line (code example and effect are as follows)
+      The output color for this line (see the example and result below).
     - data... :
-      Variable or data to be output  
-      Can be of any type, and the number of parameters can be any number.
+      Variables or data to output.  
+      Accepts any number of parameters of any type.
 - Return value: none
 
 #### Show results:
@@ -38,16 +37,15 @@ This is an upgraded version of the above function; it supports color output.
 
 ### Asynchronous Output
 
-This function returns immediately after the output request is sent, avoiding the blocking time caused by synchronous
-reading and writing.
-The bottom layer has lock protection, different `fastLog` There will be no string phenomenon between.
+This function returns immediately after sending the output request, avoiding the blocking delay of synchronous I/O.
+Because the underlying implementation uses locks, output from different `fastLog` calls will not interleave.
 
 `fastLog(data1,data2,...)`
 
 - Parameter:
     - data... :
-      Variable or data to be output
-      Can be of any type, and the number of parameters can be any number
+      Variables or data to output.
+      Accepts any number of parameters of any type.
 - Return value: none
 
 ### Delay the execution of a function for a period of time
@@ -57,13 +55,13 @@ The bottom layer has lock protection, different `fastLog` There will be no strin
 - Parameter:
 
     - func : `Function`  
-      The function to be executed.
+      The function to execute.
 
     - msec : `Integer`  
-      Delay execution time (milliseconds)
-- Return value: this task id.
+      The delay before execution, in milliseconds.
+- Return value: the task ID.
 - Return value type: `Integer`
-    - If it returns `Null`, the task failed.
+    - Returns `Null` if the task failed.
 
 ### Delay the execution of a code segment for a period of time (eval)
 
@@ -72,13 +70,13 @@ The bottom layer has lock protection, different `fastLog` There will be no strin
 - Parameter:
 
     - code : `String`  
-      The code segment to be executed.
+      The code segment to execute.
 
     - msec : `Integer`  
-      Delay execution time (milliseconds)
-- Return value: this task id
+      The delay before execution, in milliseconds.
+- Return value: the task ID.
 - Return value type: `Integer`
-    - If it returns `Null`, the task creation failed.
+    - Returns `Null` if task creation failed.
 
 ### Set period execution function
 
@@ -86,12 +84,12 @@ The bottom layer has lock protection, different `fastLog` There will be no strin
 
 - Parameter:
     - func : `Function`  
-      The function to be executed
+      The function to execute.
 
     - msec : `Integer`  
-      Execution interval period (ms)
-- Return value: this task id
-- Return value type:  `Integer`
+      The execution interval, in milliseconds (ms).
+- Return value: the task ID.
+- Return value type: `Integer`
 
 ### Set period execution code segment (eval)
 
@@ -99,13 +97,13 @@ The bottom layer has lock protection, different `fastLog` There will be no strin
 
 - Parameter:
     - code : `String`  
-      The code to be executed.
+      The code to execute.
 
     - msec : `Integer`  
-      Execution interval period (ms)
-- Return value: this task id
-- Return value type:  `Integer`
-    - If it returns `Null`, the task creation failed.
+      The execution interval, in milliseconds (ms).
+- Return value: the task ID.
+- Return value type: `Integer`
+    - Returns `Null` if task creation failed.
 
 ### Cancel Delay/Period Execution Item
 
@@ -113,9 +111,9 @@ The bottom layer has lock protection, different `fastLog` There will be no strin
 
 - Parameter:
     - timerid : `Integer`  
-      The task ID returned by the first few functions
-- Return value: whether the cancellation was successful.
-- Return value type:  `Boolean`
-    - If it returns `Null`, the cancellation of the task failed.
+      The task ID returned by one of the preceding functions.
+- Return value: whether the cancellation succeeded.
+- Return value type: `Boolean`
+    - Returns `Null` if canceling the task failed.
 
 

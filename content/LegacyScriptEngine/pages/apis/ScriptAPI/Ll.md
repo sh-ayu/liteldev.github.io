@@ -1,23 +1,23 @@
 # 💡 Plugin loading related API
 
-Some interfaces related to loader operations are provided here.
+This section describes the interfaces for loader operations.
 
 ### Properties
 
 | Property                 | Type      | Description                                                |
 |--------------------------|-----------|------------------------------------------------------------|
-| `ll.language`            | `String`  | The language LeviLamina used.(such as `zh`, `en`, `ru_RU`) |
-| `ll.major`               | `Integer` | Major Version Number (ex:  the **2** in **2**.7.1)         |
-| `ll.minor`               | `Integer` | Minor Version Number (ex: the **7** in 2.**7**.1)          |
-| `ll.revision`            | `Integer` | Revision Number: (ex: the **1** in 2.7.**1**)              |
+| `ll.language`            | `String`  | The language LeviLamina uses (such as `zh`, `en`, `ru_RU`) |
+| `ll.major`               | `Integer` | Major version number (e.g., the **2** in **2**.7.1)        |
+| `ll.minor`               | `Integer` | Minor version number (e.g., the **7** in 2.**7**.1)        |
+| `ll.revision`            | `Integer` | Revision number (e.g., the **1** in 2.7.**1**)             |
 | `ll.status`              | `Integer` | Status (`0` is Dev, `1` is Beta, `2` is Release)           |
-| `ll.scriptEngineVersion` | `String`  | Script Engine Version                                      |
-| `ll.isWine`              | `Boolean` | Whether the LeviLamina started from Wine                   |
-| `ll.isDebugMode`         | `Boolean` | Whether the LegacyScriptEngine in debug mode               |
+| `ll.scriptEngineVersion` | `String`  | Script engine version                                      |
+| `ll.isWine`              | `Boolean` | Whether LeviLamina was started under Wine                  |
+| `ll.isDebugMode`         | `Boolean` | Whether LegacyScriptEngine is in debug mode                |
 | `ll.isBeta`              | `Boolean` | Whether the current version is a beta version              |
 | `ll.isDev`               | `Boolean` | Whether the current version is a dev version               |
 | `ll.isRelease`           | `Boolean` | Whether the current version is a release version           |
-| `ll.pluginsRoot`         | `String`  | Root directory of LeviLamina mods                           |
+| `ll.pluginsRoot`         | `String`  | Root directory of LeviLamina mods                          |
 
 ### Get LegacyScriptEngine loader version string
 
@@ -26,8 +26,8 @@ Some interfaces related to loader operations are provided here.
 
 `ll.versionString()`
 
-- Return value: loader version
-- Return value type:  `String`
+- Return value: Loader version
+- Return value type: `String`
 
 ### Get information about Plugin
 
@@ -36,9 +36,9 @@ Some interfaces related to loader operations are provided here.
 - Parameter:
     - name: `String`
       Plugin name
-- Return value: Plugin Object
-- Return value type:  `Plugin`
-    - For a returned plugin object, there are the following members:
+- Return value: Plugin object
+- Return value type: `Plugin`
+    - A returned plugin object has the following members:
 
 | Property          | Description             | Type                             |
 |-------------------|-------------------------|----------------------------------|
@@ -54,22 +54,22 @@ Some interfaces related to loader operations are provided here.
 
 `ll.getCurrentPluginInfo()`
 
-- Return value: Plugin Object
-- Return value type:  `Plugin`
+- Return value: Plugin object
+- Return value type: `Plugin`
 
 ### List all loaded plugins
 
 `ll.listPlugins()`
 
-- Return value: A list containing the names of all loaded plugin
-- Return value type:  `Array<String,String,...>`
+- Return value: A list of the names of all loaded plugins
+- Return value type: `Array<String,String,...>`
 
 ### List all loaded plugins with information
 
 `ll.getAllPluginInfo()`
 
-- Return value: A list containing the plugin objects of all loaded plugin
-- Return value type:  `Array<Plugin,Plugin,...>`
+- Return value: A list of the plugin objects of all loaded plugins
+- Return value type: `Array<Plugin,Plugin,...>`
 
 ### Set the function called while the plugin is unloading
 
@@ -80,52 +80,43 @@ Some interfaces related to loader operations are provided here.
 
 - Parameter:
     - func : `Function`  
-      Function to be called while the plugin is unloading
+      Function to call when the plugin unloads
 
 ### Remote Function Call
 
 #### Export Function
 
-In order to allow the pre-plug-ins developed by developers to provide interfaces and services for other plug-ins, the
-remote function call function is provided here, so that a native mod or a script plugin can call the existing functions in another
-plug-in.
+Remote function calls let prerequisite plugins expose interfaces and services to other plugins, allowing a native mod or script plugin to call functions in another plugin.
 
 `ll.exports(func,namespace,name)`
 
 - Parameter:
     - func : `Function`  
-      Function to be exported
+      Function to export
     - namespace : `String`  
-      The namespace name of the function, which is only convenient for distinguishing the API exported by different
-      plugins.
+      Namespace of the function, used to distinguish APIs exported by different plugins.
     - name : `String`  
-      The export name of the function. Other plugins call this function based on the export name.
-- Return value: Whether the export was successful.
-- Return value type:  `Boolean`
+      Exported name of the function. Other plugins call the function by this name.
+- Return value: Whether the export succeeded.
+- Return value type: `Boolean`
 
-Note: If the namespace and name of the exported function are exactly the same as another already exported function, the
-export will fail. Please select the namespace and export name appropriately when exporting.
+Note: If another exported function already uses the same namespace and name, the export will fail. Choose the namespace and export name carefully.
 
 #### Import Function
 
-After you have learned that there is a plug-in exporting function, in order to use the function exported by him, you
-first need to import this function into your own scripting system.
-LSE provides the interface import to import functions already exported by other plugins.
+To use a function exported by another plugin, you first need to import it into your own scripting system. LSE provides the import interface to import functions exported by other plugins.
 
 `ll.imports(namespace,name)`
 
 - Parameter:
     - namespace : `String`  
-      The namespace name used by the function that is being imported.
+      The namespace name of the function being imported.
     - name : `String`  
-      The name of the function that is being imported.
+      The name of the function being imported.
 - Return value: The imported function
-- Return value type:  `Function`
+- Return value type: `Function`
 
-The return value of `ll.imports` is a function. When you call this function, the cross-plugin call process will be done
-automatically in the background. The parameters of the calling function will be wrapped and passed to the remote
-function, and the return value of this function is the return value returned by the remote function after it has been
-executed.
+`ll.imports` returns a function. Calling this function automatically triggers a cross-plugin call in the background. The arguments you pass are wrapped and sent to the remote function, and its return value is returned once execution finishes.
 
 #### Remote Call Parameter Type Mapping (Type can be any other supported type)
 
@@ -149,31 +140,26 @@ executed.
 
 #### Example of Remote Calling Function
 
-For example, there is a plug-in that exports a function using the namespace AAA, and the name of the exported function
-is Welcome  
-You can execute `welcome = ll.imports("AAA", "Welcome"); ` to import this function. After the import is complete, you can
-execute directly below:
+For example, suppose a plugin exports a function named Welcome under the namespace AAA.  
+Run `welcome = ll.imports("AAA", "Welcome"); ` to import this function. Once imported, you can call it directly as shown below:
 
 `welcome("hello",2,true);`
 
-The parameters of the function will be automatically forwarded to the corresponding target function for execution, and
-the return value of the corresponding target function will be returned after execution. The whole process is
-automatically completed.
+The arguments are automatically forwarded to the target function, and its return value is returned once execution finishes. The entire process happens automatically.
 
-Notice! When calling a function, you need to ensure that the number and types of parameters you pass in and the
-parameters accepted by the target function are correct and in one-to-one correspondence. Otherwise, an error will occur.
+Note: When calling the function, make sure the number and types of arguments you pass match the parameters accepted by the target function one-to-one. Otherwise, an error will occur.
 
 ### Determine if a remote function has been exported
 
 `ll.hasExported(namespace,name)`
 
-- Parameter：
+- Parameter:
     - namespace : `String`  
-      Namespace name used by the function
+      The namespace name used by the function
     - name : `String`  
-      Export name used by the function
-- Return value：Whether the function has been exported
-- Return value type： `Boolean`
+      The export name used by the function
+- Return value: Whether the function has been exported
+- Return value type: `Boolean`
 
 ### Execute a String as a Script
 
@@ -181,6 +167,6 @@ parameters accepted by the target function are correct and in one-to-one corresp
 
 - Parameter:
     - str : `String`  
-      String to execute as a Script
-- Return value: Execution result
-- Return value type:  `Any type`
+      The string to execute as a script
+- Return value: The execution result
+- Return value type: `Any type`

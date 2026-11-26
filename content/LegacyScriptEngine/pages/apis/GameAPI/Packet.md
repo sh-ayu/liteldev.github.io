@@ -1,10 +1,10 @@
 # 🎓 Packet API
 
-The following objects and APIs provide the basic BDS packet interface for scripts.
+The following objects and APIs provide a basic BDS packet interface for scripts.
 
-(Please refer to Nukkit, PokcetMine, BDS Reverse to know the packet structure) If the client crashes, it is a packet structure error, not a bug.
+Refer to Nukkit, PokcetMine, and BDS Reverse for packet structures. If the client crashes, it is caused by a malformed packet structure, not a bug.
 
-The documentation does not list the packet ID and its structure, please check it yourself.
+This documentation does not list packet IDs or structures; please look them up yourself.
 
 ## 目录
 
@@ -13,67 +13,67 @@ The documentation does not list the packet ID and its structure, please check it
 
 ## 🔉 Packet Object API
 
-In LSE, 「Packet Object」 is used to get information about packets.
+In LSE, the 「Packet Object」 is used to get information about packets.
 
 ### Get a packet object
 
 #### Get from API
 
-Call some **return packet object** function to get to the packet object given by BDS  
-See [Binary Stream Objects](#-binary-stream-object-api) for details
+Call a function that states **return packet object** to get a packet object provided by BDS.  
+See [Binary Stream Objects](#-binary-stream-object-api) for details.
 
 #### Create from packet ID
 
 !!! warning
-    The global aliases of this class are only available in 0.19.1 and later.
+    The global aliases for this class are only available in 0.19.1 and later.
 
 `Packet.createPacket(pktid[,raw])`  
 
-- Parameters：
+- Parameters:
   - pktid : `Integer`
     Packet ID
   - raw : `Boolean` (Optional parameter)
-    Create raw network packet. The default value is `false`
-- Return value：Packet object
-- Return value type： `Packet`
+    Whether to create a raw network packet. Defaults to `false`.
+- Return value: Packet object
+- Return value type: `Packet`
 
 ### Packet Objects - Functions
 
-Every packet object contains some member functions (member methods) that can be executed. For a particular entity object `pkt`, some operations can be performed on this packet by these functions
+Every packet object provides member functions (methods) that operate on the packet. Given a packet object `pkt`, you can call the following functions on it:
 
 #### Get packet name
 
 `pkt.getName()`
 
-- Return value：packet name
-- Return value type： `String`
+- Return value: Packet name
+- Return value type: `String`
 
 #### Get packet ID
 
 `pkt.getId()`
 
-- Return value：packet id
-- Return value type： `Integer`
+- Return value: Packet ID
+- Return value type: `Integer`
 
 #### Read binary stream data into packet
 
 `pkt.read(bs)`
 
-- Parameters：
+- Parameters:
   - bs : `BinaryStream`
     Source binary stream
-- Return value：success or not
-- Return value type： `Boolean`
+- Return value: Whether the operation succeeded
+- Return value type: `Boolean`
 
 #### Write packet data into binary stream
 
 `pkt.write(bs)`
 
-- Parameters：
+- Parameters:
   - bs : `BinaryStream`
     Target binary stream
-- Return value：success or not
-- Return value type： `Boolean`
+- Return value: Whether the operation succeeded
+- Return value type: `Boolean`
 
 #### Send packet to specified target
 
@@ -84,18 +84,18 @@ Every packet object contains some member functions (member methods) that can be 
 `pkt.sendTo(x,y,z,dimid)`  
 `pkt.sendTo(target)`
 
-- Parameters：
+- Parameters:
 
   - pos : `IntPos` / `FloatPos`  
-    The coordinates of the packet send target (or use x, y, z, dimid to determine the target position)
+    Target coordinates for sending the packet (or specify x, y, z, and dimid to set the target position)
   - target : `Player` / `Entity`  
-    Packet send target
+    Target to send the packet to
 
-- Return value：success or not
-- Return value type： `Boolean`
+- Return value: Whether the operation succeeded
+- Return value type: `Boolean`
 
-If `target` is `Player`, the packet will be sent to the specified player.  
-If `target` is `Entity`, the packet will be sent to players around the specified entity.
+If `target` is a `Player`, the packet is sent to that player.  
+If `target` is an `Entity`, the packet is sent to players near that entity.
 
 #### Send packet to all clients
 
@@ -104,8 +104,8 @@ If `target` is `Entity`, the packet will be sent to players around the specified
 
 `pkt.sendToClients()`
 
-- Return value：success or not
-- Return value type： `Boolean`
+- Return value: Whether the operation succeeded
+- Return value type: `Boolean`
 
 #### Send packet to server
 
@@ -114,8 +114,8 @@ If `target` is `Entity`, the packet will be sent to players around the specified
 
 `pkt.sendToServer()`
 
-- Return value：success or not
-- Return value type： `Boolean`
+- Return value: Whether the operation succeeded
+- Return value type: `Boolean`
 
 ## 🔌 Binary Stream Object API
 
@@ -126,30 +126,30 @@ If `target` is `Entity`, the packet will be sent to players around the specified
 [Lua] `BinaryStream()`
 
 - Return value: Binary stream object
-- Return value type： `BinaryStream`
+- Return value type: `BinaryStream`
 
 ### Binary Stream Object - Functions
 
-Every binary stream object contains some member functions (member methods) that can be executed. For a particular entity object `bs`, some operations can be performed on this binary stream by these functions
+Every binary stream object provides member functions (methods) that operate on the stream. Given a binary stream object `bs`, you can call the following functions on it:
 
 #### Resetting binary streams
 
 `bs.reset()`
 
-- Return value: success or not
-- Return value type： `Boolean`
+- Return value: Whether the operation succeeded
+- Return value type: `Boolean`
 
 #### Reserve binary stream capacity
 
 `bs.reserve(size)`
 
-- Parameters：
+- Parameters:
 
   - size : `Integer`  
     Number of bytes to reserve
 
-- Return value: success or not
-- Return value type： `Boolean`
+- Return value: Whether the operation succeeded
+- Return value type: `Boolean`
 
 #### Get binary stream read pointer
 
@@ -158,8 +158,8 @@ Every binary stream object contains some member functions (member methods) that 
 
 `bs.getReadPointer()`
 
-- Return value: current read pointer
-- Return value type： `Integer`
+- Return value: Current read pointer
+- Return value type: `Integer`
 
 #### Set binary stream read pointer
 
@@ -168,13 +168,13 @@ Every binary stream object contains some member functions (member methods) that 
 
 `bs.setReadPointer(pos)`
 
-- Parameters：
+- Parameters:
 
   - pos : `Integer`  
     New read pointer
 
-- Return value: success or not
-- Return value type： `Boolean`
+- Return value: Whether the operation succeeded
+- Return value type: `Boolean`
 
 #### Get binary stream data
 
@@ -183,18 +183,18 @@ Every binary stream object contains some member functions (member methods) that 
 
 `bs.getData([release])`
 
-- Parameters：
+- Parameters:
 
   - release : `Boolean` (Optional parameter)  
-    Whether to clear stream data after reading. The default value is `false`
+    Whether to clear the stream data after reading. Defaults to `false`.
 
-- Return value: binary stream data
-- Return value type： `ByteBuffer`
+- Return value: Binary stream data
+- Return value type: `ByteBuffer`
 
-Before 0.19.1, this function can only be used as `bs.getData()`.  
-At that time, it always cleared the stream data after reading, and the return value type was `String`.
+Before 0.19.1, this function could only be called as `bs.getData()`.  
+In those versions, it always cleared the stream data after reading and returned a `String`.
 
-Because the old return value was `String`, in JavaScript it may be forcibly encoded as UTF-8, causing binary data corruption and incorrect data content.
+Because the old return value was a `String`, JavaScript may force UTF-8 encoding on it, corrupting the binary data.
 
 #### Set binary stream data
 
@@ -203,26 +203,25 @@ Because the old return value was `String`, in JavaScript it may be forcibly enco
 
 `bs.setData(data)`
 
-- Parameters：
+- Parameters:
 
   - data : `ByteBuffer`  
     Binary stream data
 
-- Return value: success or not
-- Return value type： `Boolean`
+- Return value: Whether the operation succeeded
+- Return value type: `Boolean`
 
 #### Write to binary stream
 
 `bs.writexxxx(value)`
 
-- Parameters：
+- Parameters:
 
   - value : `Null`  
-    Refer to the table below
-    For some numeric write functions, `String` is also accepted
+    See the table below. Some numeric write functions also accept a `String`.
 
-- Return value：success or not
-- Return value type： `Boolean`
+- Return value: Whether the write succeeded.
+- Return value type: `Boolean`
 
 | Available functions            | Parameter Type       |
 | ------------------------------ | -------------------- |
@@ -261,9 +260,9 @@ Because the old return value was `String`, in JavaScript it may be forcibly enco
 - Parameters:
 
   - asString : `Boolean` (Optional parameter)
-    Only available for numeric read functions. When set to `true`, the return value is converted to `String`
+    Available only for numeric read functions. When set to `true`, the return value is converted to `String`.
   - length : `Integer`
-    Only available for `readBytes`. Number of bytes to read. Must be greater than `0`
+    Available only for `readBytes`. The number of bytes to read. Must be greater than `0`.
 
 - Return value:
   - Read result
@@ -298,21 +297,21 @@ When `asString` is `true`, scalar `read*` functions return `String`.
 
 `bs.createPacket(pktid[,raw])`
 
-- Parameters：
+- Parameters:
 
   - pktid : `Integer`  
-    Packet ID
+    Packet ID.
   - raw : `Boolean` (Optional parameter)  
-    Create raw network packet from current binary stream data. The default value is `false`
+    Creates a raw network packet from the current binary stream data. Defaults to `false`.
 
-- Return value：Packet object
-- Return value type： `Packet`
+- Return value: Packet object
+- Return value type: `Packet`
 
-Before 0.19.1, this function can only be used as `bs.createPacket(pktid)`.
+Before 0.19.1, this function can only be called as `bs.createPacket(pktid)`.
 
 ### Dome Code
 
-Send TextPacket packets to a player
+Send TextPacket packets to a player:
 
 ```js
 mc.listen("onChat", (player, message) => {

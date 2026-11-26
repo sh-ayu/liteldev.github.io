@@ -2,11 +2,11 @@
 
 ## Do I need to own Minecraft Bedrock?
 
-Yes. LeviLauncher is designed to work with a legitimate licensed copy of Minecraft Bedrock Edition (GDK / UWP).
+Yes. LeviLauncher requires a legitimate licensed copy of Minecraft Bedrock Edition (GDK / UWP).
 
 ## Can I use LeviLauncher on macOS or Linux?
 
-LeviLauncher has a **Windows** version and an **Android** version ([Android guide](https://levimc.org/LeviLauncher/guide/version-management?platform=android)). There is no macOS or Linux version.
+LeviLauncher is available for **Windows** and **Android** ([Android guide](https://levimc.org/LeviLauncher/guide/version-management?platform=android)). There is no macOS or Linux version.
 
 ## Is there an iOS version?
 
@@ -14,7 +14,7 @@ No. There are no plans for an iOS version of LeviLauncher.
 
 ## Should I use Release or Preview?
 
-Use the Minecraft **Release** build for normal play. Choose the Minecraft **Preview** build only when you specifically want upcoming features and are comfortable with instability.
+Use the Minecraft **Release** build for normal play. Choose the Minecraft **Preview** build only if you specifically want upcoming features and are comfortable with instability.
 
 ## Is isolation required?
 
@@ -26,11 +26,11 @@ Yes. LeviLauncher includes content views for worlds, resource packs, behavior pa
 
 ## Can I install mods?
 
-Yes, but mod workflows are an advanced area. Start with a clean isolated version and test gradually.
+Yes, though mod workflows are an advanced feature. Start with a clean, isolated version and test your changes gradually.
 
 ## Can I use LeviLauncher from the command line?
 
-Yes, on Windows. `LeviLauncher.exe` without arguments opens the window; with a command such as `install latest`, `play`, `instance list` or `mod install <mod>` it runs in the terminal and exits. Run `LeviLauncher.exe help` for every command, and `LeviLauncher.exe help <command>` for the flags and examples of one.
+Yes, on Windows. Running `LeviLauncher.exe` without arguments opens the window; passing a command such as `install latest`, `play`, `instance list`, or `mod install <mod>` runs it in the terminal and exits. Run `LeviLauncher.exe help` to list all commands, and `LeviLauncher.exe help <command>` to see flags and examples for a specific command.
 
 ## What does the Android version need?
 

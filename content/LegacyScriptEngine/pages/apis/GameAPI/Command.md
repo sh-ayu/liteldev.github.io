@@ -1,6 +1,6 @@
 # 🎯 Command Related API
 
-The following APIs provide interfaces for registering and listening to custom commands in the game:
+The following APIs provide interfaces for registering and listening for custom commands in the game:
 
 ### Execute a Background Command
 
@@ -8,8 +8,8 @@ The following APIs provide interfaces for registering and listening to custom co
 
 - Parameters:
     - cmd : `String`  
-      The command to be executed.
-- Return value: Whether the execution was successful.
+      The command to execute.
+- Return value: Whether the execution succeeded.
 - Return value type:  `Boolean`
 
 [JavaScript]
@@ -31,21 +31,21 @@ mc.runcmd("say Hello!")
 - Parameters:
 
     - cmd : `String`  
-      The command to be executed.
-- Return value: Command Execution Result `Object`
+      The command to execute.
+- Return value: Command execution result `Object`
 - Return value type:  `Object<Boolean,String>`
 
-    - For a returned execution result object res, there are the following members:
+    - The returned execution result object res has the following members:
 
   | Members     | Meaning                                           | Data Type |
-                      | ----------- | ------------------------------------------------- | --------- |
-  | res.success | Whether the execution was successful.             | `Boolean` |
-  | res.output  | The output result after BDS executes the command. | `String`  |
+  | ----------- | ------------------------------------------------- | --------- |
+  | res.success | Whether the execution succeeded.                  | `Boolean` |
+  | res.output  | The output from BDS after executing the command.  | `String`  |
 
 !!! note
-    The implementation of runcmdEx is very different from ordinary runcmd. The Enhanced version has a **hidden execution**
-    mechanism, and the execution result will not be output to the console. Therefore, if necessary, you must manually use
-    the log function to output the result.
+    runcmdEx is implemented very differently from runcmd. The enhanced version uses a **hidden execution**
+    mechanism, so the execution result is not printed to the console. If you need the result in the console, pass it to
+    the log function manually.
 
 [JavaScript]
 
@@ -56,11 +56,11 @@ log(result.output);
 
 ## Command Registration API
 
-An interface for registering custom commands is provided here. By docking with the built-in command system of BDS, the
-commands you register can be used by players, consoles, command blocks, NPCs and other objects that can execute commands
-in games. In addon, you can also use the commands registered here.
+This API provides an interface for registering custom commands. Because it hooks into the built-in BDS command system,
+any command you register can be run by players, the console, command blocks, NPCs, and any other in-game entity that can execute commands.
+You can also use these commands in add-ons.
 !!! warning
-    Except for variable parameters (String, RawText, Message, etc.), the commands cannot contain non-English lowercase
+    Except for variable parameters (String, RawText, Message, etc.), commands must consist only of lowercase English
     letters!
 
 ### Register a Top-Level Command
@@ -70,36 +70,35 @@ in games. In addon, you can also use the commands registered here.
 - Parameters:
 
     - cmd : `String`  
-      The command that will be registered.
+      The command to register.
     - description : `String`  
       The description text for the command.
     - permission : `PermType`  
       (Optional parameter)
     - flag : `Integer`  
-      (Optional parameter) Default value is `0x80`   
-      At present, you can directly press this input, and related modifications will be made in the future.
+      (Optional parameter) Defaults to `0x80`.  
+      For now, pass the default value directly; this parameter will be updated in the future.
     - alias : `String`  
-      (Optional argument) Add an alias for the command.
-      Multiple aliases can be set for a command, which is equivalent to triggering the same command when executed.
+      (Optional parameter) An alias for the command.
+      You can set multiple aliases for a command, and executing any of them triggers the same command.
 
 | Execution Permission   | Meaning                                             |
 |------------------------|-----------------------------------------------------|
 | `PermType.Any`         | Anyone can execute the command.                     |
-| `PermType.GameMasters` | Only the OP can execute the command.                |
-| `PermType.Admin`       | Admin permission level (Default value)              |
+| `PermType.GameMasters` | Only OPs can execute the command.                   |
+| `PermType.Admin`       | Admin permission level (default).                   |
 | `PermType.Console`     | Only the console can execute the command.           |
 
-- Return value: Command Object.
+- Return value: Command object.
 - Return value type: `Command`
 
 !!! tip
-    Top-level commands, i.e. something like `list` `gamerule`, the first input after the `/` character.  
-    After registering the top-level command, this function returns a command object. Next, the function expansion of this command needs to be carried out in this command object.
+    A top-level command is the first word after `/`, such as `list` `gamerule`.  
+    After registering the top-level command, this function returns a command object, which you use to further configure the command.
 
 ### Command Object - Function
 
-Through the command object, you can register various forms and functions for this command. Suppose there is a `Command`.
-The command object has the following member functions.
+Through the command object, you can register various forms and functions for the command. Given a `Command` object, you can call the following member functions:
 
 #### Set Command Alias
 
@@ -108,7 +107,7 @@ The command object has the following member functions.
 - Parameters:
     - alias : `String`  
       Command alias.
-- Return value: Whether creating the alias succeeded or not.
+- Return value: Whether the alias was set successfully.
 - Return value type: `Boolean`
 
 #### Add Command Enumerations
@@ -117,10 +116,10 @@ The command object has the following member functions.
 
 - Parameters:
     - name : `String`  
-      Enumeration name, used to distinguish the enumeration when setting parameters.
+      Enumeration name, used to identify the enumeration when setting parameters.
     - values : `Array<String>`  
-      Valid values ​​for enumeration.
-- Return value: New enumeration option identification name.
+      Valid values for the enumeration.
+- Return value: Identifier of the new enumeration option.
 - Return value type: `String`
 
 #### Set a Soft Enumeration
@@ -132,10 +131,10 @@ The command object has the following member functions.
       Soft enumeration name, used with `ParamType.SoftEnum` parameters.
     - values : `Array<String>`  
       Initial values of the soft enumeration.
-- Return value: Whether setting succeeded or not.
+- Return value: Whether the soft enumeration was set successfully.
 - Return value type: `Boolean`
 
-Unlike ordinary enumerations, the values of a soft enumeration can still be changed after the command is registered.
+Unlike ordinary enumerations, the values of a soft enumeration can still be modified after the command is registered.
 
 #### Add Values to a Soft Enumeration
 
@@ -146,7 +145,7 @@ Unlike ordinary enumerations, the values of a soft enumeration can still be chan
       Soft enumeration name.
     - values : `Array<String>`  
       Values to add.
-- Return value: Whether adding succeeded or not.
+- Return value: Whether the values were added successfully.
 - Return value type: `Boolean`
 
 #### Remove Values From a Soft Enumeration
@@ -158,7 +157,7 @@ Unlike ordinary enumerations, the values of a soft enumeration can still be chan
       Soft enumeration name.
     - values : `Array<String>`  
       Values to remove.
-- Return value: Whether removing succeeded or not.
+- Return value: Whether the values were removed successfully.
 - Return value type: `Boolean`
 
 #### Get the Values of a Soft Enumeration
@@ -168,7 +167,7 @@ Unlike ordinary enumerations, the values of a soft enumeration can still be chan
 - Parameters:
     - name : `String`  
       Soft enumeration name.
-- Return value: Values of the soft enumeration. Returns `Null` if it does not exist.
+- Return value: Values of the soft enumeration, or `Null` if it does not exist.
 - Return value type: `Array<String>`
 
 #### Get the Names of All Soft Enumerations
@@ -188,14 +187,13 @@ Unlike ordinary enumerations, the values of a soft enumeration can still be chan
     - type : `ParamType`  
       Command parameter type.
     - enumName : `String`  
-      Enumeration name (only valid when `ParamType` is `Enum`, used to distinguish enumeration options).
+      Enumeration name (valid only when `ParamType` is `Enum`; used to distinguish enumeration options).
     - identifier : `String`  
-      Parameter identifier, used to uniquely identify parameters in special cases, generally can be replaced by
-      `enumName` or `name`.
+      Parameter identifier, used to uniquely identify the parameter in special cases. Can generally be replaced by `enumName` or `name`.
     - enumOptions : `Integer`  
-      Parameter options, set to `1` to expand enumeration options in the command prompt.  
-      For example `<action : TagChangeAction>` will become `<add|remove>`.
-- Return value: Whether setting succeeded or not.
+      Parameter options. Set to `1` to expand enumeration options in the command prompt.  
+      For example, `<action : TagChangeAction>` becomes `<add|remove>`.
+- Return value: Whether the operation succeeded.
 - Return value type: `Boolean`
 
 #### Add an Optional Parameter
@@ -208,39 +206,38 @@ Unlike ordinary enumerations, the values of a soft enumeration can still be chan
     - type : `ParamType`  
       Command parameter type.
     - enumName : `String`  
-      Enumeration name (only valid when `ParamType` is `Enum`, used to distinguish enumeration options).
+      Enumeration name (valid only when `ParamType` is `Enum`; used to distinguish enumeration options).
     - identifier : `String`  
-      Parameter identifier, used to uniquely identify parameters in special cases, generally can be replaced by
-      `enumName` or `name`.
+      Parameter identifier, used to uniquely identify the parameter in special cases. Can generally be replaced by `enumName` or `name`.
     - enumOptions : `Integer`  
-      Parameter options, set to `1` to expand enumeration options in the command prompt.  
-      For example `<action : TagChangeAction>` will become `<add|remove>`.
-- Return value: Whether setting succeeded or not.
+      Parameter options. Set to `1` to expand enumeration options in the command prompt.  
+      For example, `<action : TagChangeAction>` becomes `<add|remove>`.
+- Return value: Whether the operation succeeded.
 - Return value type: `Boolean`
 
 #### Valid Command Parameter Types and Explanations
 
 | Command Parameter Type | Meaning                                                                                                         |
 |------------------------|-----------------------------------------------------------------------------------------------------------------|
-| `ParamType.Bool`       | Boolean Parameter                                                                                               |
-| `ParamType.Int`        | Integer Parameter                                                                                               |
-| `ParamType.Float`      | Floating point Parameter                                                                                        |
-| `ParamType.Dimension`  | Dimension Parameter                                                                                             |
-| `ParamType.String`     | String Parameter                                                                                                |
-| `ParamType.Actor`      | Entity Target Selector Parameter                                                                                |
-| `ParamType.Player`     | Player Target Selector Parameter                                                                                |
-| `ParamType.BlockPos`   | Integer Coordinate Parameters                                                                                   |
-| `ParamType.Vec3`       | Floating Point Coordinate Parameter                                                                             |
-| `ParamType.RawText`    | Raw String Arguments (May contain special characters like comma spaces, Can only be used as the last parameter) |
-| `ParamType.Message`    | Message Type Parameter (Same as `/Say` Command Parameter, Will Automatically Expand the Target Selector, Etc.)  |
+| `ParamType.Bool`       | Boolean parameter                                                                                               |
+| `ParamType.Int`        | Integer parameter                                                                                               |
+| `ParamType.Float`      | Floating-point parameter                                                                                        |
+| `ParamType.Dimension`  | Dimension parameter                                                                                             |
+| `ParamType.String`     | String parameter                                                                                                |
+| `ParamType.Actor`      | Entity target selector parameter                                                                                |
+| `ParamType.Player`     | Player target selector parameter                                                                                |
+| `ParamType.BlockPos`   | Integer coordinate parameter                                                                                    |
+| `ParamType.Vec3`       | Floating-point coordinate parameter                                                                             |
+| `ParamType.RawText`    | Raw string parameter (may contain special characters such as commas and spaces; can be used only as the last parameter) |
+| `ParamType.Message`    | Message parameter (same as the `/Say` command parameter; automatically expands target selectors, etc.)          |
 | `ParamType.JsonValue`  | `JSON` string parameter                                                                                         |
-| `ParamType.Item`       | Item Type Parameter                                                                                             |
-| `ParamType.Block`      | Block Type Parameter                                                                                            |
-| `ParamType.Effect`     | Effect Type Parameter                                                                                           |
-| `ParamType.Enum`       | Enum Parameter                                                                                                  |
-| `ParamType.SoftEnum`   | Variable Enum Parameter                                                                                         |
-| `ParamType.ActorType`  | Entity Type Parameter                                                                                           |
-| `ParamType.Command`    | Command Name Parameter (For Testing Only)                                                                       |
+| `ParamType.Item`       | Item type parameter                                                                                             |
+| `ParamType.Block`      | Block type parameter                                                                                            |
+| `ParamType.Effect`     | Effect type parameter                                                                                           |
+| `ParamType.Enum`       | Enum parameter                                                                                                  |
+| `ParamType.SoftEnum`   | Variable enum parameter                                                                                         |
+| `ParamType.ActorType`  | Entity type parameter                                                                                           |
+| `ParamType.Command`    | Command name parameter (for testing only)                                                                       |
 
 #### Add a New Command Overload
 
@@ -248,18 +245,14 @@ Unlike ordinary enumerations, the values of a soft enumeration can still be chan
 
 - Parameters:
     - params : `Array<String>`  
-      Parameter identifier, parameter list used by overloading, available parameter identifier, enumeration name,
-      parameter name.
-      Note that you cannot use identifiers that cannot distinguish specific parameters. For example, both parameters are
-      called `action` but the enumeration options are different. In this case, the enumeration name should be used
-      instead of the parameter name.
-- Return value: Whether setting succeeded or not.
+      The list of parameter identifiers for the overload. Each identifier can be either an enumeration name or a parameter name.
+      Note that you cannot use an identifier that fails to distinguish specific parameters. For example, if two parameters are both named `action` but have different enumeration options, you should use the enumeration name instead of the parameter name.
+- Return value: Whether the setting succeeded.
 - Return value type: `Boolean`
 
 !!! tip
-    Command overloading is the method used by BDS to distinguish different command forms, and each different command form
-    corresponds to a command overloading.  
-    As you can see, the parameter names provided in the command overload form a new command form.
+    BDS uses command overloading to distinguish different command forms, with each form corresponding to a separate overload.  
+    The parameter names provided in the command overload define a new command form.
 
 #### Set Command Callback
 
@@ -267,63 +260,59 @@ Unlike ordinary enumerations, the values of a soft enumeration can still be chan
 
 - Parameters:
     - callback : `Function(cmd,origin,output,results)`  
-      When the registered command is executed, the interface automatically calls the callback function.
-- Return value: Whether setting succeeded or not.
+      The callback function, called automatically when the registered command is executed.
+- Return value: Whether the setting succeeded.
 - Return value type: `Boolean`
 
 !!! tip
-    The parameters of the command callback function are relatively complex, which will be explained in detail below.
+    The parameters of the command callback function are relatively complex and are explained in detail below.
 
 #### Installation Instructions
 
-After all the configuration of the command is completed, use this function to register the command to the BDS command
-system.
+After completing all command configuration, use this function to register the command with the BDS command system.
 
 `Command.setup()`
 
-- Return value: Whether the installation was successful.
+- Return value: Whether the installation succeeded.
 - Return value type: `Boolean`
 
 ## Command Callback Function
 
-The **command callback function** mentioned above is a relatively complex callback function, and some explanations of
-the parameters are given below.
+The **command callback function** mentioned above is relatively complex. Its parameters are explained below.
 Command callback function prototype: `Function(cmd,origin,output,results)`
 
 #### Parameters `cmd` : Own Command Object
 
-This parameter gives the directive object with which you registered this command.
+This parameter provides the command object used to register this command.
 
 #### Parameters `origin` : The Executor of the Command
 
-The parameter `origin` is of type `CommandOrigin` object. This object represents the executor of this command. Through
-this object, some operations can be performed on the executor.
-For a particular `CommandOrigin` object `ori`, there are the following properties:
+The `origin` parameter is a `CommandOrigin` object representing the executor of the command. You can use this object to perform operations on the executor.
+A `CommandOrigin` object `ori` has the following properties:
 
 | Members      | Meaning                                              | Data Types   |
 |--------------|------------------------------------------------------|--------------|
-| ori.type     | Command Execution Body Type                          | `OriginType` |
-| ori.typeName | Name of the command execution body type              | `String`     |
-| ori.name     | The name of the command execution body               | `String`     |
-| ori.pos      | The coordinates of the command exection body         | `FloatPos`   |
-| ori.blockPos | The block coordinates of the command execution body  | `IntPos`     |
-| ori.entity   | The entity that executes the command (may be `Null`) | `Entity`     |
+| ori.type     | Type of the command executor                         | `OriginType` |
+| ori.typeName | Name of the command executor type                    | `String`     |
+| ori.name     | Name of the command executor                         | `String`     |
+| ori.pos      | Coordinates of the command executor                  | `FloatPos`   |
+| ori.blockPos | Block coordinates of the command executor            | `IntPos`     |
+| ori.entity   | The entity that executed the command (may be `Null`) | `Entity`     |
 | ori.player   | The player who executed the command (may be `Null`)  | `Player`     |
 
 `ori.getNbt()` returns the serialized data of the command origin as an `NbtCompound`.
 
 #### Parameter `output` : Output the Execution Result of the Command to the Command Executor
 
-Parameter `output` is of type `CommandOutput` object. Through this object, the execution result of the command can be
-output to the command executor.
-For a particular `CommandOutput` object `outp`, there are the following properties:
+The `output` parameter is a `CommandOutput` object used to send the execution result of the command to the executor.
+A `CommandOutput` object `outp` has the following properties:
 
 | Members           | Meaning                                    | Data Types |
 |-------------------|--------------------------------------------|------------|
 | outp.empty        | Whether no message has been output yet     | `Boolean`  |
 | outp.successCount | Number of successes recorded by the output | `Integer`  |
 
-and the following member methods are available:
+The following member methods are also available:
 
 ##### Output a Success Message
 
@@ -333,8 +322,8 @@ and the following member methods are available:
     - msg : `String`  
       The message to output.
     - parm : `Array`
-      Parameters to be replaced
-- Return value: Whether the output is successful.
+      Parameters for substitution.
+- Return value: Whether the output succeeded.
 - Return value type: `Boolean`
 
 ##### Output an Error Message
@@ -345,8 +334,8 @@ and the following member methods are available:
     - msg : `String`  
       The message to output.
     - parm : `Array`
-      Parameters to be replaced
-- Return value: Whether the output is successful.
+      Parameters for substitution.
+- Return value: Whether the output succeeded.
 - Return value type: `Boolean`
 
 ##### Output a General Message
@@ -357,39 +346,37 @@ and the following member methods are available:
     - msg : `String`  
       The message to output.
     - parm : `Array`
-      Parameters to be replaced
-- Return value: Whether the output is successful.
+      Parameters for substitution.
+- Return value: Whether the output succeeded.
 - Return value type: `Boolean`
 
 #### Parameter `result` : The Result Obtained by Each Parameter of the Command
 
-The content of `results` is `object<command parameter name-data value>` key-value pair. The `command parameter name` is
-the `name` value of the parameter set when the command is registered, and the `data value` is the content filled in by
-the executor in the position of the current command parameter.
+`results` is an `object<command parameter name-data value>` of key-value pairs. The `command parameter name` is the parameter's `name` value set when registering the command, and the `data value` is the argument that the executor entered for that parameter.
 
-The relationship between command parameter types and data value types is as follows:
+The mapping between command parameter types and data value types is as follows:
 
 | Command Parameter Type | Data Value Type | Meaning                                                                                                         |
 |------------------------|-----------------|-----------------------------------------------------------------------------------------------------------------|
-| `ParamType.Bool`       | `Boolean`       | Boolean Value                                                                                                   |
-| `ParamType.Int`        | `Integer`       | Integer Value                                                                                                   |
-| `ParamType.Float`      | `Float`         | Floating Point Value                                                                                            |
+| `ParamType.Bool`       | `Boolean`       | Boolean value                                                                                                   |
+| `ParamType.Int`        | `Integer`       | Integer value                                                                                                   |
+| `ParamType.Float`      | `Float`         | Floating-point value                                                                                            |
 | `ParamType.Dimension`  | `Integer`       | Dimension ID                                                                                                    |
 | `ParamType.String`     | `String`        | String                                                                                                          |
-| `ParamType.Actor`      | `Array<Actor>`  | The entity selected by the entity target selector                                                               |
-| `ParamType.Player`     | `Array<Player>` | The entity selected by the player's target selector                                                             |
-| `ParamType.BlockPos`   | `IntPos`        | Integer Coordinate Object                                                                                       |
-| `ParamType.Vec3`       | `FloatPos`      | Floating Point Coordinate Object                                                                                |
-| `ParamType.RawText`    | `String`        | Raw String Arguments (May contain special characters like comma spaces, Can only be used as the last parameter) |
-| `ParamType.Message`    | `String`        | Message Type String (same as `/say` command parameters, will automatically expand target selectors, etc.)       |
-| `ParamType.JsonValue`  | `String`        | `JSON` String                                                                                                   |
-| `ParamType.Item`       | `Item`          | Item Type                                                                                                       |
-| `ParamType.Block`      | `Block`         | Block Type                                                                                                      |
-| `ParamType.Effect`     | `String`        | Effect Type String                                                                                              |
-| `ParamType.Enum`       | `String`        | Enumerated String                                                                                               |
-| `ParamType.SoftEnum`   | `String`        | Mutable Enumerated String                                                                                       |
-| `ParamType.ActorType`  | `String`        | Entity Type String                                                                                              |
-| `ParamType.Command`    | `String`        | Command Name (For testing only)                                                                                 |
+| `ParamType.Actor`      | `Array<Actor>`  | Entities selected by the entity target selector                                                                 |
+| `ParamType.Player`     | `Array<Player>` | Entities selected by the player target selector                                                                 |
+| `ParamType.BlockPos`   | `IntPos`        | Integer coordinate object                                                                                       |
+| `ParamType.Vec3`       | `FloatPos`      | Floating-point coordinate object                                                                                |
+| `ParamType.RawText`    | `String`        | Raw string arguments (may contain special characters such as commas and spaces; can only be used as the last parameter) |
+| `ParamType.Message`    | `String`        | Message type string (same as `/say` command parameters; automatically expands target selectors, etc.)           |
+| `ParamType.JsonValue`  | `String`        | `JSON` string                                                                                                   |
+| `ParamType.Item`       | `Item`          | Item type                                                                                                       |
+| `ParamType.Block`      | `Block`         | Block type                                                                                                      |
+| `ParamType.Effect`     | `String`        | Effect type string                                                                                              |
+| `ParamType.Enum`       | `String`        | Enumerated string                                                                                               |
+| `ParamType.SoftEnum`   | `String`        | Mutable enumerated string                                                                                       |
+| `ParamType.ActorType`  | `String`        | Entity type string                                                                                              |
+| `ParamType.Command`    | `String`        | Command name (for testing only)                                                                                 |
 
 ### Command Registration Example
 
@@ -422,13 +409,10 @@ mc.listen("onServerStarted", () => {
 
 ## Fake Command API
 
-The fake command API here is reserved for **downward compatibility**. It is recommended to use the **true command** API
-written in the above document.
+The fake command API is retained for **downward compatibility**. We recommend using the **true command** API described above instead.
 
 !!! warning
-    Although it looks relatively simple, fake commands have some important disadvantages, including that they can only be
-    executed by the player or console, other objects (such as command blocks, NPCs, etc.) cannot be executed, all parameter
-    data needs to be parsed by themselves, etc.  
+    Although fake commands look relatively simple, they have significant drawbacks: only players or the console can execute them (other objects, such as command blocks and NPCs, cannot), you must parse all parameter data yourself, and so on.  
     Please try to use the real command API.
 
 ### Register a New Player Command (Fake Command)
@@ -437,24 +421,24 @@ written in the above document.
 
 - Parameters:
     - cmd : `String`  
-      The command that will be registered.
+      The command to register.
     - description : `String`  
-      Command Description Text.
+      The command description text.
     - callback : `Function(player,args)`  
-      When the registered command is executed, the interface automatically calls the callback function.
+      The callback function called automatically when the registered command is executed.
     - level : `Integer`  
-      (Optional parameter) The registration level of the command, the default is 0, that is, everyone can execute it.
-      If the command registration level is set to 1, only the OP can execute this command.
-- Return value: Whether the registration was successful.
+      (Optional) The registration level of the command. Defaults to 0, which allows everyone to execute it.
+      If the registration level is set to 1, only OPs can execute the command.
+- Return value: Whether the registration succeeded.
 - Return value type: `Boolean`
 
-Note: The callback function prototype of the parameter callback: `function(player, args)`
+Note: The callback function prototype of the callback parameter is `function(player, args)`
 
 - player : `Player`  
-  The player that executes the command.
+  The player executing the command.
 - args : `Array<String,String...>`    
-  Arguments following the target command. Divide by spaces to form a string array.  
-  If a custom command `land set` is registered, when `/land set abc 2333` is executed, the value of args will be
+  The arguments following the target command, split by spaces into a string array.  
+  For example, if you register the custom command `land set`, running `/land set abc 2333` sets args to
   `[ "abc","2333" ]`
 
 [JavaScript]
@@ -472,21 +456,21 @@ mc.regPlayerCmd("fly on", "Turn on the fly mode", function (pl, args) {
 
 - Parameters:
     - cmd : `String`  
-      The command that will be registered.
+      The command to register.
 
     - description : `String`  
-      Command Description Text.
+      The command description text.
 
     - callback : `Function`  
-      When the registered command is executed, the interface automatically calls the callback function.
-- Return value: Whether the registration was successful.
+      The callback function called automatically when the registered command is executed.
+- Return value: Whether the registration succeeded.
 - Return value type: `Boolean`
 
-Note: The callback function prototype of the parameter callback: `function(args)`
+Note: The callback function prototype of the callback parameter is `function(args)`
 
 - args : `Array<String,String...>`      
-  Arguments following the target command. Divide by spaces to form a string array.
-  If a custom command `land set` is registered, when `/land set abc 2333` is executed, the value of args will be
+  The arguments following the target command, split by spaces into a string array.
+  For example, if you register the custom command `land set`, running `/land set abc 2333` sets args to
   `['abc','2333']`
 
 [JavaScript]
@@ -499,17 +483,17 @@ mc.regConsoleCmd("backup", "Start the backup", function (args) {
 ```
 
 !!! tip "Instructions on Fake Order Registration"
-    After setting the callback function, the callback function will be called when the fake command you registered is
+    Once you set a callback function, LSE calls it whenever the registered fake command is
     executed.  
-    LSE will automatically split the command arguments into arrays for you before calling them.  
-    Take the JavaScript language as an example:  
-    Execute command  
+    Before calling the callback, LSE automatically splits the command arguments into an array.  
+    Take JavaScript as an example:  
+    Run  
     `mc.regPlayerCmd("land buy", "land buy", function(pl,args){ .... }, 0 );`  
-    after that,  
-    This callback function will be called when you use the command `/land buy abcde 12345`.  
-    The parameter args of the callback function is passed in an array: [ "abcde" , "12345" ]  
-    As you can see, the values contained in `args` are **sequentially split** command arguments.  
-    If you have quotes in your command (for example to handle player names with spaces in them), LSE will also do this when splitting.
+    After that,  
+    running the command `/land buy abcde 12345` calls this callback function.  
+    The args parameter of the callback function receives the array: [ "abcde" , "12345" ]  
+    As you can see, `args` contains the **sequentially split** command arguments.  
+    If the command includes quotes (for example, to handle player names with spaces), LSE accounts for them when splitting the arguments.
 
 ## Other APIs Related to the Command System
 
@@ -519,7 +503,7 @@ mc.regConsoleCmd("backup", "Start the backup", function (args) {
 
 - Parameters:
     - output : `String`  
-      The command output produced by the simulation.
+      The simulated command output.
 
-- Return value: Whether the exection was successful.
+- Return value: Whether the execution succeeded.
 - Return value type: `Boolean`

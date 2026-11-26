@@ -3,15 +3,15 @@ platforms: [windows]
 ---
 # Carpetas y archivos
 
-Todos los archivos y carpetas que lee y escribe la versión para Windows de LeviLauncher, según LeviLauncher 1.1.0. El lanzador no escribe nada en la carpeta temporal del sistema (`%TEMP%`).
+Todos los archivos y carpetas que lee y escribe la versión para Windows de LeviLauncher, a partir de la versión 1.1.0. El lanzador no escribe nada en la carpeta temporal del sistema (`%TEMP%`).
 
 ## Resumen
 
 | Carpeta | Ubicación | Contiene |
 | --- | --- | --- |
-| Carpeta de configuración | `%APPDATA%\LeviLauncher\` | Solo `config.json`: pequeño, y se mueve con tu perfil de Windows |
-| Carpeta local | `%LOCALAPPDATA%\LeviLauncher\` | Registros, la cuenta de Microsoft, los datos WebView2 de la ventana; también es la raíz de datos predeterminada |
-| Raíz de datos | la carpeta local, salvo que elijas otra (**Raíz base** en **Configuración → Configuración básica**, o `config set data-root`) | `Instances\`, `Backups\`, `Cache\` |
+| Carpeta de configuración | `%APPDATA%\LeviLauncher\` | Solo `config.json`: ocupa poco y viaja con tu perfil de Windows |
+| Carpeta local | `%LOCALAPPDATA%\LeviLauncher\` | Registros, la cuenta de Microsoft y los datos WebView2 de la ventana; también es la raíz de datos predeterminada |
+| Raíz de datos | La carpeta local, salvo que elijas otra (**Raíz base** en **Configuración → Configuración básica**, o `config set data-root`) | `Instances\`, `Backups\`, `Cache\` |
 
 ```text
 %APPDATA%\LeviLauncher\
@@ -35,7 +35,7 @@ Todos los archivos y carpetas que lee y escribe la versión para Windows de Levi
     gamertags.json                 los gamertags de los perfiles de jugador que ha visto el lanzador
 ```
 
-Todo lo que hay en `Cache\` se puede borrar sin perder nada. `LeviLauncher.exe cache clean` borra la caché de paquetes, los archivos descargados para importaciones y las descargas sin terminar, y `LeviLauncher.exe installer remove` borra los instaladores del juego descargados. Cambiar la raíz de datos solo apunta el lanzador a otra carpeta: las instancias, descargas y copias de seguridad existentes no se mueven.
+Todo el contenido de `Cache\` se puede borrar sin perder nada. `LeviLauncher.exe cache clean` elimina la caché de paquetes, los archivos descargados para importaciones y las descargas sin terminar, mientras que `LeviLauncher.exe installer remove` elimina los instaladores del juego descargados. Cambiar la raíz de datos solo hace que el lanzador apunte a otra carpeta: las instancias, descargas y copias de seguridad existentes no se mueven.
 
 ## La carpeta de una instancia
 
@@ -52,26 +52,26 @@ Instances\<instancia>\
   Minecraft Bedrock\               los datos de juego, con el aislamiento activado (Preview: Minecraft Bedrock Preview)
 ```
 
-Consulta [Aislamiento de instancias](../concepts/isolation) para las carpetas de datos de juego de instancias con y sin aislamiento, y [Cómo se cargan los mods](../concepts/mod-loading) para `mods\`.
+Consulta [Aislamiento de instancias](../concepts/isolation) para ver las carpetas de datos de juego en instancias con y sin aislamiento, y [Cómo se cargan los mods](../concepts/mod-loading) para conocer la carpeta `mods\`.
 
 ## Fuera de las carpetas de LeviLauncher
 
 | Ruta | Qué es |
 | --- | --- |
-| `Minecraft - <instancia>.lnk` en tu escritorio | El acceso directo de una instancia (**Crear acceso directo en el escritorio**, o `instance shortcut`). Abre el lanzador con `--launch=<instancia>`. Solo se escribe en tu propio escritorio, no en el público. |
-| `%APPDATA%\lip\` | La configuración de lip: `config.toml`, por ejemplo su `github_proxy`, que también lee el gestor de paquetes integrado. |
-| `%LOCALAPPDATA%\lip\Cache\` | La caché de paquetes del gestor de paquetes integrado, la misma que la de lip. **Limpiar caché** en **Configuración → Gestión de paquetes** la vacía. |
+| `Minecraft - <instancia>.lnk` en tu escritorio | El acceso directo de una instancia (**Crear acceso directo en el escritorio**, o `instance shortcut`). Abre el lanzador con `--launch=<instancia>`. Solo se crea en tu propio escritorio, nunca en el público. |
+| `%APPDATA%\lip\` | La configuración de lip: `config.toml` (por ejemplo, su ajuste `github_proxy`), que también lee el gestor de paquetes integrado. |
+| `%LOCALAPPDATA%\lip\Cache\` | La caché del gestor de paquetes integrado, compartida con lip. **Limpiar caché** en **Configuración → Gestión de paquetes** la vacía. |
 | `%APPDATA%\Minecraft Bedrock\`, `%APPDATA%\Minecraft Bedrock Preview\` | Los datos de juego compartidos de las instancias GDK sin aislamiento. |
 | `%LOCALAPPDATA%\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\` (Preview: `Microsoft.MinecraftWindowsBeta_8wekyb3d8bbwe`) | Los datos de juego compartidos de las instancias UWP sin aislamiento. |
 
 ## Cómo se escriben los archivos
 
-- Un archivo se escribe junto a su lugar final como `<nombre>.<aleatorio>.tmp` y luego se renombra a su sitio, de modo que nunca se ve un archivo a medio escribir. Una descarga sin terminar que se puede reanudar se guarda como `<nombre>.partial.tmp`.
-- Los nombres que eliges (instancias, mundos) se limpian con las reglas de Windows: se quitan los caracteres `<>:"/\|?*` y los puntos y espacios finales, y se evitan nombres reservados como `CON` o `NUL`.
-- Los archivos que crea el lanzador se llaman `<nombre>_<yyyyMMdd-HHmmss>.<extensión>`, por ejemplo `MyWorld_20261107-142301.mcworld`.
+- Cada archivo se escribe primero en su carpeta de destino como `<nombre>.<aleatorio>.tmp` y luego se renombra al nombre definitivo, por lo que nunca queda un archivo a medio escribir. Las descargas sin terminar que admiten reanudación se guardan como `<nombre>.partial.tmp`.
+- Los nombres que eliges (para instancias o mundos) se sanean según las reglas de Windows: se eliminan los caracteres `<>:"/\|?*`, así como los puntos y espacios finales, y se evitan nombres reservados como `CON` o `NUL`.
+- Los archivos generados por el lanzador siguen el formato `<nombre>_<yyyyMMdd-HHmmss>.<extensión>`, por ejemplo `MyWorld_20261107-142301.mcworld`.
 
 ## La estructura antigua
 
-LeviLauncher anterior a 1.1.0 guardaba todo en `%APPDATA%\<nombre del programa>\` (por ejemplo `%APPDATA%\levilauncher.exe\`), con las carpetas `versions\`, `backups\`, `installers\`, `updates\`, `logs\` y los archivos `config.json`, `user_gamertag_map.json` y `gdk_pending_versions.json`. Las instancias contenían `version.json` y `LargeLogo.ico`.
+Las versiones de LeviLauncher anteriores a la 1.1.0 guardaban todo en `%APPDATA%\<nombre del programa>\` (por ejemplo, `%APPDATA%\levilauncher.exe\`), que contenía las carpetas `versions\`, `backups\`, `installers\`, `updates\` y `logs\`, además de los archivos `config.json`, `user_gamertag_map.json` y `gdk_pending_versions.json`. Las instancias contenían `version.json` y `LargeLogo.ico`.
 
-En su primer inicio, LeviLauncher 1.1.0 o posterior traslada estos datos una sola vez a la estructura de arriba, sin borrar nada: los datos de la misma unidad se renombran a su sitio, los de otra unidad se copian y se conserva el original, y el antiguo `config.json` pasa a llamarse `config.migrated.json`. Una raíz de datos que hubieras elegido se queda donde está. Si algo no se puede trasladar (por ejemplo porque el juego se está ejecutando desde una instancia), se deshacen todos los pasos y el lanzador funciona con la estructura antigua hasta el siguiente inicio. `storage-migration.json` registra qué se trasladó y adónde; después se actualizan los accesos directos del escritorio a las nuevas ubicaciones.
+Al iniciarse por primera vez, LeviLauncher 1.1.0 o posterior migra estos datos una única vez a la nueva estructura sin borrar nada: los archivos que están en la misma unidad se mueven directamente, los que están en otra unidad se copian conservando el original y el antiguo `config.json` pasa a llamarse `config.migrated.json`. Si habías elegido una raíz de datos personalizada, se mantiene donde está. Si algo no se puede trasladar (por ejemplo, porque el juego se está ejecutando desde una instancia), se revierten todos los cambios y el lanzador sigue usando la estructura antigua hasta el siguiente inicio. El archivo `storage-migration.json` registra qué se trasladó y adónde; por último, los accesos directos del escritorio se actualizan con las nuevas ubicaciones.

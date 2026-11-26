@@ -64,8 +64,7 @@ public:
 }
 ```
 
-A logger holds its sinks by name. Every logger starts out with a console sink named
-`"ll_default_console"` and a `logs/latest.log` sink named `"ll_default_file"`.
+A logger stores its sinks by name. Every logger starts with a console sink named `"ll_default_console"` and a `logs/latest.log` sink named `"ll_default_file"`.
 
 ### LogLevel
 
@@ -144,8 +143,7 @@ void addFileSink(ll::io::Logger& logger) {
 }
 ```
 
-`setSink` replaces a sink already held under the same name and returns it; `removeSink` drops one
-and hands it back.
+`setSink` replaces an existing sink with the same name and returns it; `removeSink` removes a sink and returns it.
 
 ```cpp
 #include "ll/api/io/ConsoleSink.h"
@@ -171,22 +169,13 @@ void customizeSinks(ll::io::Logger& logger) {
 }
 ```
 
-Messages are written on a background thread. `Logger::setFormatter` and `Logger::setFlushLevel` wait
-for it, so prefer them, or replacing a sink with `setSink`, over changing a sink returned by `getSink`
-while the logger is in use.
+Messages are written on a background thread. Because `Logger::setFormatter` and `Logger::setFlushLevel` wait for that thread, prefer calling them—or replacing the sink with `setSink`—rather than modifying a sink returned by `getSink` while the logger is in use.
 
-`FileSink` instances identify their shared file state by the normalized path. Sinks that point to the
-same file therefore share its handle, rotation state and policy, while each sink keeps its own formatter
-and flush level. Different loggers can write to one file with different formatting without replacing
-one another's formatter.
+`FileSink` instances share file state by normalized path. Sinks pointing to the same file share its handle, rotation state, and policy, while each sink keeps its own formatter and flush level. Different loggers can therefore write to the same file with different formatting without overwriting each other's formatters.
 
 ### Rotating a Log File
 
-A `FileSink` only appends unless it is given a `RotatePolicy`; without one it uses
-`RotatePolicy::disabled()`, which turns rotation off entirely. `RotatePolicy{}`'s own defaults are
-meant to be usable as they are, so passing one is normally all it takes. Its fields are read at three
-different times: `rotateOnOpen` once when the file opens, `maxFileSize` and `interval` before every
-message, and the compression and retention settings asynchronously after an archive is created.
+Unless given a `RotatePolicy`, a `FileSink` uses `RotatePolicy::disabled()`, which disables rotation and only appends. The defaults on `RotatePolicy{}` work out of the box, so passing a default-constructed policy is usually enough. Its fields are read at three points: `rotateOnOpen` once when the file opens, `maxFileSize` and `interval` before each message, and the compression and retention settings asynchronously after an archive is created.
 
 | Field | Default | Meaning |
 |-------|---------|---------|
@@ -222,25 +211,13 @@ void addRotatingFileSink(ll::io::Logger& logger) {
 }
 ```
 
-The size and time triggers are independent, so whichever comes first rotates the file. `setPolicy`
-replaces the policy of an existing sink, and `rotate` rotates right away unless the file is empty.
+The size and time triggers are independent; whichever triggers first rotates the file. `setPolicy` replaces the policy of an existing sink, and `rotate` rotates immediately unless the file is empty.
 
-`maxFiles`, `maxAgeDays` and `totalSizeCap` each contribute independently and their results are
-unioned, so widening one never disables another. Retention only ever considers files matching the
-archive naming scheme, so unrelated files in the same directory are left alone. Since `totalSizeCap`
-weighs compressed sizes, turning `compress` off shortens how much history fits within it.
+`maxFiles`, `maxAgeDays`, and `totalSizeCap` are evaluated independently and their results are combined, so relaxing one never disables another. Retention only considers files that match the archive naming scheme, leaving unrelated files in the same directory untouched. Because `totalSizeCap` measures on-disk size (including compression), disabling `compress` reduces how much history fits within the cap.
 
-Archives are named by `namer`, and the active file's extension is appended to what it returns. The
-default, `RotatePolicy::defaultNamer`, produces `2026-09-19.log`, or `2026-09-19_14.log` with hourly
-rotation, adding `.1`, `.2` and so on for later rotations within the same interval. A custom namer
-receives an `ArchiveNameInfo` carrying the `time` the rotation was triggered at, the `index` of this
-rotation within the current interval starting at 0, and the policy's `interval`. Its result must
-start with a four-digit year followed by `-`, otherwise compression and retention will not recognize
-the archives.
+Archives are named by `namer`, with the active file's extension appended to the returned string. The default, `RotatePolicy::defaultNamer`, produces `2026-09-19.log` (or `2026-09-19_14.log` for hourly rotation), appending `.1`, `.2`, and so on for subsequent rotations within the same interval. A custom namer receives an `ArchiveNameInfo` containing the `time` the rotation was triggered, the `index` of this rotation within the current interval (starting at 0), and the policy's `interval`. The returned name must start with a four-digit year followed by `-`; otherwise, compression and retention will not recognize the archives.
 
-`RotatePolicy` extends `RotateConfig`, which holds every field except `namer` and can therefore be
-reflected into a config file. LeviLamina's own `logs/latest.log` takes its policy from the
-`logRotate` entry of its config.
+`RotatePolicy` extends `RotateConfig`, which contains every field except `namer` and can be reflected directly into a config file. LeviLamina's own `logs/latest.log` reads its policy from the `logRotate` entry in its configuration.
 
 ### Conditional Logging
 

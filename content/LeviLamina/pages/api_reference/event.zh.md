@@ -4,7 +4,7 @@
 
 ## 概述
 
-Event 模块提供了发布-订阅事件系统。包括事件总线单例、带优先级控制的类型化监听器、可取消事件，以及涵盖玩家操作、世界变化、实体、服务器生命周期、命令和客户端特定事件的全面内置事件集合。
+Event 模块提供了一套发布-订阅事件系统，包含事件总线单例、支持优先级控制的类型化监听器、可取消事件，以及丰富的内置事件（涵盖玩家操作、世界变化、实体、服务器生命周期、命令和客户端专属事件）。
 
 ## 头文件
 
@@ -17,14 +17,14 @@ Event 模块提供了发布-订阅事件系统。包括事件总线单例、带�
 | `ll/api/event/ListenerBase.h` | 带优先级的监听器基类 |
 | `ll/api/event/Cancellable.h` | 可取消事件混入 |
 | `ll/api/event/Emitter.h` | 事件发射器基类 |
-| `ll/api/event/DynamicListener.h` | 运行时监听器创建 |
+| `ll/api/event/DynamicListener.h` | 运行时创建监听器 |
 | `ll/api/event/MultiListener.h` | 监听多种事件类型 |
 
 ## 核心类
 
 ### EventBus
 
-事件总线单例。所有事件的发布和订阅都通过它进行。
+事件总线单例，负责所有事件的发布和订阅。
 
 ```cpp
 namespace ll::event {
@@ -129,7 +129,7 @@ public:
 
 | 事件 | 说明 | 可取消 |
 |------|------|:------:|
-| `PlayerConnectEvent` | 玩家连接（加入之前） | 是 |
+| `PlayerConnectEvent` | 玩家连接（加入前） | 是 |
 | `PlayerJoinEvent` | 玩家加入服务器 | 是 |
 | `PlayerDisconnectEvent` | 玩家断开连接 | 否 |
 | `PlayerChatEvent` | 玩家发送聊天消息 | 是 |
@@ -192,8 +192,8 @@ public:
 
 | 事件 | 说明 | 可取消 |
 |------|------|:------:|
-| `ServiceRegisterEvent` | 服务被注册 | 否 |
-| `ServiceUnregisterEvent` | 服务被注销 | 否 |
+| `ServiceRegisterEvent` | 服务已注册 | 否 |
+| `ServiceUnregisterEvent` | 服务已注销 | 否 |
 
 ### 客户端事件 `[仅客户端]`
 
@@ -207,8 +207,8 @@ public:
 | `ClientCommandRegisterEvent` | 正在注册客户端命令 | 否 |
 | `KeyInputEvent` | 键盘输入 | 是 |
 | `MouseInputEvent` | 鼠标输入 | 是 |
-| `BeforeUIRenderEvent` | UI 渲染之前 | 是 |
-| `AfterUIRenderEvent` | UI 渲染之后 | 否 |
+| `BeforeUIRenderEvent` | UI 渲染前 | 是 |
+| `AfterUIRenderEvent` | UI 渲染后 | 否 |
 
 ## 使用方法
 
@@ -317,7 +317,7 @@ void listenCustom() {
 
 ### MultiListener
 
-用单个回调监听多种事件类型：
+使用单个回调监听多种事件类型：
 
 ```cpp
 #include "ll/api/event/MultiListener.h"
@@ -338,11 +338,11 @@ void setupMulti() {
 
 ## 平台说明
 
-- **服务器事件**（`ServerStartedEvent`、`ServerStoppingEvent`）：在服务端和客户端构建中都可用，但仅在服务端触发。
+- **服务器事件**（`ServerStartedEvent`、`ServerStoppingEvent`）：在服务端和客户端构建中均可用，但仅在服务端触发。
 - **客户端事件**（`ClientJoinLevelEvent`、`KeyInputEvent`、`MouseInputEvent`、渲染事件）：仅在客户端构建中可用（`src-client/ll/api/event/`）。
 
 ## 相关模块
 
 - [操作指南：事件](../developer_guides/how_to_guides/event_guide.zh.md) — 分步教程
 - [Input（输入系统 · 客户端）](input.zh.md) — 客户端输入事件详情
-- [Service（服务系统）](service.zh.md) — 服务注册/注销事件
+- [Service（服务系统）](service.zh.md) — 服务注册与注销事件

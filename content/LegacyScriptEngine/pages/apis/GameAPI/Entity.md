@@ -1,23 +1,23 @@
 # 🎈 Entity Object API
 
-In LSE, "entity objects" are used to manipulate and obtain information about an entity.
+In LSE, "entity objects" are used to manipulate entities and obtain information about them.
 
 ### In LSE, “Entity Objects” Are Used to Manipulate and Obtain Information About an Entity.
 
 #### Get From Event or API
 
-Obtain the entity object given by BDS by registering the **event listener** function, or calling some **returning entity
-object** functions.
-For details, see [Event listener documentation - EventAPI](../EventAPI/Listen.md)
+You can obtain an entity object from BDS by registering an **event listener** function or by calling a **returning entity
+object** function.
+For details, see [Event listener documentation - EventAPI](../EventAPI/Listen.md).
 
 #### Get All Currently Loaded Entities
 
-This function returns an array of entity objects, each of which corresponds to a loaded entity.
+This function returns an array of entity objects, each corresponding to a loaded entity.
 
 `mc.getAllEntities()`
 
-- Return value: List of entity objects
-- Return value type:  `Array<Entity,Entity,...>`
+- Return value: List of entity objects.
+- Return value type: `Array<Entity,Entity,...>`
 
 ### Get entities in a specified area
 
@@ -28,17 +28,15 @@ This function returns an array of entity objects, each of which corresponds to a
     - startPos : `IntPos` / `FloatPos`  
       The starting position of the search.
     - endPos : `IntPos` / `FloatPos`  
-      The end position of the search.
+      The ending position of the search.
     - range : `Number`  
       The search radius.
-- Return value: List of entity objects
-- Return value type:  `Array<Entity,Entity,...>`
+- Return value: List of entity objects.
+- Return value type: `Array<Entity,Entity,...>`
 
 #### Acquired From Existing Entitys
 
-Manually generate entity objects by **entity information**
-Use this function to manually generate objects. Note that the entity you want to get must be online, otherwise the
-generation will fail.
+Use this function to manually generate an entity object from **entity information**. Note that the target entity must be online; otherwise, generation will fail.
 
 !!! warning
     This function is only available in 0.9.5 and later.
@@ -47,103 +45,98 @@ generation will fail.
 
 - Parameters:
     - info : `Number`  
-      Entity's UniqueId or RuntimeId.
+      The entity's UniqueId or RuntimeId.
 - Return value: The generated entity object.
 - Return value type: `Entity`
-    - If the return value is `Null`, it means that getting the entity failed.
+    - A return value of `Null` indicates that retrieving the entity failed.
 
 #### Spawn New Creature and Get Its Entity Object
 
-Through this function, generate a new creature at the specified location and get its corresponding entity object.
+This function spawns a new creature at the specified location and returns its corresponding entity object.
 
 `mc.spawnMob(name,pos)`  
 `mc.spawnMob(name,x,y,z,dimid)`
 
 - Parameters:
     - name : `String`  
-      The namespace name of the creature, such as `minecraft:creeper`
+      The namespaced ID of the creature, such as `minecraft:creeper`.
     - pos : `IntPos `/ `FloatPos`  
-      A coordinate object of where the mob is spawned (or use x, y, z, dimid to determine where to spawn).
+      The coordinates where the mob is spawned (alternatively, use x, y, z, and dimid to specify the spawn location).
 - Return value: The generated entity object.
-- Return value type:  `Entity`
-    - If the return value is `Null` it means that the generation failed
+- Return value type: `Entity`
+    - A return value of `Null` indicates that spawning failed.
 
-> Note: Do not save an entity object **long-term**.
-> When the entity corresponding to the entity object is destroyed, the corresponding entity object will become invalid.
-> Therefore, if there is a need to operate an entity for a long time, please obtain the real-time entity object through
-> the above methods.
+> Note: Do not store an entity object **long-term**.
+> When the underlying entity is destroyed, its corresponding entity object becomes invalid.
+> If you need to work with an entity over a long period, retrieve a fresh entity object in real time using the methods above.
 
 #### Summon New Creature and Get Its Entity Object
 
 !!! warning
     This function is only available in 0.19.1 and later.
 
-Through this function, summon a new creature at the specified location and get its corresponding entity object.
+This function summons a new creature at the specified location and returns its corresponding entity object.
 
 `mc.summonMob(name,pos[,event])`  
 `mc.summonMob(name,x,y,z,dimid[,event])`
 
 - Parameters:
     - name : `String`  
-      The namespace name of the creature, such as `minecraft:creeper`
+      The namespaced ID of the creature, such as `minecraft:creeper`.
     - pos : `IntPos `/ `FloatPos`  
-      A coordinate object of where the mob is spawned (or use x, y, z, dimid to determine where to spawn).
+      The coordinates where the mob is spawned (alternatively, use x, y, z, and dimid to specify the spawn location).
     - event : `String`  
-      Optional initialization event name
+      Optional initialization event name.
 - Return value: The generated entity object.
-- Return value type:  `Entity`
-    - If the return value is `Null` it means that the generation failed
+- Return value type: `Entity`
+    - A return value of `Null` indicates that summoning failed.
 
-> Note: Do not save an entity object **long-term**.
-> When the entity corresponding to the entity object is destroyed, the corresponding entity object will become invalid.
-> Therefore, if there is a need to operate an entity for a long time, please obtain the real-time entity object through
-> the above methods.
+> Note: Do not store an entity object **long-term**.
+> When the underlying entity is destroyed, its corresponding entity object becomes invalid.
+> If you need to work with an entity over a long period, retrieve a fresh entity object in real time using the methods above.
 
 #### Load Creature From NBT and Get Its Entity Object
 
 !!! warning
     This function is only available in 0.19.1 and later.
 
-Through this function, spawn a creature with the specified NBT data at the specified location and get its corresponding
-entity object.
+This function spawns a creature with the specified NBT data at the specified location and returns its corresponding entity object.
 
 `mc.loadMob(nbt,pos)`  
 `mc.loadMob(nbt,x,y,z,dimid)`
 
 - Parameters:
     - nbt : `NbtCompound`  
-      Creature NBT object
+      The creature's NBT object.
     - pos : `IntPos `/ `FloatPos`  
-      A coordinate object of where the mob is spawned (or use x, y, z, dimid to determine where to spawn).
+      The coordinates where the mob is spawned (alternatively, use x, y, z, and dimid to specify the spawn location).
 - Return value: The generated entity object.
-- Return value type:  `Entity`
-    - If the return value is `Null` it means that the generation failed
+- Return value type: `Entity`
+    - A return value of `Null` indicates that spawning failed.
 
 #### Clone A Creature and Get Its Entity Object
 
-Through this function, generate a new creature at the specified location and get its corresponding entity object.
+Clones a creature at the specified location and returns the new entity object.
 
 `mc.cloneMob(entity,pos)`  
 `mc.cloneMob(entity,x,y,z,dimid)`
 
 - Parameters:
     - entity : `Entity`  
-      Need clone entity object
+      The entity object to clone.
     - pos : `IntPos `/ `FloatPos`  
-      A coordinate object of where the mob is spawned (or use x, y, z, dimid to determine where to spawn).
-- Return value: The clone entity object.
-- Return value type:  `Entity`
-    - If the return value is `Null` it means that the generation failed
+      A coordinate object for where to spawn the mob (or use x, y, z, and dimid to specify the spawn location).
+- Return value: The cloned entity object.
+- Return value type: `Entity`
+    - Returns `Null` if spawning fails.
 
 > Note: Do not save an entity object **long-term**.
-> When the entity corresponding to the entity object is destroyed, the corresponding entity object will become invalid.
-> Therefore, if there is a need to operate an entity for a long time, please obtain the real-time entity object through
-> the above methods.
+> When the underlying entity is destroyed, its entity object becomes invalid.
+> If you need to work with an entity over time, fetch a fresh entity object using the methods above.
 
 ### Entity Object - Properties
 
-Every entity object contains some fixed object properties. for a specific entity object `en`, has the following
-properties:
+Every entity object has a fixed set of properties. A specific entity object `en` has the following properties:
 
 | Attributes               | Meaning                                                | Data Type        |
 |--------------------------|--------------------------------------------------------|------------------|
@@ -152,52 +145,49 @@ properties:
 | en.id                    | Entity's in-game ID                                    | `Integer`        |
 | en.pos                   | Entity's coordinates                                   | `FloatPos`       |
 | en.posDelta              | Entity's motion (position delta per tick)              | `FloatPos`       |
-| en.feetPos               | The coordinates of the entity's leg                    | `FloatPos`       |
-| en.blockPos              | The coordinates of the block the entity is standing on | `IntPos`         |
+| en.feetPos               | Coordinates of the entity's legs                       | `FloatPos`       |
+| en.blockPos              | Coordinates of the block the entity is standing on     | `IntPos`         |
 | en.maxHealth             | Entity's maximum health                                | `Integer`        |
 | en.health                | Entity's current health                                | `Integer`        |
-| en.canFly                | Can the entity fly                                     | `Boolean`        |
-| en.canFreeze             | Can entity be frozen                                   | `Boolean`        |
-| en.canSeeDaylight        | Can entitiy see daylight                               | `Boolean`        |
-| en.canPickupItems        | Can entitiy pick up items                              | `Boolean`        |
+| en.canFly                | Whether the entity can fly                             | `Boolean`        |
+| en.canFreeze             | Whether the entity can be frozen                       | `Boolean`        |
+| en.canSeeDaylight        | Whether the entity can see daylight                    | `Boolean`        |
+| en.canPickupItems        | Whether the entity can pick up items                   | `Boolean`        |
 | en.inAir                 | Whether the entity is in the air                       | `Boolean`        |
-| en.inWater               | Whether the entity is in the water                     | `Boolean`        |
-| en.inLava                | Whether the entity is in the lava                      | `Boolean`        |
+| en.inWater               | Whether the entity is in water                         | `Boolean`        |
+| en.inLava                | Whether the entity is in lava                          | `Boolean`        |
 | en.inRain                | Whether the entity is in rain                          | `Boolean`        |
 | en.inSnow                | Whether the entity is in snow                          | `Boolean`        |
-| en.inWall                | Whether the entity is on the wall                      | `Boolean`        |
+| en.inWall                | Whether the entity is on a wall                        | `Boolean`        |
 | en.inWaterOrRain         | Whether the entity is in water or rain                 | `Boolean`        |
 | en.inWorld               | Whether the entity is in the world                     | `Boolean`        |
 | en.speed                 | Entity's current speed                                 | `Float`          |
 | en.direction             | Entity's orientation                                   | `DirectionAngle` |
 | en.uniqueId              | Entity's unique identifier                             | `String`         |
-| en.runtimeId             | Entity's runtime identifier (Added in 0.9.5)           | `String`         |
+| en.runtimeId             | Entity's runtime identifier (added in 0.9.5)           | `String`         |
 | en.isInvisible           | Whether the entity is invisible                        | `Boolean`        |
-| en.isInsidePortal        | Whether the entity is inside the portal                | `Boolean`        |
+| en.isInsidePortal        | Whether the entity is inside a portal                  | `Boolean`        |
 | en.isTrusting            | Whether the entity is trusted                          | `Boolean`        |
-| en.isTouchingDamageBlock | Whether the entity touches the damage block            | `Boolean`        |
+| en.isTouchingDamageBlock | Whether the entity is touching a damage block          | `Boolean`        |
 | en.isOnFire              | Whether the entity is on fire                          | `Boolean`        |
 | en.isOnGround            | Whether the entity is on the ground                    | `Boolean`        |
-| en.isOnHotBlock          | Whether the entity is on a hot block (magma and etc.)  | `Boolean`        |
+| en.isOnHotBlock          | Whether the entity is on a hot block (magma, etc.)     | `Boolean`        |
 | en.isTrading             | Whether the entity is trading                          | `Boolean`        |
 | en.isRiding              | Whether the entity is riding                           | `Boolean`        |
 | en.isDancing             | Whether the entity is dancing                          | `Boolean`        |
 | en.isSleeping            | Whether the entity is sleeping                         | `Boolean`        |
 | en.isAngry               | Whether the entity is angry                            | `Boolean`        |
-| en.isBaby                | Whether the entity is baby                             | `Boolean`        |
+| en.isBaby                | Whether the entity is a baby                           | `Boolean`        |
 | en.isMoving              | Whether the entity is moving                           | `Boolean`        |
 
-These object properties are read-only and cannot be modified.
+These properties are read-only and cannot be modified.
 
-- For a detailed explanation of the **entity's current orientation** attribute, see
-  the [Basic Game Interface Documentation](./Basic.md)
-- **coordinates** and **leg coordinates**: if this entity is two blocks high, `pos` is different from `feetPos`, `pos`
-  is the coordinate of the entity's view's height and `feetPos` is the coordinate of the block where the leg is located
+- For a detailed explanation of the **entity's current orientation** attribute, see the [Basic Game Interface Documentation](./Basic.md).
+- **coordinates** and **leg coordinates**: If an entity is two blocks high, `pos` differs from `feetPos`. `pos` is the coordinate at the entity's eye level, while `feetPos` is the coordinate of the block where its legs are located.
 
 ### Entity Object - Function
 
-Each entity object contains some member functions (member methods) that can be executed. for a specific entity object
-`en`, you can perform some operations on this entity through the following functions:
+Each entity object has member functions (methods) that you can call. For a specific entity object `en`, you can perform operations on the entity using the following functions:
 
 #### Teleport Entity to Specified Location
 
@@ -205,14 +195,14 @@ Each entity object contains some member functions (member methods) that can be e
 `en.teleport(x,y,z,dimid[,rot])`
 
 - Parameters:
-    - pos :`IntPos `/ `FloatPos`  
-      Target position coordinates (or use x, y, z, dimid to determine entity position)
+    - pos : `IntPos `/ `FloatPos`  
+      Target position coordinates (or use x, y, z, and dimid to specify the entity's position).
 
     - rot: `DirectionAngle`
 
-      (Optional) The orientation of the entity after teleport, or the same orientation as before teleport if default
-- Return value: Whether the teleport was successful or not.
-- Return value type:  `Boolean`
+      (Optional) The entity's orientation after teleporting. Defaults to its orientation before teleporting.
+- Return value: Whether the teleport succeeded.
+- Return value type: `Boolean`
 
 #### Set the Entity's Motion
 
@@ -221,30 +211,30 @@ Each entity object contains some member functions (member methods) that can be e
 
 - Parameters:
     - delta : `FloatPos`  
-      The new motion (position delta per tick) of the entity (or use x, y, z to set it)
-- Return value: Whether the setting was successful or not.
-- Return value type:  `Boolean`
+      The entity's new motion (position delta per tick), or use x, y, and z to set it.
+- Return value: Whether the change succeeded.
+- Return value type: `Boolean`
 
 #### Kill the Specified Entity
 
 `en.kill()`
 
-- Return value: Whether the entity execution was successful.
-- Return value type:  `Boolean`
+- Return value: Whether the entity was killed.
+- Return value type: `Boolean`
 
 #### Make the Specified Entity Despawn
 
 `en.despawn()`
 
-- Return value: Whether the entity execution was successful.
-- Return value type:  `Boolean`
+- Return value: Whether the entity despawned.
+- Return value type: `Boolean`
 
 #### Remove the Specified Entity
 
 `en.remove()`
 
-- Return value: Whether the entity execution was successful.
-- Return value type:  `Boolean`
+- Return value: Whether the entity was removed.
+- Return value type: `Boolean`
 
 #### Inflict Damage to Entities
 
@@ -254,13 +244,13 @@ Each entity object contains some member functions (member methods) that can be e
     - damage : `Float`  
       The amount of damage to deal to the entity.
     - type : `Integer`  
-      (Optional) Actor Damage Cause, default is `0` (`ActorDamageCause.Override`)
+      (Optional) Actor Damage Cause. Defaults to `0` (`ActorDamageCause.Override`).
     - source: `Entity`  
-      (Optional) Source of damage
+      (Optional) The source of the damage.
 - Return value: Whether the damage was dealt.
-- Return value type:  `Boolean`
+- Return value type: `Boolean`
 
-Note that the damage dealt here is real damage and cannot be reduced by protective equipment such as armor.
+Note that this deals true damage, which cannot be reduced by protective equipment such as armor.
 
 | `ActorDamageCause` ENUM            | Value |
 | ---------------------------------- | --- |
@@ -309,7 +299,7 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 - Parameters:
     - health : `Integer`  
       Number of hearts to heal.
-- Return value: Whether heal was dealt.
+- Return value: Whether the entity was healed.
 - Return value type: `Boolean`
 
 #### Set Health for Entity
@@ -319,7 +309,7 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 - Parameters:
     - health : `Integer`  
       Number of hearts.
-- Return value: Whether set health for entity was success.
+- Return value: Whether setting the entity's health succeeded.
 - Return value type: `Boolean`
 
 #### Set Absorption Attribute for Entity
@@ -328,8 +318,8 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - value : `Integer`  
-      New value
-- Return value: Whether set attribute value for entity was success.
+      New value.
+- Return value: Whether setting the attribute value succeeded.
 - Return value type: `Boolean`
 
 #### Set Attack Damage Attribute for Entity
@@ -338,8 +328,8 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - value : `Integer`  
-      New value
-- Return value: Whether set attribute value for entity was success.
+      New value.
+- Return value: Whether setting the attribute value succeeded.
 - Return value type: `Boolean`
 
 #### Set Maximal Attack Damage Attribute for Entity
@@ -348,8 +338,8 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - value : `Integer`  
-      New value
-- Return value: Whether set attribute value for entity was success.
+      New value.
+- Return value: Whether setting the attribute value succeeded.
 - Return value type: `Boolean`
 
 #### Set Follow Range Attribute for Entity
@@ -358,8 +348,8 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - value : `Integer`  
-      New value
-- Return value: Whether set attribute value for entity was success.
+      New value.
+- Return value: Whether setting the attribute value succeeded.
 - Return value type: `Boolean`
 
 #### Set Knockback Resistance Attribute for Entity
@@ -368,8 +358,8 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - value : `Integer`  
-      New value (0 or 1)
-- Return value: Whether set attribute value for entity was success.
+      New value (0 or 1).
+- Return value: Whether setting the attribute value succeeded.
 - Return value type: `Boolean`
 
 #### Set Luck Attribute for Entity
@@ -378,8 +368,8 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - value : `Integer`  
-      New value
-- Return value: Whether set attribute value for entity was success.
+      New value.
+- Return value: Whether the attribute value was set.
 - Return value type: `Boolean`
 
 #### Set Movement Speed for Entity
@@ -388,8 +378,8 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - value : `Integer`  
-      New value
-- Return value: Whether set attribute value for entity was success.
+      New value.
+- Return value: Whether the attribute value was set.
 - Return value type: `Boolean`
 
 #### Set Underwater Movement Speed for Entity
@@ -398,8 +388,8 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - value : `Integer`  
-      New value
-- Return value: Whether set attribute value for entity was success.
+      New value.
+- Return value: Whether the attribute value was set.
 - Return value type: `Boolean`
 
 #### Set Lava Movement Speed for Entity
@@ -408,8 +398,8 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - value : `Integer`  
-      New value
-- Return value: Whether set attribute value for entity was success.
+      New value.
+- Return value: Whether the attribute value was set.
 - Return value type: `Boolean`
 
 #### Set Max Health for Entity
@@ -419,7 +409,7 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 - Parameters:
     - health : `Integer`  
       Number of hearts.
-- Return value: Whether set max health for entity was success.
+- Return value: Whether the entity's max health was set.
 - Return value type: `Boolean`
 
 #### Set the Specified Entity on Fire
@@ -428,17 +418,17 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - time : `Integer`  
-      Fire time, in seconds.
+      Fire duration, in seconds.
     - isEffect : `Boolean`  
-      Will there be a fire effect?
-- Return value: Whether the fire was set.
+      Whether to show a fire effect.
+- Return value: Whether the entity was set on fire.
 - Return value type:  `Boolean`
 
 #### Put Out The Entity
 
 `en.stopFire()`
 
-- Return value: Has been extinguished.
+- Return value: Whether the fire was extinguished.
 - Return value type: `Boolean`
 
 #### Scale Entity
@@ -447,7 +437,7 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - scale : `Float`  
-      New entity size
+      New entity size.
 - Return value: Whether the entity was scaled.
 - Return value type: `Boolean`
 
@@ -460,8 +450,8 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Parameters:
     - name : `String`
-      The entity's new custom name
-- Return value: Whether setting was successful
+      The entity's new custom name.
+- Return value: Whether the custom name was set.
 - Return value type: `Boolean`
 
 #### Get Entity Custom Name
@@ -471,7 +461,7 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 `en.getCustomName()`
 
-- Return value: The entity's custom name
+- Return value: The entity's custom name.
 - Return value type: `String`
 
 #### Get Entity Distance To Pos
@@ -482,7 +472,7 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 - Parameters:
     - pos : `Entity` / `Player` / `IntPos` / `FloatPos`
       The target position.
-- Return value: Distance to coordinates (in blocks).
+- Return value: Distance to the coordinates (in blocks).
 - Return value type:  `Number`
 
 #### Determine if an Entity Object Is a Player
@@ -498,10 +488,9 @@ Note that the damage dealt here is real damage and cannot be reduced by protecti
 
 - Return value: The converted `Player` object.
 - Return value type:  `Player`
-    - Returns `Null` if this entity object does not point to a player, or if the transition fails.
+    - Returns `Null` if this entity object does not point to a player, or if the conversion fails.
 
-If the current entity object points to a player, you can use this function to convert the entity object to a player
-object to use more player-related APIs.
+If the current entity object points to a player, you can use this function to convert it to a player object and access player-related APIs.
 
 #### Determine Whether an Entity Object Is a Dropped Item Entity
 
@@ -516,10 +505,9 @@ object to use more player-related APIs.
 
 - Return value: The obtained `Item` object.
 - Return value type:  `Item`
-    - If this entity object is not a drop entity, or if the acquisition fails, return `Null`
+    - Returns `Null` if this entity object is not a drop entity, or if retrieving the item fails.
 
-If the current entity object is a drop entity, you can use this function to get the item object in the drop entity to
-use more item-related APIs.
+If the current entity object is a drop entity, you can use this function to get its item object and access item-related APIs.
 
 #### Get the Block the Entity Is Currently Standing On
 
@@ -532,10 +520,10 @@ use more item-related APIs.
 
 `en.getArmor()`
 
-- Return value: The container object corresponding to the armor bar of this entity.
+- Return value: The container object corresponding to this entity's armor slot.
 - Return value type:  `Container`
 
-For more usage of container objects, please refer to [Container Object API Documentation](./Container.md)
+For more information on using container objects, see the [Container Object API Documentation](./Container.md).
 
 #### Determines if a Mob Has a Container (Except for the Armor Slot)
 
@@ -544,7 +532,7 @@ For more usage of container objects, please refer to [Container Object API Docum
 - Return value: Whether this biological entity has a container.
 - Return value type:  `Boolean`
 
-Such as the boxes on the alpaca, they each have their own container object.
+For example, the boxes on an alpaca each have their own container object.
 
 #### Get the Container Object Owned by the Mob (Except the Armor Slot)
 
@@ -553,17 +541,16 @@ Such as the boxes on the alpaca, they each have their own container object.
 - Return value: The container object owned by this biological entity.
 - Return value type:  `Container`
 
-For more usage of container objects, please refer to [Container Object API Documentation](./Container.md)
+For more information on using container objects, see the [Container Object API Documentation](./Container.md).
 
 #### Refresh Creature Inventory, Armor Slot
 
 `en.refreshItems()`
 
-- Return value: Whether the refresh was successful.
+- Return value: Whether the refresh succeeded.
 - Return value type:  `Boolean`
 
-After modifying the creature's items, in order to make the client take effect, it is necessary to refresh all the items
-of the creature.
+After modifying a creature's items, you must refresh all of its items for the changes to take effect on the client.
 
 #### Add a Tag to the Entity
 
@@ -571,8 +558,8 @@ of the creature.
 
 - Parameters:
     - tag: `String`  
-      The tag string to be added.
-- Return value: Whether the `Tag` was added successfully.
+      The tag string to add.
+- Return value: Whether the `Tag` was added.
 - Return value type:  `Boolean`
 
 #### Remove a Tag From an Entity
@@ -582,8 +569,8 @@ of the creature.
 - Parameters:
     - tag: `String`  
       The tag string to remove.
-- Return value: Whether the tag removal was successful.
-- Return value type:  `Boolean`
+- Return value: Whether the tag was removed.
+- Return value type: `Boolean`
 
 #### Check if an Entity Has a Tag
 
@@ -591,23 +578,23 @@ of the creature.
 
 - Parameters:
     - tag: `String`  
-      Tag string to check
+      The tag string to check.
 - Return value: Whether the entity has the tag.
-- Return value type:  `Boolean`
+- Return value type: `Boolean`
 
 #### Returns a List of All Tags Owned by the Entity
 
 `en.getAllTags()`
 
-- Return value: A list of all tag strings of the entity
-- Return value type:  `Array<String,String,...>`
+- Return value: A list of all tag strings on the entity.
+- Return value type: `Array<String,String,...>`
 
 #### Get the Entity's NBT Object
 
 `en.getNbt()`
 
-- Return value: NBT object of the entity.
-- Return value type:  `NbtCompound`
+- Return value: The entity's NBT object.
+- Return value type: `NbtCompound`
 
 #### Write to the Entity's NBT Object
 
@@ -615,11 +602,11 @@ of the creature.
 
 - Parameters:
     - nbt : `NbtCompound`  
-      NBT objects
-- Return value: Whether the write was successful or not.
-- Return value type:  `Boolean`
+      The NBT object.
+- Return value: Whether the write succeeded.
+- Return value type: `Boolean`
 
-For more usage of NBT objects, please refer to [NBT Interface Documentation](../NbtAPI/NBT.md)
+For more information on using NBT objects, see the [NBT Interface Documentation](../NbtAPI/NBT.md).
 
 #### Get the Entity in the Entity's Line of Sight
 
@@ -628,7 +615,7 @@ For more usage of NBT objects, please refer to [NBT Interface Documentation](../
 - Parameters:
     - maxDistance : `Float`  
       Maximum search distance.
-- Return value: The entity in the entity's line of sight. Returns `Null` if it cannot be obtained.
+- Return value: The entity in the entity's line of sight, or `Null` if none is found.
 - Return value type: `Entity`
 
 #### Get the Block in the Entity's Line of Sight
@@ -639,60 +626,60 @@ For more usage of NBT objects, please refer to [NBT Interface Documentation](../
     - includeLiquid : `Boolean`  
       Whether to include liquid blocks.
     - solidOnly : `Boolean`  
-      Whether to only allow blocks of the `Solid` type.
+      Whether to include only `Solid` blocks.
     - maxDistance : `Float`  
       Maximum search distance.
     - fullOnly : `Boolean`  
-      Whether to only allow full blocks.
-- Return value: The block in the entity's line of sight. Returns `Null` if it cannot be obtained.
+      Whether to include only full blocks.
+- Return value: The block in the entity's line of sight, or `Null` if none is found.
 - Return value type: `Block`
 
 #### Get the Entity's Biome ID
 
 `en.getBiomeId()`
 
-- Return value：Biome ID
-- Return value type：`Integer`
+- Return value: Biome ID.
+- Return value type: `Integer`
 
 #### Get the Entity's Biome Name
 
 `en.getBiomeName()`
 
-- Return value：Biome Name
-- Return value type：`String`
+- Return value: Biome name.
+- Return value type: `String`
 
 #### Get entity's effects
 
 `en.getAllEffects()`
 
-- Return value: effect ID which is entity owned
-- Return type: `Array<Integer,Integer,...>`
+- Return value: IDs of the effects currently on the entity.
+- Return value type: `Array<Integer,Integer,...>`
 
 #### Add an effect for entity
 
 `en.addEffect(id, tick, level, showParticles)`
 
-- Parameter:
+- Parameters:
     - id : `Number`
-      Effect ID
+      Effect ID.
     - tick : `Number`
-      Lasting time
+      Duration in ticks.
     - level : `Number`
-      Effect's level
+      Effect level.
     - showParticles : `Boolean`
-      Whether to show particles
-- Return value: Whether succeed
-- Return type: `Boolean`
+      Whether to display particles.
+- Return value: Whether the operation succeeded.
+- Return value type: `Boolean`
 
 #### Remove an effect for entity
 
 `en.removeEffect(id)`
 
-- Parameter:
+- Parameters:
     - id : `Number`
-      Effect ID
-- Return value: Whether succeed
-- Return type: `Boolean`
+      Effect ID.
+- Return value: Whether the operation succeeded.
+- Return value type: `Boolean`
 
 | Name            | ID |
 |-----------------|----|
@@ -736,7 +723,7 @@ For more usage of NBT objects, please refer to [NBT Interface Documentation](../
 
 ### Other Entity Function API
 
-The following APIs provide APIs for interacting with entities at specified locations in the game:
+The following APIs interact with entities at specified locations in the game:
 
 #### Create an Explosion at the Specified Location
 
@@ -747,19 +734,19 @@ The following APIs provide APIs for interacting with entities at specified locat
 
 - Parameters:
     - pos : `IntPos `/ `FloatPos`  
-      The coordinates of the location where the explosion occurred (or use x, y, z, dimid to determine entity location).
+      The coordinates of the explosion (or pass x, y, z, and dimid to specify the location).
     - source : `Entity`  
-      Set the entity object of the explosion source, which can be `Null`.
+      The entity that caused the explosion. Can be `Null`.
     - maxResistance : `Float`  
-      The maximum explosion resistance of the block. Blocks lower than this value will be destroyed. If omitted, there is no limit.
+      Maximum blast resistance. Blocks with a resistance below this value are destroyed. If omitted, there is no limit.
     - radius : `Float`  
-      The radius of the explosion, which affects the scope of the explosion.
+      The explosion radius, which determines the blast area.
     - isDestroy : `Boolean`  
-      Does the explosion destroy blocks.
+      Whether the explosion destroys blocks.
     - isFire : `Boolean`  
-      Whether there is a burning flame left after the explosion.
-- Return value: Whether the explosion was successfully created.
-- Return value type:  `Boolean`
+      Whether the explosion leaves fire behind.
+- Return value: Whether the explosion was created.
+- Return value type: `Boolean`
 
 #### Quick execute Molang expression
 
@@ -769,7 +756,7 @@ The following APIs provide APIs for interacting with entities at specified locat
     - str : `String`  
       Molang expression string.
 - Return value: The result of the Molang expression.
-- Return value type:  `Float`
+- Return value type: `Float`
 
-For detailed usage of Molang, refer to [MOLANG Doc bedrock.dev](https://bedrock.dev/docs/stable/Molang)
+For detailed Molang usage, see the [MOLANG Doc bedrock.dev](https://bedrock.dev/docs/stable/Molang).
 

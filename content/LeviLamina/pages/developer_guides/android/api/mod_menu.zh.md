@@ -2,11 +2,9 @@
 
 ## 作用
 
-Mod Menu API 用于注册原生模组拥有的运行期 UI：菜单模块、配置项、浮动按钮
-和 HUD 覆盖层绘制命令。
+Mod Menu API 用于为原生模组注册运行期 UI，包括菜单模块、配置项、浮动按钮和 HUD 覆盖层绘制命令。
 
-通常在 `enable()` 中注册；如果这些 UI 只应该在启用状态存在，请在 `disable()`
-中清理。
+通常在 `enable()` 中注册；如果这些 UI 仅在模组启用期间有效，请在 `disable()` 中清理。
 
 ## 头文件
 
@@ -16,8 +14,7 @@ Mod Menu API 用于注册原生模组拥有的运行期 UI：菜单模块、配�
 
 ## 模块注册
 
-可以使用 `pl::modmenu::ModuleBuilder`，也可以直接填充
-`pl::modmenu::ModuleInfo`。
+可以使用 `pl::modmenu::ModuleBuilder` 注册模块，也可以直接填充 `pl::modmenu::ModuleInfo`。
 
 ```cpp
 #include <pl/Mod.hpp>
@@ -57,16 +54,11 @@ bool MyMod::enable() {
 | `ConfigType::Text` | 自由文本值。 |
 | `ConfigType::Button` | 操作按钮。 |
 
-配置值变化时，`ModuleBuilder::onConfigChanged()` 收到 `(moduleId, key, value)`；
-`Keybind` 配置项通过 `onKeybind()` 收到 `(moduleId, key, isDown)`。需要更丰富的
-设置页（分类、选项、范围、条件）时，使用 `<pl/ModMenuConfig.hpp>` 中的
-`pl::modmenu::ConfigSchemaBuilder` 构建 schema，并把其 `toJson()` 传给
-`setConfigSchemaJson(moduleId, json)`；`clearConfigSchema(moduleId)` 将其移除。
+配置值变化时，`ModuleBuilder::onConfigChanged()` 会收到 `(moduleId, key, value)`；`Keybind` 配置项则通过 `onKeybind()` 收到 `(moduleId, key, isDown)`。如需更丰富的设置页（包含分类、选项、范围和条件），可使用 `<pl/ModMenuConfig.hpp>` 中的 `pl::modmenu::ConfigSchemaBuilder` 构建 schema，并将其 `toJson()` 的结果传给 `setConfigSchemaJson(moduleId, json)`；调用 `clearConfigSchema(moduleId)` 可将其移除。
 
 ## 浮动按钮
 
-使用 `pl::modmenu::ButtonBuilder` 注册屏幕浮动按钮。按钮可以把 click、hold、
-toggle 和指针事件派发到 C++ callback。
+使用 `pl::modmenu::ButtonBuilder` 注册屏幕浮动按钮。按钮可将 click、hold、toggle 和指针事件派发给 C++ callback。
 
 ```cpp
 bool registerQuickButton() {
@@ -86,14 +78,11 @@ bool registerQuickButton() {
 }
 ```
 
-按钮图标可以通过 `ButtonBuilder::pngIcon()`、`webpIcon()`、`svgIcon()` 或通用
-`icon()` helper 传入 PNG、WebP 或 SVG 数据；`resourceIcon()` 则使用具名资源。
+按钮图标可通过 `ButtonBuilder::pngIcon()`、`webpIcon()`、`svgIcon()` 或通用 `icon()` helper 传入 PNG、WebP 或 SVG 数据，也可通过 `resourceIcon()` 使用具名资源。
 
 ## 覆盖层绘制
 
-使用 `pl::modmenu::submitDrawCommands()` 替换某个模块当前的 HUD 覆盖层绘制
-命令。文本命令可以使用 `registerFont()` 注册的字体；图片命令使用
-`registerImage()` 注册的原始 RGBA 像素。
+使用 `pl::modmenu::submitDrawCommands()` 替换指定模块当前的 HUD 覆盖层绘制命令。文本命令可使用 `registerFont()` 注册的字体；图片命令则使用 `registerImage()` 注册的原始 RGBA 像素。
 
 | API | 用途 |
 | --- | --- |
@@ -103,9 +92,7 @@ bool registerQuickButton() {
 | `submitHudEditorElements(moduleId, elements)` | 声明模块中可由 HUD 编辑器移动的元素。 |
 | `getHudSurfaceSize()` | 返回 HUD 表面的宽和高。 |
 
-`registerImage()` 要求 `imageData.size()` 必须等于 `width * height * 4`。
-对 `DrawCommandType::Text`，请把 `DrawCommand::fontId` 设置为已注册的 font id。
-对 `DrawCommandType::Image`，请把 `DrawCommand::imageId` 设置为已注册的 image id。
+`registerImage()` 要求 `imageData.size()` 必须等于 `width * height * 4`。对于 `DrawCommandType::Text`，请将 `DrawCommand::fontId` 设为已注册的 font id；对于 `DrawCommandType::Image`，请将 `DrawCommand::imageId` 设为已注册的 image id。
 
 ```cpp
 std::vector<unsigned char> logoRgba = loadLogoPixels();
@@ -149,6 +136,4 @@ void submitOverlay() {
 
 ## 清理
 
-如果注册的 UI 是临时的，或只应该绑定到启用状态，请在 `disable()` 中调用
-`pl::modmenu::unregisterModule()` 和 `unregisterButton()`。从原生模组生命周期
-中注册的模块和按钮也会关联 `modId` 归属。
+如果注册的 UI 是临时的，或仅与启用状态绑定，请在 `disable()` 中调用 `pl::modmenu::unregisterModule()` 和 `unregisterButton()`。在原生模组生命周期内注册的模块和按钮也会关联所属的 `modId`。

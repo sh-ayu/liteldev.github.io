@@ -1,6 +1,6 @@
 # Community & Feedback
 
-Questions about LeviLauncher, with short answers, are in the [LeviMC FAQ](https://levimc.org/faq/play/levilauncher/).
+Short answers to questions about LeviLauncher are in the [LeviMC FAQ](https://levimc.org/faq/play/levilauncher/).
 
 ## Community links
 
@@ -13,11 +13,11 @@ Questions about LeviLauncher, with short answers, are in the [LeviMC FAQ](https:
 Use [GitHub Issues](https://github.com/LiteLDev/LeviLauncher/issues) for:
 
 - reproducible bugs
-- installation problems that are specific to LeviLauncher
+- installation problems specific to LeviLauncher
 - requests for clearer documentation
 - feature suggestions with a concrete use case
 
-Issues with the Android version go to [LiteLDev/LeviLauncher-Android Issues](https://github.com/LiteLDev/LeviLauncher-Android/issues).
+Report issues with the Android version at [LiteLDev/LeviLauncher-Android Issues](https://github.com/LiteLDev/LeviLauncher-Android/issues).
 
 ## Before opening an issue
 

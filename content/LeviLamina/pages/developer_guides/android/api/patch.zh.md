@@ -2,7 +2,7 @@
 
 ## 作用
 
-Patch API 通过 SDK 读取、写入并回滚进程内存。
+Patch API 通过 SDK 读写并回滚进程内存。
 
 ## 头文件
 
@@ -25,7 +25,7 @@ bool revertPatch(std::string_view name);
 void revertAllPatches();
 ```
 
-patch 名称用于保存原始字节，之后由 `revertPatch()` 回滚。
+系统会按 patch 名称保存原始字节，以便后续用 `revertPatch()` 回滚。
 
 ## 示例
 
@@ -67,5 +67,5 @@ private:
 ## 注意
 
 - 十六进制字符串用空白分隔字节，每个 token 必须是一位或两位十六进制数。
-- 复用 patch 名称会替换之前保存的记录。
-- 错误指令或错误地址仍可能让进程崩溃。
+- 复用 patch 名称会覆盖之前保存的记录。
+- 错误的指令或地址仍可能导致进程崩溃。

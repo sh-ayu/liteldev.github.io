@@ -33,45 +33,45 @@ Everything that is dropped, or converted with another meaning, is printed as a w
 
 ## What Changes
 
-`format` is `4`, `tooth` becomes `id`, and `version` and `info` are copied, except that `info.avatar_url` becomes `info.logo` when it starts with `https://` and is dropped otherwise, with a warning. The variants are rewritten as follows:
+`format` is set to `4`, `tooth` becomes `id`, and `version` and `info` are copied, except that `info.avatar_url` becomes `info.logo` if it starts with `https://` and is dropped with a warning otherwise. Variants are rewritten as follows:
 
 -   Each label becomes a variant of the same name; the empty label becomes the variant `""`.
--   For each platform a label applies to (the `platform` of its variants, with patterns and values that are not RIDs expanded to the RIDs you gave), the variants of the label that apply to that platform are merged as lip v0.37.0 merged them, and the result becomes one entry with that `platform`. Its `side` is `client` when the merged variants depend on `github.com/LiteLDev/LeviLamina#client`, and `server` when they depend on another variant of `github.com/LiteLDev/LeviLamina`; without a dependency on LeviLamina, the result becomes two entries, one for each side.
--   Since 26.60.8, its first version with a `lip.toml`, LeviLamina has no variant `client`: its variant `""` has the client build too. A dependency on `github.com/LiteLDev/LeviLamina#client` (or `#client_<y>`) whose range allows a version of at least 26.60.8 becomes one on `github.com/LiteLDev/LeviLamina` (or `#<y>`), its range narrowed to the versions of at least 26.60.8; a range that allows none of them is kept, and so is the dependency when the entry also depends on `github.com/LiteLDev/LeviLamina` (or `#<y>`). Then a client entry of the label `client` (or `client_<y>`) whose dependency changed so moves to the variant `""` (or `<y>`), unless that variant has a client entry for the same platform already. Each change is noted with a warning.
--   `dependencies` become `deps`, with their ranges. A range that is not a valid range now is asked for on the terminal until the answer is one; without a terminal the command fails and changes nothing.
--   Each asset keeps its `type` and `urls`, and its `placements` become `place`, converted exactly as lip reads a `tooth.json` of an [earlier format](../concepts/lip_toml.md#earlier-formats): after `\` is replaced by `/` and empty and `.` segments are removed, a `dir` placement takes the directory form (`src` and `dest` ending with `/`, or `""`), a `file` placement whose `src` contains `*`, `?` or `[` the glob form (`dest` ending with `/`, or `""`), and any other `file` placement the file form. A placement that is not valid in `lip.toml` is left out, with a warning.
--   `lip.toml` has no `tar`, `tgz` and `uncompressed` asset types. A platform whose merged variants have such an asset gets no entry, with a warning, just as lip installs no entry of it for that platform.
+-   For each platform a label applies to (the `platform` of its variants, with patterns and non-RID values expanded to the RIDs you gave), the label's variants that apply to that platform are merged as lip v0.37.0 merged them, producing one entry with that `platform`. Its `side` is `client` if the merged variants depend on `github.com/LiteLDev/LeviLamina#client`, and `server` if they depend on another variant of `github.com/LiteLDev/LeviLamina`; without a dependency on LeviLamina, the result becomes two entries, one for each side.
+-   Since 26.60.8, its first version with a `lip.toml`, LeviLamina has no `client` variant: its `""` variant includes the client build as well. A dependency on `github.com/LiteLDev/LeviLamina#client` (or `#client_<y>`) whose range allows a version of at least 26.60.8 becomes one on `github.com/LiteLDev/LeviLamina` (or `#<y>`), with its range narrowed to versions of at least 26.60.8; a range that allows no such version is kept, as is the dependency when the entry already depends on `github.com/LiteLDev/LeviLamina` (or `#<y>`). Then a client entry of the label `client` (or `client_<y>`) whose dependency changed in this way moves to the variant `""` (or `<y>`), unless that variant already has a client entry for the same platform. Each change is noted with a warning.
+-   `dependencies` become `deps`, keeping their ranges. If a range is not valid now, the command prompts for one on the terminal until a valid range is entered; without a terminal, the command fails and changes nothing.
+-   Each asset keeps its `type` and `urls`, and its `placements` become `place`, converted in the same way lip reads a `tooth.json` of an [earlier format](../concepts/lip_toml.md#earlier-formats): after `\` is replaced with `/` and empty and `.` segments are removed, a `dir` placement takes the directory form (`src` and `dest` ending with `/`, or `""`), a `file` placement whose `src` contains `*`, `?`, or `[` takes the glob form (`dest` ending with `/`, or `""`), and any other `file` placement takes the file form. Any placement that is invalid in `lip.toml` is omitted with a warning.
+-   `lip.toml` has no `tar`, `tgz`, or `uncompressed` asset types. A platform whose merged variants use such an asset gets no entry, with a warning, just as lip installs no entry for that platform.
 -   `preserve_files` becomes `preserve` and `remove_files` becomes `purge`, with `\` replaced by `/`; a `preserve_files` pattern without `/` gets a `**/` prefix, and a `remove_files` pattern without a trailing `/` is also written with one (see [Limitations](#limitations)).
--   The scripts become `hooks`: `pre_install`, `post_install` (`install` first, then `post_install`), `pre_uninstall` (`pre_uninstall`, then `uninstall`) and `post_uninstall`.
--   Other empty values, outside `info`, are omitted.
+-   Scripts become `hooks`: `pre_install`, `post_install` (`install` first, then `post_install`), `pre_uninstall` (`pre_uninstall`, then `uninstall`), and `post_uninstall`.
+-   Other empty values outside `info` are omitted.
 
 ## Limitations
 
 `lip pkg migrate` is a helper, not a guarantee. Always review its output.
 
--   `lip.toml` must have the tag version as its `version` at a tag, and the path of the repository as its `id`. lip v0.37.0 installed a `tooth.json` that broke these rules; check yours before you publish.
--   Placements are converted by the rules above, without looking at the files they place, and are then carried out as for `lip.toml`: a `file` placement whose `src` is a pattern keeps the subdirectories of the files it matches, where `tooth.json` placed them by file name only, and a placement of a missing file fails the installation, where `tooth.json` skipped it. Check such placements.
--   A `preserve_files` pattern without `/` matched the file name in any directory; it becomes `**/<pattern>`. A `remove_files` pattern also removed matching directories; it is also written with a trailing `/`. Patterns that are not valid globs, such as ones starting with `/`, are dropped.
--   Dependencies of format 1 and 2 whose range cannot be read in format 3 (e.g. `2.16.x`) were already ignored when installing the `tooth.json`; they are reported so that you can add them by hand.
--   Scripts other than the install and uninstall hooks (such as `pre_pack` or custom scripts), and the `prerequisites` of format 2, have no equivalent and are dropped.
--   A migrated package is a file package that places files where the old `tooth.json` did. If your package is a LeviLamina mod, consider publishing it as an `mcmod` asset instead (see [lip.toml: Mods](../concepts/lip_toml.md#mods)), which is installed to `mods/<name>/`.
--   Dependencies on other packages that still have a `tooth.json` keep working, because lip still installs them.
+-   At a tag, `lip.toml` must use the tag version as its `version` and the repository path as its `id`. lip v0.37.0 installed a `tooth.json` that broke these rules; check yours before publishing.
+-   Placements are converted by the rules above without inspecting the files they place, and then behave according to `lip.toml` rules: a `file` placement whose `src` is a pattern preserves the subdirectories of matched files (whereas `tooth.json` placed them by file name only), and a placement of a missing file fails the installation (whereas `tooth.json` skipped it). Check such placements.
+-   A `preserve_files` pattern without `/` matched the file name in any directory; it becomes `**/<pattern>`. A `remove_files` pattern also removed matching directories, so it is also written with a trailing `/`. Patterns that are not valid globs, such as those starting with `/`, are dropped.
+-   Format 1 and 2 dependencies whose ranges cannot be read in format 3 (e.g. `2.16.x`) were already ignored when installing the `tooth.json`; they are reported so you can add them by hand.
+-   Scripts other than the install and uninstall hooks (such as `pre_pack` or custom scripts), along with `prerequisites` from format 2, have no equivalent and are dropped.
+-   A migrated package is a file package that places files where the old `tooth.json` did. If your package is a LeviLamina mod, consider publishing it as an `mcmod` asset instead (see [lip.toml: Mods](../concepts/lip_toml.md#mods)), which installs to `mods/<name>/`.
+-   Dependencies on other packages that still use `tooth.json` continue to work, because lip still installs them.
 
-Tags are versions only when they are named exactly `v<SemVer>` (e.g. `v1.2.3`). Tags such as `v1.2` are not versions.
+Tags count as versions only when named exactly `v<SemVer>` (e.g. `v1.2.3`). Tags such as `v1.2` are not versions.
 
 ## After migrating
 
 1. Read the warnings and fix `lip.toml` where needed.
-2. Check the result: run `lip` in the folder, and choose **Edit lip.toml** on the [Develop Tools](../interface/tools.md) page. The form marks every value that is not valid, and before it saves, it shows what would be installed with the package on a server.
+2. Check the result: run `lip` in the folder and select **Edit lip.toml** on the [Develop Tools](../interface/tools.md) page. The form highlights any invalid values, and before saving, it previews what the package would install on a server.
 
-3. Install it into a test server, as [Publish your mod with lip](https://levimc.org/tutorials/develop/publish-a-package/) describes.
-4. Commit, and publish a new version with a tag, as [Publish your mod with lip](https://levimc.org/tutorials/develop/publish-a-package/) describes.
+3. Install the package on a test server, as described in [Publish your mod with lip](https://levimc.org/tutorials/develop/publish-a-package/).
+4. Commit your changes and publish a new version with a tag, as described in [Publish your mod with lip](https://levimc.org/tutorials/develop/publish-a-package/).
 
-Versions that you published before keep their `tooth.json`, and lip keeps installing them.
+Previously published versions keep their `tooth.json`, and lip continues to install them.
 
 ## See also
 
 - [`lip pkg migrate`](../reference/commands/pkg_migrate.md)
 - [lip.toml](../concepts/lip_toml.md#earlier-formats): how lip reads a `tooth.json`.
 - [Publish your mod with lip](https://levimc.org/tutorials/develop/publish-a-package/)
-- [Develop Tools](../interface/tools.md): the same action in the interface, and a form that checks `lip.toml`.
+- [Develop Tools](../interface/tools.md): the same action in the interface, along with a form that validates `lip.toml`.

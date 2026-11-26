@@ -1,6 +1,6 @@
 # 📡 System Call API 
 
-The following APIs provide interfaces to perform some system calls:
+The following APIs provide interfaces for making system calls:
 
 ### Invoke the Shell to Execute the Specified System Command
 
@@ -8,24 +8,24 @@ The following APIs provide interfaces to perform some system calls:
 
 - Parameters:
   - cmd : `String`  
-    The executed system command.
+    The system command to execute.
   - callback : `Function`  
-    The callback function used to return data after the system process ends.
+    The callback function invoked with the result after the system process ends.
   - timeLimit : `Integer`  
-    (Optional parameter) The maximum time for the command to run, in milliseconds.
-    The default is `-1`, i.e. unlimited runtime 
-- Return value: Whether the command was successfully started.
+    (Optional) The maximum execution time for the command, in milliseconds.
+    Defaults to `-1` (unlimited runtime).
+- Return value: Whether the command started successfully.
 - Return value type: `Boolean`
 
-Note: The prototype of the callback function of the parameter callback: `function(exitcode,output)`  
+Note: The prototype for the callback function is `function(exitcode,output)`:
 
 - exitcode : `Integer`    
   The process exit code.
 - output : `String`  
-  The contents of standard output and standard error.
+  The combined contents of standard output and standard error.
 
-Notice! What is executed here is not the command of the MC command system.
-This function works asynchronously. It will not wait for the system to execute the command before returning, but the engine will automatically call the given callback function to return the result. 
+Notice! This function executes a system command, not an MC command.
+It runs asynchronously and returns immediately without waiting for the command to finish. Once the command completes, the engine automatically invokes the provided callback function with the result.
 
 
 
@@ -35,22 +35,22 @@ This function works asynchronously. It will not wait for the system to execute t
 
 - Parameters:
   - process : `String`  
-    The path of the program to run (with command line arguments).
+    The path to the program to run (including any command-line arguments).
   - callback : `Function`  
-    The callback function used to return data after the program process ends.
+    The callback function invoked with the result after the program process ends.
   - timeLimit : `Integer`  
-    (Optional parameter) The maximum time limit for the program process to run, in milliseconds.  
-    The default is `-1`, i.e. unlimited runtime.
-- Return value: Whether the process was successfully started.
+    (Optional) The maximum execution time for the program process, in milliseconds.  
+    Defaults to `-1` (unlimited runtime).
+- Return value: Whether the process started successfully.
 - Return value type: `Boolean`
 
-Note: The prototype of the callback function of the parameter callback: `function(exitcode,output)`  
+Note: The prototype for the callback function is `function(exitcode,output)`:
 
 - exitcode : `Integer`    
-  Process exit code.
+  The process exit code.
 - output : `String`  
-  The contents of the program's standard output and standard error output.
+  The combined contents of the program's standard output and standard error.
 
-This function works asynchronously. It will not wait for the system to execute the command before returning, but the engine will automatically call the given callback function to return the result.
+This function runs asynchronously and returns immediately without waiting for the command to finish. Once execution completes, the engine automatically invokes the provided callback function with the result.
 
 

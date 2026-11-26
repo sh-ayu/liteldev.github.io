@@ -3,11 +3,11 @@ platforms: [windows]
 ---
 # Einstellungen & Personalisierung
 
-LeviLauncher bietet eine umfassende Einstellungsseite, auf der du Pfade, Erscheinungsbild, Paketverwaltung, Datenschutzeinstellungen und das Update-Verhalten anpassen kannst.
+In den Einstellungen von LeviLauncher kannst du Pfade, Erscheinungsbild, Paketverwaltung, Datenschutz und das Update-Verhalten anpassen.
 
 ## Hauptbereiche der Einstellungen
 
-Die Anwendung unterteilt die Einstellungen derzeit in mehrere Bereiche, zum Beispiel:
+Die Einstellungen sind derzeit in mehrere Bereiche unterteilt, zum Beispiel:
 
 - Allgemeine Einstellungen
 - Personalisierung
@@ -23,60 +23,60 @@ Die Anwendung unterteilt die Einstellungen derzeit in mehrere Bereiche, zum Beis
 
 - Basispfad für Inhalte
 - Beschreibbarer Speicherort für verwaltete Dateien
-- Eine für deine Festplattenstruktur besser geeignete Platzierung
+- Einen Speicherort, der besser zu deiner Festplattenstruktur passt
 
 ### Erscheinungsbild
 
 - Sprache
-- Präferenz für helles oder dunkles Thema
+- Helles oder dunkles Design
 - Verhalten der Akzentfarbe
 - Hintergrund- und visuelle Personalisierungsoptionen
 
 #### Hintergrundbild und Oberflächenmaterial
 
-Wähle unter **Personalisierung → Hintergrundbild** einen Bildordner aus und öffne dann **Personalisierung → Material und Lesbarkeit**, um das **Oberflächenmaterial** anzupassen – die Ebene zwischen Hintergrundbild und Inhalt. Navigation, Karten, Tabs, Formularelemente und Popup-Flächen nutzen ein gemeinsames Materialsystem. Helle und dunkle Profile werden getrennt gespeichert und automatisch passend zum App-Design angewendet; die Schaltflächen **Hellmodus** / **Dunkelmodus** im Material-Editor wählen nur das Profil aus, das bearbeitet und in der Vorschau angezeigt wird.
+Wähle unter **Personalisierung → Hintergrundbild** einen Bildordner aus und öffne anschließend **Personalisierung → Material und Lesbarkeit**, um das **Oberflächenmaterial** anzupassen – die Ebene zwischen Hintergrundbild und Inhalt. Navigation, Karten, Tabs, Formularelemente und Popup-Flächen nutzen ein gemeinsames Materialsystem. Helle und dunkle Profile werden getrennt gespeichert und automatisch passend zum App-Design angewendet. Mit den Schaltflächen **Hellmodus** / **Dunkelmodus** im Material-Editor legst du lediglich fest, welches Profil gerade bearbeitet und in der Vorschau angezeigt wird.
 
 | Einstellung | Verhalten |
 | --- | --- |
-| Ausgewogen | Standardvorgabe: weiches Glas mit eingeschaltetem Lesbarkeitsschutz |
-| Klar | Mehr Hintergrundbild scheint durch die Karten, Lesbarkeitsschutz ist ausgeschaltet; am besten mit einfachen, kontrastarmen Bildern |
+| Ausgewogen | Standardvorgabe: weiches Glas mit aktiviertem Lesbarkeitsschutz |
+| Klar | Das Hintergrundbild scheint stärker durch die Karten, der Lesbarkeitsschutz ist deaktiviert; ideal für schlichte, kontrastarme Bilder |
 | Deckend | Undurchsichtige Karten ohne Kartenunschärfe; außerhalb der Karten bleibt das Hintergrundbild sichtbar |
-| Deckkraft der Oberfläche | Ändert die neutrale Tönung der Oberflächen, ohne Text, Symbole oder Schaltflächen verblassen zu lassen |
+| Deckkraft der Oberfläche | Ändert die neutrale Tönung der Oberflächen, ohne dass Text, Symbole oder Schaltflächen verblassen |
 | Unschärfe der Oberfläche | Steuert die Unschärfe hinter Panels, Navigation und Popup-Flächen; die Bildunschärfe wirkt auf das gesamte Hintergrundbild |
-| Hintergrundbild-Overlay | Dämpft das Hintergrundbild im Hellmodus mit einer hellen und im Dunkelmodus mit einer dunklen Tönung, unabhängig von Bildhelligkeit und Deckkraft |
-| Lesbarkeitsschutz | Wendet abhängig von Design, Helligkeit, Bilddeckkraft und Unschärfe eine zurückhaltende Mindesttönung an und verstärkt sekundären Text |
+| Hintergrundbild-Overlay | Dämpft das Hintergrundbild im Hellmodus mit einer hellen und im Dunkelmodus mit einer dunklen Tönung – unabhängig von Bildhelligkeit und Deckkraft |
+| Lesbarkeitsschutz | Wendet je nach Design, Helligkeit, Bilddeckkraft und Unschärfe eine dezente Mindesttönung an und hebt sekundären Text stärker hervor |
 
-Die Live-Vorschau verwendet dasselbe geladene Bild und dieselben Rendering-Parameter wie das Hauptfenster. Wenn der Schutz die effektive Deckkraft der Karten erhöht, zeigt der Editor den angewendeten Wert an. Diese Berechnung analysiert das Bild nicht und lädt es nicht hoch. **Dieses Design zurücksetzen** setzt nur das gerade bearbeitete Materialprofil zurück; der Bildordner und das Profil des anderen Designs bleiben unverändert.
+Die Live-Vorschau nutzt dasselbe geladene Bild und dieselben Rendering-Parameter wie das Hauptfenster. Erhöht der Lesbarkeitsschutz die effektive Deckkraft der Karten, zeigt der Editor den tatsächlich angewendeten Wert an. Für diese Berechnung wird das Bild weder analysiert noch hochgeladen. **Dieses Design zurücksetzen** setzt nur das aktuell bearbeitete Materialprofil zurück; der Bildordner und das Profil des anderen Designs bleiben erhalten.
 
-Verwende **Nächstes Bild**, wenn der Ordner mehrere Bilder enthält. Die Reihenfolge **Sequentiell** nutzt eine natürliche Sortierung nach Dateinamen; **Zufällig** vermeidet, das aktuelle Bild zu wiederholen. Wenn kein Bild ausgewählt ist, das Bild nicht geladen werden kann oder die Bilddeckkraft 0 beträgt, kehrt die Oberfläche zu normalen Flächen zurück. Bei erhöhtem Kontrast, reduzierter Transparenz oder nicht unterstützten Backdrop-Filtern werden deckende Ersatzflächen verwendet.
+Enthält der Ordner mehrere Bilder, kannst du mit **Nächstes Bild** zwischen ihnen wechseln. Die Reihenfolge **Sequentiell** sortiert natürlich nach Dateinamen, während **Zufällig** vermeidet, das aktuelle Bild direkt zu wiederholen. Ist kein Bild ausgewählt, lässt es sich nicht laden oder beträgt die Bilddeckkraft 0, verwendet die Oberfläche wieder normale Flächen. Bei erhöhtem Kontrast, reduzierter Transparenz oder nicht unterstützten Backdrop-Filtern greift die App auf deckende Ersatzflächen zurück.
 
 ### Paketverwaltung
 
-- integrierter Paketmanager (kompatibel mit [lip](https://github.com/LiteLDev/lip); keine Installation oder Aktualisierung nötig): mit **Cache leeren** heruntergeladene Paketdateien entfernen, wenn Paket-Downloads fehlschlagen
-- **Mirror-Quellen verwenden**: Launcher-Updates, Pakete und Versionslisten von in Festlandchina gehosteten Mirrors laden (für Nutzer in Festlandchina standardmäßig aktiviert)
-- **GitHub-Proxy** für Paket-Downloads (sichtbar, wenn **Mirror-Quellen verwenden** aktiviert ist): eine Vorgabe wählen oder mit **Benutzerdefiniert** eine eigene URL eingeben; leer lassen, um den Standard wiederherzustellen
+- Integrierter Paketmanager (kompatibel mit [lip](https://github.com/LiteLDev/lip); keine Installation oder Aktualisierung nötig): Entferne heruntergeladene Paketdateien über **Cache leeren**, falls Paket-Downloads fehlschlagen
+- **Mirror-Quellen verwenden**: Lädt Launcher-Updates, Pakete und Versionslisten von Mirrors auf dem chinesischen Festland (für Nutzer in Festlandchina standardmäßig aktiviert)
+- **GitHub-Proxy** für Paket-Downloads (sichtbar, wenn **Mirror-Quellen verwenden** aktiviert ist): Wähle eine Vorgabe oder gib unter **Benutzerdefiniert** eine eigene URL ein; lasse das Feld leer, um den Standard wiederherzustellen
 
 ### Datenschutz
 
-- Nutzungsanalyse (Google Analytics), die du jederzeit ausschalten kannst
-- Links zu den Google Analytics-Nutzungsbedingungen und der Google-Datenschutzerklärung
+- Nutzungsanalyse (Google Analytics), jederzeit deaktivierbar
+- Links zu den Nutzungsbedingungen von Google Analytics und zur Datenschutzerklärung von Google
 
 ### Updates
 
-- Überprüfung auf Updates
-- **Beta-Updates erhalten**, um Vorabversionen des Launchers zu bekommen
+- Nach Updates suchen
+- **Beta-Updates erhalten**, um Vorabversionen des Launchers zu beziehen
 
 ## Empfohlene Standardeinstellungen
 
-- Speichere verwaltete Dateien an einem beschreibbaren und speicherplatzreichen Ort auf der Festplatte
-- Lass **Beta-Updates erhalten** ausgeschaltet, sofern du keine Vorabversionen des Launchers möchtest
-- Stelle zunächst die Grundumgebung stabil ein, bevor du das Erscheinungsbild feinjustierst
+- Speichere verwaltete Dateien auf einem beschreibbaren Laufwerk mit ausreichend freiem Speicherplatz
+- Lasse **Beta-Updates erhalten** deaktiviert, sofern du keine Vorabversionen des Launchers testen möchtest
+- Richte zuerst eine stabile Grundumgebung ein, bevor du das Erscheinungsbild im Detail anpasst
 
 ## Wann es sich lohnt, die Einstellungen zu überprüfen
 
-In folgenden Situationen empfiehlt es sich, die Einstellungsseite erneut zu prüfen:
+In folgenden Fällen solltest du einen Blick in die Einstellungen werfen:
 
-- Wenn du die Installation auf eine andere Festplatte verschieben möchtest
-- Bei Schreibberechtigungsfehlern
-- Wenn du auf verschiedenen Computern unterschiedliche Erscheinungsbilder oder Pfadstrategien verwenden möchtest
-- Zur Fehlerbehebung bei Download- oder Komponentenerkennungsproblemen
+- Du möchtest die Installation auf ein anderes Laufwerk verschieben
+- Es treten Fehler wegen fehlender Schreibberechtigungen auf
+- Du möchtest auf verschiedenen Computern unterschiedliche Erscheinungsbilder oder Pfade nutzen
+- Probleme beim Herunterladen oder bei der Erkennung von Komponenten müssen behoben werden

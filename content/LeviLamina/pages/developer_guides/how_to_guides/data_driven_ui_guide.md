@@ -1,12 +1,12 @@
 # Data-driven UI Guide
 
-This guide shows how to build reactive Minecraft Bedrock forms with `ll::ui`. For the complete declarations, defaults, lifecycle rules, and low-level APIs, see the [Data-driven UI API reference](../../api_reference/data_driven_ui.md).
+This guide shows how to build reactive Minecraft Bedrock forms with `ll::ui`. For complete declarations, defaults, lifecycle rules, and low-level APIs, see the [Data-driven UI API reference](../../api_reference/data_driven_ui.md).
 
 LeviLamina's API follows the reactive concepts in Microsoft's [Introduction to the Data-Driven UI framework](https://learn.microsoft.com/en-us/minecraft/creator/documents/scripting/intro-to-ddui?view=minecraft-bedrock-stable), adapted to C++ callbacks, `Expected<T>`, and LeviLamina coroutines.
 
 ## Before you start
 
-Use DDUI code on the server thread. The examples assume a valid `Player&` obtained from a server-thread event or command handler.
+Run DDUI code on the server thread. The examples assume a valid `Player&` obtained from a server-thread event or command handler.
 
 The main headers are:
 
@@ -128,13 +128,13 @@ void showSettings(Player& player) {
 }
 ```
 
-The form receives copies of the observables, but every copy shares state. The callback can therefore read the final values even though the local form wrapper has left scope.
+The form receives copies of the observables, but every copy shares the same state. As a result, the callback can read the final values even after the local form wrapper leaves scope.
 
-The explicit `unsubscribe()` is for the application-created `name` subscription. Internal form bridges are disconnected automatically when the form completes.
+The explicit `unsubscribe()` call cleans up the application-created `name` subscription. Internal form bridges disconnect automatically when the form completes.
 
 ## Update the UI from the server
 
-Any observable used by text or an option can change while the form is open. A delayed update must still run on the server thread.
+Any observable bound to text or an option can change while the form is open. Delayed updates must still run on the server thread.
 
 ```cpp
 #include <chrono>
@@ -172,7 +172,7 @@ void showMonitor(Player& player) {
 }
 ```
 
-Do not rebuild or re-show the form to update it. `setData()` writes the new value through the existing binding. Setting the same value again is suppressed by `Observable<T>`.
+Do not rebuild or re-show the form to update it. `setData()` writes the new value through the existing binding, and `Observable<T>` suppresses duplicate updates when you set the same value again.
 
 ## React to player input immediately
 
@@ -189,11 +189,11 @@ auto const subscription = volume.subscribe(
 );
 ```
 
-Keep the subscription ID and remove it when your owning state finishes. Ignoring the ID intentionally leaves the callback active for the lifetime of the shared Observable state; the return value is not an RAII token.
+Save the subscription ID and remove it when your owning state finishes. Because the return value is not an RAII token, ignoring the ID leaves the callback active for the lifetime of the shared Observable state.
 
 ## Dynamic component options
 
-Option values can be observables. This allows one control to show, hide, enable, or disable another without changing the form structure.
+Option values can also be observables, letting one control show, hide, enable, or disable another without changing the form structure.
 
 ```cpp
 ll::ui::ObservableBoolean advanced{false, {.clientWritable = true}};
@@ -214,11 +214,11 @@ form.toggle("Advanced mode", advanced)
     .closeButton();
 ```
 
-The form structure is immutable after showing starts, but every bound value remains mutable.
+Once showing starts, the form structure is immutable, but all bound values remain mutable.
 
 ## Use the coroutine path
 
-`showAsync()` waits for the final close result. The task must be launched or awaited on the server thread.
+`showAsync()` waits for the final close result. Launch or await the task on the server thread.
 
 ```cpp
 #include "ll/api/coro/CoroTask.h"
@@ -254,7 +254,7 @@ Do not call both `show()` and `showAsync()` on the same form. A form or session 
 
 ## Show a MessageBox
 
-`MessageBox` is a two-button dialog. Unlike `CustomForm` action buttons, its result reports which button was selected.
+`MessageBox` is a two-button dialog. Unlike `CustomForm` action buttons, its result reports which button the player selected.
 
 ```cpp
 #include "ll/api/ui/form/MessageBox.h"
@@ -290,11 +290,11 @@ void confirmReset(Player& player) {
 }
 ```
 
-Button numbers are one-based: `button1` produces `1`, and `button2` produces `2`. A busy player, programmatic close, or other close without a selection leaves `selection` empty.
+Button numbers are one-based: `button1` produces `1`, and `button2` produces `2`. If the player is busy, or if the dialog closes programmatically or without a choice, `selection` remains empty.
 
 ## Close forms
 
-Use the narrowest close operation that matches the intent:
+Use the narrowest close operation that fits your intent:
 
 ```cpp
 auto targeted = form.close(); // Close this CustomForm only.
@@ -302,11 +302,11 @@ auto targeted = form.close(); // Close this CustomForm only.
 ll::ui::closeScreen(player);  // Close every DDUI screen for this player.
 ```
 
-`form.close()` returns `Expected<>` and requires the form to be showing. `closeScreen(player)` returns `void`; each active session receives its own `ProgrammaticCloseAll` completion later.
+`form.close()` returns `Expected<>` and requires the form to be showing. `closeScreen(player)` returns `void`, and each active session receives its own `ProgrammaticCloseAll` completion later.
 
 ## Open a custom resource-pack screen
 
-Only use `ScreenSession` when the resource pack defines the screen and its data contract. Prefer `cereal::DynamicValue` over the compatibility JSON overload.
+Use `ScreenSession` only when the resource pack defines both the screen and its data contract. Prefer `cereal::DynamicValue` over the compatibility JSON overload.
 
 ```cpp
 #include "ll/api/ui/base/ScreenSession.h"
@@ -339,7 +339,7 @@ void showCustomScreen(Player& player) {
 }
 ```
 
-The `ScreenSession` must remain alive for its `Property` and `Binding<T>` handles to work. A production custom-screen owner should retain the session until its completion callback runs.
+The `ScreenSession` must remain alive for its `Property` and `Binding<T>` handles to work. In production code, retain the session until its completion callback runs.
 
 ## Common mistakes
 

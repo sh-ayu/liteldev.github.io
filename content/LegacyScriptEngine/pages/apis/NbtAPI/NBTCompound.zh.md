@@ -1,13 +1,13 @@
 # 📒 NbtCompound - 标签类型
 
-一个 `NbtCompound` 代表一个完整的标签，里面储存了一系列键值对，类似于对象 / 表这样的数据结构。  
-通过 `NbtCompound` 对象的接口，才可以进行 NBT 标签所独有的一些操作。
+`NbtCompound` 代表一个完整的标签，内部储存了一系列键值对，结构类似于对象或表。  
+NBT 标签独有的操作必须通过 `NbtCompound` 对象的接口来进行。
 
 ### 获取一个 NBT 标签对象
 
 #### 从现有的 NBT 对象中解析获取
 
-详见 [NbtList - 列表类型](./NBTList.zh.md) 和 [NbtCompound - 标签类型](./NBTCompound.zh.md) 文档
+详见 [NbtList - 列表类型](./NBTList.zh.md) 和 [NbtCompound - 标签类型](./NBTCompound.zh.md) 文档。
 
 
 
@@ -18,8 +18,7 @@
 
 - 参数：
   - data：Object<string, NBT Object>（可选参数）  
-    传入一个 NBT 对象构成的对象。对象中允许包含其他数组 / 对象结构，
-    但内容必须都为 NBT 对象。`Null` 会被视为 `NBT.End`
+    传入一个由 NBT 对象构成的对象。对象中允许包含其他数组或对象结构，但内部元素必须全为 NBT 对象。`Null` 会被视为 `NBT.End`。
 - 返回值：生成的 NBT 对象
 - 返回值类型：`NbtCompound`
   - 如果创建失败，将抛出异常
@@ -57,13 +56,12 @@ local nbt = NbtCompound({
 
 - 参数：
   - snbt：`String`  
-    你要解析的 SNBT 字符串
+    要解析的 SNBT 字符串
 - 返回值：生成的 NBT 对象
 - 返回值类型：`NBT Object`
   - 如返回值为 `Null` 则表示解析失败
 
-> 支持脚本层已暴露的 SNBT 值类型，包括普通值、`List` 和
-> `Compound`
+> 支持脚本层已暴露的 SNBT 值类型，包括普通值、`List` 和 `Compound`。
 
 
 
@@ -73,14 +71,14 @@ local nbt = NbtCompound({
 
 - 参数：
   - nbt：`ByteBuffer`  
-    你要解析的二进制 NBT 数据
+    要解析的二进制 NBT 数据
 - 返回值：生成的 NBT 对象
 - 返回值类型：`NbtCompound`
   - 如返回值为 `Null` 则表示解析失败
 
-> 二进制 NBT 数据中必须包含一个完整的 Compound
+> 二进制 NBT 数据中必须包含一个完整的 Compound。
 
-对于某个一个 `NbtCompound` 类型的对象 `comp`，有如下这些接口
+`NbtCompound` 类型的对象 `comp` 提供以下接口：
 
 #### 获取所有的键
 
@@ -100,7 +98,7 @@ local nbt = NbtCompound({
     要查询的键名
 - 返回值：对应的值的数据类型
 - 返回值类型：`Enum`
-  - 如果要读取的NBT不存在，将返回`Null`
+  - 如果要读取的 NBT 不存在，将返回 `Null`
 
 可能的返回值有：`NBT.End` `NBT.Byte` `NBT.Short` `NBT.Int` `NBT.Long`   
 `NBT.Float` `NBT.Double` `NBT.ByteArray` `NBT.String`  
@@ -116,9 +114,9 @@ local nbt = NbtCompound({
   - key：`String`   
     要操作的键名
   - tag： `NBT Object`  
-    要写入的 NBT 对象（它承载着具体的 NBT 数据）  
-    如果键已存在，会直接替换原有标签；如果键不存在，则会新建这个键值对。
-    传入 `Null` 时会写入 `NBT.End`
+    要写入的 NBT 对象（承载具体的 NBT 数据）。  
+    如果键已存在，将直接替换原有标签；如果键不存在，则新建该键值对。
+    传入 `Null` 时会写入 `NBT.End`。
 - 返回值：CompoundTag 自身
 - 返回值类型：`NbtCompound`
 
@@ -133,7 +131,7 @@ local nbt = NbtCompound({
     要操作的键名
 - 返回值：键对应的 NBT 对象
 - 返回值类型： `NBT Object`
-  - 如果要读取的 NBT 不存在，将返回`Null`
+  - 如果要读取的 NBT 不存在，将返回 `Null`
 
 
 
@@ -155,7 +153,7 @@ local nbt = NbtCompound({
 
 - 参数：
   - key：`String`  
-    要操作的键名。键名必须已经存在
+    要操作的键名。该键名必须已存在
 - 返回值：处理完毕的 NBT 对象（便于连锁进行其他操作）
 - 返回值类型：`NbtCompound`
 
@@ -163,8 +161,8 @@ local nbt = NbtCompound({
 
 ## 一些协助 NBT 对象操作的方便函数
 
-很明显，在修改 NBT 的某些值的时候，纯粹使用 NBT 对象会显得麻烦而语法复杂。  
-因此，这里还提供了一些简化对象操作的方便函数，通过直接操作指定位置的数据，而避免通过 NBT 对象中转，可以一定程度上降低代码量
+修改 NBT 的值时，如果只使用 NBT 对象，语法会显得繁琐复杂。  
+为此，这里提供了一些简化对象操作的辅助函数，无需通过 NBT 对象中转即可直接操作指定位置的数据，从而减少代码量。
 
 #### 设置键对应的值的具体数据
 
@@ -182,7 +180,7 @@ local nbt = NbtCompound({
   - key：`String`   
     要操作的键名
   - data：`上述类型`  
-    要写入的具体数据  
+    要写入的具体数据。  
     如果键不存在，会自动创建对应的键值
 - 返回值：写入完毕的 NBT 对象（便于连锁进行其他操作）
 - 返回值类型：`NbtCompound`
@@ -198,7 +196,7 @@ local nbt = NbtCompound({
     要操作的键名
 - 返回值：键对应的值的具体数据
 - 返回值类型：`任意类型`，以储存的数据类型为准
-  - 如果目标位置储存的是 `List` 类型 NBT，将返回一个 `NbtList` 对象；如果目标位置储存的是 `Compound` 类型 NBT，将返回一个 `NbtCompound` 对象
+  - 如果目标位置储存的是 `List` 类型的 NBT，将返回 `NbtList` 对象；如果储存的是 `Compound` 类型的 NBT，将返回 `NbtCompound` 对象
   - 如果要读取的 NBT 不存在，将返回 `Null`
 
 
@@ -210,8 +208,8 @@ local nbt = NbtCompound({
 - 返回值：对应的对象 / 表
 - 返回值类型：`Object`
 
-将 Compound 的内容转换为脚本引擎对象，把数据项都转换为脚本引擎数据类型储存于对象的对应 key 中，方便读取和处理  
-如果 Compound 某一项储存的是 `List` 或者 `Compound` 类型的 NBT，将在对应位置递归展开为 `Array` 或 `Object`
+将 Compound 的内容转换为脚本引擎对象，把各个数据项转换为脚本引擎的数据类型并储存在对应的键名下，以便读取和处理。  
+如果 Compound 的某一项储存的是 `List` 或 `Compound` 类型的 NBT，则会在对应位置递归展开为 `Array` 或 `Object`。
 
 
 
@@ -220,18 +218,17 @@ local nbt = NbtCompound({
 
 - 参数
   - space : `Integer`  
-    （可选参数）如果要格式化输出的字符串，则传入此参数  
-    代表每个缩进的空格数量，这样生成的字符串更适合人阅读  
-    此参数默认为 -1，即不对输出字符串进行格式化
+    （可选参数）如需格式化输出的字符串，可传入此参数。  
+    代表每个缩进的空格数量，使生成的字符串更易于阅读。  
+    此参数默认为 -1，即不对输出字符串进行格式化。
   - format : `Enum`
     （可选参数）SNBT 输出格式，使用 `SnbtFormat` 枚举中的值
 - 返回值：对应的 SNBT 字符串
 - 返回值类型：`String`
 
 调用 `comp.toSNBT()` 时，默认使用 `SnbtFormat.ForceQuote`。  
-调用 `comp.toSNBT(space)` 且 `space >= 0` 时，默认使用
-`SnbtFormat.PartialLineFeed`。  
-如果需要显式指定其他 SNBT 格式，请使用 `comp.toSNBT(space, format)`。
+调用 `comp.toSNBT(space)` 且 `space >= 0` 时，默认使用 `SnbtFormat.PartialLineFeed`。  
+如需显式指定其他 SNBT 格式，请使用 `comp.toSNBT(space, format)`。
 
 > 除了普通的二进制 NBT 之外，另一种玩家更熟悉的 NBT 是纯文本形式的，通常在[命令](https://zh.minecraft.wiki/w/命令)里使用。这种格式常被称为**SNBT**（**字符串化的二进制命名标签**，**S**tringified **NBT**）
 >
@@ -245,7 +242,7 @@ local nbt = NbtCompound({
 
 - 返回值：对应的二进制 NBT 数据
 - 返回值类型：`ByteBuffer`
-> 只有完整的顶层Compound标签可以被转换为二进制 NBT
+> 只有完整的顶层 Compound 标签才能转换为二进制 NBT。
 
 
 
@@ -255,5 +252,5 @@ local nbt = NbtCompound({
 - 返回值：是否成功清理
 - 返回值类型：`Boolean`
 
-注意，只有根 Compound 标签可以被销毁，而且，请谨慎使用此函数，不当的使用将会造成服务器崩溃  
-合适的销毁有助于解决内存占用问题。在销毁完后，请千万不要再使用此 NBT 对象和他的所有子对象
+注意，只有根 Compound 标签可以被销毁。请谨慎使用此函数，使用不当会导致服务器崩溃。  
+适时销毁对象有助于减少内存占用。销毁后，请勿再使用此 NBT 对象及其任何子对象。

@@ -25,7 +25,7 @@ The Command module provides a high-level API for registering custom commands in 
 
 ### CommandRegistrar
 
-Singleton that manages all command registrations. Accessed via `getInstance(bool isClientSide)` (or the shorthands `getServerInstance()` / `getClientInstance()`; the latter exists only in client builds).
+A singleton that manages all command registrations. Access it via `getInstance(bool isClientSide)` or the shorthands `getServerInstance()` and `getClientInstance()` (the latter exists only in client builds).
 
 ```cpp
 namespace ll::command {
@@ -71,7 +71,7 @@ public:
 
 ### CommandHandle
 
-Returned by `getOrCreateCommand()`. Used to add overloads and aliases.
+Returned by `getOrCreateCommand()` and used to add overloads and aliases.
 
 ```cpp
 namespace ll::command {
@@ -90,7 +90,7 @@ public:
 
 ### Overload\<Params\>
 
-Fluent builder for defining command parameters and execution handler.
+A fluent builder for defining command parameters and the execution handler.
 
 ```cpp
 namespace ll::command {
@@ -112,7 +112,7 @@ public:
 }
 ```
 
-The execution callback `Fn` can have the following signatures:
+The execution callback `Fn` can have any of the following signatures:
 
 - `void(CommandOrigin const&, CommandOutput&, Params const&, ::Command const&)` — Full context
 - `void(CommandOrigin const&, CommandOutput&, Params const&)` — With parameters
@@ -208,7 +208,7 @@ void registerModeCommand() {
 
 ### Soft Enums
 
-Soft enums allow values to be added/removed at runtime:
+Soft enums let you add and remove values at runtime:
 
 ```cpp
 #include "ll/api/command/CommandRegistrar.h"

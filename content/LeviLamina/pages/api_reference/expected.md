@@ -4,7 +4,7 @@
 
 ## Overview
 
-The Expected module provides LeviLamina's error handling primitives: `Expected<T>` (a value-or-error type based on `nonstd::expected`), `Error` (a polymorphic error container), and helper functions for creating and propagating errors.
+The Expected module provides LeviLamina's error-handling primitives: `Expected<T>` (a value-or-error type based on `nonstd::expected`), `Error` (a polymorphic error container), and helper functions for creating and propagating errors.
 
 ## Headers
 
@@ -24,11 +24,11 @@ using Expected = nonstd::expected<T, ll::Error>;
 ```
 
 - `Expected<T>` — holds either a value of type `T` or an `ll::Error`
-- `Expected<>` — alias for `Expected<void>`, represents success or error without a value
+- `Expected<>` — an alias for `Expected<void>` that represents success or an error without a value
 
 ### Error
 
-A move-only error container wrapping a polymorphic `ErrorInfoBase`.
+A move-only error container that wraps a polymorphic `ErrorInfoBase`.
 
 ```cpp
 namespace ll {
@@ -57,7 +57,7 @@ public:
 
 ### ErrorInfoBase
 
-Abstract base class for error details. Subclass this and override `message(std::string_view locale)` to create custom error types.
+An abstract base class for error details. Subclass it and override `message(std::string_view locale)` to create custom error types.
 
 ```cpp
 namespace ll {

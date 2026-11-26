@@ -2,8 +2,7 @@
 
 ## Purpose
 
-Input API lets native mods observe touch, key, and mouse events and control the
-Android soft keyboard.
+The Input API lets native mods observe touch, key, and mouse events and control the Android soft keyboard.
 
 ## Header
 
@@ -53,11 +52,7 @@ void hideKeyboard();
 bool openDocument(std::string mimeType, pl::input::DocumentCallback callback);
 ```
 
-`registerTextInputCallback()` receives text committed through the soft keyboard.
-`openDocument()` opens the Android document picker for `mimeType` (`*/*` when
-empty) and calls the callback once with a `DocumentResult` (`success`, `path`,
-`displayName`, `error`); it returns `false` when another request is pending or
-the picker cannot be opened.
+`registerTextInputCallback()` receives text committed through the soft keyboard. `openDocument()` opens the Android document picker for `mimeType` (`*/*` when empty) and calls the callback once with a `DocumentResult` (`success`, `path`, `displayName`, `error`). It returns `false` if another request is pending or if the picker cannot be opened.
 
 ## Example
 
@@ -80,7 +75,6 @@ bool MyMod::enable() {
 
 ## Notes
 
-- There is currently no unregister API; register callbacks once per process or
-  route them through mod-owned enabled state.
+- There is currently no unregister API. Register callbacks once per process, or gate them with a mod-managed enabled flag.
 - Keep callbacks short and non-blocking.
 - Keyboard functions require the game Activity to be available.

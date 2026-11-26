@@ -4,7 +4,7 @@
 
 ## 概述
 
-Form 模块提供了三种可发送给玩家的交互式 UI 表单：SimpleForm（按钮列表）、ModalForm（双按钮对话框）和 CustomForm（多字段输入表单）。
+Form 模块提供三种可发送给玩家的交互式 UI 表单：SimpleForm（按钮列表）、ModalForm（双按钮对话框）和 CustomForm（多字段输入表单）。
 
 ## 头文件
 
@@ -17,7 +17,7 @@ Form 模块提供了三种可发送给玩家的交互式 UI 表单：SimpleForm�
 
 ## SimpleForm
 
-具有标题、可选内容文本和按钮列表的表单。
+包含标题、可选内容文本和按钮列表的表单。
 
 ```cpp
 namespace ll::form {
@@ -124,7 +124,7 @@ void confirmAction(Player& player) {
 
 ## CustomForm
 
-具有多种输入元素的表单：文本输入、开关、下拉菜单、滑块和步进滑块。
+支持多种输入控件的表单，包括文本输入、开关、下拉菜单、滑块和步进滑块。
 
 ```cpp
 namespace ll::form {

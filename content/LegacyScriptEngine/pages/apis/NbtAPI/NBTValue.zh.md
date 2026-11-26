@@ -1,12 +1,12 @@
 # 📋 NBT - 普通数据类型
 
-我们把除了 `NbtList` 和 `NbtCompound` 类型以外的其他NBT对象统称为 **普通数据** 类型。这些对象只储存了简单的数据，内部不含有其他复杂结构。
+除 `NbtList` 和 `NbtCompound` 以外的 NBT 对象统称为 **普通数据** 类型。这类对象仅储存简单数据，不含其他复杂结构。
 
 ### 获取一个 NBT 普通数据对象
 
 #### 从现有的NBT对象中解析获取
 
-详见 [NbtList - 列表类型](./NBTList.zh.md) 和 [NbtCompound - 标签类型](./NBTCompound.zh.md) 文档
+详见 [NbtList - 列表类型](./NBTList.zh.md) 和 [NbtCompound - 标签类型](./NBTCompound.zh.md) 文档。
 
 
 
@@ -33,15 +33,15 @@
 
 - 参数：
   - data: `Number` / `Float` / `Double` / `ByteBuffer` / `String`（可选参数）  
-    根据你要创建的对象类型设置初始数据，传入的数据类型需要能够初始化对应类型的数据  
-    可以不传入此参数
-- 返回值：生成的NBT对象
-- 返回值类型：`NbtByte` / `NbtShort` / `NbtInt` / `NbtLong` / `NbtFloat` / `NbtDouble` / `NbtByteArray` / `NbtString` ，取决于你选择的数据类型
-  - 如果创建失败，将抛出异常
+    所创建对象的初始数据，传入值的类型必须与目标对象类型匹配。  
+    此参数可省略。
+- 返回值：生成的 NBT 对象。
+- 返回值类型：`NbtByte` / `NbtShort` / `NbtInt` / `NbtLong` / `NbtFloat` / `NbtDouble` / `NbtByteArray` / `NbtString`，取决于所选的数据类型。
+  - 如果创建失败，将抛出异常。
 
 
 
-对于一个储存普通数据类型的NBT对象 `value`，有如下成员函数
+储存普通数据类型的 NBT 对象 `value` 具有以下成员函数：
 
 #### 设置对象的数据
 
@@ -49,9 +49,9 @@
 
 - 参数：
   - data : `Number` / `Float` / `Double` / `ByteBuffer` / `String`  
-    根据这个NBT对象的数据类型，写入对应类型的数据  
-    如对于一个`Float`类型的 NBT 对象，你需要传入一个`Float`类型的值
-- 返回值：是否成功写入
+    要写入的数据，类型需与该 NBT 对象的数据类型一致。  
+    例如，对于 `Float` 类型的 NBT 对象，需传入 `Float` 类型的值。
+- 返回值：是否写入成功。
 - 返回值类型：`Boolean`
 
 
@@ -60,7 +60,7 @@
 
 `value.get()`
 
-- 返回值：对象中储存的数据
-- 返回值类型：``Number` / `Float` / `Double` / `ByteBuffer` / `String`，以储存的实际数据类型为准
+- 返回值：对象中储存的数据。
+- 返回值类型：``Number` / `Float` / `Double` / `ByteBuffer` / `String`，以实际储存的数据类型为准。
 
 

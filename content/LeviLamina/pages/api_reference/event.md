@@ -4,7 +4,7 @@
 
 ## Overview
 
-The Event module provides a publish-subscribe event system. It includes an event bus singleton, typed listeners with priority control, cancellable events, and a comprehensive set of built-in events for player actions, world changes, entities, server lifecycle, commands, and client-specific events.
+The Event module provides a publish-subscribe event system. It includes a singleton event bus, typed listeners with priority control, cancellable events, and built-in events for player actions, world changes, entities, the server lifecycle, commands, and the client.
 
 ## Headers
 
@@ -18,13 +18,13 @@ The Event module provides a publish-subscribe event system. It includes an event
 | `ll/api/event/Cancellable.h` | Cancellable event mixin |
 | `ll/api/event/Emitter.h` | Event emitter base |
 | `ll/api/event/DynamicListener.h` | Runtime listener creation |
-| `ll/api/event/MultiListener.h` | Listen to multiple event types |
+| `ll/api/event/MultiListener.h` | Listener for multiple event types |
 
 ## Key Classes
 
 ### EventBus
 
-Singleton event dispatcher. All event publishing and subscription goes through this.
+Singleton event dispatcher that handles all event publishing and subscription.
 
 ```cpp
 namespace ll::event {
@@ -109,7 +109,7 @@ enum class EventPriority {
 
 ### Cancellable\<T\>
 
-Mixin template to make an event cancellable.
+Mixin template that makes an event cancellable.
 
 ```cpp
 namespace ll::event {
@@ -338,11 +338,11 @@ void setupMulti() {
 
 ## Platform Notes
 
-- **Server events** (`ServerStartedEvent`, `ServerStoppingEvent`): Available on both server and client builds, but only fire on the server side.
-- **Client events** (`ClientJoinLevelEvent`, `KeyInputEvent`, `MouseInputEvent`, render events): Only available in client builds (`src-client/ll/api/event/`).
+- **Server events** (`ServerStartedEvent`, `ServerStoppingEvent`): Available in both server and client builds, but fire only on the server side.
+- **Client events** (`ClientJoinLevelEvent`, `KeyInputEvent`, `MouseInputEvent`, render events): Available only in client builds (`src-client/ll/api/event/`).
 
 ## Related
 
 - [How-to Guide: Events](../developer_guides/how_to_guides/event_guide.md) — Step-by-step tutorial
 - [Input (Client)](input.md) — Client-only input event details
-- [Service](service.md) — Service registration/unregistration events
+- [Service](service.md) — Service registration and unregistration events

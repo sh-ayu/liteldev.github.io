@@ -2,9 +2,7 @@
 
 ## Purpose
 
-This example resolves a target with `pl::memory::resolveSignature()`, installs
-a hook with `pl::memory::HookHandle`, and releases it in `disable()` or by
-destroying the handle.
+This example resolves a target with `pl::memory::resolveSignature()`, installs a hook with `pl::memory::HookHandle`, and releases it in `disable()` or by destroying the handle.
 
 ## Headers
 

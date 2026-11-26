@@ -4,19 +4,19 @@
 
 ## Who This Page Is For
 
-If you only want to store a plain struct as JSON, or give a type a string form, read [Reflection](reflection.md) first. This page is for when you need to:
+If you only want to store a plain struct as JSON or give a type a string form, read [Reflection](reflection.md) first. Read this page when you need to:
 
 - write specializations that control field names, required fields, and output shape;
 - understand how the framework picks a specialization, and why one you wrote appears to do nothing;
-- look things up while writing code: the full signature table, the return-type rules, and the compile-time error table.
+- look up reference details while writing code: the full signature table, the return-type rules, and the compile-time error table.
 
-Every complex example below is taken from the test suite, `src-test/server/ReflectionTest.cpp`, and carries the name of the gtest case it came from, so you can grep for it and run it.
+Every complex example below comes from the test suite (`src-test/server/ReflectionTest.cpp`) and includes the name of its gtest case so you can grep for it and run it.
 
 ## Dispatch Model and Terminology
 
 ### Priority Tags
 
-Dispatch is not a chain of nested `if constexpr`. It is **compile-time priority dispatch** through tag inheritance plus overload resolution: every candidate is named `serialize_impl` / `deserialize_impl`, and they differ only in their last parameter, `meta::PriorityTag<N>` (`PriorityTag<N>` derives from `PriorityTag<N-1>`, so higher numbers are "more specialized"). Passing `PriorityTag<11>` makes overload resolution pick the highest-priority branch the type satisfies.
+Dispatch is not a chain of nested `if constexpr` branches. It uses **compile-time priority dispatch** through tag inheritance and overload resolution: every candidate is named `serialize_impl` or `deserialize_impl`, differing only in its last parameter, `meta::PriorityTag<N>` (`PriorityTag<N>` derives from `PriorityTag<N-1>`, so higher numbers are "more specialized"). Passing `PriorityTag<11>` makes overload resolution pick the highest-priority branch the type satisfies.
 
 | Priority | Matches (deserialization direction) |
 | --- | --- |
@@ -33,11 +33,11 @@ Dispatch is not a chain of nested `if constexpr`. It is **compile-time priority 
 | 1 | reflectable aggregates |
 | 0 | fallback: a convertible target is converted, otherwise `cannot deserialize this type` |
 
-All of this happens at **compile time**, independent of runtime values: change the type in one place and a completely different branch can be selected.
+All of this happens at **compile time**, independent of runtime values: changing a type in one place can select a completely different branch.
 
 ### Trait Probes
 
-"Does a specialization of this shape exist?" is answered by a set of variable templates in `ll::reflection::detail`:
+A set of variable templates in `ll::reflection::detail` answers whether a specialization of a given shape exists:
 
 | Trait | What it detects |
 | --- | --- |
@@ -51,7 +51,7 @@ All of this happens at **compile time**, independent of runtime values: change t
 | `has_typed_key_formatter_v<T, F>` | a formatter with a per-type `operator()<T>(value)` overload |
 | `is_key_stringifiable_v<T>` | usable as an associative key (string / enum / `to_string` + `from_string`) |
 
-One detail that is easy to miss: the value forms are probed with a compound requirement that carries **no return-type constraint** (`{ expr };`). That is what lets you return `J` instead of `Expected<J>`, and the side effect is that `void` satisfies the probe too. A value specialization returning `void` is therefore selected and then fails to compile inside the framework. `void` is never a valid return type.
+One detail is easy to miss: the value forms are probed with a compound requirement that carries **no return-type constraint** (`{ expr };`). This lets you return `J` instead of `Expected<J>`, with the side effect that `void` also satisfies the probe. A value specialization returning `void` is therefore selected and then fails to compile inside the framework. `void` is never a valid return type.
 
 ### The Three Kinds of Specialization
 
@@ -68,10 +68,10 @@ One detail that is easy to miss: the value forms are probed with a compound requ
 3. default aggregate reflection (priority 1);
 4. the fallback conversion (priority 0).
 
-The two directions differ in internal order, so a type that implements both kinds hits different ones:
+The two directions check specializations in different orders, so a type that implements both kinds hits a different one in each direction:
 
 - **Serialization** prefers the value specialization and only then looks for an in-place one;
-- **Deserialization** prefers the in-place specialization and only then falls back to the value one / built-in handling.
+- **Deserialization** prefers the in-place specialization and only then falls back to the value one or built-in handling.
 
 ## Signatures and Return Types
 
@@ -84,7 +84,7 @@ Specializations are identified by signature, so **a signature that does not matc
 | Value, without formatter | `template <typename J> static ll::Expected<J> serialize(T const&)` | same, but the framework never passes the key formatter in |
 | In-place | `template <typename J, typename F> static ll::Expected<> serialize(T const&, J& out, F const&)` | must be `ll::Expected<>` |
 
-`deserialize` mirrors this: the value form takes the input and returns `T` or `ll::Expected<T>`, the in-place form takes a `T&` and returns `ll::Expected<>`.
+`deserialize` mirrors this: the value form takes the input and returns `T` or `ll::Expected<T>`, and the in-place form takes a `T&` and returns `ll::Expected<>`.
 
 ### Signature Checklist
 
@@ -136,7 +136,7 @@ A formatter reaches member key names and associative keys, but **never leaks int
 
 ## Member and Field Helpers
 
-These helpers are shorthands meant for the inside of a `Serializer<T>` specialization. The direction of `member` / `field` is decided by the constness of the json argument — **a mutable lvalue writes out, a const lvalue or an rvalue reads in** — so outside a specialization call `serialize` / `deserialize` directly, or use one of the directional names.
+These helpers are shorthands meant for the inside of a `Serializer<T>` specialization. The direction of `member` / `field` is decided by the constness of the json argument — **a mutable lvalue writes out, a const lvalue or an rvalue reads in** — so outside a specialization, call `serialize` / `deserialize` directly or use one of the directional names.
 
 | Semantics | Member pointer form | Fixed key form |
 | --- | --- | --- |
@@ -150,7 +150,7 @@ These helpers are shorthands meant for the inside of a `Serializer<T>` specializ
 Additional semantics:
 
 - writing: an empty `std::optional<T>` member omits the key instead of writing `null`;
-- argument order differs: serialization is "json first, value second", deserialization is the other way round;
+- argument order differs: serialization is "json first, value second", while deserialization is the other way around;
 - the member pointer form derives the field name from the reflected member name; use the fixed key form when the two differ.
 
 ## Complex Examples (From the Tests)
@@ -229,7 +229,7 @@ Test: `FlatReflectionMergesObjectSerializersAndRoundTrips`.
 
 ### 3. Types That Cannot Be Default Constructed
 
-Those need the value form: `deserialize` returns a `T` that the specialization constructs itself. It also works inside containers, `std::optional` and `std::variant` (the framework routes through `deserialize_construct`):
+These types require the value form: `deserialize` returns a `T` constructed by the specialization itself. This also works inside containers, `std::optional`, and `std::variant` (the framework routes through `deserialize_construct`):
 
 ```cpp
 template <>
@@ -252,7 +252,7 @@ Tests: `DeserializeToSupportsNonDefaultConstructibleTypesWithValueDeserializer`,
 
 ### 4. Variants with an Explicit Discriminator
 
-A plain `std::variant` can only guess an alternative from the value's shape. For an explicit discriminator, wrap the variant and specialize the wrapper:
+A plain `std::variant` can only guess an alternative from the value's shape. To use an explicit discriminator, wrap the variant and specialize the wrapper:
 
 ```cpp
 template <typename Enum, typename Variant>
@@ -271,7 +271,7 @@ Test: `VariantWithEnumIndexSerializesAndDeserializesUsingEnumDiscriminator`.
 
 ### 5. ABI Wrapper Types
 
-Wrappers such as `ll::TypedStorage<Align, Size, T>` are not seen through by default reflection and have to be opted in explicitly:
+Default reflection cannot see through wrappers such as `ll::TypedStorage<Align, Size, T>`, so you must opt them in explicitly:
 
 ```cpp
 template <size_t Align, size_t Size, typename T>
@@ -296,7 +296,7 @@ Test: `SerializedSkinImplSpecializationSupportsTypedStorageFields`.
 
 ### 6. One Type, Different Output for JSON and NBT
 
-Branch on `J` with `if constexpr`. The test specializes `CompoundTagVariant`: it writes SNBT text for a JSON target and returns the node itself for an NBT target.
+Branch on `J` with `if constexpr`. This test specializes `CompoundTagVariant` to write SNBT text for a JSON target and return the node itself for an NBT target:
 
 ```cpp
 template <>
@@ -316,7 +316,7 @@ Test: `NbtValueSpecializationCanSerializeDifferentlyForJsonAndNbt`.
 
 ### 7. Deserialize Only, Never Serialize (Compatibility)
 
-Wrap the type so that serialization writes an empty object while deserialization keeps working:
+Wrap the type so that serialization writes an empty object while deserialization continues to work:
 
 ```cpp
 template <typename T>
@@ -334,47 +334,47 @@ Test: `CustomDeserializerCanHideATypeDuringSerialization`.
 
 | Scenario | Test name |
 | --- | --- |
-| one type supporting both a string form and a value form | `ValueSerializerAndStringSerializerCanCoexistOnSameType` |
-| value specializations for paths / durations / `ordered_json` | `OrderedJsonAndFilesystemPathUseValueSpecializations`, `DurationSpecializationSerializesTheUnderlyingCount` |
-| `string_view` only accepts a borrowable lvalue source | `StringViewDeserializationRequiresBorrowableLvalueSource` |
-| exact-match behavior of a plain variant, and its failure path | `PlainVariantPrefersExactArithmeticAlternativeMatches`, `PlainVariantReportsCastFailureWhenNoAlternativeMatches` |
-| out-of-range and fractional numbers | `NumericDeserializationRejectsOutOfRangeAndFractionalValues` |
-| an in-place specialization used by every entry point | `InPlaceDeserializerIsUsedByDeserializeAndDeserializeTo` |
+| One type supporting both a string form and a value form | `ValueSerializerAndStringSerializerCanCoexistOnSameType` |
+| Value specializations for paths, durations, and `ordered_json` | `OrderedJsonAndFilesystemPathUseValueSpecializations`, `DurationSpecializationSerializesTheUnderlyingCount` |
+| `string_view` accepting only a borrowable lvalue source | `StringViewDeserializationRequiresBorrowableLvalueSource` |
+| Exact-match behavior of a plain variant and its failure path | `PlainVariantPrefersExactArithmeticAlternativeMatches`, `PlainVariantReportsCastFailureWhenNoAlternativeMatches` |
+| Out-of-range and fractional numbers | `NumericDeserializationRejectsOutOfRangeAndFractionalValues` |
+| An in-place specialization used by every entry point | `InPlaceDeserializerIsUsedByDeserializeAndDeserializeTo` |
 
 ## Custom Target Types
 
-The framework is fully generic over its target type `J`: there is no base class, no trait and no adapter interface — the only contract is that `J` happens to have the members the framework calls when you write `serialize<J>` / `deserialize_to<T>(J)`. Supporting another data structure (a script engine object, `Json::Value`, your own `Value` type) therefore means satisfying this contract.
+The framework is fully generic over its target type `J`. There is no base class, trait, or adapter interface—the only contract is that `J` provides the members the framework calls when you invoke `serialize<J>` or `deserialize_to<T>(J)`. To support another data structure (such as a script engine object, `Json::Value`, or your own `Value` type), you simply need to satisfy this contract.
 
 ### The Contract
 
 | Category | Members | Needed when |
 | --- | --- | --- |
-| Construction | `static J object()`, `static J array()` | any object / array serialization |
-| Construction | constructible from `nullptr_t` | serializing an empty `std::optional` (the framework writes `return t ? … : nullptr;`) |
-| Construction | scalars and strings constructible directly (see the two-step pitfall below) | serializing arithmetic types, strings, enums |
-| Construction | default constructible and assignable | only the in-place specialization branch and `serialize_to` |
-| Queries | `is_object` / `is_array` / `is_string` / `is_null` / `is_boolean` / `is_number` / `is_number_float` / `is_number_integer` / `is_number_unsigned`, `type_name()`, `size()` | trim to the branches you actually use |
-| Objects | `contains(key)`, `operator[](key)`, `items()` (usable as `for (auto&& [k, v] : …)`) | reading and writing objects |
-| Arrays | `operator[](index)`, `push_back(value)` | reading and writing arrays and tuples |
-| Scalars | `static_cast`-able to arithmetic types, implicitly convertible to `std::string` and `std::string_view` | reading scalars; the latter is what LeviLamina's built-in stringified specializations (`mce::UUID`, `ll::data::Version`, ...) use |
-| Variant only | `get<bool>()` / `get<double>()` / `get<int64>()` / `get<uint64>()`, `dump()` | only when `std::variant` appears |
-| string_view only | a `using string_t = ...;` member alias plus `template <class T> T const& get_ref() const` (the `BorrowableStringSource` concept) | only when `std::string_view` appears, see Borrowing Strings below |
+| Construction | `static J object()`, `static J array()` | Serializing any object or array |
+| Construction | Constructible from `nullptr_t` | Serializing an empty `std::optional` (the framework writes `return t ? … : nullptr;`) |
+| Construction | Scalars and strings constructible directly (see the two-step pitfall below) | Serializing arithmetic types, strings, and enums |
+| Construction | Default constructible and assignable | Only the in-place specialization branch and `serialize_to` |
+| Queries | `is_object` / `is_array` / `is_string` / `is_null` / `is_boolean` / `is_number` / `is_number_float` / `is_number_integer` / `is_number_unsigned`, `type_name()`, `size()` | Trim to the branches you actually use |
+| Objects | `contains(key)`, `operator[](key)`, `items()` (usable as `for (auto&& [k, v] : …)`) | Reading and writing objects |
+| Arrays | `operator[](index)`, `push_back(value)` | Reading and writing arrays and tuples |
+| Scalars | `static_cast`-able to arithmetic types, implicitly convertible to `std::string` and `std::string_view` | Reading scalars; LeviLamina's built-in stringified specializations (`mce::UUID`, `ll::data::Version`, ...) use the latter |
+| Variant only | `get<bool>()` / `get<double>()` / `get<int64>()` / `get<uint64>()`, `dump()` | Only when `std::variant` appears |
+| string_view only | A `using string_t = ...;` member alias plus `template <class T> T const& get_ref() const` (the `BorrowableStringSource` concept) | Only when `std::string_view` appears (see Borrowing Strings below) |
 
 ### Three Hard Constraints
 
-1. **`operator[]` has to hand out the same `J`.** For an ordinary `J` the framework does `return static_cast<J&&>(j[key]);` (see `object_child_at` / `array_child_at`); only `CompoundTagVariant` / `UniqueTagPtr` get a dedicated branch that rewraps the child. A type whose `operator[]` returns a raw handle (`JSValue`, `lua_State*`) therefore cannot be used as `J` directly — wrap it in a node type whose children are nodes of the same type.
-2. **An lvalue source needs references, an rvalue source gets copied.** In the same function, an lvalue `J` requires `j[key]` to yield a real reference, while an rvalue goes through `std::remove_cvref_t<J>(j[key])`. An adapter whose `operator[]` returns temporaries can therefore only be passed as an rvalue (`deserialize_to<T>(makeNode())`); otherwise it either fails to compile or dangles.
+1. **`operator[]` has to hand out the same `J`.** For an ordinary `J`, the framework runs `return static_cast<J&&>(j[key]);` (see `object_child_at` / `array_child_at`); only `CompoundTagVariant` and `UniqueTagPtr` get a dedicated branch that rewraps the child. A type whose `operator[]` returns a raw handle (`JSValue`, `lua_State*`) therefore cannot be used as `J` directly — wrap it in a node type whose children are nodes of the same type.
+2. **An lvalue source needs references, an rvalue source gets copied.** In the same function, an lvalue `J` requires `j[key]` to yield a real reference, while an rvalue goes through `std::remove_cvref_t<J>(j[key])`. An adapter whose `operator[]` returns temporaries can therefore only be passed as an rvalue (`deserialize_to<T>(makeNode())`); otherwise, it either fails to compile or dangles.
 3. **The write entry points use fixed names**: `(*res)[key] = value` for objects and `res->push_back(value)` for arrays, so `operator[]` must return an assignable reference and `push_back` must exist.
 
 ### Three Pitfalls We Hit
 
-- **Do not offer only "constructible from the intermediate type".** The framework writes implicit conversions such as `return t;` (an `int` becoming an `Expected<J>`), and `int → Json::Value → J` is a **two-step user-defined conversion**, which does not exist in an implicit context. Provide direct constructors for scalars and strings (a template constrained on `is_arithmetic_v<T>`, plus `std::string` and `char const*`).
-- **An arithmetic conversion operator fights the built-in subscript.** An adapter needs `template <class T> operator T()` to read numbers, and then `node["a"]` is read as "convert the node to `__ptrdiff_t` and use the built-in `operator[](__ptrdiff_t, const char*)`", which is ambiguous with your `operator[](std::string_view)`. Adding `operator[](char const* key)` makes string literals an exact match and resolves it.
-- **Do not offer a conversion to the character types.** `std::string{j}` is braced initialization: as soon as the adapter has an implicit conversion to `char`, it takes the `initializer_list<char>` constructor and turns `static_cast<char>(j)` into a one-byte string (which reads back as `\0` — string members silently become garbage, and only an enum member reports `invalid enum value`). Constrain the conversion operator with `std::is_arithmetic_v<T> && !ll::traits::is_char_v<T>`, which is what `CompoundTagVariant` has always done.
+- **Do not offer only "constructible from the intermediate type".** The framework uses implicit conversions such as `return t;` (an `int` becoming an `Expected<J>`), and `int → Json::Value → J` is a **two-step user-defined conversion**, which is not allowed in an implicit context. Provide direct constructors for scalars and strings (a template constrained on `is_arithmetic_v<T>`, plus `std::string` and `char const*`).
+- **An arithmetic conversion operator fights the built-in subscript.** An adapter needs `template <class T> operator T()` to read numbers, which causes `node["a"]` to be read as "convert the node to `__ptrdiff_t` and use the built-in `operator[](__ptrdiff_t, const char*)`", making it ambiguous with your `operator[](std::string_view)`. Adding `operator[](char const* key)` makes string literals an exact match and resolves the ambiguity.
+- **Do not offer a conversion to the character types.** `std::string{j}` uses braced initialization: if the adapter has an implicit conversion to `char`, it selects the `initializer_list<char>` constructor and turns `static_cast<char>(j)` into a one-byte string (which reads back as `\0` — string members silently become garbage, and only an enum member reports `invalid enum value`). Constrain the conversion operator with `std::is_arithmetic_v<T> && !ll::traits::is_char_v<T>`, just as `CompoundTagVariant` has always done.
 
 ### Borrowing Strings (`string_t` + `get_ref`)
 
-When the target type has a `std::string_view` member, the framework needs two things: a `string_t` member alias plus
+When the target type has a `std::string_view` member, the framework needs two things: a `string_t` member alias and
 
 ```cpp
 // Returns a reference to the string the implementation owns; its lifetime is the implementation's
@@ -383,24 +383,24 @@ template <class T>
 [[nodiscard]] T const& get_ref() const;
 ```
 
-The framework then **builds whatever type it needs from that reference**, `std::string_view` here. `CompoundTagVariant` (`string_t = std::string`) and `nlohmann::json` both satisfy it.
+The framework then **builds whatever type it needs from that reference** — `std::string_view` in this case. Both `CompoundTagVariant` (`string_t = std::string`) and `nlohmann::json` satisfy this requirement.
 
-An adapter whose storage is not a `std::string` can satisfy it too: `Json::Value` only hands out strings by value (`asString()`), so `JsonValueNode` declares `using string_t = std::string;`, caches that text in a `mutable` member and returns a reference to it from `get_ref`.
+An adapter whose storage is not a `std::string` can satisfy it too: `Json::Value` only hands out strings by value (`asString()`), so `JsonValueNode` declares `using string_t = std::string;`, caches that text in a `mutable` member, and returns a reference to it from `get_ref`.
 
 Two semantics to remember:
 
-- the returned reference / view points at **the string the source owns** (the internal storage for `CompoundTagVariant` and `nlohmann::json`, a cached copy for the `Json::Value` adapter), so that string has to outlive the view;
-- the framework **only borrows from an lvalue source**. A temporary (rvalue) node still reports `field cannot be safely deserialized into string_view from a temporary or non-borrowing source` — name the node and pass it in instead.
+- The returned reference or view points to **the string the source owns** (the internal storage for `CompoundTagVariant` and `nlohmann::json`, or a cached copy for the `Json::Value` adapter), so that string must outlive the view.
+- The framework **only borrows from an lvalue source**. A temporary (rvalue) node still reports `field cannot be safely deserialized into string_view from a temporary or non-borrowing source` — bind the node to a variable and pass that in instead.
 
-The reference `get_ref` returns has to point at **storage**: with a `T const&` return type, `return somePointerValue;` binds the reference to a temporary on the stack, which dangles as soon as the function returns.
+The reference returned by `get_ref` must point to **storage**: with a `T const&` return type, `return somePointerValue;` binds the reference to a temporary on the stack, which dangles as soon as the function returns.
 
 ### Implementation and Tests
 
-`JsonValueNode` in `src-test/server/ReflectionTest.cpp` is that adapter for Bedrock's `Json::Value`, written against this contract. It is also a writable view: copying a node is shallow (both share one `Json::Value`), assigning to a node **writes through** into the underlying `Json::Value`, and element access returns references into a cache of child views — which is what makes the framework's lvalue path work. The tests:
+`JsonValueNode` in `src-test/server/ReflectionTest.cpp` implements this adapter contract for Bedrock's `Json::Value`. It is also a writable view: copying a node is shallow (both copies share one `Json::Value`), assigning to a node **writes through** to the underlying `Json::Value`, and element access returns references into a cache of child views, which enables the framework's lvalue path. Here are the tests:
 
 | Test | Coverage |
 | --- | --- |
-| `JsonValueNodeSerializesAggregatesIntoJsonValue` | aggregate → `Json::Value`: arithmetic types, strings, booleans, an omitted empty optional, enums, `vector`, `map`, nested structs, variants and a custom `Serializer<T>`, plus a round-trip comparison |
+| `JsonValueNodeSerializesAggregatesIntoJsonValue` | aggregate → `Json::Value`: arithmetic types, strings, booleans, an omitted empty optional, enums, `vector`, `map`, nested structs, variants, and a custom `Serializer<T>`, plus a round-trip comparison |
 | `JsonValueNodeDeserializesFromAConstJsonValue` | deserializing from a read-only `Json::Value`, including a missing optional key becoming `nullopt` |
 | `JsonValueNodeReportsPathsRangesAndUnsupportedTargets` | nested error paths, missing required fields, fractional / out-of-range / negative-into-unsigned numbers, a boolean read as a number, a variant that matches nothing (the error carries `dump()`), and an rvalue source reporting the `string_view` lifetime error |
 | `JsonValueNodeBorrowsStringViewsFromAnLvalueSource` | borrowing a `std::string_view` member from an lvalue source, asserting that repeated borrows from the same child node yield the same cached text |
@@ -409,35 +409,35 @@ The reference `get_ref` returns has to point at **storage**: with a `T const&` r
 | `PlainVariantDeserializesFromNbt` | deserializing a `std::variant` from NBT |
 | `JsonValueNodeWritesThroughAndSharesItsValue` | write-through semantics, shallow sharing, `push_back`, and the `nullptr` construction used by empty optionals |
 
-Three details are worth copying: keep the child cache behind a pointer (`std::map<Json::Value*, std::unique_ptr<Node>>`) instead of storing `std::deque<Node>` directly, or the self-referential type fails to compile as incomplete — and **deduplicate by slot address** (`Json::Value` heap-allocates its children, so those addresses are stable), otherwise every access stores another view; and declare the copy constructor as a shallow copy and the assignment operator as a write-through, since the asymmetry is deliberate.
+Three details are worth copying: keep the child cache behind a pointer (`std::map<Json::Value*, std::unique_ptr<Node>>`) instead of storing `std::deque<Node>` directly, or the self-referential type will fail to compile as incomplete; **deduplicate by slot address** (`Json::Value` heap-allocates its children, so those addresses are stable), or every access will store another view; and declare the copy constructor as a shallow copy and the assignment operator as a write-through, since the asymmetry is deliberate.
 
 ### When Not To Do This
 
 - Converting between two JSON representations once (Bedrock's `Json::Value` ↔ `nlohmann::json`): a value conversion specialization is less work — see `Serializer<Json::Value, nlohmann::json>` in the tests.
 - The data lives in a script engine: `JSON.stringify` / `JSON.parse` plus `serialize<nlohmann::json>` / `deserialize_to<T>` is usually cheaper than an adapter layer.
-- A single C++ type has to be written into a target in a specific shape: that is what `Serializer<T, J>` is for (it only changes how `T` itself becomes `J`; members still go through the built-in branches, so the underlying contract still applies).
+- Writing a single C++ type into a target in a specific shape: that is what `Serializer<T, J>` is for (it only changes how `T` itself becomes `J`; members still go through the built-in branches, so the underlying contract still applies).
 
 ## How Variants Match
 
 `std::variant` deserialization runs in two passes:
 
-1. **Exact match**: a boolean only matches a boolean, a float only a float, a signed value only a signed alternative, an unsigned value only an unsigned alternative, and the value has to fit the target type; the first declared candidate wins.
-2. **Fallback match**: the alternatives are tried in declaration order by type, with arithmetic alternatives going through the strict numeric conversion (out-of-range and fractional values are reported here too).
+1. **Exact match**: a boolean matches only a boolean, a float only a float, a signed value only a signed alternative, and an unsigned value only an unsigned alternative, and the value must fit the target type. The first declared candidate wins.
+2. **Fallback match**: the alternatives are tried in declaration order by type, with arithmetic alternatives going through strict numeric conversion (which also reports out-of-range and fractional values).
 
-When both passes fail, the error carries the input's type name and text, for example `could not cast target object ({"unexpected":true}) to any type in the variant`. For an explicit discriminator, write a specialization as in example 4 above.
+When both passes fail, the error includes the input's type name and text, for example `could not cast target object ({"unexpected":true}) to any type in the variant`. For an explicit discriminator, write a specialization as in example 4 above.
 
 ## `std::string_view` Lifetime
 
-Deserializing into `std::string_view` only works when the input can be borrowed safely:
+Deserializing into `std::string_view` works only when the input can be borrowed safely:
 
 - reading from a stable lvalue JSON / NBT object yields a view into its storage;
 - reading from a temporary or a non-borrowing backend reports `field cannot be safely deserialized into string_view from a temporary or non-borrowing source`.
 
-That guard exists to prevent dangling views; use `std::string` when the value has to outlive the input.
+This guard prevents dangling views; use `std::string` when the value must outlive the input.
 
 ## `Dispatcher<T, Listener>`
 
-A `Dispatcher` binds a value to a listener. Reflection's contract for it is: **serialization writes only `storage`, and deserialization reads `storage` back and then calls `call()` once**.
+A `Dispatcher` binds a value to a listener. Under reflection, **serialization writes only `storage`, and deserialization reads `storage` back and then calls `call()` once**.
 
 ```cpp
 struct LevelNotifier {
@@ -454,11 +454,11 @@ struct GameOptions {
 
 Notes:
 
-- `Listener` has to be default constructible and movable, and provide `call(Storage const&)`;
+- `Listener` must be default constructible and movable, and it must provide `call(Storage const&)`;
 - `call()` runs when the dispatcher is assigned (`disp = value`) and after deserialization; writing `disp.storage` directly does not trigger it;
 - the third template parameter, `CallInit` (default `false`), also calls `call()` on construction when set to `true`;
-- it converts back to `Storage`, so it can be used as the underlying value directly;
-- the listener may own state, so a `Dispatcher` is movable but not copyable, and a move carries the listener along.
+- it converts back to `Storage`, so you can use it directly as the underlying value;
+- because the listener may own state, a `Dispatcher` is movable but not copyable, and moving it moves the listener as well.
 
 Test: `SerializeAndDeserializeRespectKeyFormatterAndDispatcher`.
 
@@ -468,28 +468,28 @@ Test: `SerializeAndDeserializeRespectKeyFormatterAndDispatcher`.
 
 | Message fragment | Meaning | What to do |
 | --- | --- | --- |
-| `cannot serialize this type: ...` | no serialization path applies | add a `Serializer<T>` specialization, or make the type an aggregate / use supported member types |
-| `cannot deserialize this type: ...` | same, deserialization direction | same |
-| `an associative container key has to be a string, ...` | the key type cannot be turned into a string | give the key type `to_string` / `from_string`, or use a per-type formatter |
+| `cannot serialize this type: ...` | no serialization path applies | add a `Serializer<T>` specialization, or make the type an aggregate with supported member types |
+| `cannot deserialize this type: ...` | same, for deserialization | same |
+| `an associative container key has to be a string, ...` | the key type cannot be converted to a string | provide `to_string` / `from_string` for the key type, or use a per-type formatter |
 | `the key type has to be a string, ...` | `type_to_string` / `string_to_type` cannot handle that type | same |
-| `Boost.PFR: ... Please report this issue ...` | Boost.PFR cannot count the fields of that aggregate (bases, a member with a deleted converting constructor, ...) | write a `Serializer<T>` instead of relying on default reflection |
+| `Boost.PFR: ... Please report this issue ...` | Boost.PFR cannot count the aggregate's fields (e.g., base classes, a member with a deleted converting constructor, ...) | write a `Serializer<T>` instead of relying on default reflection |
 
 ### Finding the Cause
 
-1. **Check whether the specialization is being ignored**: temporarily add `static_assert(ll::traits::always_false<std::remove_cvref_t<T>>, "");` to it — if the build still succeeds, the framework never selected it.
-2. **Narrow it down to one member**: verify with `deserialize_to<MemberType>(json)` / `serialize<J>(member)` directly instead of iterating on the whole struct.
+1. **Check whether the specialization is being ignored**: temporarily add `static_assert(ll::traits::always_false<std::remove_cvref_t<T>>, "");` to it. If the build still succeeds, the framework never selected it.
+2. **Narrow it down to one member**: test `deserialize_to<MemberType>(json)` / `serialize<J>(member)` directly instead of iterating on the whole struct.
 3. **Look at which layer complained**: an invalid enum value or a missing field means a built-in branch matched instead of your specialization; `cannot serialize` means no branch matched at all.
-4. **An aggregate hitting a PFR assertion**: that is PFR's own field counting failing; only an explicit specialization gets around it.
+4. **An aggregate hitting a PFR assertion**: PFR's own field counting failed; only an explicit specialization works around it.
 
 ## Implementation Notes
 
-- **Numeric conversion is strict**: out-of-range values, fractional values, and negative values written into unsigned targets are reported, identically for the JSON and NBT backends. The range check is implemented inside `ll::reflection` because the MSVC STL rejects the plain character types in `std::in_range`.
-- **Failure atomicity**: the value path constructs into a temporary and only then assigns to the target, leaving the target untouched on failure; the in-place path writes field by field, so a mid-way failure can leave a half-written object. Choose the value form when that matters.
-- **Variant errors are lazy**: the error containing a full dump is only built once every alternative fails; a matching alternative never pays for serializing the whole subtree.
-- **Entry points agree**: both `deserialize_to` and `deserialize` prefer an in-place specialization (`deserialize_to` default-constructs the target first), so an in-place-only type has to be default constructible. If it is not, use the value form.
+- **Numeric conversion is strict**: both the JSON and NBT backends report out-of-range values, fractional values, and negative values written into unsigned targets in the same way. `ll::reflection` implements its own range check because the MSVC STL rejects plain character types in `std::in_range`.
+- **Failure atomicity**: the value path constructs a temporary before assigning to the target, leaving the target untouched on failure. The in-place path writes field by field, so a mid-way failure can leave a partially written object. Use the value form when atomicity matters.
+- **Variant errors are lazy**: the error containing a full dump is built only after every alternative fails; a matching alternative never pays the cost of serializing the whole subtree.
+- **Entry points agree**: both `deserialize_to` and `deserialize` prefer an in-place specialization (`deserialize_to` default-constructs the target first), so an in-place-only type must be default constructible. If it is not, use the value form.
 
 ## Related
 
-- [Reflection](reflection.md): first-time usage and the simplest specialization
+- [Reflection](reflection.md): getting started and writing a basic specialization
 - [Config](config.md): the config system, the main consumer of reflection
 - [Base](base.md): the base utilities reflection builds on (concepts, containers, `Expected`)

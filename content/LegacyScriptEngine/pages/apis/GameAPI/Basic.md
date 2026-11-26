@@ -89,14 +89,14 @@ For some languages ​​that support general object orientation, LSE also provi
 
 - Parameters: 
   - x : `Integer`  
-    x coordinate
+    X coordinate.
   - y : `Integer`  
-    y coordinate
+    Y coordinate.
   - z : `Integer`  
-    z coordinate
+    Z coordinate.
   - dimid : `Integer`  
-    Dimension ID: `0` representing the overworld, `1` represents The Nether, `2` represents The End.
-- Return value: An Integer coordinate object.
+    Dimension ID: `0` represents the Overworld, `1` represents The Nether, and `2` represents The End.
+- Return value: An integer coordinate object.
 - Return value type: `IntPos`
 
 #### Generate a Floating Point Coordinate Object
@@ -106,32 +106,30 @@ For some languages ​​that support general object orientation, LSE also provi
 
 - Parameters: 
   - x : `Float`  
-    x coordinate
+    X coordinate.
   - y : `Float`  
-    y coordinate
+    Y coordinate.
   - z : `Float`  
-    z coordinate
+    Z coordinate.
   - dimid : `Integer`  
-    Dimension ID: `0` representing the overworld, `1` represents The Nether, `2` represents The End.
-- Return value: A floating point coordinate object.
+    Dimension ID: `0` represents the Overworld, `1` represents The Nether, and `2` represents The End.
+- Return value: A floating-point coordinate object.
 - Return value type: `FloatPos`
 
 
 
 ## 📐 Bearing Angle Object
 
-The engine uses a `DirectionAngle` object to denote an Euler angle, called a "direction angle object".
-Its two members are **floating point numbers**, which are mostly used to represent the direction data such as the orientation of the entity.
-Each member of the direction angle object is **readable and writable**. 
+The engine uses a `DirectionAngle` object (called a "direction angle object") to represent an Euler angle. Its two members are **floating point numbers**, commonly used to represent directional data such as an entity's orientation. Each member of the direction angle object is **readable and writable**. 
 
-For a `DirectionAngle` type variable ang, there are the following members:  
+A `DirectionAngle` variable ang has the following members:  
 
 | Member    | Meaning                    | Data Type |
 | --------- | -------------------------- | --------- |
 | ang.pitch | Pitch angle (-90° ~ 90°)   | `Float`   |
 | ang.yaw   | Yaw angle (rotation angle) | `Float`   |
 
-Since there is no concept of rotation in the entity system of MC, there is no data related to the rollover angle.
+Because the MC entity system has no concept of roll, there is no roll angle data.
 
 
 
@@ -142,9 +140,9 @@ Since there is no concept of rotation in the entity system of MC, there is no da
 
 - Parameters: 
   - pitch : `Float`  
-    pitch angle
+    Pitch angle.
   - yaw : `Float`  
-    yaw angle
+    Yaw angle.
 - Return value: A direction angle object.
 - Return value type: `DirectionAngle`
 
@@ -154,10 +152,10 @@ Since there is no concept of rotation in the entity system of MC, there is no da
 
 `ang.toFacing()`
 
-- Return value: The basic orientation indicated by the current bearing object.
+- Return value: The cardinal direction indicated by the current direction angle object.
 - Return value type: `Integer`
 
-The return value is `0-3`, representing the four basic orientations of **North, East, South, West**. Used to quickly determine the general direction an entity is facing.
+Returns `0-3`, representing the four cardinal directions: **North, East, South, West**. Use this to quickly determine the general direction an entity is facing.
 
 ## Get Structure NBT
 
@@ -165,10 +163,10 @@ The return value is `0-3`, representing the four basic orientations of **North, 
 
 - Parameters:
 
-  - pos1 : `IntPos` diagonal coordinate 1, filled in similarly to the `from` parameter of the [fill command](https://minecraft.wiki/w/Commands/fill "view in wikipedia")
-  - pos2 : `IntPos` diagonal coordinate 2, filled in similarly to the `to` parameter of the [fill command](https://minecraft.wiki/w/Commands/fill "View in Wikipedia")
-  - ignoreBlocks : `Boolean` Ignore blocks
-  - ignoreEntities : `Boolean` Ignore entities
+  - pos1 : `IntPos` Diagonal coordinate 1, specified like the `from` parameter of the [fill command](https://minecraft.wiki/w/Commands/fill "view in wikipedia").
+  - pos2 : `IntPos` Diagonal coordinate 2, specified like the `to` parameter of the [fill command](https://minecraft.wiki/w/Commands/fill "View in Wikipedia").
+  - ignoreBlocks : `Boolean` Whether to ignore blocks.
+  - ignoreEntities : `Boolean` Whether to ignore entities.
 - Return value type : `NbtCompound`
 
 ## Set Structure NBT
@@ -178,9 +176,9 @@ The return value is `0-3`, representing the four basic orientations of **North, 
 - Parameters:
 
   - nbt : `NbtCompound`
-  - pos : `IntPos` place coordinates
-  - mirror : `Integer` mirror mode
+  - pos : `IntPos` Placement coordinates.
+  - mirror : `Integer` Mirror mode:
     - `0: no mirror` `1: X-axis` `2: Z-axis` `3: XZ-axis`
-  - rotation : `Integer` rotation angle
+  - rotation : `Integer` Rotation angle:
     - `0: no rotation` `1: rotation 90°` `2: rotation 180°` `3: rotation 270°`
 - Return value type : `Boolean`

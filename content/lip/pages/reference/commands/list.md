@@ -10,16 +10,16 @@ lip list [--json] [-h | --help]
 
 ## Description
 
-`lip list` reads the [state file](../../concepts/state_file.md) of the workspace and writes the installed packages, each as `<identity>@<version>`, in two groups:
+`lip list` reads the workspace's [state file](../../concepts/state_file.md) and writes the installed packages, each as `<identity>@<version>`, in two groups:
 
-1. the **explicitly installed** packages: those you asked for, the game and the loader among them;
-2. the **dependency packages**: those installed because another package needs them.
+1. **explicitly installed** packages: those you asked for, including the game and the loader;
+2. **dependency packages**: those installed because another package needs them.
 
-The explicitly installed packages come first. Within each group the packages are in installation order: a package comes after the packages it depends on.
+Explicitly installed packages come first. Within each group, packages appear in installation order: each package comes after the packages it depends on.
 
-The **identity** of a package is its package id, followed by `#<variant>` when the variant is not the default one, such as `github.com/LiteLDev/LegacyScriptEngine#lua`. It is what [`lip uninstall`](uninstall.md) takes.
+The **identity** of a package is its package ID, followed by `#<variant>` for non-default variants (such as `github.com/LiteLDev/LegacyScriptEngine#lua`). This is the value that [`lip uninstall`](uninstall.md) takes.
 
-`lip list` changes nothing and takes no lock, so it works while another command or the server runs. In a workspace without a state file both groups are empty. A workspace of lip v0.x, which has a `tooth_lock.json` instead, is listed from that file without changing it.
+`lip list` changes nothing and takes no lock, so it can run alongside another command or the server. In a workspace without a state file, both groups are empty. In a lip v0.x workspace, which has a `tooth_lock.json` file instead, the command reads from that file without changing it.
 
 ## Options
 
@@ -30,7 +30,7 @@ The **identity** of a package is its package id, followed by `#<variant>` when t
 
 ## Output
 
-The result goes to standard output. Without `--json` it is two trees, for people:
+The command writes the result to standard output. Without `--json`, it prints two human-readable trees:
 
 ```
 User-Requested
@@ -60,15 +60,15 @@ With `--json`, the result is a JSON object with exactly these members:
 
 | Member | Value |
 | --- | --- |
-| `ExplicitInstalled` | An array of strings `<identity>@<version>`: the explicitly installed packages. |
-| `ImplicitInstalled` | An array of strings `<identity>@<version>`: the dependency packages. |
+| `ExplicitInstalled` | An array of `<identity>@<version>` strings for the explicitly installed packages. |
+| `ImplicitInstalled` | An array of `<identity>@<version>` strings for the dependency packages. |
 
 ## Exit status
 
 | Code | Meaning |
 | --- | --- |
 | `0` | The list was written. |
-| not `0` | A usage error, or the state file cannot be read. |
+| not `0` | A usage error occurred, or the state file cannot be read. |
 
 ## Examples
 
@@ -78,7 +78,7 @@ List the packages:
 lip list
 ```
 
-Get the explicitly installed packages in a script, with [jq](https://jqlang.org/):
+Get the explicitly installed packages in a script using [jq](https://jqlang.org/):
 
 ```shell
 lip list --json | jq -r '.ExplicitInstalled[]'

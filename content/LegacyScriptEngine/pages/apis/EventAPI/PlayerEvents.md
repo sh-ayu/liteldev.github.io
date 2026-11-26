@@ -6,10 +6,10 @@
   `function(player)`
 - Parameters: 
   - player : `Player`  
-    The player that is connecting to the server.
+    The player connecting to the server.
 - Intercept events: function returns `false`
 
-Note: Only some basic information of players can be obtained in this monitoring function, such as name, IP, XUID, etc. Because the player has not fully entered the server at this time.
+Note: Because the player has not fully entered the server at this point, only basic player information is available in this listener function, such as name, IP, and XUID.
 
 
 
@@ -19,7 +19,7 @@ Note: Only some basic information of players can be obtained in this monitoring 
   `function(player)`
 - Parameters: 
   - player : `Player`  
-    The player that enters the game.
+    The player entering the game.
 - Intercept events: function returns `false`
 
 
@@ -30,7 +30,7 @@ Note: Only some basic information of players can be obtained in this monitoring 
   `function(player)`
 - Parameters: 
   - player : `Player`  
-    The player that left the game.
+    The player who left the game.
 
 - Intercept event: cannot be intercepted.
 
@@ -53,9 +53,9 @@ Note: Only some basic information of players can be obtained in this monitoring 
   `function(player,source)`
 - Parameters: 
   - player : `Player`  
-    The player that died.
+    The player who died.
   - source : `Entity`  
-    The entity that dealt the damage that killed the player (may be `Null`).
+    The entity that dealt the fatal damage to the player (may be `Null`).
   
 - Intercept event: cannot be intercepted.
 
@@ -67,9 +67,9 @@ Note: Only some basic information of players can be obtained in this monitoring 
   `function(player,cmd)`
 - Parameters: 
   - player : `Player`  
-    The player that executed the command.
+    The player who executed the command.
   - cmd : `String`  
-    The command that is being executed.
+    The command being executed.
 
 - Intercept events: function returns `false`
 
@@ -81,7 +81,7 @@ Note: Only some basic information of players can be obtained in this monitoring 
   `function(player,msg)`
 - Parameters: 
   - player : `Player`  
-    The player that sent the message.
+    The player who sent the message.
   - msg : `String`  
     The message that was sent.
 
@@ -95,9 +95,9 @@ Note: Only some basic information of players can be obtained in this monitoring 
   `function(player,dimid)`
 - Parameters: 
   - player : `Player`  
-    The player that switched dimensions.
+    The player who switched dimensions.
   - dimid : `Integer`  
-    Go to the dimension ID of the dimension, 0 is the main world, 1 is the nether, and 2 is the end.
+    The ID of the target dimension: 0 is the Overworld, 1 is the Nether, and 2 is the End.
 - Intercept event: cannot be intercepted.
 
 Reminder: This event does not fire when the player returns to the Overworld from the End via a return portal.
@@ -110,7 +110,7 @@ Reminder: This event does not fire when the player returns to the Overworld from
   `function(player)`
 - Parameters: 
   - player : `Player`  
-    The player that jumped.
+    The player who jumped.
 
 - Intercept event: cannot be intercepted.
 
@@ -122,9 +122,9 @@ Reminder: This event does not fire when the player returns to the Overworld from
   `function(player,isSneaking)`
 - Parameters: 
   - player : `Player`  
-    The player that toggled their sneak state.
+    The player who toggled their sneak state.
   - isSneaking : `Boolean`  
-    `True` indicates that the player is sneaking,`False` indicates that the player is no longer sneaking.
+    `True` indicates that the player is sneaking; `False` indicates that the player is no longer sneaking.
 
 - Intercept events: function returns `false`
 
@@ -136,7 +136,7 @@ Reminder: This event does not fire when the player returns to the Overworld from
   `function(player)`
 - Parameters: 
   - player : `Player`  
-    The player that swung their arm.
+    The player who swung their arm.
 
 - Intercept event: cannot be intercepted.
 
@@ -148,9 +148,9 @@ Reminder: This event does not fire when the player returns to the Overworld from
   `function(player,entity)`
 - Parameters: 
   - player : `Player` 
-    The player that attacked an entity.
+    The player who attacked an entity.
   - entity : `Entity` 
-    The entity that is being attacked.
+    The entity being attacked.
 
 - Intercept events: function returns `false`
 
@@ -164,11 +164,11 @@ Reminder: This event does not fire when the player returns to the Overworld from
 - Parameters: 
 
   - player : `Player` 
-    The player that attacked the block.
+    The player who attacked the block.
   - block : `Block` 
-    Attacked block.
+    The attacked block.
   - item: `Item`
-    Item used to attack the block.
+    The item used to attack the block.
 
 - Intercept events: function returns `false`
 
@@ -180,7 +180,7 @@ Reminder: This event does not fire when the player returns to the Overworld from
   `function(player,item)`
 - Parameters: 
   - player : `Player`  
-    The player that used the item.
+    The player who used the item.
   - item : `Item`  
     The item that was used.
 - Intercept events: function returns `false`
@@ -193,20 +193,20 @@ Reminder: This event does not fire when the player returns to the Overworld from
   `function(player,item,block,side,pos)`
 - Parameters: 
   - player : `Player`  
-    The player that used the item.
+    The player who used the item.
   - item : `Item`  
     The item being used.
   - block : `Block`  
     The block that was right-clicked.
   - side : `Number`  
-    The face of the object that was clicked.  
+    The face of the block that was clicked.  
     The faces: `0`-Down `1`-Up `2`-North `3`-South `4`-West `5`-East
   - pos : `FloatPos`
     The position that was right-clicked.
 
 - Intercept events: function returns `false`
 
-Note: Win10 client right-clicking on the player will trigger this event on the server multiple times in a row.
+Note: Right-clicking on the Win10 client triggers this event on the server multiple times in a row.
 
 
 
@@ -214,22 +214,22 @@ Note: Win10 client right-clicking on the player will trigger this event on the s
 
 - Listener function prototype 
   `function(player,item,block,side,pos)`
-- Parameters：
+- Parameters:
   - player : `Player`  
-    The player that used the item.
+    The player who used the item.
   - item : `Item`  
     The item being used.
   - block : `Block`  
-    The block being poured out of the bucket (such as water or lava), at the position it is placed.
+    The block poured from the bucket (such as water or lava), at the position where it is placed.
   - side : `Number`  
-    The face of the object that was clicked.   
+    The face of the clicked object.   
     The faces: `0`-Down `1`-Up `2`-North `3`-South `4`-West `5`-East
   - pos : `FloatPos`  
     The position where the contents are poured out.
 
 - Intercept events: function returns `false`
 
-Note: The player may trigger this event on the server multiple times in a row.
+Note: A player may trigger this event on the server multiple times in a row.
 
 
 
@@ -237,21 +237,21 @@ Note: The player may trigger this event on the server multiple times in a row.
 
 - Listener function prototype 
   `function(player,item,target,side,pos)`
-- Parameters：
+- Parameters:
   - player : `Player`  
-    The player that used the item.
+    The player who used the item.
   - item : `Item`  
     The item being used.
   - target : `Block`  
-    The block being taken into the bucket (water, lava or powder snow).
+    The block being scooped into the bucket (water, lava, or powder snow).
   - side : `Number`  
     Always `-1`.
   - pos : `FloatPos`  
-    The position of the block being taken.
+    The position of the block being scooped up.
 
 - Intercept events: function returns `false`
 
-Note: The player may trigger this event on the server multiple times in a row.
+Note: A player may trigger this event on the server multiple times in a row.
 
 
 
@@ -262,9 +262,9 @@ Note: The player may trigger this event on the server multiple times in a row.
 - Parameters: 
 
   - player : `Player`  
-    The player that picked up the item.
+    The player who picked up the item.
   - entity: `Entity`  
-    The dropped entity of the item about to be picked up.
+    The dropped item entity about to be picked up.
   - item : `Item`  
     The item about to be picked up.
 
@@ -278,7 +278,7 @@ Note: The player may trigger this event on the server multiple times in a row.
   `function(player,item)`
 - Parameters: 
   - player : `Player`  
-    The player that dropped the item.
+    The player who dropped the item.
   - item : `Item`  
     The item being dropped.
 
@@ -292,13 +292,13 @@ Note: The player may trigger this event on the server multiple times in a row.
   `function(player,item)`
 - Parameters: 
   - player : `Player`  
-    The player that is eating.
+    The player who is eating.
   - item : `Item`  
     The item being eaten.
   
 - Intercept events: function returns `false`
 
-**Food** here is a broad concept of items, including conventional food, potions, milk, medicines and other items that can be ingested.
+Here, **Food** is a broad term that covers conventional food, potions, milk, medicines, and any other consumable items.
 
 
 
@@ -308,9 +308,9 @@ Note: The player may trigger this event on the server multiple times in a row.
   `function(player,item)`
 - Parameters: 
   - player : `Player`  
-    The player that has eaten.
+    The player who ate the item.
   - item : `Item`  
-    The item which has been eaten.
+    The item that was eaten.
   
 - Intercept events: function returns `false`
 
@@ -320,9 +320,9 @@ Note: The player may trigger this event on the server multiple times in a row.
   `function(player)`
 - Parameters: 
   - player : `Player`  
-    The player that consumes the totem.
+    The player who consumes the totem.
 - Intercept events: function returns `false`
-  - After intercepting here, the resurrection effect of the totem will still be triggered, but the totem will not be consumed.
+  - If you intercept this event, the totem's resurrection effect still triggers, but the totem is not consumed.
 
 
 
@@ -332,13 +332,13 @@ Note: The player may trigger this event on the server multiple times in a row.
   `function(player,effectName,amplifier,duration)`
 - Parameters: 
   - player : `Player`  
-    The player who gets the effect.
+    The player who receives the effect.
   - effectName : `String`  
-    Obtained effect name: **minecraft:effect.EffectName**
+    The name of the added effect: **minecraft:effect.EffectName**
   - amplifier : `Number` 
-    Obtained effect amplifier (effect level -1)
+    The effect's amplifier (effect level -1).
   - duration : `Number` 
-    Obtained effect duration (ticks)
+    The effect's duration (in ticks).
   
 - Intercept events: function returns `false`
 
@@ -350,9 +350,9 @@ Note: The player may trigger this event on the server multiple times in a row.
   `function(player,effectName)`
 - Parameters: 
   - player : `Player`  
-    Player with the removed effect.
+    The player who lost the effect.
   - effectName : `String`   
-    Removed effect name: **minecraft:effect.EffectName**
+    The name of the removed effect: **minecraft:effect.EffectName**
   
 - Intercept events: function returns `false`
 
@@ -364,13 +364,13 @@ Note: The player may trigger this event on the server multiple times in a row.
   `function(player,effectName,amplifier,duration)`
 - Parameters: 
   - player : `Player`  
-    The player that updated the effect.
+    The player whose effect was updated.
   - effectName : `String`   
-    Refreshed effect name: **minecraft:effect.EffectName**
+    The name of the refreshed effect: **minecraft:effect.EffectName**
   - amplifier : `Number` 
-    Obtained effect amplifier (effect level -1)
+    The effect's amplifier (effect level -1).
   - duration : `Number` 
-    Obtained effect duration (ticks)
+    The effect's duration (in ticks).
   
 - Intercept events: function returns `false`
 
@@ -382,9 +382,9 @@ Note: The player may trigger this event on the server multiple times in a row.
   `function(player,block)`
 - Parameters: 
   - player : `Player`  
-    The player that is breaking the block.
+    The player who is breaking the block.
   - block : `Block`  
-    The block that is being destroyed.
+    The block being broken.
 
 - Intercept events: function returns `false`
 
@@ -396,7 +396,7 @@ Note: The player may trigger this event on the server multiple times in a row.
   `function(player,block)`
 - Parameters: 
   - player : `Player`  
-    The player that broke the block.
+    The player who broke the block.
   - block : `Block`  
     The broken block.
 
@@ -410,15 +410,15 @@ Note: The player may trigger this event on the server multiple times in a row.
   `function(player,block,face)`
 - Parameters: 
   - player : `Player`  
-    The player that placed the block.
+    The player who placed the block.
   - block : `Block`  
-    The block that is about to be placed.
+    The block about to be placed.
   - face : `Integer`  
     The face that was placed on.
 
 - Intercept events: function returns `false`
 
-> **ATTENTION** This event will always fire when the player tries to place a block.
+> **ATTENTION** This event always fires when the player tries to place a block.
 
 
 
@@ -428,7 +428,7 @@ Note: The player may trigger this event on the server multiple times in a row.
   `function(player,block)`
 - Parameters: 
   - player : `Player`  
-    The player that placed the block.
+    The player who placed the block.
   - block : `Block`  
     The block that was placed.
 
@@ -442,12 +442,12 @@ Note: The player may trigger this event on the server multiple times in a row.
   `function(player,block)`
 - Parameters: 
   - player : `Player`  
-    The player that opened the container.
+    The player who opened the container.
   - block : `Block`  
     The opened container block.
 - Intercept events: function returns `false`
 
-The **container** here is a broad concept of container, including boxes, buckets and other containers that can store items can trigger this event.
+Here, **container** is a broad term: boxes, buckets, and other containers that can store items can trigger this event.
 
 
 
@@ -457,7 +457,7 @@ The **container** here is a broad concept of container, including boxes, buckets
   `function(player,block)`
 - Parameters: 
   - player : `Player`  
-    The player that closes the container.
+    The player who closed the container.
   - block : `Block`  
     The container that was closed.
 - Intercept event: cannot be intercepted.
@@ -474,19 +474,19 @@ The **container** here is a broad concept of container, including boxes, buckets
   - slotNum : `Integer`  
     The slot position of the inventory operation.
   - oldItem : `Item`  
-    The original item in the grid.
+    The original item in the slot.
   - newItem : `Item`  
-    The new item in the grid.
+    The new item in the slot.
 - Intercept events: function returns `false`
 
 Explanation of callback parameters:  
-There are many different combinations of old item objects and new item objects, indicating different changes in the grid.
+Different combinations of the old and new item objects indicate different changes in the slot.
 
-- Put item: the old item object is empty, the new item object is not empty.
-- Take out the item: the old item object is not empty, the new item object is empty.
-- Item Increase Stack: Old Item Object's `type` == new item object's `type`, old item's `count` < new item's `count`.
-- Item Reduce Stack: Old Item Object's `type` == new item object's `type`, old item's `count` > new item's `count`.
-Replacement Item: Old Item Object's `type` does not equal the new item's `type`, and neither item stack is empty.
+- Put item: the old item object is empty, and the new item object is not empty.
+- Take out item: the old item object is not empty, and the new item object is empty.
+- Increase stack: the old item object's `type` == the new item object's `type`, and the old item's `count` < the new item's `count`.
+- Reduce stack: the old item object's `type` == the new item object's `type`, and the old item's `count` > the new item's `count`.
+Replace item: the old item object's `type` does not equal the new item's `type`, and neither item stack is empty.
 
 
 
@@ -496,12 +496,12 @@ Replacement Item: Old Item Object's `type` does not equal the new item's `type`,
   `function(player,sprinting)`
 - Parameters: 
   - player : `Player`  
-    The player that started or stopped sprinting.
+    The player who started or stopped sprinting.
   - sprinting : `Boolean`  
     Whether the player is now sprinting.
 - Intercept event: cannot be intercepted.
 
-Note: Player.setSprinting (false) can be executed in the next game tick to achieve the interception effect.
+Note: You can execute Player.setSprinting (false) in the next game tick to achieve the interception effect.
 
 
 
@@ -511,13 +511,13 @@ Note: Player.setSprinting (false) can be executed in the next game tick to achie
   `function(player,slotNum,item)`
 - Parameters: 
   - player : `Player`  
-    Player object that changes armor.
+    The player object changing armor.
   - slotNum : `Integer`  
-    The armor column number, range from 0 to 3.
+    The armor slot number, ranging from 0 to 3.
   - item : `Item`  
     The item in the armor slot.
 - Intercept event: function returns `false`
-- Warning: After interception, you will take off your original equipment when you enter the game.
+- Warning: If intercepted, your original equipment will be taken off when you enter the game.
 
 
 
@@ -540,10 +540,10 @@ Note: Player.setSprinting (false) can be executed in the next game tick to achie
   `function(player)`
 - Parameters: 
   - player : `Player`  
-    The player that opened the GUI.
+    The player who opened the GUI.
 - Intercept events: function returns `false`
 
-Note: This event is so powerful that it can even intercept and open backpacks.
+Note: This event is broad enough that it can even intercept opening backpacks.
 
 
 
@@ -553,7 +553,7 @@ Note: This event is so powerful that it can even intercept and open backpacks.
   `function(player)`
 - Parameters: 
   - player : `Player`  
-    The player that opens their inventory.
+    The player who opens their inventory.
 - Intercept events: function returns `false`
 
 
@@ -562,11 +562,11 @@ Note: This event is so powerful that it can even intercept and open backpacks.
 
 - Listener function prototype 
   `function(player,exp)`
-- Parameters：
+- Parameters:
   - player : `Player`  
-    Players with experience.
+    The player gaining experience.
   - exp : `Integer`
-    Amount of experience gained by the player.
+    The amount of experience gained by the player.
 - Intercept events: function returns `false`
 
 
@@ -577,11 +577,11 @@ Note: This event is so powerful that it can even intercept and open backpacks.
   `function(player,entity,item)`
 - Parameters:
   - player : `Player`  
-    Player using fishing hook.
+    The player using the fishing hook.
   - entity : `Entity`  
-    Entity that player pull closer
+    The entity that the player pulls closer.
   - item : `Item`  
-    Item that player pull closer（If this entity is not item entity, this parameter will be null）
+    The item that the player pulls closer (if this entity is not an item entity, this parameter is null).
 - Intercept events: function returns `false`
 
 
@@ -590,12 +590,12 @@ Note: This event is so powerful that it can even intercept and open backpacks.
 
 - Listener function prototype 
   `function(player,pos)`
-- Parameters：
+- Parameters:
   - player : `Player`  
     The player using the bed.
   - pos : `IntPos`  
-    The position of the bed used.
-- Intercept events: function returns `false`
+    The position of the bed.
+- Intercept event: return `false` from the function.
 
 
 
@@ -606,11 +606,11 @@ Note: This event is so powerful that it can even intercept and open backpacks.
 
 - Listener function prototype 
   `function(player, entity, pos)`
-- Parameters：
+- Parameters:
   - player : `Player`  
-    Players who interact with entity
+    The player interacting with the entity.
   - entity : `Entity`
-    Entity that player interact with
+    The entity the player interacts with.
   - pos : `FloatPos`  
-    Interaction position
-- Intercept events: function returns `false`
+    The position of the interaction.
+- Intercept event: return `false` from the function.

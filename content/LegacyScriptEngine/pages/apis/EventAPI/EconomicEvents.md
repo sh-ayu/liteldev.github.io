@@ -1,6 +1,6 @@
 # 💰 Economic System Events
 
-Here are the economic change events of the LegacyMoney economic system (see [Economic System API](../DataAPI/Economy.md)):
+These are the balance-change events in the LegacyMoney economic system (see [Economic System API](../DataAPI/Economy.md)):
 
 #### `"beforeMoneyAdd"` - Pre-Money Adding Event
 
@@ -8,10 +8,10 @@ Here are the economic change events of the LegacyMoney economic system (see [Eco
   `function(xuid,money)`
 - Parameters: 
   - xuid : `String`  
-    The XUID of the player whose amount of money changed.
+    The XUID of the player whose balance changed.
   - money : `Integer`  
-    The amount of money being given.
-- Intercept events: Function returns `false`
+    The amount of money being added.
+- Intercept event: Return `false`
 
 
 
@@ -21,9 +21,9 @@ Here are the economic change events of the LegacyMoney economic system (see [Eco
   `function(xuid,money)`
 - Parameters: 
   - xuid : `String`  
-    The XUID of the player whose amount of money changed.
+    The XUID of the player whose balance changed.
   - money : `Integer`  
-    The amount of money being given.
+    The amount of money being added.
 
 
 
@@ -33,10 +33,10 @@ Here are the economic change events of the LegacyMoney economic system (see [Eco
   `function(xuid,money)`
 - Parameters: 
   - xuid : `String`  
-    The XUID of the player whose amount of money changed.
+    The XUID of the player whose balance changed.
   - money : `Integer`  
-    The amount of money being taken.
-- Intercept events: Function returns `false`
+    The amount of money being deducted.
+- Intercept event: Return `false`
 
 
 
@@ -46,9 +46,9 @@ Here are the economic change events of the LegacyMoney economic system (see [Eco
   `function(xuid,money)`
 - Parameters: 
   - xuid : `String`  
-    The XUID of the player whose amount of money changed.
+    The XUID of the player whose balance changed.
   - money : `Integer`  
-    The amount of money being taken.
+    The amount of money being deducted.
 
 
 
@@ -58,12 +58,12 @@ Here are the economic change events of the LegacyMoney economic system (see [Eco
   `function(from,to,money)`
 - Parameters: 
   - from : `String`  
-    The XUID of the player initating the transfer.
+    The XUID of the player initiating the transfer.
   - to : `String`  
-    The XUID of the player accepting the transfer.
+    The XUID of the player receiving the transfer.
   - money : `Integer`  
     The amount of money being transferred.
-- Intercept events: Function returns `false`
+- Intercept event: Return `false`
 
 
 
@@ -73,9 +73,9 @@ Here are the economic change events of the LegacyMoney economic system (see [Eco
   `function(from,to,money)`
 - Parameters: 
   - from : `String`  
-    The XUID of the player initating the transfer.
+    The XUID of the player initiating the transfer.
   - to : `String`  
-    The XUID of the player accepting the transfer.
+    The XUID of the player receiving the transfer.
   - money : `Integer`  
     The amount of money being transferred.
 
@@ -88,10 +88,10 @@ Here are the economic change events of the LegacyMoney economic system (see [Eco
   `function(xuid,money)`
 - Parameters: 
   - xuid : `String`  
-    The XUID of the player whose amount of money changed.
+    The XUID of the player whose balance changed.
   - money : `Integer`  
     The amount of money being set.
-- Intercept events: Function returns `false`
+- Intercept event: Return `false`
 
 
 
@@ -101,7 +101,7 @@ Here are the economic change events of the LegacyMoney economic system (see [Eco
   `function(xuid,money)`
 - Parameters: 
   - xuid : `String`  
-    The XUID of the player whose amount of money changed.
+    The XUID of the player whose balance changed.
   - money : `Integer`  
     The amount of money being set.
 

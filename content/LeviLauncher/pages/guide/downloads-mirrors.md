@@ -3,13 +3,13 @@ platforms: [windows]
 ---
 # Downloads & Mirrors
 
-LeviLauncher includes tools to help you choose a usable download source, track progress, and use local installation files when needed.
+LeviLauncher includes tools to help you choose a working download source, track progress, and install from local files when needed.
 
 ## What this area is for
 
 - browse installable versions
 - test or select available mirrors
-- track active download and install progress
+- track active downloads and installations
 - retry failed tasks more easily
 - import a local installer package when supported by your workflow
 
@@ -17,9 +17,9 @@ LeviLauncher includes tools to help you choose a usable download source, track p
 
 1. Open **Download**.
 2. Choose the Minecraft Release or Preview build you want.
-3. Let LeviLauncher test or use your preferred mirror.
+3. Let LeviLauncher test mirrors or use your preferred mirror.
 4. Start the task.
-5. Open the task or download manager view if you want more detailed progress.
+5. Open the task or download manager view to see detailed progress.
 
 ## When to change mirrors
 
@@ -27,11 +27,11 @@ Consider switching mirrors when:
 
 - downloads are unusually slow
 - a mirror repeatedly fails to connect
-- a task stalls for too long compared with another source
+- a task stalls longer than it would on another source
 
 ## Local package import
 
-If you already have a compatible local package or installer source, LeviLauncher can use local import flows where supported.
+If you already have a compatible local package or installer source, LeviLauncher can import it where supported.
 
 This is useful when:
 
@@ -48,4 +48,4 @@ Check the following before retrying:
 - required Windows components are installed
 - your selected mirror is still responsive
 
-Then continue with [Update & Troubleshooting](./update-troubleshooting) if the failure persists.
+If the failure persists, see [Update & Troubleshooting](./update-troubleshooting).

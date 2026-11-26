@@ -3,15 +3,15 @@ platforms: [windows]
 ---
 # フォルダーとファイル
 
-Windows 版 LeviLauncher が読み書きするすべてのファイルとフォルダーです（LeviLauncher 1.1.0 時点）。ランチャーはシステムの一時フォルダー（`%TEMP%`）には何も書き込みません。
+Windows 版 LeviLauncher（1.1.0 時点）が読み書きするすべてのファイルとフォルダーを説明します。ランチャーはシステムの一時フォルダー（`%TEMP%`）には何も書き込みません。
 
 ## 概要
 
 | フォルダー | 場所 | 内容 |
 | --- | --- | --- |
-| 設定フォルダー | `%APPDATA%\LeviLauncher\` | `config.json` のみ。小さく、Windows プロファイルと一緒にローミングされる |
+| 設定フォルダー | `%APPDATA%\LeviLauncher\` | `config.json` のみ。サイズは小さく、Windows プロファイルと一緒にローミングされる |
 | ローカルフォルダー | `%LOCALAPPDATA%\LeviLauncher\` | ログ、Microsoft アカウント、ウィンドウの WebView2 データ。既定のデータルートでもある |
-| データルート | 別の場所を選ばない限りローカルフォルダー（**設定 → 基本設定** の **基本ルート**、または `config set data-root`） | `Instances\`、`Backups\`、`Cache\` |
+| データルート | 別の場所を指定しない限りローカルフォルダー（**設定 → 基本設定** の **基本ルート**、または `config set data-root`） | `Instances\`、`Backups\`、`Cache\` |
 
 ```text
 %APPDATA%\LeviLauncher\
@@ -35,7 +35,7 @@ Windows 版 LeviLauncher が読み書きするすべてのファイルとフォ�
     gamertags.json                 ランチャーが見たプレイヤープロファイルのゲーマータグ
 ```
 
-`Cache\` の中身はすべて、何も失わずに削除できます。`LeviLauncher.exe cache clean` はパッケージキャッシュ、インポート用にダウンロードしたファイル、未完了のダウンロードを削除し、`LeviLauncher.exe installer remove` はダウンロード済みのゲームのインストーラーを削除します。データルートを変更しても、ランチャーが別のフォルダーを見るようになるだけで、既存のインスタンス、ダウンロード、バックアップは移動しません。
+`Cache\` の中身はすべて、データを失うことなく削除できます。`LeviLauncher.exe cache clean` はパッケージキャッシュ、インポート用にダウンロードしたファイル、未完了のダウンロードを削除し、`LeviLauncher.exe installer remove` はダウンロード済みのゲームインストーラーを削除します。データルートを変更しても参照先のフォルダーが変わるだけで、既存のインスタンス、ダウンロード、バックアップは移動しません。
 
 ## インスタンスのフォルダー
 
@@ -52,26 +52,26 @@ Instances\<インスタンス>\
   Minecraft Bedrock\               隔離が有効なときのゲームデータ（プレビュー版: Minecraft Bedrock Preview）
 ```
 
-隔離の有無によるインスタンスのゲームデータフォルダーは[インスタンスの隔離](../concepts/isolation)を、`mods\` は[Mod の読み込み](../concepts/mod-loading)を参照してください。
+隔離の有無によるインスタンスのゲームデータフォルダーについては[インスタンスの隔離](../concepts/isolation)を、`mods\` については[Mod の読み込み](../concepts/mod-loading)を参照してください。
 
 ## LeviLauncher のフォルダー以外
 
 | パス | 内容 |
 | --- | --- |
-| デスクトップの `Minecraft - <インスタンス>.lnk` | インスタンスのデスクトップショートカット（**デスクトップにショートカットを作成**、または `instance shortcut`）。`--launch=<インスタンス>` でランチャーを開きます。書き込むのは自分のデスクトップだけで、パブリックデスクトップには書き込みません。 |
-| `%APPDATA%\lip\` | lip の設定 `config.toml`。たとえばその `github_proxy` は内蔵パッケージマネージャーも読み込みます。 |
-| `%LOCALAPPDATA%\lip\Cache\` | 内蔵パッケージマネージャーのパッケージキャッシュで、lip のものと同じです。**設定 → パッケージ管理** の **キャッシュを削除** で空になります。 |
+| デスクトップの `Minecraft - <インスタンス>.lnk` | インスタンスのデスクトップショートカット（**デスクトップにショートカットを作成**、または `instance shortcut`）。`--launch=<インスタンス>` を付けてランチャーを開きます。個人のデスクトップにのみ書き込まれ、パブリックデスクトップには書き込まれません。 |
+| `%APPDATA%\lip\` | lip の設定ファイル `config.toml`。たとえば `github_proxy` の設定は内蔵パッケージマネージャーも読み込みます。 |
+| `%LOCALAPPDATA%\lip\Cache\` | 内蔵パッケージマネージャーのパッケージキャッシュ（lip と共通）。**設定 → パッケージ管理** の **キャッシュを削除** で空にできます。 |
 | `%APPDATA%\Minecraft Bedrock\`、`%APPDATA%\Minecraft Bedrock Preview\` | 隔離していない GDK インスタンスの共有ゲームデータ。 |
 | `%LOCALAPPDATA%\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\`（プレビュー版: `Microsoft.MinecraftWindowsBeta_8wekyb3d8bbwe`） | 隔離していない UWP インスタンスの共有ゲームデータ。 |
 
 ## ファイルの書き込み方
 
-- ファイルは最終的な場所の横に `<名前>.<ランダム文字列>.tmp` として書き込まれ、その後で名前を変えて配置されるため、書きかけのファイルが見えることはありません。再開できる未完了のダウンロードは `<名前>.partial.tmp` として保存されます。
-- ユーザーが付けた名前（インスタンス、ワールド）は Windows の規則で整えられます。`<>:"/\|?*` の文字と末尾のピリオドや空白が取り除かれ、`CON` や `NUL` などの予約名は避けられます。
-- ランチャーが作るファイルの名前は `<名前>_<yyyyMMdd-HHmmss>.<拡張子>` です。例: `MyWorld_20261107-142301.mcworld`。
+- ファイルは保存先と同じ場所に一旦 `<名前>.<ランダム文字列>.tmp` として書き込まれ、完了後に本来の名前に変更されます。そのため、書きかけのファイルが見えることはありません。再開可能な未完了のダウンロードは `<名前>.partial.tmp` として保存されます。
+- ユーザーが付けた名前（インスタンスやワールド）は Windows の命名規則に合わせて整形されます。`<>:"/\|?*` の文字および末尾のピリオドや空白は取り除かれ、`CON` や `NUL` などの予約名は避けられます。
+- ランチャーが生成するファイルの名前は `<名前>_<yyyyMMdd-HHmmss>.<拡張子>` の形式になります（例: `MyWorld_20261107-142301.mcworld`）。
 
 ## 旧レイアウト
 
-1.1.0 より前の LeviLauncher は、すべてを `%APPDATA%\<プログラム名>\`（例: `%APPDATA%\levilauncher.exe\`）に置いており、そこに `versions\`、`backups\`、`installers\`、`updates\`、`logs\` フォルダーと、`config.json`、`user_gamertag_map.json`、`gdk_pending_versions.json` ファイルがありました。インスタンスには `version.json` と `LargeLogo.ico` がありました。
+1.1.0 より前の LeviLauncher は、すべてのデータを `%APPDATA%\<プログラム名>\`（例: `%APPDATA%\levilauncher.exe\`）に保存していました。この中に `versions\`、`backups\`、`installers\`、`updates\`、`logs\` フォルダーと、`config.json`、`user_gamertag_map.json`、`gdk_pending_versions.json` ファイルがあり、各インスタンスには `version.json` と `LargeLogo.ico` がありました。
 
-LeviLauncher 1.1.0 以降は最初の起動時に、このデータを上のレイアウトへ一度だけ移行し、何も削除しません。同じドライブのデータは名前を変えて配置し、別のドライブのデータはコピーして元のものを残し、古い `config.json` は `config.migrated.json` に名前を変えます。自分で選んだデータルートはその場所に残ります。移行できないものがある場合（たとえばインスタンスからゲームが実行中のとき）、すべての手順が元に戻され、ランチャーは次回の起動まで旧レイアウトで動作します。何をどこへ移したかは `storage-migration.json` に記録され、その後デスクトップショートカットが新しい場所に更新されます。
+LeviLauncher 1.1.0 以降は初回起動時に、これらのデータを上記の新しいレイアウトへ一度だけ移行します（元のデータは削除しません）。同じドライブ内のデータは名前を変更して移動し、別ドライブのデータは元のファイルを残したままコピーし、古い `config.json` は `config.migrated.json` に名前を変更します。独自に指定したデータルートはそのままの場所に残ります。インスタンスからゲームを実行中であるなど、移行できないデータがある場合は、すべての処理が元に戻され、次回の起動まで旧レイアウトのまま動作します。何をどこへ移したかは `storage-migration.json` に記録され、最後にデスクトップショートカットのリンク先が新しい場所へ更新されます。

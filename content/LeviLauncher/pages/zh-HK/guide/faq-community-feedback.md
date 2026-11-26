@@ -1,6 +1,6 @@
 # 社群與回饋
 
-關於 LeviLauncher 的常見問題及簡短回答，見 [LeviMC 問答](https://levimc.org/zh-Hant/faq/play/levilauncher/)。
+有關 LeviLauncher 的常見問題與簡短解答，請參閱 [LeviMC 問答](https://levimc.org/zh-Hant/faq/play/levilauncher/)。
 
 ## 社群入口
 
@@ -10,18 +10,18 @@
 
 ## 如何回饋問題與功能建議
 
-請使用 [GitHub Issues](https://github.com/LiteLDev/LeviLauncher/issues) 進行回饋：
+請透過 [GitHub Issues](https://github.com/LiteLDev/LeviLauncher/issues) 回報以下事項：
 
 - 可重現的錯誤 (Bug)
-- 與 LeviLauncher 明確相關的安裝問題
-- 針對文檔表達不清的改進建議
-- 帶有明確使用場景的功能請求
+- 明確與 LeviLauncher 相關的安裝問題
+- 針對文件表達不清處的改進建議
+- 具明確使用情境的功能請求
 
-Android 版的問題請提交到 [LiteLDev/LeviLauncher-Android Issues](https://github.com/LiteLDev/LeviLauncher-Android/issues)。
+Android 版的問題請提交至 [LiteLDev/LeviLauncher-Android Issues](https://github.com/LiteLDev/LeviLauncher-Android/issues)。
 
 ## 提交 Issue 之前建議先做
 
 - 更新至最新可用版本
-- 使用一個乾淨的隔離版本進行對照測試
+- 使用乾淨的隔離版本進行對照測試
 - 暫時停用新加入的模組或資源包
-- 記錄導致問題出現的精確步驟
+- 記錄觸發問題的詳細步驟

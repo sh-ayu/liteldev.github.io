@@ -1,11 +1,11 @@
 # Drive the game client with Be.D.D.
 
-At the end of this tutorial Minecraft Bedrock runs in the background of your PC, driven by a script you wrote: the script reads the screen in front as text, takes a screenshot, and closes the game again. You never touch the game window, and you can keep using your mouse and keyboard meanwhile. This is what Be.D.D. (Bedrock Deep Dive) is for: end-to-end tests of LeviLamina client mods, and anything else that needs a real game client under a program's control.
+By the end of this tutorial, Minecraft Bedrock will run in the background on your PC, driven by a script you wrote: the script reads the current screen as text, takes a screenshot, and closes the game. You never touch the game window, and you can keep using your mouse and keyboard the whole time. This is what Be.D.D. (Bedrock Deep Dive) is for: end-to-end tests of LeviLamina client mods, and anything else that needs a real game client under a program's control.
 
-It takes about half an hour, most of it downloading the game.
+It takes about half an hour, most of it spent downloading the game.
 
 ::: warning A testing tool
-A game with Be.D.D. in its `mods\` ignores your real mouse and keyboard and shows only in the Be.D.D. manager window. Be.D.D. installs itself only into its own copies of the game, never into an instance you play.
+A game with Be.D.D. in its `mods\` folder ignores your real mouse and keyboard and appears only in the Be.D.D. manager window. Be.D.D. installs itself only into its own copies of the game, never into an instance you play.
 :::
 
 ## What you need
@@ -15,13 +15,13 @@ A game with Be.D.D. in its `mods\` ignores your real mouse and keyboard and show
 - [LeviLauncher](https://levimc.org/LeviLauncher/) 1.1 or newer. If you have not installed it yet, follow steps 1 and 2 of [Play with mods on Windows](../play/play-with-mods.md).
 - [Node.js](https://nodejs.org/) 24 or newer, for the script. Check with `node -v`.
 
-You need no PowerShell modules, `lip` or .NET runtime.
+You do not need any PowerShell modules, `lip`, or the .NET runtime.
 
 ## 1. Install the base game
 
-Be.D.D. 0.4 drives Minecraft **1.26.60** (the GDK release) with LeviLamina **26.60.x**. It copies that instance of LeviLauncher and never changes or starts the original, which is called the **base**.
+Be.D.D. 0.4 drives Minecraft **1.26.60** (the GDK release) with LeviLamina **26.60.x**. It copies that LeviLauncher instance and never modifies or starts the original, which is called the **base**.
 
-In a terminal, run LeviLauncher's command line (use the full path to `LeviLauncher.exe` if it is not on your `PATH`):
+In a terminal, run LeviLauncher from the command line (use the full path to `LeviLauncher.exe` if it is not on your `PATH`):
 
 ```powershell
 LeviLauncher.exe account login              # once per PC: sign in with the account that owns Minecraft
@@ -29,22 +29,22 @@ LeviLauncher.exe install 1.26.60 --loader   # the 1.26.60 GDK release, with Levi
 LeviLauncher.exe instance list              # check the result
 ```
 
-You should see an instance with a game version `1.26.60.xx` and a loader `26.60.x` in the list.
+You should see an instance with game version `1.26.60.xx` and loader `26.60.x` in the list.
 
-If you prefer the window of LeviLauncher, add the version 1.26.60 with LeviLamina there, as in step 3 of [Play with mods on Windows](../play/play-with-mods.md); the result is the same.
+If you prefer the LeviLauncher GUI, add version 1.26.60 with LeviLamina there, as shown in step 3 of [Play with mods on Windows](../play/play-with-mods.md); the result is the same.
 
 ## 2. Install Be.D.D.
 
-1. Download `bedd-windows-x64-setup.exe` from the [latest release](https://github.com/LiteLDev/BeDD/releases/latest) and run it. It needs no administrator rights: it installs for your user into `%LOCALAPPDATA%\Programs\BeDD`, adds a **BeDD** entry to the Start menu and puts the folder on your `PATH`.
+1. Download `bedd-windows-x64-setup.exe` from the [latest release](https://github.com/LiteLDev/BeDD/releases/latest) and run it. It does not need administrator rights: it installs for your user into `%LOCALAPPDATA%\Programs\BeDD`, adds a **BeDD** entry to the Start menu, and adds the folder to your `PATH`.
 2. Open a **new** terminal and run:
 
    ```powershell
    BeDD.exe version
    ```
 
-   You should see `Be.D.D. 0.4.0` (or newer) and the game and LeviLamina versions it drives.
+   You should see `Be.D.D. 0.4.0` (or newer) along with the game and LeviLamina versions it drives.
 
-The archive and the silent installer for CI: see [Install Be.D.D.](https://levimc.org/BeDD/install).
+For the archive and the silent installer for CI, see [Install Be.D.D.](https://levimc.org/BeDD/install).
 
 ## 3. Start a game in the background
 
@@ -54,9 +54,9 @@ BeDD.exe launch --slot 1 --json
 
 `launch` does everything at once:
 
-1. It makes a **clone** of the base, named `<game version>-<slot>`, such as `1.26.60.05-1`. A clone has its own `mods\`, worlds, options and logs; the game files are hard links to the base, so it takes almost no space.
+1. It makes a **clone** of the base, named `<game version>-<slot>`, such as `1.26.60.05-1`. A clone has its own `mods\`, worlds, options, and logs; the game files are hard links to the base, so the clone takes almost no extra disk space.
 2. It installs the Be.D.D. mod into the clone.
-3. It starts the game in the background, opens the **manager window**, waits until the game is ready, prints one line of JSON and exits. The game keeps running.
+3. It starts the game in the background, opens the **manager window**, waits until the game is ready, prints one line of JSON, and exits. The game keeps running.
 
 You should see a line like:
 
@@ -64,13 +64,13 @@ You should see a line like:
 {"pid":12345,"instance":"1.26.60.05-1","instanceDir":"…","url":"ws://127.0.0.1:53021/v1","token":"9f3c…","label":"…"}
 ```
 
-and the manager window, which shows the game. `url` and `token` are how a script talks to the game: every game serves a WebSocket on `127.0.0.1`, and the token is new at each start.
+along with the manager window, which displays the game. A script uses `url` and `token` to talk to the game: each running game serves a WebSocket on `127.0.0.1` with a new token generated on every start.
 
 `BeDD.exe ps` lists the running games at any time.
 
 ## 4. Write your first script
 
-A script sends one JSON request per message, such as `{"id": 1, "op": "ping"}`, and gets one reply with the same `id` once the game has handled it. Create a folder, and in it the file `hello-bedd.mjs`:
+A script sends one JSON request per message, such as `{"id": 1, "op": "ping"}`, and receives one reply with the same `id` once the game has handled it. Create a new folder, and inside it create a file named `hello-bedd.mjs`:
 
 ```js
 import { execFileSync } from 'node:child_process';
@@ -120,7 +120,7 @@ Run it:
 node hello-bedd.mjs
 ```
 
-You should see the instance name, `default mode: bedboo`, and the title screen as text, something like:
+You should see the instance name, `default mode: bedboo`, and the title screen rendered as text, something like:
 
 ```text
 screen start_screen
@@ -129,7 +129,7 @@ screen start_screen
 - text "v26.60/LeviLamina-26.60.5"
 ```
 
-and the file `screen.png` next to the script, showing the title screen. The `[e1]` after a control is its **ref**: `call('ui', { action: 'click', ref: 'e1' })` would press **Play**.
+along with `screen.png` saved next to the script, showing the title screen. The `[e1]` after a control is its **ref**: `call('ui', { action: 'click', ref: 'e1' })` would press **Play**.
 
 ## 5. Stop the game
 
@@ -137,21 +137,21 @@ and the file `screen.png` next to the script, showing the title screen. The `[e1
 BeDD.exe stop 1.26.60.05-1
 ```
 
-Use the instance name that `launch` printed. You should see `stopped 1.26.60.05-1 (pid …)`, and the game leaves the manager window. Closing it there works too.
+Use the instance name that `launch` printed. You should see `stopped 1.26.60.05-1 (pid …)`, and the game disappears from the manager window. Closing it from the manager window works too.
 
-The clone stays for next time: `BeDD.exe launch --slot 1` starts it again in a few seconds. `--slot 2` makes a second clone, so that two games run side by side.
+The clone stays on disk for next time: `BeDD.exe launch --slot 1` starts it again in a few seconds. Passing `--slot 2` creates a second clone so you can run two games side by side.
 
 ## What you have now
 
 - Be.D.D. installed, with a clone of Minecraft 1.26.60 that runs in the background.
-- A script that finds a running game, talks to it over its WebSocket, reads its screen and takes screenshots.
+- A script that finds a running game, talks to it over its WebSocket, reads its screen, and takes screenshots.
 
 ## Next steps
 
-- Which way to drive the game, and why: bedboo ops first, then the UI tree, then simulated input: [Operation modes](https://levimc.org/BeDD/guide/operation-modes.html).
-- Move, look, use items and fight with a mineflayer-style bot: [Your first bedboo bot](first-bedboo-bot.md), then bedboo's [Be.D.D. transport](https://levimc.org/bedboo/guide/bedd.html).
-- Read and click menus: [UI tree](https://levimc.org/BeDD/reference/ui.html). Every request and its fields: [WebSocket API](https://levimc.org/BeDD/reference/websocket.html).
-- Several games at once, and the manager window: [Several games](https://levimc.org/BeDD/guide/several-games.html).
+- How to drive the game and why (bedboo ops first, then the UI tree, then simulated input): [Operation modes](https://levimc.org/BeDD/guide/operation-modes.html).
+- Move, look, use items, and fight with a mineflayer-style bot: [Your first bedboo bot](first-bedboo-bot.md), followed by bedboo's [Be.D.D. transport](https://levimc.org/bedboo/guide/bedd.html).
+- Read and click menus: [UI tree](https://levimc.org/BeDD/reference/ui.html). For every request and its fields, see [WebSocket API](https://levimc.org/BeDD/reference/websocket.html).
+- Run several games at once and use the manager window: [Several games](https://levimc.org/BeDD/guide/several-games.html).
 - Test a client together with a dedicated server: [Modes](https://levimc.org/BeDD/guide/modes.html).
-- Settings of the mod, such as the window size: [Configuration](https://levimc.org/BeDD/guide/configuration.html).
-- Something does not work: [Troubleshooting](https://levimc.org/BeDD/guide/troubleshooting.html).
+- Mod settings, such as window size: [Configuration](https://levimc.org/BeDD/guide/configuration.html).
+- If something does not work: [Troubleshooting](https://levimc.org/BeDD/guide/troubleshooting.html).

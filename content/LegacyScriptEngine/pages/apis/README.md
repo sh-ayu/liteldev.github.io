@@ -2,26 +2,23 @@
 
 ## ⛳ Start
 
-`LegacyScriptEngine`, hereinafter referred to as **LSE**, is a plugin framework for `Bedrock Dedicated Server` (hereinafter referred to as **BDS**), the official server of Minecraft Bedrock Edition, and for the Minecraft client on Windows, providing powerful cross-language script plug-in support and stable development API support.  
+`LegacyScriptEngine`, hereinafter referred to as **LSE**, is a plugin framework for `Bedrock Dedicated Server` (hereinafter referred to as **BDS**), the official server for Minecraft Bedrock Edition, and for the Minecraft client on Windows. It provides powerful cross-language script plugin support and a stable development API.
 
-> Welcome to LSE's plug-in development!
+> Welcome to LSE plugin development!
 
-From here, you will gradually become familiar with the basic elements and processes of LSE plug-in development. 
+Here, you will learn the basic elements and workflow of LSE plugin development.
 
-Before engaging with development, you need to have a systematic understanding of LSE. The documentation here, first of all, will help you establish a general knowledge framework. 
-Familiarize yourself with them first, this will be a very important part of your learning development process. 
+Before you begin developing, you need a systematic understanding of LSE. This documentation will first help you build a general knowledge framework. Be sure to familiarize yourself with these concepts first, as they are an essential part of learning the development process.
 
 
 
 ## 💊 Data Types
 
-As we all know, the type system is usually a more critical part of a design framework. 
-So, first, you need to be familiar with several data types that you will use frequently when working with API documentation. 
-The nouns of these data types appear frequently in the development documentation, so be sure to be familiar with them first. 
+A type system is usually a critical part of a design framework. First, you should get familiar with several data types that you will use frequently when working with the API documentation. The names of these data types appear often in the development documentation, so be sure to learn them first.
 
 ### Generic Data Type Conventions
 
-Although scripting languages ​​are usually weakly typed, there is no need to pay attention to specific data types, but since LSE supports a variety of different scripting languages, in order to facilitate the docking of the API, some general data types and the mapping relationship to the corresponding scripting language types are defined below.
+Although scripting languages are usually weakly typed and do not require attention to specific data types, LSE supports a variety of scripting languages. To make working with the API easier, the table below defines general data types and how they map to the corresponding types in each scripting language.
 
 | Engine Data Type | JS Data Type       | Lua Data Type | Data Type Description                  |
 | ---------------- | ------------------ | ------------- | -------------------------------------- |
@@ -35,76 +32,74 @@ Although scripting languages ​​are usually weakly typed, there is no need to
 | `Object`         | `Object`           | `table`       | Objects (Maps, Dictionaries, Tables)   |
 | `ByteBuffer`     | `ArrayBuffer`      | `table`       | Byte Array                             |
 
-`Any type` in the documentation means that a value of any of the types above can be used.
+In the documentation, `Any type` means that a value of any of the types above can be used.
 
-In addition to the above standard types, there are also some engine-defined object types. 
+In addition to the standard types above, the engine defines several object types:
 
 - `IntPos` - Integer coordinate object (see the base game interface for details)
-- `FloatPos` - Floating point coordinate object (see the base game interface for details)
+- `FloatPos` - Floating-point coordinate object (see the base game interface for details)
 - `Player` - Player object (see Player for details) - class name actually registered in the engine: `LLSE_Player`
-- `Entity` - Entity objects (see Entity for details) - class name actually registered in the engine: `LLSE_Entity`
-- `Block` - Block objects (see Blocks for details) - class name actually registered in the engine: `LLSE_Block`
+- `Entity` - Entity object (see Entity for details) - class name actually registered in the engine: `LLSE_Entity`
+- `Block` - Block object (see Blocks for details) - class name actually registered in the engine: `LLSE_Block`
 - `BlockEntity` - Block entity object (see Block entity for details) - class name actually registered in the engine: `LLSE_BlockEntity`
 - `Item` - Inventory item object (see Items for details) - class name actually registered in the engine: `LLSE_Item`
 - `Device` - Player equipment information object (see player for details) - class name actually registered in the engine: `LLSE_Device`
-- `Container` - container object (see container for details) - class name actually registered in the engine: `LLSE_Container`
+- `Container` - Container object (see container for details) - class name actually registered in the engine: `LLSE_Container`
 - `Objective` - Scored item object (see Scoreboard for details) - class name actually registered in the engine: `LLSE_Objective`
 - `Packet` - Packet object (see Packet for details) - class name actually registered in the engine: `LLSE_Packet`
 - `NBT` - NBT Tag object (see NBT for details)
-- `SimpleForm` - Normal form objects (see Form Builder for details) - class name actually registered in the engine: `LLSE_SimpleForm`
-- `CustomForm` - Custom form objects (see Form Builder for details) - class name actually registered in the engine: `LLSE_CustomForm`
+- `SimpleForm` - Normal form object (see Form Builder for details) - class name actually registered in the engine: `LLSE_SimpleForm`
+- `CustomForm` - Custom form object (see Form Builder for details) - class name actually registered in the engine: `LLSE_CustomForm`
 - `Conf` - Configuration file object (see configuration file for details)
-- `DB` - Database objects (see Database for details)
+- `DB` - Database object (see Database for details)
 - `File` - File object (see file reading and writing for details)
 - `WSClient` - WebSocket client object (see Network for details)
-- `Enum` - Enumeration type, usually stored in some type, providing some limited range of options.
+- `Enum` - Enumeration type, usually stored in some type, providing a limited range of options.
 
 
 
 ## 📌 API Documentation Description Conventions
 
-As we all know, a good help document is naturally inseparable from a unified and concise format and a clear appearance. 
-Therefore, in order to unify and standardize the format of the document, it is necessary to uniformly specify the description convention of LSE's help document. 
+Good documentation requires a consistent, concise format and a clear layout. To standardize the LSE help documentation, we use the following conventions.
 
-> For all the API documentation you see next, there are writing rules like this: 
+> The API documentation that follows uses these conventions:
 
-1. About the description of **function parameter types** in the documentation:
-   Function parameters are described in the format **Parameter Name : Parameter Type**  
-   For example: cmd : `String` means a variable **cmd** of type **String**  
-   The parameter type `Array<...>`, represents an array/list containing the variables within <>.
+1. **function parameter types**:
+   Function parameters are written as **Parameter Name : Parameter Type**.  
+   For example, cmd : `String` indicates a variable **cmd** of type **String**.  
+   The parameter type `Array<...>` represents an array or list of the variables inside <>.
    
-2. About the description of **optional parameters** in the documentation:  
-   If `optional parameters` appears in the parameter descripton, it means that you have the option to not pass this parameter.
-   When you do not pass this parameter, the engine will use the default value given in the description.
+2. **optional parameters**:  
+   If a parameter description includes `optional parameters`, you can omit that parameter.
+   When you omit it, the engine uses the default value specified in the description.
    In API signatures, optional parameters are enclosed in [ ].
-   For example: `pl.tell(msg[,type])`, where `type` is an optional parameter.
+   For example, in `pl.tell(msg[,type])`, `type` is an optional parameter.
 
 
 
-After you are familiar with the above infrastructure, you can start to read the documentation for each other specific content step by step. 
-If you come across something you forgot, you can look it up more. 
+Once you are familiar with these conventions, you can work through the specific documentation step by step and refer back here whenever needed.
 
 
 
 ## 📜 Plugin Development Tips
 
-Here, there are some suggestions when developing plugins, I hope they can help you 
+Here are a few suggestions to help you when developing plugins:
 
 - **Don't reinvent** the wheel
-  When possible, try to use libraries that have been written by others for specific functions, rather than writing each function yourself. In this way, it is conducive to the integration and development of the ecology. 
+  Whenever possible, use existing libraries for specific tasks rather than writing every function yourself. This helps the ecosystem grow and stay integrated.
 - Think about the **user**
-  When designing the interface and configuration, it is best to take the user's feelings into account. The content of external interaction such as UI and commands should be as clear and clear as possible, in line with normal usage habits. 
+  Keep the user experience in mind when designing interfaces and configurations. User-facing elements such as UIs and commands should be clear and follow familiar conventions.
 - From multiple perspectives, **innovation** occurs  
-  Everyone is encouraged to learn from the excellent plugins already available in JE, and everyone is welcome to make their own innovations.
+  We encourage you to learn from the excellent plugins already available in JE and to create your own innovations.
 
 ## 📡 Debug Plugins
 
-You can type these commands in the server console to enter the corresponding debug mode (the Node.js engine has none):
+Enter these commands in the server console to start the corresponding debug mode (the Node.js engine does not have one):
 
 * `jsdebug`: JavaScript debug mode
 * `luadebug`: Lua debug mode
 * `pydebug`: Python debug mode
 
-In debug mode, all texts you type will be parsed as scripts and be executed in real time, as the console of developer tools of browsers do. If any error occurs, you will see an error report.
+In debug mode, everything you type is parsed as a script and executed in real time, just like in a browser's developer tools console. If an error occurs, an error report is displayed.
 
-You can type the same command (`jsdebug` / `luadebug` / `pydebug`) and press Enter to exit the debug mode.
+Enter the same command (`jsdebug` / `luadebug` / `pydebug`) and press Enter to exit debug mode.

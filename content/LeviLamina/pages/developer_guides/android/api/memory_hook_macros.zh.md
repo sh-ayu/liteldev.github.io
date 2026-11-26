@@ -2,8 +2,7 @@
 
 ## 作用
 
-这个示例用 `pl::memory::resolveSignature()` 解析目标，用
-`pl::memory::HookHandle` 安装 hook，并在 `disable()` 或句柄析构时释放。
+本示例演示如何通过 `pl::memory::resolveSignature()` 解析目标，使用 `pl::memory::HookHandle` 安装 hook，并在调用 `disable()` 或析构句柄时将其释放。
 
 ## 头文件
 
@@ -59,6 +58,6 @@ private:
 
 ## 注意
 
-- detour 签名必须和目标函数完全一致。
-- hook handle 应存放在模组自有状态中，不要放在局部变量里。
-- 优先使用明确的生命周期清理，不要依赖 constructor-time 自动注册。
+- detour 的签名必须与目标函数完全一致。
+- hook handle 应保存在模组自身的状态中，切勿定义为局部变量。
+- 优先在明确的生命周期阶段执行清理，不要依赖构造阶段（constructor-time）的自动注册。

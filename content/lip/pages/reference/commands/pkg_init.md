@@ -1,6 +1,6 @@
 # lip pkg init
 
-Create a `lip.toml` for a new package in the current directory.
+Create a `lip.toml` file for a new package in the current directory.
 
 ## Synopsis
 
@@ -10,11 +10,11 @@ lip pkg init [-h | --help]
 
 ## Description
 
-`lip pkg init` asks for the package id, then writes `lip.toml` in the current working directory.
+`lip pkg init` prompts for the package ID, then writes `lip.toml` in the current working directory.
 
-1. When `lip.toml` already exists there, the command fails and writes nothing.
-2. lip asks on the terminal for the package id, a [Go module path](https://pkg.go.dev/golang.org/x/mod/module#CheckPath) such as `github.com/user/repo`, and asks again until the answer is valid. For a package in a git repository, the id is the path of the repository.
-3. It writes a [package file](../../concepts/lip_toml.md) with exactly these values, `<id>` being your answer:
+1. If `lip.toml` already exists there, the command fails and writes nothing.
+2. lip prompts on the terminal for the package ID—a [Go module path](https://pkg.go.dev/golang.org/x/mod/module#CheckPath) such as `github.com/user/repo`—and keeps prompting until you enter a valid one. For a package in a Git repository, the ID is the repository path.
+3. It writes a [package file](../../concepts/lip_toml.md) with the following exact values, where `<id>` is your answer:
 
    ```toml
    format = 4
@@ -26,21 +26,21 @@ lip pkg init [-h | --help]
    platform = "win-x64"
    ```
 
-When standard input or standard error is not a terminal, lip cannot ask, and the command fails instead. There is no option that gives the id; in a script, write `lip.toml` yourself.
+If standard input or standard error is not a terminal, lip cannot prompt and the command fails. No option accepts the ID on the command line; in a script, write `lip.toml` directly.
 
-The package installs nothing yet. See [Publish your mod with lip](https://levimc.org/tutorials/develop/publish-a-package/) for what to add.
+The generated package does not install anything yet. See [Publish your mod with lip](https://levimc.org/tutorials/develop/publish-a-package/) for what to add.
 
-`lip pkg init` is not a workspace operation: it needs no server, takes no lock, and touches nothing but `lip.toml`.
+`lip pkg init` is not a workspace operation: it needs no server, takes no lock, and touches only `lip.toml`.
 
 ## Options
 
 | Option | Description |
 | --- | --- |
-| `-h`, `--help` | Write the help and exit. |
+| `-h`, `--help` | Print help and exit. |
 
 ## Output
 
-`lip pkg init` has no result: it writes nothing to standard output. The question and the final line are messages on standard error:
+`lip pkg init` writes nothing to standard output. Both the prompt and the final confirmation line are written to standard error:
 
 ```
 Enter the package id of the package (a Go module path, e.g. github.com/owner/repo):
@@ -51,7 +51,7 @@ Enter the package id of the package (a Go module path, e.g. github.com/owner/rep
 | Code | Meaning |
 | --- | --- |
 | `0` | `lip.toml` was written. |
-| not `0` | A usage error; `lip.toml` exists; lip cannot ask; or the file cannot be written. |
+| not `0` | A usage error occurred, `lip.toml` already exists, lip cannot prompt, or the file cannot be written. |
 
 ## Examples
 
@@ -64,4 +64,4 @@ lip pkg init
 
 - [Publish your mod with lip](https://levimc.org/tutorials/develop/publish-a-package/)
 - [lip.toml](../../concepts/lip_toml.md)
-- [Develop Tools](../../interface/tools.md): **Create lip.toml** in the interface, a form that writes the whole `lip.toml`, checks it as you type, and edits it later.
+- [Develop Tools](../../interface/tools.md): **Create lip.toml** in the interface—a form that generates a complete `lip.toml`, validates it as you type, and lets you edit it later.

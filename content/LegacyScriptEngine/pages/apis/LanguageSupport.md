@@ -2,44 +2,38 @@
 
 ## 🌏 Current Status
 
-With the support of the [ScriptX](https://github.com/Tencent/ScriptX) project, LSE adapts to multiple development
-languages using the same set of source code.    
-At the same time, the API remains consistent, allowing various languages to share the same development document. It
-greatly reducing maintenance difficulties.
+Backed by the [ScriptX](https://github.com/Tencent/ScriptX) project, LSE supports multiple development languages from a single codebase.    
+It also provides a consistent API across languages, so they can share the same development documentation, which greatly simplifies maintenance.
 
-Currently, LSE supports writing plugins in the following languages：
+LSE currently supports writing plugins in the following languages:
 
 | Language backend | Remarks                                                                        |
 |------------------|--------------------------------------------------------------------------------|
-| `JavaScript`     | Using QuickJS engine, with support for ES Modules                              |
-| `Lua`            | Using CLua engine                                                              |
-| `Node.js`        | Modify Node.js to work with embedding, with support for npm package management |
-| `Python`         | Using CPython engine, with support for pip package management                  |
+| `JavaScript`     | Uses the QuickJS engine and supports ES Modules                                |
+| `Lua`            | Uses the CLua engine                                                           |
+| `Node.js`        | Modifies Node.js for embedding and supports npm package management             |
+| `Python`         | Uses the CPython engine and supports pip package management                    |
 
 !!! tip
-    If you need to write plugins in native languages such as C++, Go, Rust, etc., please go 
-    to [Home](https://levimc.org/LeviLamina/) for other language documentation
+    To write plugins in native languages such as C++, Go, or Rust, see [Home](https://levimc.org/LeviLamina/) for documentation on other languages.
 
 ## JavaScript language support description
 
-- Support for simple JavaScript plugins using the QuickJS engine, a lightweight engine with a low resource footprint
-- The current version of QuickJS supports up to ES2020, and natively supports ES Modules which allows developers to
-  easily manage projects.
-- Package management is not supported. If needed, you can use Node.js for plugin development and use npm for package
-  management
-- Use `jsdebug` command in the BDS console to enter and exit the QuickJS interactive command line environment. This
-  feature facilitates some simple testing when writing plugins
+- Supports simple JavaScript plugins through QuickJS, a lightweight engine with a low resource footprint.
+- The current version of QuickJS supports up to ES2020 and natively supports ES Modules, making project management easier.
+- Package management is not supported. If you need it, develop your plugin with Node.js and use npm for package management.
+- Run the `jsdebug` command in the BDS console to enter and exit the interactive QuickJS command line for quick testing while writing plugins.
 
 ### QuickJS ESModule Path Resolution Behavior
 
-The **ScriptX** used by LegacyScriptEngine is forked from the upstream **Tencent/ScriptX** project, with additional features added on top of it (such as Python backend support).
+The **ScriptX** used by LegacyScriptEngine is forked from the upstream **Tencent/ScriptX** project, with additional features such as Python backend support.
 
-In the QuickJS backend, ScriptX uses the default `module loader` provided in **quickjs-libc.h**.
-This loader causes the behavior of QuickJS ESModule when resolving the **entry module** to differ from the standard ESModule specification.
+In the QuickJS backend, ScriptX uses the default `module loader` from **quickjs-libc.h**.
+Because of this loader, QuickJS ESModule resolves the **entry module** differently from the standard ESModule specification.
 
-Specifically, when loading the **entry module**, the loader sets the module's base path to the **current working directory (CWD)** — which is typically the directory where the server executable is located — rather than the directory where the script file resides.
+Specifically, when loading the **entry module**, the loader sets the module's base path to the **current working directory (CWD)**—typically the directory containing the server executable—rather than the directory containing the script file.
 
-As a result, relative `import` paths in the entry file are resolved differently from standard ESModule behavior.
+As a result, relative `import` paths in the entry file are not resolved according to standard ESModule behavior.
 
 Assume the following plugin directory structure:
 
@@ -73,53 +67,45 @@ instead of:
 file:///c:/bds/plugins/your_plugin
 ```
 
-Therefore `./command/command.js` cannot be resolved correctly, causing the plugin to fail to load.
+Consequently, `./command/command.js` cannot be resolved, and the plugin fails to load.
 
-For example, QuickJS may produce an error similar to the following (original log output):
+For example, QuickJS may produce an error like the following (original log output):
 ```
 19:26:12.343 ERROR [LeviLamina] Failed to load plugin your_plugin: Unexpected token '{'      
 19:26:12.343 ERROR [LeviLamina]     at ./plugins/your_plugin\index.js:1:1
 ```
 
-To resolve this issue, use a path **relative to the current working directory (CWD)**:
+To fix this issue, use a path **relative to the current working directory (CWD)**:
 
 ```js
 import { initCommand } from "./plugins/your_plugin/command/command.js"
 ```
 
-This will allow the module to be loaded correctly.
+This allows the module to load properly.
 
 !!! tip
     This issue **only affects the entry module specified in manifest.json**.
-    After the entry module is loaded, module resolution between other modules follows the standard ESModule behavior.
+    Once the entry module is loaded, resolution between other modules follows standard ESModule behavior.
 
 ## Lua language support description
 
-- Use the CLua engine, support require
-- Since the Rocks package management mechanism requires the introduction of a compiler, the implementation is not
-  available at this time. If you need to depend on extensions, you can compile them manually and introduce them into
-  your project (e.g. SQLite)
-- Use `luadebug` command in the BDS console to enter and exit the Lua interactive command line environment. This feature
-  facilitates some simple testing when writing plugins
+- Uses the CLua engine and supports require.
+- Because the Rocks package manager requires a compiler, it is not currently supported. If you need extension dependencies (such as SQLite), you can compile them manually and include them in your project.
+- Run the `luadebug` command in the BDS console to enter and exit the interactive Lua command line for quick testing while writing plugins.
 
 ## Node.js support description
 
-- LSE makes it possible to work in embedded mode by implementing the Node.js starter code itself, and isolates the
-  execution environment for different plugins
-- Created interface to implement programmic support for npm. Support installing third-party extension dependencies via
-  package.json
-- Supports ES Modules: set `"type": "module"` in `package.json` to load the plugin as an ES module
-- The Node.js engine has no debug mode: unlike `jsdebug`, `luadebug` and `pydebug`, there is no interactive command line for it in the BDS console
+- LSE implements its own Node.js bootstrap code to run Node.js in embedded mode and isolates the execution environment for each plugin.
+- Provides programmatic support for npm, allowing you to install third-party dependencies via package.json.
+- Supports ES Modules: set `"type": "module"` in `package.json` to load the plugin as an ES module.
+- The Node.js engine has no debug mode: unlike `jsdebug`, `luadebug`, and `pydebug`, it does not provide an interactive command line in the BDS console.
 
 #### ⭐ **Node.js Plugin Development**
 
-1. First, install Node.js
-2. Create a new directory for plugin development. Launch the terminal in this directory and execute `npm init`. Follow
-   npm to create a new project and fill in the information about the project.
-3. Write the plugin code in the filled entry point file
-4. If necessary, create multiple source files and bring them in via require. Properly splitting the source code into
-   files can help improve the clarity of the project structure and facilitate further maintenance and expansion of the
-   plugin.
+1. Install Node.js.
+2. Create a new directory for your plugin. Open a terminal in this directory, run `npm init`, and follow the prompts to initialize the project.
+3. Write your plugin code in the entry point file you specified.
+4. If needed, split your code across multiple source files and import them with require. Organizing your code into separate files keeps the project structure clear and makes the plugin easier to maintain and extend.
 
 #### ⭐ **Node.js Plugin Packaging & Deployment**
 
@@ -191,18 +177,12 @@ This will allow the module to be loaded correctly.
 
 #### **Known issues with Python plugin development**
 
-To be fair, the quality and maintenance of CPython's code is in a somewhat worrisome state. Given below are some
-problems to be aware of when developing Python plugins, many of which are caused by bugs in CPython itself:
+To be fair, the quality and maintenance of CPython's code are in a somewhat worrisome state. Keep the following issues in mind when developing Python plugins, many of which are caused by bugs in CPython itself:
 
-1. Do not use `threading`, `asyncio` and other features for the time being
-    - LSE uses CPython's sub-interpreter as the core unit of engine scheduling, but CPython itself has long had bad
-      support for the sub-interpreter, and there are many bugs that are hard to explain. The GIL api that is currently
-      used for these mechanisms does not take into account the existence of sub-interpreters, so deadlocks and crashes
-      will occur once they are used.
-    - Developers with parallel computing needs can temporarily use `multiprocess` to parallelize multiple processes.
+1. Do not use `threading`, `asyncio`, and other features for the time being
+    - LSE uses CPython's sub-interpreter as the core unit of engine scheduling, but CPython itself has long had poor support for sub-interpreters, resulting in many hard-to-explain bugs. The GIL API currently used for these mechanisms does not account for sub-interpreters, so using them will cause deadlocks and crashes.
+    - Developers who need parallel computing can temporarily use `multiprocess` to run multiple processes in parallel.
 2. `sys.stdin` is disabled for all Python engines
-    - This is another CPython bug, see https://github.com/python/cpython/issues/83526 for details
-    - In addition, even if the CPython engine is not loaded in the above case, there will be a problem of stdin
-      grabbing, causing some tools that use the input redirection to fail
-    - Therefore, we hit a patch to disable `sys.stdin` for all Python engines. We will not restore it until future
-      versions of CPython to completely solve this series of bugs.
+    - This is another CPython bug; see https://github.com/python/cpython/issues/83526 for details.
+    - In addition, even if the CPython engine is not loaded in the scenario above, it still grabs stdin, causing some tools that use input redirection to fail.
+    - Therefore, we applied a patch to disable `sys.stdin` for all Python engines. We will not restore it until future versions of CPython completely resolve this series of bugs.
