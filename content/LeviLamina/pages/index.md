@@ -15,8 +15,8 @@ LeviLamina is an unofficial mod loader for Minecraft Bedrock Edition. It loads i
 or into the Minecraft client on Windows, loads the mods you install, and gives them the API they are written
 against. It is the successor to LiteLoaderBDS.
 
-- **For server owners**, LeviLamina is the base every server mod builds on: install it into a server and add mods
-  to it.
+- **For server owners**, LeviLamina is the base every server mod builds on: [install](install.md) it into a server
+  and add mods to it.
 - **For players**, LeviLamina runs the client mods of a Minecraft installation on Windows.
 - **For mod developers**, LeviLamina is the C++ API (`ll::` and the game's classes) your mod is built against,
   documented on this site and in the [C++ Reference](https://levimc.org/LeviLamina/api/).

@@ -67,18 +67,25 @@ commit that only moves a page does not count, and a page's history is followed t
 
 ### The shape of a project's docs
 
-Every project's docs have the same four sections in the site column, in this order and no others ("Navigation
+Every project's docs have the same five sections in the site column, in this order and no others ("Navigation
 model" in `src/kit/README.md`):
 
 1. **Overview** (概览) — the home page, `pages/index.md` of each locale: a plain doc page (`# <Project>`, a lead,
    the introduction and a short demo — no `layout: home` banner) and a section with no pages of its own:
    `{ text: 'Overview', link: '/' }` (the locale's home) first in `nav`.
-2. **Guides** (指南) — how to do one thing with one feature, step by step; troubleshooting last, in a `Help` group.
-3. **Concepts** (概念) — how it works and why: the model behind the features.
-4. **Reference** (参考) — the complete external interface: API, protocol, CLI, configuration, files, supported versions
+2. **Install** (安装) — one page, `pages/install.md` of each locale, a section with no pages of its own like Overview:
+   `{ text: 'Install', link: '/install' }` second in `nav`. The same headings on every project, in this order, leaving
+   out those with nothing to say: *What you need*, *Install*, *Check that it works*, *Update*, *Other versions* (the
+   releases page, betas, older versions), *Uninstall*, *Next steps*. It is the only place that says how to get the
+   project: the overview, the guides, the tutorials and the FAQ link to it, and levimc.org's home page leads to it.
+   The site column has no download button.
+3. **Guides** (指南) — how to do one thing with one feature, step by step; troubleshooting last, in a `Help` group.
+4. **Concepts** (概念) — how it works and why: the model behind the features.
+5. **Reference** (参考) — the complete external interface: API, protocol, CLI, configuration, files, supported versions
    (LeviLamina's Doxygen C++ Reference is its first link).
 
-Step-by-step tutorials from a clean PC are at levimc.org/tutorials/, questions and answers at levimc.org/faq/.
+Step-by-step tutorials from a clean PC are at levimc.org/tutorials/ (a tutorial keeps the one usual way to install
+in a step of its own, and names the Install page for the rest), questions and answers at levimc.org/faq/.
 
 ### Adding a project's docs
 

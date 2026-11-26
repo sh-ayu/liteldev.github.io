@@ -9,6 +9,7 @@ const site = 'https://github.com/LiteLDev/liteldev.github.io';
 
 const root = {
   overview: 'Overview',
+  install: 'Install',
   guide: 'Guides',
   concepts: 'Concepts',
   reference: 'Reference',
@@ -43,6 +44,7 @@ type Labels = typeof root;
 
 const zh: Labels = {
   overview: '概览',
+  install: '安装',
   guide: '指南',
   concepts: '概念',
   reference: '参考',
@@ -75,8 +77,8 @@ const zh: Labels = {
 };
 
 // The LeviMC navigation model (src/kit/README.md "Navigation model"): every top-level entry is a section, i.e. an entry
-// of the site column with the sidebar tree of its pages. Four sections, in this order: Overview (the home page itself:
-// what bedboo is, with a code sample; no pages below it), Guides (how to do one thing: connect, load plugins, drive a
+// of the site column with the sidebar tree of its pages. Five sections, in this order: Overview (the home page itself:
+// what bedboo is, with a code sample; no pages below it), Install (one page: the checkout, updates), Guides (how to do one thing: connect, load plugins, drive a
 // real client, run the agent), Concepts (how bedboo works and why it behaves as it does) and Reference (the API, the
 // Bedrock differences topic by topic, the BDS notes, the supported versions). The "Overview" entries inside the
 // Reference groups are the groups' index pages. `p` is the locale's prefix ('/' or '/zh-Hans/'); zh-Hant is converted
@@ -87,6 +89,9 @@ const nav = (p: string, t: Labels): NavEntry[] => {
   return [
     // the home page: what bedboo is, with a bot in a few lines (no pages below it)
     { text: t.overview, link: p },
+    // Install (kit 2.32): the second section on every project's docs, one page like Overview: what you need, how to
+    // install, check, update and get other versions.
+    { text: t.install, link: `${p}install` },
     {
       text: t.guide,
       items: [

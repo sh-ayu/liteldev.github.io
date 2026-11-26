@@ -64,8 +64,9 @@ export default defineDocsConfig({
   lastUpdated: true,
   sidebar: 'tabs',
   // The LeviMC navigation model (src/kit/README.md "Navigation model"): every top-level entry is a section, i.e. a tab of
-  // the site column and the sidebar tree of its pages. Every LeviMC project has the same four, in this order:
-  // Overview (the home page alone: what LeviLamina is, with a small mod as the example; no pages below it), Guides
+  // the site column and the sidebar tree of its pages. Every LeviMC project has the same five, in this order:
+  // Overview (the home page alone: what LeviLamina is, with a small mod as the example; no pages below it), Install
+  // (one page: LeviLamina on a server, in the game and in a mod project), Guides
   // (how to use one part of the API, step by step), Concepts (how LeviLamina works) and Reference (the complete
   // interface: the C++ reference, the API by topic, the Android native mods API, the supported versions, the usage
   // guidelines). Step-by-step tutorials (install a server, play with mods, your first mod) live at
@@ -73,6 +74,9 @@ export default defineDocsConfig({
   // open every group; longer ones (Reference) only the group holding the current page.
   nav: [
     { Overview: 'index.md' },
+    // Install (kit 2.32): the second section on every project's docs, one page like Overview: what you need, how to
+    // install, check, update and get other versions.
+    { Install: 'install.md' },
     {
       Guides: [
         'developer_guides/how_to_guides/event_guide.md',
@@ -165,6 +169,7 @@ export default defineDocsConfig({
   navTranslations: {
     zh: {
       Overview: '概览',
+      Install: '安装',
       Guides: '指南',
       Concepts: '概念',
       Reference: '参考',

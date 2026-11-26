@@ -45,9 +45,13 @@ const assert = (c, msg) => {
   if (!c) throw new Error(msg);
 };
 
+// LEVIMC_CHROME: a browser executable to use instead of Playwright's own download (e.g. an installed Chrome).
 // Use the environment's proxy when there is one (for the live-data checks); loopback always goes direct.
 const proxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.HTTP_PROXY || process.env.http_proxy;
-const browser = await chromium.launch(proxy ? { proxy: { server: proxy, bypass: '<-loopback>,localhost,127.0.0.1' } } : {});
+const browser = await chromium.launch({
+  executablePath: process.env.LEVIMC_CHROME || undefined,
+  ...(proxy ? { proxy: { server: proxy, bypass: '<-loopback>,localhost,127.0.0.1' } } : {}),
+});
 /** @param {{ locale?: string, width?: number, height?: number, scheme?: 'light' | 'dark', mobile?: boolean, userAgent?: string }} [options] */
 const newContext = async ({ locale, width = 1440, height = 900, scheme = 'light', mobile = false, userAgent } = {}) => {
   const ctx = await browser.newContext({ viewport: { width, height }, colorScheme: scheme, isMobile: mobile, hasTouch: mobile, deviceScaleFactor: mobile ? 2 : 1, userAgent });
@@ -298,43 +302,49 @@ await check('root redirect: / follows the stored language, else the browser lang
   return `${cases.length} cases`;
 });
 
-await check('hero role tabs ("I want to…"): play by default, click, arrow keys and #hash switch the role; remembered', async () => {
+await check('hero roles ("I want to…"): three rows at once, each leads to an Install page; no download button; #hash picks the card', async () => {
   const ctx = await newContext();
   const page = await ctx.newPage();
   const errs = watch(page);
   await page.goto(base, { waitUntil: 'networkidle' });
-  const tabs = page.locator('.lm-roles [role="tab"]');
-  const panel = page.locator('.lm-roles [role="tabpanel"]');
-  assert((await tabs.count()) === 3, 'expected 3 role tabs');
-  assert((await tabs.nth(0).getAttribute('aria-selected')) === 'true', 'Play is not selected by default');
-  assert((await panel.innerText()).includes('Download for Windows'), 'no Windows download on a desktop');
-  await tabs.nth(1).click();
-  const lipButton = panel.locator('.mc-btn').first();
-  assert((await lipButton.innerText()).includes('Download lip'), 'server panel not shown');
-  assert((await lipButton.getAttribute('href')) === 'https://github.com/LiteLDev/lip/releases/latest', 'the lip button does not open the latest release');
-  assert((await page.locator('.kit-hero-aside').innerText()).includes('Windows · Linux · macOS'), 'no lip introduction beside it');
-  assert(new URL(page.url()).hash === '#host', `hash is ${new URL(page.url()).hash}`);
-  await tabs.nth(1).press('ArrowRight');
-  assert((await tabs.nth(2).getAttribute('aria-selected')) === 'true', 'ArrowRight did not move to Develop');
-  assert((await panel.innerText()).includes('Create your first mod'), 'developer panel not shown');
-  await page.goto(base, { waitUntil: 'networkidle' });
-  assert((await tabs.nth(2).getAttribute('aria-selected')) === 'true', 'the last role was not remembered');
-  await page.goto(base + '#play', { waitUntil: 'networkidle' });
-  assert((await tabs.nth(0).getAttribute('aria-selected')) === 'true', '#play did not select Play');
+  const rows = page.locator('.lm-roles .lm-path');
+  assert((await rows.count()) === 3, 'expected 3 rows');
+  for (let i = 0; i < 3; i++) assert(await rows.nth(i).isVisible(), `row ${i} is not visible`);
+  const go = (/** @type {string} */ role) => page.locator(`.lm-path[data-role="${role}"] .lm-path-go`);
+  const pathOf = async (/** @type {string} */ role) => new URL((await go(role).getAttribute('href')) ?? '', base).pathname;
+  assert((await go('play').innerText()).includes('Install LeviLauncher'), 'no "Install LeviLauncher"');
+  assert((await pathOf('play')) === '/LeviLauncher/install', `play leads to ${await pathOf('play')}`);
+  assert((await go('host').innerText()).includes('Install lip'), 'no "Install lip"');
+  assert((await pathOf('host')) === '/lip/install.html', `host leads to ${await pathOf('host')}`);
+  assert((await go('develop').innerText()).includes('Create your first mod'), 'no developer action');
+  // the home page starts no download: no filled button in the hero, no link to a release's files
+  assert((await page.locator('.lm-hero .mc-btn-primary').count()) === 0, 'a primary button in the hero');
+  assert((await page.locator('.lm-hero a[href*="/releases/latest/download/"]').count()) === 0, 'a direct download in the hero');
+  // the card beside the list: LeviLauncher by default, lip for #host, and the row a visitor points at
+  const aside = page.locator('.kit-hero-aside');
+  assert((await aside.innerText()).includes('Windows · Android'), 'no LeviLauncher introduction by default');
+  await page.goto(base + '#host', { waitUntil: 'networkidle' });
+  assert((await aside.innerText()).includes('Windows · Linux · macOS'), 'no lip introduction for #host');
+  assert((await page.locator('.lm-path[data-role="host"]').getAttribute('data-current')) !== null, '#host is not the current row');
+  await page.locator('.lm-path[data-role="develop"]').hover();
+  await page.waitForSelector('.kit-hero-aside [role="tab"]', { timeout: 5000 });
   assert(!errs.length, errs.join(' | '));
   await ctx.close();
-  return 'play → host → develop → (reload) develop → #play';
+  return 'play, host, develop → Install pages; #host and hover pick the card';
 });
 
-await check('hero role tabs: an Android phone is offered the Android download first', async () => {
+await check('hero roles: the three rows fit a phone (390px), in one column', async () => {
   const ctx = await newContext({ width: 390, height: 844, mobile: true, userAgent: 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Mobile Safari/537.36' });
   const page = await ctx.newPage();
-  await page.goto(base + '#play', { waitUntil: 'networkidle' });
-  const first = page.locator('.lm-role-panel .mc-btn').first();
-  assert((await first.innerText()).includes('Download for Android'), `first button: ${await first.innerText()}`);
-  assert((await first.getAttribute('href')) === 'https://github.com/LiteLDev/LeviLauncher-Android/releases/latest', 'wrong APK link');
+  await page.goto(base, { waitUntil: 'networkidle' });
+  const rows = page.locator('.lm-roles .lm-path');
+  assert((await rows.count()) === 3, 'expected 3 rows');
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  assert(overflow <= 0, `the page scrolls sideways by ${overflow}px`);
+  const first = page.locator('.lm-path[data-role="play"] .lm-path-go');
+  assert(new URL((await first.getAttribute('href')) ?? '', base).pathname === '/LeviLauncher/install', 'play does not lead to the Install page');
   await ctx.close();
-  return 'Download for Android';
+  return '3 rows, no sideways scroll';
 });
 
 await check('hero code tabs (hotbar, developers): click and arrow keys switch the sample', async () => {

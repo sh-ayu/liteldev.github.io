@@ -1,6 +1,6 @@
 # 安装与克隆
 
-安装 Be.D.D.、在一台电脑上准备好第一个游戏：见教程
+安装 Be.D.D.：见[安装](/zh/install)页。在一台电脑上准备好第一个游戏：见教程
 [用 Be.D.D. 驱动游戏客户端](https://levimc.org/zh-Hans/tutorials/automate/bedd/)。本页讲之后的事：升级、CI、实例、克隆和目录。
 
 ## 升级

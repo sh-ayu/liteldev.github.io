@@ -13,7 +13,7 @@
 LeviLamina 是一个非官方的 Minecraft 基岩版模组加载器。它加载到基岩版专用服务器（BDS）或 Windows 上的 Minecraft
 客户端中，加载你安装的模组，并为模组提供它们所依赖的 API。它是 LiteLoaderBDS 的后继者。
 
-- **对服主来说**，LeviLamina 是所有服务端模组的基础：把它装进服务器，再在上面安装模组。
+- **对服主来说**，LeviLamina 是所有服务端模组的基础：把它[装进](install.md)服务器，再在上面安装模组。
 - **对玩家来说**，LeviLamina 在 Windows 上的 Minecraft 中运行客户端模组。
 - **对模组开发者来说**，LeviLamina 是模组所依赖的 C++ API（`ll::` 和游戏自身的类），在本站和
   [C++ 参考](https://levimc.org/LeviLamina/api/)中有文档。

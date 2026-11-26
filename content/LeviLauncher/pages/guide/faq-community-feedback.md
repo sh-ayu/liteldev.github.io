@@ -8,12 +8,6 @@ Questions about LeviLauncher, with short answers, are in the [LeviMC FAQ](https:
 - **Personal Discord:** [discord.gg/VqQaC8vWz8](https://discord.gg/VqQaC8vWz8)
 - **QQ Group:** [458083875](https://qm.qq.com/q/1z791rJgJG)
 
-## Download links
-
-- **GitHub Releases (LeviLauncher downloads):** [LiteLDev/LeviLauncher Releases](https://github.com/LiteLDev/LeviLauncher/releases)
-
-- **Android version (APK):** [LiteLDev/LeviLauncher-Android Releases](https://github.com/LiteLDev/LeviLauncher-Android/releases/latest)
-
 ## Reporting issues and feature requests
 
 Use [GitHub Issues](https://github.com/LiteLDev/LeviLauncher/issues) for:

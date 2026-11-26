@@ -21,35 +21,7 @@ Whatever system lip runs on, it installs the same packages, those made for Windo
 
 ## Install lip
 
-On macOS and on Linux on x64, install lip with the install script, in a terminal:
-
-```sh
-curl -fsSL https://levimc.org/lip/install.sh | sh
-```
-
-The script:
-
-1. picks the build of lip for your system: `osx-arm64` on a Mac with Apple silicon, `osx-x64` on a Mac with Intel, `linux-x64` on Linux on x64. On any other system it stops;
-2. downloads that build of the latest release from GitHub, and checks it against the release's `SHA256SUMS`. A file that differs is not installed;
-3. puts `lip` in `~/.local/bin`, replacing a lip that is there;
-4. when that folder is not on your `PATH`, asks whether to add it to the profile of your shell, unless the profile adds it already.
-
-It needs no root and no administrator password, and does not touch anything outside the folder and the profile. Open a new terminal afterwards, and check that `lip -v` prints a version. Update lip later with `lip self-update`.
-
-These variables change what the script does. Set them for `sh`, after the `|`:
-
-```sh
-curl -fsSL https://levimc.org/lip/install.sh | LIP_VERSION=0.42.0 sh
-```
-
-| Variable | What the script does with it |
-| --- | --- |
-| `LIP_VERSION` | Installs this version, such as `0.42.0`, instead of the latest. |
-| `LIP_INSTALL_DIR` | Installs lip in this folder, an absolute path, instead of `~/.local/bin`. |
-| `LIP_GITHUB_PROXY` | Downloads from GitHub through this GitHub proxy, as the setting [`github_proxy`](configuration.md#github-proxy) of lip does: the address of the proxy, then `/`, then the address on GitHub. |
-| `LIP_NO_MODIFY_PATH` | When `1`, never changes the profile of your shell, and prints the line to add to it instead. |
-
-To install by hand instead, download the archive for your system from the [latest release](https://github.com/LiteLDev/lip/releases/latest) (`lip-<version>-osx-arm64.zip`, `lip-<version>-osx-x64.zip` or `lip-<version>-linux-x64.tar.xz`) and extract the file `lip` into a folder on your `PATH`. On macOS, remove the quarantine mark that the browser put on it, or macOS refuses to run it: `xattr -d com.apple.quarantine <folder>/lip`. The script needs no such step, since `curl` puts no such mark. [Your first server](https://levimc.org/tutorials/server/first-server/#_1-install-lip) goes through both ways step by step.
+On macOS and on Linux on x64, install lip with the install script: `curl -fsSL https://levimc.org/lip/install.sh | sh`. The [Install](../install.md) page says what the script does, the variables that change it, and how to install from the archive by hand.
 
 ## The Windows server through Wine
 

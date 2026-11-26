@@ -21,56 +21,35 @@
 
 选择你的系统。页面已经选好了你正在用的那个。
 
-
-:::: tabs
+::: tabs
 
 == Windows
 
-1. 打开 [lip 的最新发行版](https://github.com/LiteLDev/lip/releases/latest)，下载 `lip-<version>-win-x64.msi`；ARM 处理器的电脑下载 `lip-<version>-win-arm64.msi`。
-2. 运行这个文件。安装程序会询问把 `lip` 装到哪个文件夹（默认是 `C:\Program Files\lip`），点击 **Install** 并允许 Windows 进行更改后开始安装，并把这个文件夹加入 `PATH`。
-3. 打开一个**新的**终端窗口。安装前就开着的终端还不知道新的 `PATH`。
-4. 查看 `lip` 的版本：
-
-   ```shell
-   lip -v
-   ```
-
-   你应该看到一个版本号，例如 `0.42.0`。如果终端说不认识 `lip`，关掉它，重新打开一个。
+打开 [lip 的最新发行版](https://github.com/LiteLDev/lip/releases/latest)，下载 `lip-<version>-win-x64.msi`（ARM 处理器的电脑下载 `lip-<version>-win-arm64.msi`）并运行。它会装好 `lip` 并把它加入你的 `PATH`。
 
 == macOS / Linux
 
-1. 打开终端（Mac 上是“应用程序” › “实用工具”里的“终端”），运行：
-
-   ```shell
-   curl -fsSL https://levimc.org/lip/install.sh | sh
-   ```
-
-   这个脚本从最新发行版下载适合你的系统的 `lip`，用发行版的 SHA-256 校验和检查它，然后放进 `~/.local/bin`。不需要管理员密码，也不需要 root。如果 `~/.local/bin` 还不在 `PATH` 里，它会询问是否加进去。
-2. 打开一个**新的**终端窗口。安装前就开着的终端还不知道新的 `PATH`。
-3. 查看 `lip` 的版本：
-
-   ```shell
-   lip -v
-   ```
-
-   你应该看到一个版本号，例如 `0.42.0`。如果终端说不认识 `lip`，关掉它，重新打开一个。
-
-Apple 芯片的 Mac 通过 Rosetta 2 运行 `lip` 的 Wine。如果还没有安装 Rosetta 2，`lip` 会在第一次安装或启动服务器时询问是否安装它。安装即表示接受 Apple 的 Rosetta 2 许可协议。如果安装失败，`lip` 会给出手动安装 Rosetta 2 的命令：`softwareupdate --install-rosetta --agree-to-license`。
-
-::: details 不用脚本：压缩包
-从[最新发行版](https://github.com/LiteLDev/lip/releases/latest)下载适合你的系统的压缩包：`lip-<version>-osx-arm64.zip`（Apple 芯片的 Mac）、`lip-<version>-osx-x64.zip`（Intel 的 Mac）或 `lip-<version>-linux-x64.tar.xz`（Linux），解压到 `PATH` 里的某个文件夹：
+打开终端（Mac 上是“应用程序” › “实用工具”里的“终端”），运行：
 
 ```shell
-mkdir -p ~/.local/bin
-unzip lip-<version>-osx-arm64.zip -d ~/.local/bin        # macOS（或 osx-x64）
-xattr -d com.apple.quarantine ~/.local/bin/lip           # macOS
-tar -xJf lip-<version>-linux-x64.tar.xz -C ~/.local/bin  # Linux
+curl -fsSL https://levimc.org/lip/install.sh | sh
 ```
 
-在 macOS 上，`xattr` 那一行去掉 macOS 给浏览器下载的文件加上的隔离标记；不去掉的话，macOS 会拒绝运行 `lip`。如果 `~/.local/bin` 不在 `PATH` 里，把 `export PATH="$HOME/.local/bin:$PATH"` 这一行加进 `~/.zshrc`（macOS）或 `~/.profile`（Linux），然后打开一个新终端。之后同样用 `lip -v` 检查。
+这个脚本把 `lip` 放进 `~/.local/bin`，不需要管理员密码，也不需要 root。如果这个文件夹还不在 `PATH` 里，它会询问是否加进去：回答是。
+
+在 Apple 芯片的 Mac 上，`lip` 第一次安装或启动服务器时会询问是否安装 Rosetta 2。安装即表示接受 Apple 的 Rosetta 2 许可协议。
+
 :::
 
-::::
+然后打开一个**新的**终端窗口（安装前就开着的终端还不知道新的 `PATH`），查看 `lip` 的版本：
+
+```shell
+lip -v
+```
+
+你应该看到一个版本号，例如 `0.44.0`。如果终端说不认识 `lip`，关掉它，重新打开一个。
+
+想用压缩包手动安装、安装其他版本，或者安装程序失败：见[安装 lip](https://levimc.org/zh-Hans/lip/install.html)。
 
 ## 2. 启动 lip
 

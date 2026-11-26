@@ -1,66 +1,39 @@
-import { useCallback, useEffect, useState, type ReactNode } from 'react';
-import { HotbarTabs, LINKS, PixelButton, PixelIcon, PlatformPicker, PROJECTS, localizeNetworkUrl, usePlatformChoice, type PixelIconName } from '../../kit/components';
-import { detectPlatform, type DevicePlatform } from '../../kit/docs/shared/platform';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { LINKS, PixelIcon, PROJECTS, localizeNetworkUrl, type PixelIconName } from '../../kit/components';
 import { useLeviLaminaStats } from '../hooks/useExternalData';
 import { useI18n, type Locale } from '../i18n';
 import CodeCard from './CodeCard';
 
-// The hero's "I want to…" tabs: who opened the page decides what it offers first. Players get LeviLauncher for
-// their device, server owners LeviLamina through lip, developers the APIs. The choice is kept in the URL hash
-// (#play, #host, #develop: shareable links) and remembered for the next visit.
+// The hero's "I want to…" list: players, server owners and developers, all three on the page at once. Each row says
+// who it is for, in one line what they get, and has one way on: the project's Install page (the developers' row: the
+// first tutorial, since a mod's toolchain is what that tutorial sets up). The home page starts no download itself.
+//
+// One quiet action per row, a text link with an arrow, and no filled buttons: three primary buttons side by side
+// compete, and the visitor has to compare them. Here the row's title is what the eye lands on ("that is me"), and
+// the link is the only thing to do next. The whole row is the link's target. Smaller links below it lead further.
+//
+// The card beside the list (LeviLauncher, lip, a code sample) follows the row the visitor points at or tabs to, and
+// the URL hash (#play, #host, #develop: links to a row, which the browser also scrolls to).
 
 export const ROLES = ['play', 'host', 'develop'] as const;
 export type Role = (typeof ROLES)[number];
 const isRole = (v: unknown): v is Role => ROLES.includes(v as Role);
 
 const ROLE_ICONS: Record<Role, PixelIconName> = { play: 'diamond', host: 'monitor', develop: 'pickaxe' };
-const STORAGE_KEY = 'levimc-home-role';
 
-/**
- * The selected role. The page is prerendered with `play`; after hydration the URL hash, else the visitor's last
- * choice, takes over, and in-page links to #play / #host / #develop switch it.
- */
+/** The role whose card shows beside the list. The page is prerendered with `play`; the URL hash takes over. */
 export function useRole(): [Role, (role: Role) => void] {
-  const [role, setRoleState] = useState<Role>('play');
+  const [role, setRole] = useState<Role>('play');
   useEffect(() => {
     const fromHash = () => {
       const h = location.hash.slice(1);
-      return isRole(h) ? h : undefined;
+      if (isRole(h)) setRole(h);
     };
-    let stored: string | null = null;
-    try {
-      stored = localStorage.getItem(STORAGE_KEY);
-    } catch {
-      // storage blocked: the default stays
-    }
-    const initial = fromHash() ?? (isRole(stored) ? stored : undefined);
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- the stored role is read after hydration: the prerendered page has the default
-    if (initial) setRoleState(initial);
-    const onHash = () => {
-      const r = fromHash();
-      if (r) setRoleState(r);
-    };
-    window.addEventListener('hashchange', onHash);
-    return () => window.removeEventListener('hashchange', onHash);
-  }, []);
-  const setRole = useCallback((r: Role) => {
-    setRoleState(r);
-    try {
-      localStorage.setItem(STORAGE_KEY, r);
-    } catch {
-      // not remembered, still shown
-    }
-    history.replaceState(history.state, '', `#${r}`);
+    fromHash();
+    window.addEventListener('hashchange', fromHash);
+    return () => window.removeEventListener('hashchange', fromHash);
   }, []);
   return [role, setRole];
-}
-
-/** The visitor's device, known only after hydration (the prerendered page offers the Windows download first). */
-function usePlatform(): DevicePlatform | undefined {
-  const [platform, setPlatform] = useState<DevicePlatform>();
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- the visitor's platform is known in the browser only
-  useEffect(() => setPlatform(detectPlatform()), []);
-  return platform;
 }
 
 // Docs and tutorial URLs in the visitor's language: the language is the first segment of every levimc.org URL
@@ -69,191 +42,116 @@ const docs = (project: 'LeviLamina' | 'LegacyScriptEngine' | 'lip' | 'LeviLaunch
   localizeNetworkUrl(`${PROJECTS.find((p) => p.id === project)!.docs}${path}`, locale);
 const tutorial = (locale: Locale, path: string) => localizeNetworkUrl(`${LINKS.tutorials}${path}`, locale);
 
-// both open the latest release's page, which lists its files, rather than one starting a download and the other not
-const DOWNLOADS = {
-  windows: 'https://github.com/LiteLDev/LeviLauncher/releases/latest',
-  android: 'https://github.com/LiteLDev/LeviLauncher-Android/releases/latest',
-} as const;
-const PLATFORM_NAMES = { windows: 'Windows', android: 'Android' } as const;
+interface RoleLink {
+  href: string;
+  label: string;
+  /** a page of levimc.org itself (the mods catalog): the same tab */
+  internal?: boolean;
+}
 
-function PlayPanel() {
+/** How long the pointer rests on a row before its card shows: crossing a row on the way elsewhere changes nothing. */
+const HOVER_INTENT_MS = 120;
+
+/** The three rows (in the hero's copy column). */
+export function RoleList({ role, onChange }: { role: Role; onChange: (role: Role) => void }) {
   const { t, locale, href } = useI18n();
   const r = t.roles;
-  const platform = usePlatform();
-  const first = platform === 'android' ? 'android' : 'windows';
-  const second = first === 'android' ? 'windows' : 'android';
-  const elsewhere = platform === 'ios' || platform === 'macos' || platform === 'linux';
-  return (
-    <>
-      <p className="lm-role-desc">{r.playDesc}</p>
-      <div className="kit-hero-actions">
-        <PixelButton href={DOWNLOADS[first]} variant="primary" size="lg">
-          {r.downloadFor(PLATFORM_NAMES[first])}
-        </PixelButton>{' '}
-        <PixelButton href={DOWNLOADS[second]} size="lg">
-          {r.otherVersion(PLATFORM_NAMES[second])}
-        </PixelButton>
-      </div>
-      <p className="lm-role-meta">
-        {elsewhere ? <strong>{r.noVersionHere} </strong> : null}
-        {first === 'android' ? r.reqAndroid : r.reqWindows}
-      </p>
-      <RoleLinks
-        links={[
-          { href: docs('LeviLauncher', locale, 'download'), label: r.allDownloads },
-          { href: href(LINKS.mods), label: r.browseMods, internal: true },
-        ]}
-      />
-    </>
-  );
-}
-
-// How to get lip, below the description like the players' downloads: Windows has its installer, on the page of the
-// latest release (which lists the file of each architecture); macOS and Linux share the install script, one line to
-// copy. The prerendered page shows Windows.
-const LIP_WAYS = ['windows', 'macos linux'] as const;
-const LIP_RELEASE = 'https://github.com/LiteLDev/lip/releases/latest';
-const INSTALL_SCRIPT = 'curl -fsSL https://levimc.org/lip/install.sh | sh';
-
-function HostPanel() {
-  const { t, locale, info } = useI18n();
-  const r = t.roles;
   const { version } = useLeviLaminaStats();
-  const [way, setWay] = usePlatformChoice(LIP_WAYS, 'windows');
-  const windows = (way ?? 'windows') === 'windows';
-  return (
-    <>
-      <p className="lm-role-desc">{r.hostDesc}</p>
-      <div className="lm-platforms">
-        <p className="lm-platforms-label" aria-hidden="true">
-          {r.platformLabel}
-        </p>
-        <PlatformPicker options={LIP_WAYS} value={way ?? 'windows'} onChange={setWay} label={r.platformLabel} lang={info.lang} />
-      </div>
-      {windows ? (
-        <div className="kit-hero-actions">
-          <PixelButton href={LIP_RELEASE} variant="primary" size="lg">
-            {r.downloadLip}
-          </PixelButton>
-        </div>
-      ) : (
-        <InstallLine />
-      )}
-      <p className="lm-role-meta">{windows ? r.msiNext : r.scriptNote}</p>
-      <p className="lm-role-meta">
-        <a href="https://github.com/LiteLDev/LeviLamina/releases/latest" target="_blank" rel="noopener" className="lm-release">
-          <span className="lm-release-dot" aria-hidden="true" />
-          <span>
-            {r.latest}{' '}
-            {version ? <span className="lm-release-version">{version}</span> : <span className="lm-skeleton lm-skeleton-sm lm-release-skeleton" />}
-          </span>
-        </a>
-      </p>
-      <RoleLinks links={[{ href: docs('lip', locale), label: r.lipDocs }]} />
-    </>
+  const timer = useRef<number | undefined>(undefined);
+  const settle = useCallback(
+    (next: Role | undefined) => {
+      window.clearTimeout(timer.current);
+      if (next) timer.current = window.setTimeout(() => onChange(next), HOVER_INTENT_MS);
+    },
+    [onChange],
   );
-}
+  useEffect(() => () => window.clearTimeout(timer.current), []);
 
-/** The install script's command line, with a button that copies it. */
-function InstallLine() {
-  const { t } = useI18n();
-  const r = t.roles;
-  const [copied, setCopied] = useState(false);
-  const copy = () => {
-    void navigator.clipboard?.writeText(INSTALL_SCRIPT).then(() => {
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1600);
-    });
+  const rows: Record<Role, { desc: string; platforms?: string; go: RoleLink; more: RoleLink[] }> = {
+    play: {
+      desc: r.playDesc,
+      platforms: r.playPlatforms,
+      go: { href: docs('LeviLauncher', locale, 'install'), label: r.installLauncher },
+      more: [
+        { href: tutorial(locale, 'play/play-with-mods/'), label: r.playTutorial },
+        { href: href(LINKS.mods), label: r.browseMods, internal: true },
+      ],
+    },
+    host: {
+      desc: r.hostDesc,
+      platforms: r.hostPlatforms,
+      go: { href: docs('lip', locale, 'install.html'), label: r.installLip },
+      more: [{ href: tutorial(locale, 'server/first-server/'), label: r.hostTutorial }],
+    },
+    develop: {
+      desc: r.developDesc,
+      go: { href: tutorial(locale, 'develop/first-levilamina-mod/'), label: r.firstMod },
+      more: [
+        { href: docs('LegacyScriptEngine', locale), label: r.scripting },
+        // the Doxygen reference is in English only
+        { href: `${docs('LeviLamina', 'en')}api/`, label: r.apiReference },
+        { href: tutorial(locale, 'develop/first-android-mod/'), label: r.androidMods },
+      ],
+    },
   };
-  return (
-    <div className="kit-code lm-install" data-lang="shell">
-      <pre className="shiki kit-shiki" tabIndex={0}>
-        <code>
-          <span className="line">
-            <span className="lm-term-prompt">$ </span>
-            {INSTALL_SCRIPT}
-          </span>
-        </code>
-      </pre>
-      <button type="button" className="kit-code-copy" aria-label={r.copyInstall} onClick={copy} {...(copied ? { 'data-copied': r.copied } : {})}>
-        <PixelIcon name="copy" className="kit-icon-copy" />
-        <PixelIcon name="check" className="kit-icon-done" />
-      </button>
-    </div>
-  );
-}
 
-function DevelopPanel() {
-  const { t, locale } = useI18n();
-  const r = t.roles;
-  return (
-    <>
-      <p className="lm-role-desc">{r.developDesc}</p>
-      <div className="kit-hero-actions">
-        <PixelButton href={tutorial(locale, 'develop/first-levilamina-mod/')} variant="primary" size="lg" iconRight="arrowRight">
-          {r.firstMod}
-        </PixelButton>{' '}
-        <PixelButton href={docs('LegacyScriptEngine', locale)} size="lg">
-          {r.scripting}
-        </PixelButton>
-      </div>
-      <RoleLinks
-        links={[
-          // the Doxygen reference is in English only
-          { href: `${docs('LeviLamina', 'en')}api/`, label: r.apiReference },
-          { href: tutorial(locale, 'develop/first-android-mod/'), label: r.androidMods },
-        ]}
-      />
-    </>
-  );
-}
-
-function RoleLinks({ links }: { links: { href: string; label: string; internal?: boolean }[] }) {
-  return (
-    <p className="lm-role-links">
-      {links.map((l) => (
-        <a key={l.href} href={l.href} {...(l.internal ? {} : { target: '_blank', rel: 'noopener' })}>
-          {l.label}
-          <PixelIcon name={l.internal ? 'arrowRight' : 'external'} />
-        </a>
-      ))}
-    </p>
-  );
-}
-
-/** The role tabs and the selected role's panel (in the hero's copy column). */
-export function RoleTabs({ role, onChange }: { role: Role; onChange: (role: Role) => void }) {
-  const { t } = useI18n();
-  const panels: Record<Role, ReactNode> = { play: <PlayPanel />, host: <HostPanel />, develop: <DevelopPanel /> };
   return (
     <div className="lm-roles">
-      <p className="lm-roles-label" aria-hidden="true">
-        {t.roles.label}
+      <p className="lm-roles-label" id="lm-roles-label">
+        {r.label}
       </p>
-      <HotbarTabs
-        className="lm-roles-tabs"
-        label={t.roles.label}
-        value={role}
-        onChange={(id) => onChange(id as Role)}
-        tabs={ROLES.map((id) => ({
-          id,
-          label: (
-            <>
-              <PixelIcon name={ROLE_ICONS[id]} size={16} />
-              {t.roles[id]}
-            </>
-          ),
-        }))}
-      >
-        <div className="lm-role-panel" data-role={role}>
-          {panels[role]}
-        </div>
-      </HotbarTabs>
+      <ul className="lm-paths" aria-labelledby="lm-roles-label">
+        {ROLES.map((id) => {
+          const row = rows[id];
+          return (
+            <li
+              key={id}
+              id={id}
+              className="lm-path"
+              data-role={id}
+              data-current={role === id ? '' : undefined}
+              onPointerEnter={(e) => (e.pointerType === 'mouse' ? settle(id) : undefined)}
+              onPointerLeave={() => settle(undefined)}
+              onFocus={() => onChange(id)}
+            >
+              <PixelIcon name={ROLE_ICONS[id]} size={24} className="lm-path-icon" />
+              <div className="lm-path-body">
+                <h2 className="lm-path-title">{r[id]}</h2>
+                <p className="lm-path-desc">{row.desc}</p>
+                <p className="lm-path-action">
+                  {/* the row's one action; its ::after covers the row, so the whole row is the link */}
+                  <a className="lm-path-go" href={row.go.href}>
+                    {row.go.label}
+                    <PixelIcon name="arrowRight" />
+                  </a>
+                  {row.platforms ? <span className="lm-path-platforms">{row.platforms}</span> : null}
+                </p>
+                <p className="lm-path-more">
+                  {row.more.map((l) => (
+                    <a key={l.href} href={l.href} {...(l.internal ? {} : { target: '_blank', rel: 'noopener' })}>
+                      {l.label}
+                    </a>
+                  ))}
+                  {id === 'host' ? (
+                    <a href="https://github.com/LiteLDev/LeviLamina/releases/latest" target="_blank" rel="noopener" className="lm-release">
+                      <span className="lm-release-dot" aria-hidden="true" />
+                      <span>
+                        {r.latest}{' '}
+                        {version ? <span className="lm-release-version">{version}</span> : <span className="lm-skeleton lm-skeleton-sm lm-release-skeleton" />}
+                      </span>
+                    </a>
+                  ) : null}
+                </p>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
 
-/** What the selected role gets beside the copy: LeviLauncher at a glance, lip at a glance, code. */
+/** What shows beside the list for the current row: LeviLauncher at a glance, lip at a glance, code. */
 export function RoleShowcase({ role }: { role: Role }) {
   const { t } = useI18n();
   if (role === 'host') return <LipCard />;

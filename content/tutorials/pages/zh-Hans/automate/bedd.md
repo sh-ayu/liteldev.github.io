@@ -44,9 +44,7 @@ LeviLauncher.exe instance list              # 检查结果
 
    你应该看到 `Be.D.D. 0.4.0`（或更新版本），以及它驱动的游戏和 LeviLamina 版本。
 
-::: details 不用安装程序
-同一发布中的 `bedd-windows-x64.zip` 解压到任何位置都能用：在其文件夹中运行 `BeDD.exe`。`bedd-windows-x64.msi` 可以用 `msiexec /i bedd-windows-x64.msi /qn` 静默安装，适合受管理的电脑和 CI。
-:::
+压缩包和给 CI 用的静默安装程序：见[安装 Be.D.D.](https://levimc.org/zh-Hans/BeDD/install)。
 
 ## 3. 在后台启动游戏
 

@@ -8,12 +8,6 @@
 - **个人 Discord 频道：** [discord.gg/VqQaC8vWz8](https://discord.gg/VqQaC8vWz8)
 - **QQ 群：** [458083875](https://qm.qq.com/q/1z791rJgJG)
 
-## 下载入口
-
-- **GitHub Releases（LeviLauncher 下载）：** [LiteLDev/LeviLauncher Releases](https://github.com/LiteLDev/LeviLauncher/releases)
-
-- **Android 版（APK）：** [LiteLDev/LeviLauncher-Android Releases](https://github.com/LiteLDev/LeviLauncher-Android/releases/latest)
-
 ## 如何反馈问题与功能建议
 
 请使用 [GitHub Issues](https://github.com/LiteLDev/LeviLauncher/issues) 反馈：

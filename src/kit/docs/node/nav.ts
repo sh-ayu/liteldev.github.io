@@ -118,6 +118,8 @@ export const OPEN_ALL_MAX_LINKS = 24;
  * no tree (kit 2.26: Overview), which is then the current section on the home page; the brand links it too.
  */
 export const HOME_KEY = 'index';
+/** The page of the Install section (kit 2.32): `install.md` at the root of a locale's pages, a section of one page like Overview. */
+export const INSTALL_KEY = 'install';
 
 export function countLinks(items: NavItem[]): number {
   let n = 0;
@@ -236,6 +238,10 @@ export function buildNavigation({ cfg, scan, titles, warn }: NavBuildInput): Nav
           else if (it.key === HOME_KEY) {
             // the Overview section (kit 2.26): the home page, first
             if (tree.indexOf(it) !== 0) warnOnce(`nav: the home page's section '${it.text}' must come first`);
+          }
+          else if (it.key === INSTALL_KEY) {
+            // the Install section (kit 2.32): one page, right after Overview
+            if (tree.indexOf(it) !== 1 || tree[0]?.key !== HOME_KEY) warnOnce(`nav: the Install page's section '${it.text}' must come second, after the home page's`);
           }
           else if (it.key) warnOnce(`nav: top-level entry '${it.text}' is not a section (a single page: put it into a section, e.g. its 'Help' group)`);
         }

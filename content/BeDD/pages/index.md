@@ -1,7 +1,7 @@
 # Be.D.D.
 
 Minecraft tests that run in the background: your script plays Minecraft Bedrock while your mouse, keyboard and
-windows stay yours. [Download](https://github.com/LiteLDev/BeDD/releases/latest), or
+windows stay yours. [Install](/install) it, or
 [start here](https://levimc.org/tutorials/automate/bedd/).
 
 ![Three headless Minecraft games react to a test script in the manager window](/showcase/desktop.webp)
@@ -77,7 +77,7 @@ A `screenshot` of an off-screen window.
 
 Authors of LeviLamina client mods and anyone who tests against the real Minecraft Bedrock client: CI jobs, regression
 suites, bots that need the client rather than a protocol emulation. Only the test PC needs it. It is not a lip package
-and not on LeviMC Mods: get it from the [releases](https://github.com/LiteLDev/BeDD/releases).
+and not on LeviMC Mods: see [Install](/install).
 
 New to it? The tutorial [Drive the game client with Be.D.D.](https://levimc.org/tutorials/automate/bedd/) installs it,
 sets up a PC and runs a first script.
@@ -93,11 +93,7 @@ sets up a PC and runs a first script.
 
 ## Requirements
 
-- Windows 10 or 11, x64.
-- [LeviLauncher](https://levimc.org/LeviLauncher/) **1.1+** with a Minecraft Bedrock **1.26.60** (GDK, release)
-  instance that has LeviLamina **26.60.x** ([Installs and clones](/guide/installs#which-instance)).
-
-No PowerShell, lip or .NET runtime needed.
+Windows 10 or 11 on x64, and LeviLauncher with a Minecraft Bedrock 1.26.60 instance that has LeviLamina. [Install](/install) has the details and the installer.
 
 ## Where it fits
 

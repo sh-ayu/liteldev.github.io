@@ -4,7 +4,7 @@ At the end of this tutorial you have a Minecraft Bedrock Dedicated Server with L
 
 ## What you need
 
-- `lip`, installed: see step 1 of [Your first server](first-server.md#_1-install-lip). `lip -v` must print a version.
+- `lip`, installed: see [Install lip](https://levimc.org/lip/install.html). `lip -v` must print a version.
 - Windows 10, Windows 11 or Windows Server 2019 or later; or Linux on x64 or macOS, where `lip` runs the Windows server through its own Wine.
 - An internet connection.
 

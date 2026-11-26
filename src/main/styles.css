@@ -219,126 +219,155 @@
     width: 3.5rem;
   }
 
-  /* "I want to…": hotbar tabs for players, server owners and developers (src/main/components/Roles.tsx) */
+  /* "I want to…": players, server owners and developers, all three at once (src/main/components/Roles.tsx).
+     Rows under hairlines, one text action each: no filled button, so that no row shouts over the others. The row's
+     title is what the eye lands on; the arrow link is the one thing to do next, and the whole row is its target. */
   .lm-roles {
     width: 100%;
     margin-top: 2rem;
   }
   .lm-roles-label {
-    margin: 0 0 0.5rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--color-muted);
-  }
-  .lm-roles-tabs.kit-tabs {
-    margin: 0;
-  }
-  .lm-roles-tabs .kit-tabs-bar {
-    margin: var(--px) var(--px) 0;
-  }
-  .lm-roles-tabs .kit-tabs-bar > [role="tab"] {
-    min-height: 2.5rem;
-    padding-inline: 1rem;
-    font-size: 0.9375rem;
-  }
-  @media (max-width: 480px) {
-    /* the three tabs in one row on phones */
-    .lm-roles-tabs .kit-tabs-bar > [role="tab"] {
-      padding-inline: 0.5rem;
-      font-size: 0.875rem;
-    }
-  }
-  .lm-roles-tabs .kit-tab-panel:focus-visible {
-    outline: var(--px) solid var(--color-focus);
-    outline-offset: 4px;
-  }
-  /* the same height for every role, so switching does not move the page below */
-  .lm-role-panel {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    min-height: 15.5rem;
-    padding-top: 1.25rem;
-  }
-  .lm-role-desc {
-    max-width: 36rem;
-    margin: 0;
-    font-size: 1.0625rem;
-    line-height: 1.6;
-    color: var(--color-muted);
-    text-wrap: pretty;
-  }
-  .lm-role-panel .kit-hero-actions {
-    margin-top: 1.5rem;
-  }
-  /* "Install lip on": the platform picker of the server owners' panel (kit PlatformPicker) */
-  .lm-platforms {
-    margin-top: 1.25rem;
-  }
-  .lm-platforms-label {
     margin: 0 0 0.25rem;
     font-size: 0.875rem;
     font-weight: 600;
     color: var(--color-muted);
   }
-  /* Windows, macOS / Linux: one row (the inline-flex hotbar would otherwise wrap at its own shrink-to-fit width) */
-  .lm-platforms .kit-platform-picker {
-    margin-left: 0;
-    flex-wrap: nowrap;
-  }
-  .lm-platforms .kit-platform-picker > button {
-    padding-inline: 0.75rem;
-    white-space: nowrap;
-  }
-  /* macOS and Linux: lip's install script, one line with its copy button (Windows: the download button instead) */
-  .lm-install {
-    display: flex;
-    align-items: center;
-    min-width: 0;
-    max-width: min(36rem, calc(100% - 2 * var(--px)));
-    margin: 1.5rem var(--px) 0;
-  }
-  .lm-install pre {
-    flex: 1;
-    min-width: 0;
+  .lm-paths {
     margin: 0;
-    padding: 0.625rem 0.875rem;
-    overflow-x: auto;
-    white-space: pre;
+    padding: 0;
+    list-style: none;
   }
-  .lm-install .kit-code-copy {
+  .lm-path {
+    position: relative;
+    display: flex;
+    gap: 0.875rem;
+    padding: 1rem 0.75rem 1rem 0.5rem;
+    margin-inline: -0.5rem;
+    border-top: 1px solid var(--color-line);
+    /* a link to a row (#host) stops below the sticky LeviMC bar */
+    scroll-margin-top: 5rem;
+    transition: background-color 0.12s;
+  }
+  .lm-path:first-child {
+    border-top-color: transparent;
+  }
+  .lm-path:hover,
+  .lm-path:focus-within {
+    background: color-mix(in srgb, var(--color-primary) 7%, transparent);
+  }
+  .lm-path-icon {
     flex: none;
-    margin-right: 0.25rem;
-  }
-  .lm-role-meta {
-    margin: 1rem 0 0;
-    font-size: 0.875rem;
+    margin-top: 0.125rem;
     color: var(--color-muted);
+    transition: color 0.12s;
   }
-  .lm-role-meta strong {
-    font-weight: 600;
+  .lm-path:hover .lm-path-icon,
+  .lm-path:focus-within .lm-path-icon,
+  .lm-path[data-current] .lm-path-icon {
+    color: var(--color-primary-strong);
+  }
+  .dark .lm-path:hover .lm-path-icon,
+  .dark .lm-path:focus-within .lm-path-icon,
+  .dark .lm-path[data-current] .lm-path-icon {
+    color: var(--color-primary);
+  }
+  .lm-path-body {
+    min-width: 0;
+  }
+  .lm-path-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.3;
     color: var(--color-ink);
   }
-  .lm-role-links {
+  .lm-path-desc {
+    margin: 0.25rem 0 0;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--color-muted);
+    text-wrap: pretty;
+  }
+  .lm-path-action {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem 1.5rem;
-    margin: 0.75rem 0 0;
-    font-size: 0.875rem;
-    font-weight: 600;
+    align-items: baseline;
+    gap: 0.25rem 0.875rem;
+    margin: 0.5rem 0 0;
   }
-  .lm-role-links a {
+  .lm-path-go {
     display: inline-flex;
     align-items: center;
     gap: 0.375rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
     color: var(--color-primary-strong);
   }
-  .dark .lm-role-links a {
+  .dark .lm-path-go {
     color: var(--color-primary);
   }
-  .lm-role-links a:hover {
+  /* the whole row is the link */
+  .lm-path-go::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+  .lm-path-go:focus-visible {
+    outline: none;
+  }
+  .lm-path:has(.lm-path-go:focus-visible) {
+    outline: var(--px) solid var(--color-focus);
+    outline-offset: -1px;
+  }
+  .lm-path-go .px-icon,
+  .lm-path-go svg {
+    transition: transform 0.12s;
+  }
+  .lm-path:hover .lm-path-go svg {
+    transform: translateX(3px);
+  }
+  .lm-path:hover .lm-path-go {
     text-decoration: underline;
     text-underline-offset: 3px;
+  }
+  .lm-path-platforms {
+    font-size: 0.8125rem;
+    color: var(--color-muted);
+  }
+  /* where else a row leads: smaller and muted, above the row's link target so they can be clicked themselves */
+  .lm-path-more {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 1.125rem;
+    width: fit-content;
+    margin: 0.5rem 0 0;
+    font-size: 0.8125rem;
+  }
+  .lm-path-more a {
+    color: var(--color-muted);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+    text-underline-offset: 3px;
+  }
+  .lm-path-more a:hover {
+    color: var(--color-ink);
+    text-decoration-color: currentColor;
+  }
+  .lm-path-more .lm-release {
+    font-size: inherit;
+    gap: 0.5rem;
+    text-decoration: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lm-path,
+    .lm-path-icon,
+    .lm-path-go svg {
+      transition: none;
+    }
   }
 
   /* what the selected role gets beside the copy: LeviLauncher, a terminal, or a code sample */

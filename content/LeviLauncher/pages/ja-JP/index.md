@@ -2,7 +2,7 @@
 
 Windows・Android 向け Minecraft Bedrock ランチャー。Windows PC や Android デバイスで、Minecraft 統合版のインストール、管理、分離、Mod 導入、起動を行えます。
 
-**ダウンロード:** [Windows 版 LeviLauncher](https://github.com/LiteLDev/LeviLauncher/releases/latest) · [Android 版 LeviLauncher](https://github.com/LiteLDev/LeviLauncher-Android/releases/latest) · [ダウンロード](./download)ページに、各バージョンの動作要件とほかの入手先が載っています。
+**インストール:** [インストール](./install)ページに、各バージョンの動作要件、入手先、更新方法、ベータ版の試し方が載っています。
 
 ::: info Windows 版と Android 版
 LeviLauncher には Minecraft Bedrock Edition (GDK / UWP) 向けの **Windows 版**と、Google Play の公式 Minecraft 向けの **Android 版**があります。どちらも**正規版のライセンス**が必要です。iOS 版はなく、開発する予定もありません。
@@ -38,16 +38,11 @@ GDK 版をインストールするには、Minecraft を所有する Microsoft �
 
 このドキュメントは**最終ユーザー**向けであり、メンテナーや開発者向けではありません。
 
-- **ガイド**: 1 ページに 1 つの作業。[ダウンロード](./download)ページでアプリを入手し、[バージョン](./guide/version-management)、[ダウンロードとミラー](./guide/downloads-mirrors)、[コンテンツ](./guide/content-management)、[アカウントとクイック起動](./guide/accounts-quick-launch)（Android）、[Mod](./guide/mods-integrations)、[ワールド](./guide/world-tools)、[設定](./guide/settings-personalization)を管理します。「ヘルプ」グループでは[更新とトラブルシューティング](./guide/update-troubleshooting)と[コミュニティとフィードバック](./guide/faq-community-feedback)を扱います。
+- **ガイド**: 1 ページに 1 つの作業。[インストール](./install)ページでアプリを入手し、[バージョン](./guide/version-management)、[ダウンロードとミラー](./guide/downloads-mirrors)、[コンテンツ](./guide/content-management)、[アカウントとクイック起動](./guide/accounts-quick-launch)（Android）、[Mod](./guide/mods-integrations)、[ワールド](./guide/world-tools)、[設定](./guide/settings-personalization)を管理します。「ヘルプ」グループでは[更新とトラブルシューティング](./guide/update-troubleshooting)と[コミュニティとフィードバック](./guide/faq-community-feedback)を扱います。
 - **概念**: LeviLauncher の仕組み。[インスタンスとゲームバージョン](./concepts/instances)（正式版とプレビュー版、GDK と UWP、Windows と Android）、[インスタンスの隔離](./concepts/isolation)、[Mod の読み込み](./concepts/mod-loading)。
 - **リファレンス**: [コマンドライン](./reference/command-line)、[すべての設定](./reference/settings)、LeviLauncher が使う[フォルダーとファイル](./reference/files)、Android の[クイック起動 URI](./reference/quick-launch-uri)、Android 版の[プライバシーポリシー](./privacy-policy)。
 
 推奨読解順序: チュートリアル[Play with mods on Windows](https://levimc.org/tutorials/play/play-with-mods/)、次に[バージョン管理](./guide/version-management)と[コンテンツ管理](./guide/content-management)。
-
-## ダウンロードチャンネル
-
-- **GitHub Releases (LeviLauncherダウンロード):** [LiteLDev/LeviLauncher Releases](https://github.com/LiteLDev/LeviLauncher/releases)
-- **Android 版:** [LiteLDev/LeviLauncher-Android Releases](https://github.com/LiteLDev/LeviLauncher-Android/releases)
 
 ## コミュニティとフィードバック
 

@@ -209,7 +209,7 @@ export async function buildSite(cfg: ResolvedConfig, opts: { changed?: Set<strin
     routes.push(meta);
     // every doc page belongs to exactly one section (kit 2.19 IA): report pages no section lists
     const sectioned = cfg.sidebar === undefined || cfg.sidebar === 'tabs' || (typeof cfg.sidebar === 'object' && cfg.sidebar !== null);
-    if (sectioned && layout === 'doc' && !isHome && r.key !== '404' && fm.sidebar !== false && !p.sidebar && !orphans.has(r.key)) orphans.set(r.key, r.source.rel);
+    if (sectioned && layout === 'doc' && !isHome && r.key !== '404' && fm.sidebar !== false && !p.sidebar && p.nav === undefined && !orphans.has(r.key)) orphans.set(r.key, r.source.rel);
     const keepFm: Record<string, unknown> = {};
     for (const k of ['layout', 'outline', 'aside', 'sidebar', 'editLink', 'lastUpdated', 'pageClass']) if (k in fm) keepFm[k] = fm[k];
     const pageMeta: PageMeta = {};

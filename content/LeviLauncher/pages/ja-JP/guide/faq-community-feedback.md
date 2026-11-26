@@ -36,7 +36,7 @@ LeviLauncher には **Windows 版**と **Android 版**（[Android 版ガイド](
 
 ### Android 版に必要なものは？
 
-ARM64 デバイス上の Android 9.0 以降と、Google Play からインストールした Minecraft 統合版 1.21.80 以降です。[ダウンロード](../download?platform=android)を参照してください。
+ARM64 デバイス上の Android 9.0 以降と、Google Play からインストールした Minecraft 統合版 1.21.80 以降です。[インストール](../install?platform=android)を参照してください。
 
 ### Android で複数の Minecraft バージョンを使えますか？
 
@@ -47,12 +47,6 @@ ARM64 デバイス上の Android 9.0 以降と、Google Play からインスト�
 - **公式 Discord：** [discord.gg/v5R5P4vRZk](https://discord.gg/v5R5P4vRZk)
 - **個人 Discord チャンネル：** [discord.gg/VqQaC8vWz8](https://discord.gg/VqQaC8vWz8)
 - **QQ グループ：** [458083875](https://qm.qq.com/q/1z791rJgJG)
-
-## ダウンロード
-
-- **GitHub Releases（LeviLauncher ダウンロード）：** [LiteLDev/LeviLauncher Releases](https://github.com/LiteLDev/LeviLauncher/releases)
-
-- **Android 版（APK）:** [LiteLDev/LeviLauncher-Android Releases](https://github.com/LiteLDev/LeviLauncher-Android/releases/latest)
 
 ## 問題や機能要望の報告方法
 

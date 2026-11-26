@@ -31,9 +31,7 @@ pnpm install
 
 `corepack enable` 会提供仓库要求的 pnpm 版本。你应该看到 pnpm 列出已安装的包并顺利结束，没有错误。
 
-::: details 找不到 `corepack`，或没有权限
-Node.js 25 及更新版本不再自带 corepack：用 `npm install -g corepack` 安装后，再运行一次 `corepack enable`。在 Windows 上，如果 Node.js 安装在 `C:\Program Files`，请在以管理员身份打开的终端中运行一次 `corepack enable`。
-:::
+如果找不到 `corepack` 或没有权限，见[安装 bedboo](https://levimc.org/zh-Hans/bedboo/install)。
 
 ## 2. 为机器人建一个包
 

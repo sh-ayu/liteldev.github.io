@@ -36,7 +36,7 @@ LeviLauncher에는 **Windows 버전**과 **Android 버전**([Android 가이드](
 
 ### Android 버전에는 무엇이 필요한가요?
 
-ARM64 기기의 Android 9.0 이상과 Google Play에서 설치한 Minecraft Bedrock Edition 1.21.80 이상이 필요합니다. [다운로드](../download?platform=android)를 참고하세요.
+ARM64 기기의 Android 9.0 이상과 Google Play에서 설치한 Minecraft Bedrock Edition 1.21.80 이상이 필요합니다. [설치](../install?platform=android)를 참고하세요.
 
 ### Android에서 여러 Minecraft 버전을 실행할 수 있나요?
 
@@ -47,12 +47,6 @@ ARM64 기기의 Android 9.0 이상과 Google Play에서 설치한 Minecraft Bedr
 - **공식 디스코드(Discord):** [discord.gg/v5R5P4vRZk](https://discord.gg/v5R5P4vRZk)
 - **개인 디스코드 채널:** [discord.gg/VqQaC8vWz8](https://discord.gg/VqQaC8vWz8)
 - **QQ 그룹:** [458083875](https://qm.qq.com/q/1z791rJgJG)
-
-## 다운로드 진입점
-
-- **GitHub 릴리스(LeviLauncher 다운로드):** [LiteLDev/LeviLauncher Releases](https://github.com/LiteLDev/LeviLauncher/releases)
-
-- **Android 버전(APK):** [LiteLDev/LeviLauncher-Android Releases](https://github.com/LiteLDev/LeviLauncher-Android/releases/latest)
 
 ## 문제 및 기능 요청을 피드백하는 방법
 

@@ -14,6 +14,8 @@ At the end of this tutorial you play Minecraft Bedrock Edition on Windows with L
 2. Run the installer and finish the setup wizard. If it asks to install WebView2 or another component, let it continue.
 3. Start LeviLauncher. You should see its window, with a column of icons at the left: **Launch**, **Download**, **Instances**, **About** and **Settings** (point at an icon to see its name). The first time, it opens on the **First Launch Setup**.
 
+The other files of the release, a beta version and updates: see [Install LeviLauncher](https://levimc.org/LeviLauncher/install?platform=windows).
+
 ## 2. Go through the first launch
 
 1. In the **First Launch Setup**, the **Base Root** under **Content Paths** is where LeviLauncher keeps your instances. Keep it on a drive with a few GB free: to change it, press **Browse…**, choose a folder and press **Apply**. **Language** sets the language of LeviLauncher.

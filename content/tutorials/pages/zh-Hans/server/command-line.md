@@ -4,7 +4,7 @@
 
 ## 你需要准备
 
-- 已经安装好的 `lip`：见[开你的第一个服务器](first-server.md#_1-安装-lip)的第 1 步。`lip -v` 应当能输出版本号。
+- 已经安装好的 `lip`：见[安装 lip](https://levimc.org/zh-Hans/lip/install.html)。`lip -v` 应当能输出版本号。
 - Windows 10、Windows 11 或 Windows Server 2019 及更高版本；或者 x64 的 Linux、macOS，`lip` 会在那里用自带的 Wine 运行 Windows 服务器。
 - 网络连接。
 

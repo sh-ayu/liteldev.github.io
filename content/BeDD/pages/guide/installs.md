@@ -1,6 +1,6 @@
 # Installs and clones
 
-Installing Be.D.D. and setting up the first game on a PC: the tutorial
+Installing Be.D.D.: the [Install](/install) page. Setting up the first game on a PC: the tutorial
 [Drive the game client with Be.D.D.](https://levimc.org/tutorials/automate/bedd/). This page is what comes after:
 upgrades, CI, instances, clones and folders.
 

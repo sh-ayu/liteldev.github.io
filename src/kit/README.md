@@ -311,19 +311,28 @@ One model on every docs site (and the Doxygen API, which generates its chrome fr
 * **The site column** (SiteNav) on every page, home included: the brand (logo + name → the docs home), then the
   **sections**, then the **resources** (`header.links`, then the `repo` GitHub link). Each section is exactly one
   sidebar tree: the current one is open, the others open in place on a click.
-* **The four sections of a project's docs**, in this order and no others (kit 2.26; levimc.org's `content/<Project>/`):
+* **The five sections of a project's docs**, in this order and no others (kit 2.26, Install since 2.32; levimc.org's
+  `content/<Project>/`):
   1. **Overview** — the home page itself, a section that is a link and has no pages (`{ text: 'Overview', link: '/' }`,
      the locale's home: `/zh-Hans/` …); it is the current section on the home page. The project introduced, with a
      short demo (a code sample, a screenshot).
-  2. **Guides** — task guides, one feature each; troubleshooting last, in a `Help` group.
-  3. **Concepts** — explanations: how it works, the model behind it.
-  4. **Reference** — the complete external interface: API, protocol, CLI, configuration, files, supported versions.
+  2. **Install** — one page, `install.md` at the root of the pages, a section that is a link like Overview
+     (`{ text: 'Install', link: '/install' }`). The same headings on every project, in this order, leaving out those
+     with nothing to say: *What you need*, *Install*, *Check that it works*, *Update*, *Other versions* (the releases
+     page, betas, older versions), *Uninstall*, *Next steps* (the tutorials). It is the only place that says how to
+     get the project: the overview, the guides, the tutorials and the FAQ link to it instead of repeating it, and
+     levimc.org's home page leads to it. A tutorial keeps the one usual way in a step of its own, so that it still
+     goes from nothing to one thing done, and names the Install page for the rest. No download button in the
+     resources slot (`header.links`): the Install section is the way to the downloads.
+  3. **Guides** — task guides, one feature each; troubleshooting last, in a `Help` group.
+  4. **Concepts** — explanations: how it works, the model behind it.
+  5. **Reference** — the complete external interface: API, protocol, CLI, configuration, files, supported versions.
      A same-site reference with its own tree and no docs pages (LeviLamina's Doxygen API,
      `{ 'C++ Reference': 'https://levimc.org/LeviLamina/api/' }`) is the **first** link of the Reference tree, so that
      the section's link in `nav.json` leads into it and the Doxygen pages mark Reference current.
 
-  Labels: Overview / Guides / Concepts / Reference; 概览 / 指南 / 概念 / 参考 (Traditional Chinese 概覽 / 指南 / 概念 /
-  參考). The tutorials and the FAQ are sites of their own sections (by task, by topic).
+  Labels: Overview / Install / Guides / Concepts / Reference; 概览 / 安装 / 指南 / 概念 / 参考 (Traditional Chinese
+  概覽 / 安裝 / 指南 / 概念 / 參考). The tutorials and the FAQ are sites of their own sections (by task, by topic).
 * **Sections' trees**: every doc page belongs
   to exactly one section — the build warns `nav: page '<key>' … is in no section` (home and 404 excepted; frontmatter
   `sidebar: false` opts a page out). Groups: all open when the section has ≤ 24 links, otherwise only the group holding
@@ -333,17 +342,18 @@ One model on every docs site (and the Doxygen API, which generates its chrome fr
   Its `<meta name="description">` is the config `description` unless the frontmatter sets one. (`layout: home`, the
   hero + features banner, still renders for sites outside levimc.org's docs, see below.)
 * **Lint** (build warnings, tabs mode): `nav: top-level entry 'X' is not a section (…)` for a top-level page other than
-  the home page, or an external link; `nav: the home page's section 'X' must come first`; `nav: section 'X' has no page`.
+  the home page and the Install page, or an external link; `nav: the home page's section 'X' must come first`;
+  `nav: the Install page's section 'X' must come second, after the home page's`; `nav: section 'X' has no page`.
 
 ```ts
 nav: [
   { Overview: 'index.md' },
-  { Guides: [{ 'Getting Started': ['guide/install.md', 'guide/first-steps.md'] }, 'guide/usage.md', { Help: ['troubleshooting.md'] }] },
+  { Install: 'install.md' },
+  { Guides: [{ 'Getting Started': ['guide/first-steps.md'] }, 'guide/usage.md', { Help: ['troubleshooting.md'] }] },
   { Concepts: ['concepts/how-it-works.md'] },
   { Reference: ['api/README.md', { Events: ['api/events/listen.md'] }, 'versions.md'] },
 ],
-navTranslations: { zh: { Overview: '概览', Guides: '指南', 'Getting Started': '入门', Help: '帮助', Concepts: '概念', Reference: '参考' } },
-header: { links: [{ kind: 'download', link: 'https://github.com/LiteLDev/<project>/releases/latest' }] },
+navTranslations: { zh: { Overview: '概览', Install: '安装', Guides: '指南', 'Getting Started': '入门', Help: '帮助', Concepts: '概念', Reference: '参考' } },
 repo: 'https://github.com/LiteLDev/<project>',
 ```
 
@@ -975,6 +985,13 @@ Commands run from the repository root, with the site's dependencies installed (`
 * Before merging a chrome change, run `node src/kit/scripts/chrome-parity.mjs` against a preview.
 
 ## Changelog
+
+### 2.32.0
+
+* **Navigation model:** a fifth section, **Install**, second on every project's docs: one page (`install.md`), a link
+  with no tree like Overview. The lint accepts it as the second top-level entry (`INSTALL_KEY`,
+  `nav: the Install page's section 'X' must come second, after the home page's`). levimc.org's project docs no longer
+  put a download button in the resources slot; `header.links` keeps working.
 
 ### 2.31.0
 

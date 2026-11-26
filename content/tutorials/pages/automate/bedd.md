@@ -44,9 +44,7 @@ If you prefer the window of LeviLauncher, add the version 1.26.60 with LeviLamin
 
    You should see `Be.D.D. 0.4.0` (or newer) and the game and LeviLamina versions it drives.
 
-::: details Without the installer
-`bedd-windows-x64.zip` from the same release works unzipped anywhere: run `BeDD.exe` from its folder. `bedd-windows-x64.msi` installs silently with `msiexec /i bedd-windows-x64.msi /qn`, for managed PCs and CI.
-:::
+The archive and the silent installer for CI: see [Install Be.D.D.](https://levimc.org/BeDD/install).
 
 ## 3. Start a game in the background
 

@@ -11,7 +11,7 @@ on LeviLamina with little or no change, and new plugins use the same API, docume
 
 LSE runs on Bedrock Dedicated Server and in the Minecraft client on Windows. Like every LeviLamina mod, it is
 installed with [lip](https://levimc.org/lip/) on a server and with [LeviLauncher](https://levimc.org/LeviLauncher/)
-on the client: see [Install mods on your server](https://levimc.org/tutorials/server/install-mods/).
+on the client: see [Install](install.md).
 
 With LSE you get:
 
@@ -68,13 +68,7 @@ them, so the reference applies to every language (see [Language support](apis/La
 | `#nodejs` | JavaScript | Node.js, with npm packages |
 | `#python` | Python | CPython, with pip packages |
 
-The Python engine needs Python on the machine it runs on:
-
-| LSE version | Python version |
-|---|---|
-| >=0.16.2 | 3.12.10 |
-| >=0.9.0 <0.16.2 | 3.12.8 |
-| <0.9.0 | 3.10.11 |
+[Install](install.md) says how to install a variant, and which Python the Python engine needs.
 
 On the client, releases up to 0.23.1 name the variants `#client_lua`, `#client_quickjs`, `#client_nodejs` and
 `#client_python`; LeviLauncher picks the right build for you.

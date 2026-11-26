@@ -34,7 +34,7 @@ LeviLauncher 提供 **Windows 版**和 **Android 版**（[Android 版文档](htt
 
 ## Android 版需要什么？
 
-ARM64 设备上的 Android 9.0 或更高版本，以及从 Google Play 安装的 Minecraft 基岩版 1.21.80 或更高版本。参见[下载](https://levimc.org/zh-Hans/LeviLauncher/download?platform=android)。
+ARM64 设备上的 Android 9.0 或更高版本，以及从 Google Play 安装的 Minecraft 基岩版 1.21.80 或更高版本。参见[安装 LeviLauncher](https://levimc.org/zh-Hans/LeviLauncher/install?platform=android)。
 
 ## Android 上能运行多个 Minecraft 版本吗？
 

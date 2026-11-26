@@ -93,6 +93,8 @@ from its monorepo for now (the [tutorial](https://levimc.org/tutorials/automate/
 
 ## Packages
 
+bedboo is used from a checkout of its repository: see [Install](install.md).
+
 | package | |
 |---|---|
 | `bedboo` | the library |

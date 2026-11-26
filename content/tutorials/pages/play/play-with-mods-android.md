@@ -16,6 +16,8 @@ Mods on Android are native mods, made for Android. LeviLamina and the LeviLamina
 2. Open the downloaded file. If Android says that your browser is not allowed to install apps, tap **Settings**, turn on **Allow from this source** (the setting "Install unknown apps" of the browser), go back and tap **Install**.
 3. Open LeviLauncher. You should see "Opening your launcher…", and then its licence agreement.
 
+Older versions and updates: see [Install LeviLauncher](https://levimc.org/LeviLauncher/install?platform=android).
+
 ## 2. Go through the first start
 
 1. Read the **LeviLauncher License Agreement** and tap **Accept**.

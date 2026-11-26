@@ -11,16 +11,16 @@ import { defineDocsConfig, type LocaleConfig, type NavEntry } from '../../src/ki
 const repo = 'https://github.com/LiteLDev/LeviLauncher';
 
 // --- Navigation -----------------------------------------------------------------------------------
-// The LeviMC navigation model (src/kit/README.md "Navigation model"), the same four sections on every project's site:
-//   Overview  - the home page (what LeviLauncher is, both downloads, a short example), no pages below it;
-//   Guides    - one task per page: Core Workflows (the Download page first), Advanced, then the Help group
+// The LeviMC navigation model (src/kit/README.md "Navigation model"), the same sections on every project's site:
+//   Overview  - the home page (what LeviLauncher is, a short example), no pages below it;
+//   Install   - one page: what each version needs, where to get it, updates and beta versions;
+//   Guides    - one task per page: Core Workflows, Advanced, then the Help group
 //               (troubleshooting, community & feedback);
 //   Concepts  - how it works: instances and game versions, instance isolation, how mods are loaded;
 //   Reference - the complete interface: the Windows command line, every setting, the folders and files, the Android
 //               Quick Launch URIs, and the Android app's privacy policy.
-// Guide pages stay in guide/ (their URLs are unchanged); the new pages are in concepts/ and reference/. The Download
-// page is also in the resources slot of the site column (`header.links`), next to the repository's GitHub link
-// (`repo`). Every label is translated in the tables below, for each of the nine locales.
+// Guide pages stay in guide/ (their URLs are unchanged); the new pages are in concepts/ and reference/. Every label is
+// translated in the tables below, for each of the nine locales.
 
 interface SidebarLabels {
   coreWorkflows: string;
@@ -50,7 +50,10 @@ function buildNav(prefix: string, t: SidebarLabels, n: NavLabels): NavEntry[] {
   return [
     // the home page: what LeviLauncher is and where to get it (no pages below it)
     { text: n.overview, link: prefix },
-    { text: n.guides, items: buildGuides(`${prefix}guide/`, prefix, t, n) },
+    // Install (kit 2.32): the second section on every project's docs, one page like Overview. Its tabs are named after
+    // the platforms and select the visitor's.
+    { text: n.install, link: `${prefix}install` },
+    { text: n.guides, items: buildGuides(`${prefix}guide/`, t) },
     {
       text: n.concepts,
       items: [
@@ -75,13 +78,11 @@ function buildNav(prefix: string, t: SidebarLabels, n: NavLabels): NavEntry[] {
   ];
 }
 
-function buildGuides(guide: string, prefix: string, t: SidebarLabels, n: NavLabels): NavEntry[] {
+function buildGuides(guide: string, t: SidebarLabels): NavEntry[] {
   return [
     {
       text: t.coreWorkflows,
       items: [
-        // the Download page offers both versions and selects the visitor's (tabs named after the platforms)
-        { text: n.download, link: `${prefix}download` },
         { text: t.versions, link: `${guide}version-management` },
         { text: t.downloads, link: `${guide}downloads-mirrors` },
         { text: t.content, link: `${guide}content-management` },
@@ -307,25 +308,25 @@ const SIDEBAR: Record<string, SidebarLabels> = {
   },
 };
 
-// The four sections' names (the site column and the sidebar titles) and the Download page's title.
+// The sections' names (the site column and the sidebar titles).
 interface NavLabels {
   overview: string;
   guides: string;
   concepts: string;
   reference: string;
-  download: string;
+  install: string;
 }
 
 const NAV: Record<string, NavLabels> = {
-  'en-US': { overview: 'Overview', guides: 'Guides', concepts: 'Concepts', reference: 'Reference', download: 'Download' },
-  'es-ES': { overview: 'Resumen', guides: 'Guías', concepts: 'Conceptos', reference: 'Referencia', download: 'Descargas' },
-  'zh-CN': { overview: '概览', guides: '指南', concepts: '概念', reference: '参考', download: '下载' },
-  'zh-HK': { overview: '概覽', guides: '指南', concepts: '概念', reference: '參考', download: '下載' },
-  'ru-RU': { overview: 'Обзор', guides: 'Руководства', concepts: 'Концепции', reference: 'Справочник', download: 'Загрузки' },
-  'de-DE': { overview: 'Überblick', guides: 'Anleitungen', concepts: 'Konzepte', reference: 'Referenz', download: 'Downloads' },
-  'ja-JP': { overview: '概要', guides: 'ガイド', concepts: '概念', reference: 'リファレンス', download: 'ダウンロード' },
-  'ko-KR': { overview: '개요', guides: '가이드', concepts: '개념', reference: '참조', download: '다운로드' },
-  'fr-FR': { overview: "Vue d'ensemble", guides: 'Guides', concepts: 'Concepts', reference: 'Référence', download: 'Téléchargements' },
+  'en-US': { overview: 'Overview', guides: 'Guides', concepts: 'Concepts', reference: 'Reference', install: 'Install' },
+  'es-ES': { overview: 'Resumen', guides: 'Guías', concepts: 'Conceptos', reference: 'Referencia', install: 'Instalación' },
+  'zh-CN': { overview: '概览', guides: '指南', concepts: '概念', reference: '参考', install: '安装' },
+  'zh-HK': { overview: '概覽', guides: '指南', concepts: '概念', reference: '參考', install: '安裝' },
+  'ru-RU': { overview: 'Обзор', guides: 'Руководства', concepts: 'Концепции', reference: 'Справочник', install: 'Установка' },
+  'de-DE': { overview: 'Überblick', guides: 'Anleitungen', concepts: 'Konzepte', reference: 'Referenz', install: 'Installation' },
+  'ja-JP': { overview: '概要', guides: 'ガイド', concepts: '概念', reference: 'リファレンス', install: 'インストール' },
+  'ko-KR': { overview: '개요', guides: '가이드', concepts: '개념', reference: '참조', install: '설치' },
+  'fr-FR': { overview: "Vue d'ensemble", guides: 'Guides', concepts: 'Concepts', reference: 'Référence', install: 'Installation' },
 };
 
 // --- Locales & UI labels --------------------------------------------------------------------------
@@ -402,8 +403,10 @@ const REDIRECTS: Record<string, string> = Object.fromEntries(
     const tutorial = TUTORIAL[l.code] ?? TUTORIAL['en-US']!;
     return urlPrefixes(l).flatMap((from) => [
       ...TUTORIAL_PAGES.map((page) => [`${from}${page}`, tutorial]),
-      [`${from}android/`, `${p}download?platform=android`],
-      [`${from}android/guide/getting-started`, `${p}download?platform=android`],
+      // the Download page became the Install page (2026-11-26)
+      [`${from}download`, `${p}install`],
+      [`${from}android/`, `${p}install?platform=android`],
+      [`${from}android/guide/getting-started`, `${p}install?platform=android`],
       [`${from}android/guide/features`, `${p}guide/version-management?platform=android`],
       [`${from}android/guide/compatibility`, `${p}guide/faq-community-feedback`],
       [`${from}android/guide/developer`, ll],
@@ -435,7 +438,7 @@ export default defineDocsConfig({
   urlStyle: 'html',
   cleanUrls: true,
   slug: 'vitepress',
-  // MkDocs containers too, for the `=== "Windows"` / `=== "Android"` tabs of the Download page
+  // MkDocs containers too, for the `=== "Windows"` / `=== "Android"` tabs of the Install page
   markdown: { compat: 'commonmark', lineNumbers: true, containers: { vitepress: true, mkdocs: true } },
   outline: [2, 3],
   lastUpdated: true,
@@ -443,8 +446,6 @@ export default defineDocsConfig({
   sitemap: { hostname: 'https://levimc.org' },
   sidebar: 'tabs',
   nav: perLocale((code, prefix) => buildNav(prefix, SIDEBAR[code]!, NAV[code]!)),
-  // the resources slot: Download (this site's page, in the visitor's locale), then the repository's GitHub icon
-  header: { links: [{ kind: 'download', link: 'download' }] },
   ui: UI,
   redirects: REDIRECTS,
 });

@@ -13,6 +13,7 @@ const SOURCES = 'https://github.com/LiteLDev/liteldev.github.io';
 
 interface Labels {
   overview: string;
+  install: string;
   guide: string;
   usingInterface: string;
   tour: string;
@@ -51,6 +52,7 @@ type Locale = 'root' | 'zh' | 'zh-Hant';
 const LABELS: Record<Locale, Labels> = {
   root: {
     overview: 'Overview',
+    install: 'Install',
     guide: 'Guides',
     usingInterface: 'Using the interface',
     tour: 'A tour of the interface',
@@ -84,6 +86,7 @@ const LABELS: Record<Locale, Labels> = {
   },
   zh: {
     overview: '概览',
+    install: '安装',
     guide: '指南',
     usingInterface: '使用界面',
     tour: '界面导览',
@@ -119,6 +122,7 @@ const LABELS: Record<Locale, Labels> = {
   // characters only (服務器, 設置, 界面), and the pages are made by scripts/zh-hant.mjs (see CONTRIBUTING.md).
   'zh-Hant': {
     overview: '概覽',
+    install: '安裝',
     guide: '指南',
     usingInterface: '使用介面',
     tour: '介面導覽',
@@ -161,6 +165,9 @@ const COMMANDS = ['cache_clean', 'config', 'daemon', 'install', 'list', 'pkg_ini
 const nav = (p: string, t: Labels): NavEntry[] => [
   // the home page: what lip is, with a picture of it running (no pages below it)
   { text: t.overview, link: p },
+  // Install (kit 2.32): the second section on every project's docs, one page like Overview: what you need, how to
+  // install, check, update and get other versions.
+  { text: t.install, link: `${p}install` },
   {
     text: t.guide,
     items: [

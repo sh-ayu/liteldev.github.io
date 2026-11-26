@@ -28,37 +28,27 @@ const zh: typeof en = {
     languages: "开发语言",
   },
 
-  // "我想…"：首页顶部给玩家、服主和开发者的选项卡
+  // "我想…"：首页顶部给玩家、服主和开发者的三栏
   roles: {
     label: "我想…",
     play: "玩游戏",
     host: "开服",
     develop: "开发",
-    playDesc:
-      "LeviLauncher 在 Windows 和 Android 上启动 Minecraft 基岩版：多个游戏版本互不干扰，管理存档和资源包，加载模组游玩。",
-    downloadFor: (platform: string) => `下载 ${platform} 版`,
-    otherVersion: (platform: string) => `${platform} 版`,
-    reqWindows: "Windows 10 或 11 · 来自 Microsoft Store 的 Minecraft",
-    reqAndroid: "Android 9 及以上（ARM64）· 来自 Google Play 的 Minecraft 1.21.80 及以上",
-    noVersionHere: "LeviLauncher 支持 Windows 和 Android。",
-    allDownloads: "全部下载",
+    playDesc: "用 LeviLauncher 玩带模组的 Minecraft 基岩版，多个游戏版本互不干扰。",
+    playPlatforms: "Windows · Android · macOS（测试版）",
+    installLauncher: "安装 LeviLauncher",
+    playTutorial: "教程：玩模组",
     browseMods: "浏览模组",
-    hostDesc:
-      "在 Windows、Linux 或 macOS 上用 LeviLamina 运行基岩版专用服务器。lip 的界面带你一步步开服、装模组和插件、启动服务器。",
-    lipDocs: "lip 文档",
+    hostDesc: "带 LeviLamina、模组和插件的基岩版专用服务器，由 lip 安装和运行。",
+    hostPlatforms: "Windows · Linux · macOS",
+    installLip: "安装 lip",
+    hostTutorial: "教程：开你的第一个服务器",
     latest: "LeviLamina 最新版",
-    developDesc:
-      "用 C++ 基于 LeviLamina 编写原生模组，用 JavaScript、Lua 或 Python 基于 LegacyScriptEngine 编写插件，或用 LeviLauncher 的 Preloader API 编写 Android 原生模组。",
+    developDesc: "用 C++ 基于 LeviLamina 写原生模组，或用 JavaScript、Lua、Python 基于 LegacyScriptEngine 写插件。",
     firstMod: "编写第一个模组",
     scripting: "脚本插件",
     apiReference: "API 参考",
     androidMods: "Android 模组",
-    copied: "已复制！",
-    copyInstall: "复制安装命令",
-    platformLabel: "安装 lip 到",
-    downloadLip: "下载 lip",
-    msiNext: "发布页列出各架构的安装程序（.msi）。运行它，然后在新的 PowerShell 窗口里打开 lip。",
-    scriptNote: "脚本把 lip 安装到 ~/.local/bin，不需要管理员权限。装好后打开一个新终端。",
     launcherFeatures: [
       { title: "版本隔离", desc: "多个游戏版本，数据各自独立。" },
       { title: "模组", desc: "加载 LeviMC Mods 上的或你自己的模组。" },

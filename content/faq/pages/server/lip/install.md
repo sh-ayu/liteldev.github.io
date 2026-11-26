@@ -105,7 +105,7 @@ Run `curl -fsSL https://levimc.org/lip/install.sh | sh` in a terminal. The scrip
 
 :::
 
-Step by step, with the archive for installing by hand on macOS and Linux: [Your first server](https://levimc.org/tutorials/server/first-server/#_1-install-lip). lip is a single executable and needs no separate .NET, git or Wine. The official documentation no longer offers a winget install (the old `futrime.lip` winget package is no longer available); update lip with `lip self-update` (`lip self-update --check` only checks). After installing, open a terminal in the server folder and type `lip` to use the interface, or use commands such as `lip install LeviLamina`.
+Every way to install it, with the archive for installing by hand: [Install lip](https://levimc.org/lip/install.html). lip is a single executable and needs no separate .NET, git or Wine. The official documentation no longer offers a winget install (the old `futrime.lip` winget package is no longer available); update lip with `lip self-update` (`lip self-update --check` only checks). After installing, open a terminal in the server folder and type `lip` to use the interface, or use commands such as `lip install LeviLamina`.
 
 *Applies to: current lip (v0.41.x)*
 

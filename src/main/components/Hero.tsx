@@ -1,9 +1,9 @@
 import { PaintedHero } from '../../kit/components';
 import { useI18n } from '../i18n';
-import { RoleShowcase, RoleTabs, useRole } from './Roles';
+import { RoleList, RoleShowcase, useRole } from './Roles';
 import LeviChanPeek from '../levichan/LeviChanPeek';
 
-/** The home hero: what LeviMC is, then "I want to…" tabs for players, server owners and developers. */
+/** The home hero: what LeviMC is, then the "I want to…" list for players, server owners and developers. */
 export default function Hero() {
   const { t } = useI18n();
   const [role, setRole] = useRole();
@@ -25,7 +25,7 @@ export default function Hero() {
         </div>
       }
     >
-      <RoleTabs role={role} onChange={setRole} />
+      <RoleList role={role} onChange={setRole} />
     </PaintedHero>
   );
 }

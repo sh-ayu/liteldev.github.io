@@ -21,35 +21,7 @@ lip 为前五种系统发布。没有 arm64 Linux 版的 lip：见[限制和已�
 
 ## 安装 lip
 
-在 macOS 和 x64 的 Linux 上，用安装脚本安装 lip，在终端中运行：
-
-```sh
-curl -fsSL https://levimc.org/lip/install.sh | sh
-```
-
-这个脚本会：
-
-1. 选出适合你的系统的 lip 版本：Apple 芯片的 Mac 用 `osx-arm64`，Intel 的 Mac 用 `osx-x64`，x64 的 Linux 用 `linux-x64`。在其他系统上它会停止；
-2. 从 GitHub 下载最新发行版中的这个版本，并用发行版的 `SHA256SUMS` 检查它。校验不一致的文件不会被安装；
-3. 把 `lip` 放进 `~/.local/bin`，替换那里已有的 lip；
-4. 如果这个文件夹不在 `PATH` 里，询问是否把它加进你的 shell 的配置文件；配置文件已经加过的，就不再加。
-
-它不需要 root，也不需要管理员密码，除了这个文件夹和配置文件，不会改动任何东西。装好后打开一个新终端，确认 `lip -v` 能输出版本号。以后用 `lip self-update` 更新 lip。
-
-下面这些变量可以改变脚本的行为。把它们设置给 `|` 后面的 `sh`：
-
-```sh
-curl -fsSL https://levimc.org/lip/install.sh | LIP_VERSION=0.42.0 sh
-```
-
-| 变量 | 脚本怎样使用它 |
-| --- | --- |
-| `LIP_VERSION` | 安装这个版本（例如 `0.42.0`），而不是最新版。 |
-| `LIP_INSTALL_DIR` | 把 lip 安装到这个文件夹（绝对路径），而不是 `~/.local/bin`。 |
-| `LIP_GITHUB_PROXY` | 通过这个 GitHub 代理从 GitHub 下载，与 lip 的设置 [`github_proxy`](configuration.md#github-proxy) 相同：代理的地址，然后是 `/`，然后是 GitHub 上的地址。 |
-| `LIP_NO_MODIFY_PATH` | 为 `1` 时，从不修改 shell 的配置文件，而是输出需要加进去的那一行。 |
-
-如果想手动安装，从[最新发行版](https://github.com/LiteLDev/lip/releases/latest)下载你的系统对应的压缩包（`lip-<version>-osx-arm64.zip`、`lip-<version>-osx-x64.zip` 或 `lip-<version>-linux-x64.tar.xz`），把其中的 `lip` 文件解压到 `PATH` 里的某个文件夹。在 macOS 上，还要去掉浏览器给它加上的隔离标记，否则 macOS 会拒绝运行它：`xattr -d com.apple.quarantine <文件夹>/lip`。用脚本安装不需要这一步，因为 `curl` 不会加这个标记。[开你的第一个服务器](https://levimc.org/zh-Hans/tutorials/server/first-server/#_1-安装-lip)一步步讲解了这两种方式。
+在 macOS 和 x64 的 Linux 上，用安装脚本安装 lip：`curl -fsSL https://levimc.org/lip/install.sh | sh`。[安装](../install.md)页说明了脚本做了什么、能改变它的变量，以及怎样用压缩包手动安装。
 
 ## 通过 Wine 运行 Windows 服务器
 

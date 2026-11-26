@@ -34,7 +34,7 @@ Yes, on Windows. `LeviLauncher.exe` without arguments opens the window; with a c
 
 ## What does the Android version need?
 
-Android 9.0 or later on an ARM64 device, and Minecraft Bedrock Edition 1.21.80 or later installed from Google Play. See [Download](https://levimc.org/LeviLauncher/download?platform=android).
+Android 9.0 or later on an ARM64 device, and Minecraft Bedrock Edition 1.21.80 or later installed from Google Play. See [Install LeviLauncher](https://levimc.org/LeviLauncher/install?platform=android).
 
 ## Can I run several Minecraft versions on Android?
 

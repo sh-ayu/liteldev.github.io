@@ -2,7 +2,7 @@
 
 Minecraft Bedrock-Launcher für Windows und Android: Minecraft Bedrock Edition auf deinem Windows-PC oder Android-Gerät installieren, verwalten, isolieren, modden und starten.
 
-**Download:** [LeviLauncher für Windows](https://github.com/LiteLDev/LeviLauncher/releases/latest) · [LeviLauncher für Android](https://github.com/LiteLDev/LeviLauncher-Android/releases/latest) · die Seite [Downloads](./download) nennt, was jede Version braucht, und die weiteren Downloadquellen.
+**Installieren:** Die Seite [Installation](./install) nennt, was jede Version braucht, wo du sie bekommst, wie du sie aktualisierst und wie du eine Beta ausprobierst.
 
 ::: info Windows und Android
 LeviLauncher gibt es als **Windows-Version** für Minecraft Bedrock Edition (GDK / UWP) und als **Android-Version** für das offizielle Minecraft aus Google Play. Für beide brauchst du eine rechtmäßig lizenzierte Kopie des Spiels. Eine iOS-Version gibt es nicht, und sie ist auch nicht geplant.
@@ -38,16 +38,11 @@ Zum Installieren eines GDK-Builds musst du mit einem Microsoft-Konto angemeldet 
 
 Diese Dokumentation richtet sich an **Endnutzer**, nicht an Entwickler oder Mitwirkende.
 
-- **Anleitungen**: eine Aufgabe pro Seite. Hol dir die App auf der Seite [Downloads](./download), dann [verwalte Versionen](./guide/version-management), [Downloads und Spiegel](./guide/downloads-mirrors), [Inhalte](./guide/content-management), [Konten und Schnellstart](./guide/accounts-quick-launch) (Android), [Mods](./guide/mods-integrations), [Welten](./guide/world-tools) und [Einstellungen](./guide/settings-personalization). Die Gruppe „Hilfe“ behandelt [Updates und Fehlerbehebung](./guide/update-troubleshooting) sowie [Community und Feedback](./guide/faq-community-feedback).
+- **Anleitungen**: eine Aufgabe pro Seite. Hol dir die App auf der Seite [Installation](./install), dann [verwalte Versionen](./guide/version-management), [Downloads und Spiegel](./guide/downloads-mirrors), [Inhalte](./guide/content-management), [Konten und Schnellstart](./guide/accounts-quick-launch) (Android), [Mods](./guide/mods-integrations), [Welten](./guide/world-tools) und [Einstellungen](./guide/settings-personalization). Die Gruppe „Hilfe“ behandelt [Updates und Fehlerbehebung](./guide/update-troubleshooting) sowie [Community und Feedback](./guide/faq-community-feedback).
 - **Konzepte**: wie LeviLauncher funktioniert: [Instanzen und Spielversionen](./concepts/instances) (Release und Preview, GDK und UWP, Windows und Android), [Instanz-Isolierung](./concepts/isolation) und [wie Mods geladen werden](./concepts/mod-loading).
 - **Referenz**: die [Befehlszeile](./reference/command-line), [alle Einstellungen](./reference/settings), die [Ordner und Dateien](./reference/files), die LeviLauncher verwendet, die [Schnellstart-URIs](./reference/quick-launch-uri) für Android und die [Datenschutzerklärung](./privacy-policy) der Android-Version.
 
 Empfohlene Lese-Reihenfolge: das Tutorial [Play with mods on Windows](https://levimc.org/tutorials/play/play-with-mods/), dann [Versionsverwaltung](./guide/version-management) und [Inhaltsverwaltung](./guide/content-management).
-
-## Downloadquellen
-
-- **GitHub Releases (offizieller LeviLauncher-Download):** [LiteLDev/LeviLauncher Releases](https://github.com/LiteLDev/LeviLauncher/releases)
-- **Android-Version:** [LiteLDev/LeviLauncher-Android Releases](https://github.com/LiteLDev/LeviLauncher-Android/releases)
 
 ## Community & Feedback
 

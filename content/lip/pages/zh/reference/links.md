@@ -47,7 +47,7 @@ LeviLauncher 读取同样形式的 `levilauncher://` 链接；对于在客户端
 
 ## 在 Windows 上注册
 
-`lip` 的 Windows Installer 包（`.msi`，见[安装 lip](../index.md#安装-lip)）在安装 `lip` 时注册 `lip` 协议，按它安装 `lip` 本身的方式，为你自己或为所有用户注册。它在 `HKEY_CURRENT_USER` 或 `HKEY_LOCAL_MACHINE` 的 `Software\Classes\lip` 下写入这些键：
+`lip` 的 Windows Installer 包（`.msi`，见[安装 lip](../install.md)）在安装 `lip` 时注册 `lip` 协议，按它安装 `lip` 本身的方式，为你自己或为所有用户注册。它在 `HKEY_CURRENT_USER` 或 `HKEY_LOCAL_MACHINE` 的 `Software\Classes\lip` 下写入这些键：
 
 | 键 | 值 | 数据 |
 | --- | --- | --- |
@@ -62,7 +62,7 @@ LeviLauncher 读取同样形式的 `levilauncher://` 链接；对于在客户端
 
 ## 什么都没有发生时
 
-浏览器对**用 lip 安装**按钮没有反应时，说明 `lip` 没有安装、不是用 `.msi` 安装的，或者是不认识链接的旧版本。用 `.msi` [安装 lip](../index.md#安装-lip)，或者复制模组页面显示的 `lip install` 命令，在服务器文件夹中运行。
+浏览器对**用 lip 安装**按钮没有反应时，说明 `lip` 没有安装、不是用 `.msi` 安装的，或者是不认识链接的旧版本。用 `.msi` [安装 lip](../install.md)，或者复制模组页面显示的 `lip install` 命令，在服务器文件夹中运行。
 
 ## 另请参阅
 

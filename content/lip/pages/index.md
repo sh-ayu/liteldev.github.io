@@ -62,28 +62,7 @@ There is no release for Linux on ARM64, where a LeviLamina server does not run. 
 
 ## Install lip
 
-Pick your system. The page has picked the one you are browsing from.
-
-
-::: tabs
-
-== Windows
-
-Download `lip-<version>-win-x64.msi`, or `lip-<version>-win-arm64.msi` on a PC with an ARM processor, from the [latest release](https://github.com/LiteLDev/lip/releases/latest) and run it. It installs `lip` for you in `%LOCALAPPDATA%\Programs\lip` and adds that folder to your `PATH`, without an administrator. Where `lip` is already installed for every user, as earlier versions installed it in `C:\Program Files\lip`, it updates that installation instead, which needs an administrator. Then open a new terminal and check that `lip -v` prints a version.
-
-== macOS / Linux
-
-In a terminal, run:
-
-```shell
-curl -fsSL https://levimc.org/lip/install.sh | sh
-```
-
-The script installs the `lip` for your system in `~/.local/bin`, without an administrator password or root, and offers to add that folder to the `PATH`. Then open a new terminal and check that `lip -v` prints a version. On a Mac with Apple silicon, `lip` asks to install Rosetta 2 when it first needs it: see [Linux and macOS](guides/linux_macos.md#macos-on-apple-silicon).
-
-:::
-
-[Your first server](https://levimc.org/tutorials/server/first-server/#_1-install-lip) goes through it step by step, with the archive for those who install by hand. [Linux and macOS](guides/linux_macos.md#install-lip) says what the script does and how to change it.
+The [Install](install.md) page has the installer for Windows, the install script for macOS and Linux, and how to update `lip`.
 
 ## The rest of this site
 

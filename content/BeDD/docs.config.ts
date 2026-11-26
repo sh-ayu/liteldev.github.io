@@ -9,6 +9,7 @@ const repo = 'https://github.com/LiteLDev/BeDD';
 
 interface Labels {
   overview: string;
+  install: string;
   guides: string;
   concepts: string;
   reference: string;
@@ -31,6 +32,7 @@ interface Labels {
 const LABELS: Record<string, Labels> = {
   root: {
     overview: 'Overview',
+    install: 'Install',
     guides: 'Guides',
     concepts: 'Concepts',
     reference: 'Reference',
@@ -51,6 +53,7 @@ const LABELS: Record<string, Labels> = {
   },
   zh: {
     overview: '概览',
+    install: '安装',
     guides: '指南',
     concepts: '概念',
     reference: '参考',
@@ -72,13 +75,16 @@ const LABELS: Record<string, Labels> = {
 };
 
 // The LeviMC navigation model (src/kit/README.md "Navigation model"): every top-level entry is a section with the sidebar
-// tree of its pages, the same four on every LeviMC docs site, in this order: Overview (the home page alone: what
-// Be.D.D. is, with the recordings of it running), Guides (one task each; Help last), Concepts (the ideas behind it)
+// tree of its pages, the same five on every LeviMC docs site, in this order: Overview (the home page alone: what
+// Be.D.D. is, with the recordings of it running), Install (one page: the installer, updates, other versions), Guides (one task each; Help last), Concepts (the ideas behind it)
 // and Reference (the whole interface: command line, configuration, WebSocket, UI tree, tap). The pages keep the URLs
 // they had: the concepts are still under guide/ and reference/. `p` is the locale's URL prefix ('/' or '/zh-Hans/');
 // zh-Hant is converted from zh by the kit.
 const nav = (p: string, t: Labels): NavEntry[] => [
   { text: t.overview, link: p },
+  // Install (kit 2.32): the second section on every project's docs, one page like Overview: what you need, how to
+  // install, check, update and get other versions.
+  { text: t.install, link: `${p}install` },
   {
     text: t.guides,
     items: [
@@ -164,6 +170,4 @@ export default defineDocsConfig({
   sidebar: 'tabs',
   redirects,
   nav: { root: nav('/', LABELS.root!), zh: nav('/zh-Hans/', LABELS.zh!) },
-  // the resources slot: Download (the latest release), then the repository's GitHub icon (`repo`)
-  header: { links: [{ kind: 'download', link: `${repo}/releases/latest` }] },
 });

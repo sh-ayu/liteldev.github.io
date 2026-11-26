@@ -36,7 +36,7 @@
 
 ### Что нужно версии для Android?
 
-Android 9.0 или новее на устройстве ARM64 и Minecraft Bedrock Edition 1.21.80 или новее, установленная из Google Play. См. [Загрузки](../download?platform=android).
+Android 9.0 или новее на устройстве ARM64 и Minecraft Bedrock Edition 1.21.80 или новее, установленная из Google Play. См. [Установка](../install?platform=android).
 
 ### Можно ли запускать несколько версий Minecraft на Android?
 
@@ -47,12 +47,6 @@ Android 9.0 или новее на устройстве ARM64 и Minecraft Bedro
 - **Официальный Discord:** [discord.gg/v5R5P4vRZk](https://discord.gg/v5R5P4vRZk)
 - **Личный Discord:** [discord.gg/VqQaC8vWz8](https://discord.gg/VqQaC8vWz8)
 - **Группа QQ:** [458083875](https://qm.qq.com/q/1z791rJgJG)
-
-## Ссылки для загрузки
-
-- **Релизы GitHub (загрузки LeviLauncher):** [LiteLDev/LeviLauncher Releases](https://github.com/LiteLDev/LeviLauncher/releases)
-
-- **Версия для Android (APK):** [LiteLDev/LeviLauncher-Android Releases](https://github.com/LiteLDev/LeviLauncher-Android/releases/latest)
 
 ## Сообщение об ошибках и запросы функций
 

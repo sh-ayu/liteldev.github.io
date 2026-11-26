@@ -10,7 +10,7 @@ LegacyScriptEngine（LSE）是一个 [LeviLamina](https://levimc.org/zh-Hans/Lev
 
 LSE 可运行在基岩版专用服务器和 Windows 上的 Minecraft 客户端中。与其他 LeviLamina 模组一样，服务器上用
 [lip](https://levimc.org/zh-Hans/lip/) 安装，客户端上用 [LeviLauncher](https://levimc.org/zh-Hans/LeviLauncher/) 安装：见
-[给服务器安装模组](https://levimc.org/zh-Hans/tutorials/server/install-mods/)。
+[安装](install.md)。
 
 LSE 提供：
 
@@ -64,13 +64,7 @@ mc.listen("onJoin", (player) => {
 | `#nodejs` | JavaScript | Node.js，支持 npm 包 |
 | `#python` | Python | CPython，支持 pip 包 |
 
-Python 引擎需要在运行它的机器上安装 Python：
-
-| LSE 版本 | Python 版本 |
-|---|---|
-| >=0.16.2 | 3.12.10 |
-| >=0.9.0 <0.16.2 | 3.12.8 |
-| <0.9.0 | 3.10.11 |
+怎样安装某个变体，以及 Python 引擎需要哪个 Python，见[安装](install.md)。
 
 在客户端上，0.23.1 及更早的版本把变体命名为 `#client_lua`、`#client_quickjs`、`#client_nodejs` 和 `#client_python`；
 LeviLauncher 会为你选用正确的版本。

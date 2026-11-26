@@ -105,7 +105,7 @@ lip 的仓库现为 <https://github.com/LiteLDev/lip>（原 `futrime/lip`），�
 
 :::
 
-分步说明（含 macOS 和 Linux 上手动安装用的压缩包）见[开你的第一个服务器](https://levimc.org/zh-Hans/tutorials/server/first-server/#_1-安装-lip)。lip 是单个可执行文件，无需另装 .NET、git 或 Wine。官方文档已不再提供 winget 安装方式（旧的 `futrime.lip` winget 包已不可用）；更新 lip 用 `lip self-update`（`lip self-update --check` 只检查）。安装后在服务器文件夹打开终端输入 `lip` 即可使用界面，或用 `lip install LeviLamina` 等命令。
+所有安装方式（含手动安装用的压缩包）见[安装 lip](https://levimc.org/zh-Hans/lip/install.html)。lip 是单个可执行文件，无需另装 .NET、git 或 Wine。官方文档已不再提供 winget 安装方式（旧的 `futrime.lip` winget 包已不可用）；更新 lip 用 `lip self-update`（`lip self-update --check` 只检查）。安装后在服务器文件夹打开终端输入 `lip` 即可使用界面，或用 `lip install LeviLamina` 等命令。
 
 *适用版本：当前 lip（v0.41.x）*
 

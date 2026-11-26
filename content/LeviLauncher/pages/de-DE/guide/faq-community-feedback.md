@@ -36,7 +36,7 @@ Ja, unter Windows. `LeviLauncher.exe` ohne Argumente öffnet das Fenster; mit ei
 
 ### Was braucht die Android-Version?
 
-Android 9.0 oder neuer auf einem ARM64-Gerät und Minecraft Bedrock Edition 1.21.80 oder neuer aus Google Play. Siehe [Downloads](../download?platform=android).
+Android 9.0 oder neuer auf einem ARM64-Gerät und Minecraft Bedrock Edition 1.21.80 oder neuer aus Google Play. Siehe [Installation](../install?platform=android).
 
 ### Kann ich unter Android mehrere Minecraft-Versionen nutzen?
 
@@ -47,12 +47,6 @@ Ja. Importiere offizielle Minecraft-APKs, um andere Versionen im Launcher zu sta
 - **Offizieller Discord:** [discord.gg/v5R5P4vRZk](https://discord.gg/v5R5P4vRZk)  
 - **Persönlicher Discord-Kanal:** [discord.gg/VqQaC8vWz8](https://discord.gg/VqQaC8vWz8)  
 - **QQ-Gruppe (chinesisch):** [458083875](https://qm.qq.com/q/1z791rJgJG)  
-
-## Download-Quellen
-
-- **GitHub Releases (offizieller Download):** [LiteLDev/LeviLauncher Releases](https://github.com/LiteLDev/LeviLauncher/releases)  
-
-- **Android-Version (APK):** [LiteLDev/LeviLauncher-Android Releases](https://github.com/LiteLDev/LeviLauncher-Android/releases/latest)
 
 ## So gibst du Probleme oder Feature-Ideen weiter
 

@@ -16,6 +16,8 @@ Android 上的模组是为 Android 制作的原生模组。LeviLamina 和为 Win
 2. 打开下载的文件。如果 Android 提示浏览器不允许安装应用，点击**设置**，打开**允许来自此来源的应用**（浏览器的“安装未知应用”设置），返回后点击**安装**。
 3. 打开 LeviLauncher。你应该先看到“正在打开启动器…”，然后是它的用户协议。
 
+历史版本和更新方式：见[安装 LeviLauncher](https://levimc.org/zh-Hans/LeviLauncher/install?platform=android)。
+
 ## 2. 完成首次启动
 
 1. 阅读 **LeviLauncher 用户协议**，点击**接受**。

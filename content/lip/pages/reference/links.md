@@ -47,7 +47,7 @@ A link only opens the interface. It installs nothing until you confirm, and it d
 
 ## Registration on Windows
 
-The Windows Installer package of `lip` (the `.msi`, see [Install lip](../index.md#install-lip)) registers the scheme `lip` when it installs `lip`, for you or for every user, as it installed `lip` itself. It writes these keys below `Software\Classes\lip` of `HKEY_CURRENT_USER` or `HKEY_LOCAL_MACHINE`:
+The Windows Installer package of `lip` (the `.msi`, see [Install lip](../install.md)) registers the scheme `lip` when it installs `lip`, for you or for every user, as it installed `lip` itself. It writes these keys below `Software\Classes\lip` of `HKEY_CURRENT_USER` or `HKEY_LOCAL_MACHINE`:
 
 | Key | Value | Data |
 | --- | --- | --- |
@@ -62,7 +62,7 @@ The Windows Installer package of `lip` (the `.msi`, see [Install lip](../index.m
 
 ## When nothing happens
 
-When a browser does nothing for an **Install with lip** button, `lip` is not installed, or was installed without the `.msi`, or is an older version that does not know links. [Install lip](../index.md#install-lip) with the `.msi`, or copy the `lip install` line that the mod's page shows and run it in your server's folder.
+When a browser does nothing for an **Install with lip** button, `lip` is not installed, or was installed without the `.msi`, or is an older version that does not know links. [Install lip](../install.md) with the `.msi`, or copy the `lip install` line that the mod's page shows and run it in your server's folder.
 
 ## See also
 

@@ -1,7 +1,7 @@
 # Be.D.D.
 
 在后台跑的 Minecraft 测试：脚本玩 Minecraft 基岩版，你的鼠标、键盘和窗口照常归你用。
-[下载](https://github.com/LiteLDev/BeDD/releases/latest)，或者[从这里开始](https://levimc.org/zh-Hans/tutorials/automate/bedd/)。
+[安装](/zh/install)它，或者[从这里开始](https://levimc.org/zh-Hans/tutorials/automate/bedd/)。
 
 ![管理窗口里的三个无头 Minecraft 游戏跟着测试脚本动](/showcase/desktop.webp)
 
@@ -68,8 +68,7 @@ bot.once('spawn', () => bot.setControlState('forward', true));
 ## 给谁用
 
 LeviLamina 客户端模组的作者，以及任何要对真实 Minecraft 基岩版客户端做测试的人：CI 任务、回归测试、需要真实客户端而不是
-协议模拟的机器人。只有测试机需要它。它不是 lip 包，不在 LeviMC 模组上架：从
-[Releases](https://github.com/LiteLDev/BeDD/releases) 获取。
+协议模拟的机器人。只有测试机需要它。它不是 lip 包，不在 LeviMC 模组上架：见[安装](/zh/install)。
 
 第一次用？教程[用 Be.D.D. 驱动游戏客户端](https://levimc.org/zh-Hans/tutorials/automate/bedd/)带你安装、准备电脑、
 跑第一个脚本。
@@ -85,11 +84,7 @@ LeviLamina 客户端模组的作者，以及任何要对真实 Minecraft 基岩�
 
 ## 系统要求
 
-- Windows 10 或 11，x64。
-- [LeviLauncher](https://levimc.org/zh-Hans/LeviLauncher/) **1.1+**，装有 Minecraft 基岩版 **1.26.60**（GDK 正式版）实例，
-  实例里有 LeviLamina **26.60.x**（[安装与克隆](/zh/guide/installs#用哪个实例)）。
-
-不需要 PowerShell、lip 或 .NET 运行时。
+x64 的 Windows 10 或 11，以及装有带 LeviLamina 的 Minecraft 基岩版 1.26.60 实例的 LeviLauncher。详细要求和安装程序见[安装](/zh/install)。
 
 ## 在生态里的位置
 

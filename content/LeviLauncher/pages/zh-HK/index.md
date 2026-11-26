@@ -2,7 +2,7 @@
 
 面向 Windows 與 Android 的 Minecraft Bedrock 啟動器：在 Windows 電腦或 Android 裝置上完成 Minecraft Bedrock 的安裝、管理、隔離、模組配置與啟動。
 
-**下載：** [LeviLauncher Windows 版](https://github.com/LiteLDev/LeviLauncher/releases/latest) · [LeviLauncher Android 版](https://github.com/LiteLDev/LeviLauncher-Android/releases/latest) · [下載](./download)頁面列出兩個版本各自的要求和其他下載渠道。
+**安裝：** [安裝](./install)頁面說明了每個版本需要什麼、從哪裡取得、怎樣更新，以及怎樣試用測試版。
 
 ::: info Windows 版與 Android 版
 LeviLauncher 提供面向 Minecraft Bedrock Edition (GDK / UWP) 的 **Windows 版**，以及面向 Google Play 官方 Minecraft 的 **Android 版**，兩者都需要您擁有**正版授權**。我們沒有開發 iOS 版的計劃。
@@ -38,16 +38,11 @@ LeviLauncher.exe play
 
 這套文檔面向**最終用戶**，而非維護者或開發者。
 
-- **指南**：每頁一項任務。在[下載](./download)頁面取得應用程式，然後[管理版本](./guide/version-management)、[下載與鏡像](./guide/downloads-mirrors)、[內容](./guide/content-management)、[帳號與快速啟動](./guide/accounts-quick-launch)（Android）、[模組](./guide/mods-integrations)、[世界](./guide/world-tools)和[設定](./guide/settings-personalization)。「協助」分組包括[更新與故障排查](./guide/update-troubleshooting)和[社群與回饋](./guide/faq-community-feedback)。
+- **指南**：每頁一項任務。在[安裝](./install)頁面取得應用程式，然後[管理版本](./guide/version-management)、[下載與鏡像](./guide/downloads-mirrors)、[內容](./guide/content-management)、[帳號與快速啟動](./guide/accounts-quick-launch)（Android）、[模組](./guide/mods-integrations)、[世界](./guide/world-tools)和[設定](./guide/settings-personalization)。「協助」分組包括[更新與故障排查](./guide/update-troubleshooting)和[社群與回饋](./guide/faq-community-feedback)。
 - **概念**：LeviLauncher 的運作方式：[實例與遊戲版本](./concepts/instances)（正式版與預覽版、GDK 與 UWP、Windows 與 Android）、[實例隔離](./concepts/isolation)和[模組如何載入](./concepts/mod-loading)。
 - **參考**：[命令列](./reference/command-line)、[全部設定](./reference/settings)、LeviLauncher 使用的[資料夾與檔案](./reference/files)、Android 的[快速啟動 URI](./reference/quick-launch-uri)以及 Android 版的[私隱政策](./privacy-policy)。
 
 建議閱讀順序：先看教學[在 Windows 上玩模組](https://levimc.org/zh-Hant/tutorials/play/play-with-mods/)，再看[版本管理](./guide/version-management)和[內容管理](./guide/content-management)。
-
-## 下載渠道
-
-- **GitHub Releases（LeviLauncher 下載）：** [LiteLDev/LeviLauncher Releases](https://github.com/LiteLDev/LeviLauncher/releases)
-- **Android 版：** [LiteLDev/LeviLauncher-Android Releases](https://github.com/LiteLDev/LeviLauncher-Android/releases)
 
 ## 社群與回饋
 

@@ -28,37 +28,27 @@ const en = {
     languages: "Languages",
   },
 
-  // "I want to…": the hero's tabs for players, server owners and developers
+  // "I want to…": the hero's list for players, server owners and developers
   roles: {
     label: "I want to…",
     play: "Play",
     host: "Run a server",
     develop: "Develop",
-    playDesc:
-      "LeviLauncher launches Minecraft Bedrock Edition on Windows and Android: keep several game versions side by side, manage worlds and packs, and play with mods.",
-    downloadFor: (platform: string) => `Download for ${platform}`,
-    otherVersion: (platform: string) => `${platform} version`,
-    reqWindows: "Windows 10 or 11 · Minecraft from the Microsoft Store",
-    reqAndroid: "Android 9 or later (ARM64) · Minecraft 1.21.80 or later from Google Play",
-    noVersionHere: "LeviLauncher runs on Windows and Android.",
-    allDownloads: "All downloads",
+    playDesc: "Minecraft Bedrock Edition with mods, and several game versions side by side, in LeviLauncher.",
+    playPlatforms: "Windows · Android · macOS (beta)",
+    installLauncher: "Install LeviLauncher",
+    playTutorial: "Tutorial: play with mods",
     browseMods: "Browse mods",
-    hostDesc:
-      "Run Bedrock Dedicated Server with LeviLamina on Windows, Linux or macOS. lip's interface walks you through setting up the server, adding mods and plugins, and starting it.",
-    lipDocs: "lip documentation",
+    hostDesc: "A Bedrock Dedicated Server with LeviLamina, mods and plugins. lip sets it up and runs it.",
+    hostPlatforms: "Windows · Linux · macOS",
+    installLip: "Install lip",
+    hostTutorial: "Tutorial: your first server",
     latest: "Latest LeviLamina",
-    developDesc:
-      "Write native mods in C++ with LeviLamina, plugins in JavaScript, Lua or Python with LegacyScriptEngine, or native Android mods with LeviLauncher's Preloader API.",
+    developDesc: "Native mods in C++ with LeviLamina, or plugins in JavaScript, Lua and Python with LegacyScriptEngine.",
     firstMod: "Create your first mod",
     scripting: "Script plugins",
     apiReference: "API reference",
     androidMods: "Android mods",
-    copied: "Copied!",
-    copyInstall: "Copy the install command",
-    platformLabel: "Install lip on",
-    downloadLip: "Download lip",
-    msiNext: "The release page lists the installer of each architecture (.msi). Run it, then open lip in a new PowerShell window.",
-    scriptNote: "The script installs lip in ~/.local/bin, without administrator rights. Open a new terminal after it.",
     launcherFeatures: [
       { title: "Version isolation", desc: "Several game versions, each with its own data." },
       { title: "Mods", desc: "Load mods, from LeviMC Mods or your own." },

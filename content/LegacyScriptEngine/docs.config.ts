@@ -39,14 +39,17 @@ export default defineDocsConfig({
   outline: [2, 6],
   sidebar: 'tabs',
   // The LeviMC navigation model (src/kit/README.md "Navigation model"): every top-level entry is a section with its
-  // sidebar tree, the same four on every project's docs, in this order: Overview (the home page: what LSE is, the
-  // engines and a minimal plugin; a link with no tree), Guides (one task each, step by step), Concepts (how plugins,
+  // sidebar tree, the same five on every project's docs, in this order: Overview (the home page: what LSE is, the
+  // engines and a minimal plugin; a link with no tree), Install (one page: the variants, lip and LeviLauncher), Guides (one task each, step by step), Concepts (how plugins,
   // engines and the API work) and Reference (the API). Tutorials (installing LSE, your first plugin) live at
   // https://levimc.org/tutorials/, the questions at https://levimc.org/faq/. The pages keep their URLs: Language
   // Support explains the engines and is in Concepts, but stays at apis/LanguageSupport/. The Reference section has
   // more than 24 links, so only the group holding the current page starts open.
   nav: [
     { Overview: 'index.md' },
+    // Install (kit 2.32): the second section on every project's docs, one page like Overview: what you need, how to
+    // install, check, update and get other versions.
+    { Install: 'install.md' },
     {
       Guides: [
         'guides/events.md',
@@ -142,6 +145,6 @@ export default defineDocsConfig({
   },
   // Section titles; the pages are titled by their H1 in each locale.
   navTranslations: {
-    zh: { Overview: '概览', Guides: '指南', Concepts: '概念', Reference: '参考' },
+    zh: { Overview: '概览', Install: '安装', Guides: '指南', Concepts: '概念', Reference: '参考' },
   },
 });

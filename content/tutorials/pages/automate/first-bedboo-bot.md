@@ -31,9 +31,7 @@ pnpm install
 
 `corepack enable` provides pnpm in the version the repository asks for. You should see pnpm finish with the list of installed packages and no error.
 
-::: details `corepack` is not found, or not allowed
-Node.js 25 and newer no longer include corepack: install it with `npm install -g corepack`, then run `corepack enable` again. On Windows, if Node.js is installed in `C:\Program Files`, run `corepack enable` once in a terminal opened as administrator.
-:::
+If `corepack` is not found or not allowed, see [Install bedboo](https://levimc.org/bedboo/install).
 
 ## 2. Make a package for your bot
 
