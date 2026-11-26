@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { LINKS, PixelIcon, PROJECTS, localizeNetworkUrl, type PixelIconName } from '../../kit/components';
-import { useLeviLaminaStats } from '../hooks/useExternalData';
 import { useI18n, type Locale } from '../i18n';
 import CodeCard from './CodeCard';
 
@@ -56,7 +55,6 @@ const HOVER_INTENT_MS = 120;
 export function RoleList({ role, onChange }: { role: Role; onChange: (role: Role) => void }) {
   const { t, locale, href } = useI18n();
   const r = t.roles;
-  const { version } = useLeviLaminaStats();
   const timer = useRef<number | undefined>(undefined);
   const settle = useCallback(
     (next: Role | undefined) => {
@@ -132,15 +130,6 @@ export function RoleList({ role, onChange }: { role: Role; onChange: (role: Role
                       {l.label}
                     </a>
                   ))}
-                  {id === 'host' ? (
-                    <a href="https://github.com/LiteLDev/LeviLamina/releases/latest" target="_blank" rel="noopener" className="lm-release">
-                      <span className="lm-release-dot" aria-hidden="true" />
-                      <span>
-                        {r.latest}{' '}
-                        {version ? <span className="lm-release-version">{version}</span> : <span className="lm-skeleton lm-skeleton-sm lm-release-skeleton" />}
-                      </span>
-                    </a>
-                  ) : null}
                 </p>
               </div>
             </li>

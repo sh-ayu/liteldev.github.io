@@ -141,21 +141,6 @@
     margin-bottom: 0.25rem;
   }
 
-  /* loading placeholders for live GitHub / Discord data */
-  .lm-skeleton {
-    display: inline-block;
-    vertical-align: middle;
-    background: color-mix(in srgb, var(--color-ink) 11%, transparent);
-  }
-  .lm-skeleton-xs {
-    width: 1.75rem;
-    height: 0.75rem;
-  }
-  .lm-skeleton-sm {
-    width: 3rem;
-    height: 0.875rem;
-  }
-
   /* ================================================================== hero */
   .lm-hero .kit-hero-copy {
     display: flex;
@@ -189,36 +174,6 @@
   .dark .lm-hero-lang {
     color: var(--color-primary);
   }
-  .lm-release {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.625rem;
-    font-size: 0.875rem;
-    color: var(--color-muted);
-    transition: color 0.12s;
-  }
-  .lm-release:hover {
-    color: var(--color-ink);
-  }
-  .lm-release-dot {
-    width: 6px;
-    height: 6px;
-    flex: none;
-    background: var(--color-mc-grass);
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-mc-grass) 30%, transparent);
-  }
-  .lm-release-version {
-    font-family: var(--font-mono);
-    font-weight: 600;
-    color: var(--color-primary-strong);
-  }
-  .dark .lm-release-version {
-    color: var(--color-primary);
-  }
-  .lm-release-skeleton {
-    width: 3.5rem;
-  }
-
   /* "I want to…": players, server owners and developers, all three at once (src/main/components/Roles.tsx).
      Rows under hairlines, one text action each: no filled button, so that no row shouts over the others. The row's
      title is what the eye lands on; the arrow link is the one thing to do next, and the whole row is its target. */
@@ -356,11 +311,6 @@
   .lm-path-more a:hover {
     color: var(--color-ink);
     text-decoration-color: currentColor;
-  }
-  .lm-path-more .lm-release {
-    font-size: inherit;
-    gap: 0.5rem;
-    text-decoration: none;
   }
   @media (prefers-reduced-motion: reduce) {
     .lm-path,
@@ -543,18 +493,6 @@
     font-size: 0.875rem;
     color: var(--color-faint);
   }
-  .lm-project-stars {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    font-variant-numeric: tabular-nums;
-  }
-  .lm-star {
-    width: 13px;
-    height: 13px;
-    color: var(--color-mc-gold);
-    fill: currentColor;
-  }
   /* The name is the card's link; its ::after stretches over the whole card, so anywhere on it opens the project */
   .lm-project {
     position: relative;
@@ -689,17 +627,6 @@
   }
   a:hover > .lm-community-cta svg {
     transform: translateX(3px);
-  }
-  .lm-online {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-  .lm-online-dot {
-    width: 6px;
-    height: 6px;
-    background: var(--color-mc-grass);
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-mc-grass) 30%, transparent);
   }
   .lm-qq-groups {
     display: flex;
@@ -1695,28 +1622,6 @@
       0 var(--px) 0 0 var(--color-ink),
       calc(var(--px) * -1) 0 0 0 var(--color-ink),
       var(--px) 0 0 0 var(--color-ink);
-  }
-}
-
-/* No perpetual animation while the page is idle (kit Design rules): the status dots blink four times when they
-   appear, a placeholder pulses for at most ~10 s (it is replaced as soon as its data arrives); none with reduced motion. */
-@media (prefers-reduced-motion: no-preference) {
-  .lm-skeleton {
-    animation: lm-pulse 1.6s steps(4, end) 6;
-  }
-  .lm-release-dot,
-  .lm-online-dot {
-    animation: lm-blink 2.4s steps(2, end) 4;
-  }
-}
-@keyframes lm-blink {
-  50% {
-    opacity: 0.35;
-  }
-}
-@keyframes lm-pulse {
-  50% {
-    opacity: 0.45;
   }
 }
 

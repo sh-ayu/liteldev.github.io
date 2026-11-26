@@ -7,7 +7,6 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import { lazyRoute } from './lazy-route';
 import { I18nProvider, useI18n, type Locale } from './i18n';
-import { markHydrated } from './hooks/useExternalData';
 import { pageInfo, routeIdOf, routeMeta, type PageInfo, type RouteId } from './routes';
 
 // The home (the landing page) and the 404 are in the entry chunk; every other page is its own chunk.
@@ -92,7 +91,6 @@ function Shell({ page }: { page: PageInfo }) {
 /** `initialLocale`: the language of the prerendered HTML being hydrated (see I18nProvider). */
 export function App({ initialLocale }: { initialLocale?: Locale }) {
   useEffect(() => {
-    markHydrated();
     preloadAllRoutes();
   }, []);
   const { pathname } = useLocation();

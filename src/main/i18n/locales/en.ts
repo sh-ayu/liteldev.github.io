@@ -43,7 +43,6 @@ const en = {
     hostPlatforms: "Windows · Linux · macOS",
     installLip: "Install lip",
     hostTutorial: "Tutorial: your first server",
-    latest: "Latest LeviLamina",
     developDesc: "Native mods in C++ with LeviLamina, or plugins in JavaScript, Lua and Python with LegacyScriptEngine.",
     firstMod: "Create your first mod",
     scripting: "Script plugins",
@@ -141,10 +140,6 @@ const en = {
     description:
       "Connect with developers building the future of Bedrock modding. Get help, share your mods, and contribute to the ecosystem.",
     joinDiscord: "Join Discord",
-    online: "online",
-    discordMembers: "Discord Members",
-    totalStars: "Total Stars",
-    onlineNow: "Online Now",
     coreProjects: "Core Projects",
     // Community page
     pageTitle: "Get Involved",
@@ -154,6 +149,7 @@ const en = {
       "Get real-time help, share your mods, and chat with the core team and community.",
     telegramTitle: "Telegram",
     telegramDesc: "Join our Telegram group for discussions and updates.",
+    discordLabel: "Community Server",
     telegramLabel: "Community Group",
     joinTelegram: "Join Telegram",
     githubTitle: "GitHub",

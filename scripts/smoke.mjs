@@ -59,9 +59,9 @@ const newContext = async ({ locale, width = 1440, height = 900, scheme = 'light'
   if (locale) await ctx.addCookies([{ name: 'levimc_lang', value: LANG[locale] ?? locale, url: base }]);
   return ctx;
 };
-// Third-party hosts whose failures the site tolerates: web fonts, and the live-data endpoints (GitHub /
-// Shields / Discord, which may rate-limit or be blocked; the site falls back silently) and GitHub avatars.
-const TOLERATED = /^https:\/\/(fonts\.googleapis\.com|fonts\.gstatic\.com|api\.github\.com|img\.shields\.io|discord\.com|avatars\.githubusercontent\.com|waline\.levimc\.org|unpkg\.com)\//;
+// Third-party hosts whose failures the site tolerates: web fonts, GitHub avatars and the blog's comments (Waline).
+// The site shows no live data: nothing else is fetched from another host.
+const TOLERATED = /^https:\/\/(fonts\.googleapis\.com|fonts\.gstatic\.com|avatars\.githubusercontent\.com|waline\.levimc\.org|unpkg\.com)\//;
 const watch = (page) => {
   const errs = [];
   page.on('pageerror', (e) => errs.push(`pageerror: ${e.message}`));
@@ -347,6 +347,26 @@ await check('hero roles: the three rows fit a phone (390px), in one column', asy
   return '3 rows, no sideways scroll';
 });
 
+await check('no live data: the home and community pages ask no other host for data', async () => {
+  const ctx = await newContext();
+  const page = await ctx.newPage();
+  /** @type {string[]} */
+  const asked = [];
+  page.on('request', (r) => {
+    const u = new URL(r.url());
+    // the site's own files (absolute https://levimc.org/… URLs of the kit's registry), fonts and avatars are no data
+    if (u.origin !== new URL(base).origin && !/^(levimc\.org|fonts\.googleapis\.com|fonts\.gstatic\.com|avatars\.githubusercontent\.com)$/.test(u.hostname)) asked.push(r.url());
+  });
+  for (const path of ['', 'community/']) {
+    await page.goto(base + path, { waitUntil: 'networkidle' });
+    // what used to start when the main thread was idle
+    await page.waitForTimeout(2500);
+  }
+  await ctx.close();
+  assert(!asked.length, `requests to other hosts: ${asked.join(', ')}`);
+  return 'home, community: none';
+});
+
 await check('hero code tabs (hotbar, developers): click and arrow keys switch the sample', async () => {
   const ctx = await newContext();
   const page = await ctx.newPage();
@@ -362,21 +382,6 @@ await check('hero code tabs (hotbar, developers): click and arrow keys switch th
   assert((await sample.innerText()).includes('player:tell("Welcome!")'), 'Lua sample not shown');
   await ctx.close();
   return 'main.cpp → main.js → main.lua';
-});
-
-await check('live data: release badge (server owners) and project stars fill in after hydration', async () => {
-  const ctx = await newContext();
-  const page = await ctx.newPage();
-  await page.goto(base + '#host', { waitUntil: 'networkidle' });
-  await page.waitForSelector('.lm-release-version', { timeout: 15000 });
-  await page.waitForFunction(() => !document.querySelector('.lm-project-stars .lm-skeleton'), null, { timeout: 15000 });
-  const v = (await page.locator('.lm-release-version').innerText()).trim();
-  const stars = await page.locator('.lm-project-stars').first().innerText();
-  await ctx.close();
-  // shields.io answers 200 with its error text as the value under rate pressure: only a version may show here
-  assert(/^\S*\d+\.\d+\S*$/.test(v), `release badge shows "${v}", not a version`);
-  assert(/^\d+(\.\d+)?k?$/.test(stars.trim()), `star count shows "${stars}"`);
-  return `LeviLamina ${v}, ${stars} stars`;
 });
 
 await check('mobile (390px): the bar folds its entries into its menu; it closes on Escape and after navigating', async () => {
@@ -451,18 +456,6 @@ await check('header fits: inline tabs from 961 px up (en, zh) with room before t
     }
   }
   return `room left: ${seen.join(', ')}`;
-});
-
-await check('Discord unreachable: no invented "online" count', async () => {
-  const ctx = await newContext();
-  await ctx.route(/discord\.com/, (r) => r.abort());
-  const page = await ctx.newPage();
-  await page.goto(base + 'zh-Hans/community/', { waitUntil: 'networkidle' });
-  await page.waitForFunction(() => !document.querySelector('.lm-community-card .lm-skeleton'), null, { timeout: 15000 });
-  const card = (await page.locator('.lm-accent-discord').first().innerText()).replace(/\s+/g, ' ');
-  assert(!/\d+ (在线|online)/.test(card), `Discord card shows "${card}"`);
-  await ctx.close();
-  return 'no presence line';
 });
 
 

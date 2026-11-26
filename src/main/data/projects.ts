@@ -10,7 +10,6 @@ export interface Project {
   tags: string[];
   /** Home page: the LeviMC Mods page of an official mod, else the docs, else the repository. */
   link: string;
-  stars?: number;
 }
 
 /** Card tag of each project (the kit's project registry holds names, links and icons). */
@@ -26,12 +25,6 @@ const TAGS: Record<string, string> = {
   MoreDimensions: 'Library',
   bedboo: 'Bot Library',
 };
-
-// GitHub repositories of the projects: stars, language and description are fetched from the GitHub API
-export const PROJECT_CONFIGS: { id: string; owner: string; repo: string }[] = PROJECTS.map((p) => {
-  const [owner, repo] = new URL(p.repo).pathname.slice(1).split('/') as [string, string];
-  return { id: p.id.toLowerCase(), owner, repo };
-});
 
 /**
  * Every LeviMC project (the kit's registry, in the order of the bar's Projects menu) with this site's

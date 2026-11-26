@@ -5,13 +5,10 @@ import ProjectCard from '../components/ProjectCard';
 import { DiscordCard, GITHUB_URL, QQCard, TelegramCard } from '../components/CommunityCards';
 import { Eyebrow } from '../components/ui';
 import { useProjects } from '../data/projects';
-import { useDiscordInfo, useRepoData } from '../hooks/useExternalData';
 import { isChineseLocale, useI18n } from '../i18n';
 
 export default function Home() {
   const { t, locale } = useI18n();
-  const { repoData, loading } = useRepoData();
-  const discordInfo = useDiscordInfo();
   const projects = useProjects();
 
   return (
@@ -32,17 +29,9 @@ export default function Home() {
         </div>
 
         <div className="lm-grid-4">
-          {projects.map((project) => {
-            const data = repoData?.get(project.id);
-            return (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                stars={data?.stars}
-                loading={loading}
-              />
-            );
-          })}
+          {projects.map((project) => (
+            <ProjectCard key={project.id} project={project} />
+          ))}
         </div>
       </section>
 
@@ -59,7 +48,7 @@ export default function Home() {
           </div>
 
           <div className={isChineseLocale(locale) ? 'lm-join-grid lm-join-grid-3' : 'lm-join-grid'}>
-            <DiscordCard info={discordInfo} />
+            <DiscordCard />
             <TelegramCard />
             {isChineseLocale(locale) && <QQCard />}
           </div>

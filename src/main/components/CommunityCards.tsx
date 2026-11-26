@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { BrandIcon, LINKS, PixelIcon, SOCIAL, type BrandIconName } from '../../kit/components';
-import type { DiscordInfo } from '../services/githubService';
 import { useI18n } from '../i18n';
 
 // Canonical, redirect-free URLs from the kit's cross-site registry.
@@ -82,19 +81,7 @@ function LinkCard({
   );
 }
 
-/** Live Discord presence ("● 1029 online"); a placeholder until the widget data has loaded. */
-function DiscordPresence({ info }: { info?: DiscordInfo }) {
-  const { t } = useI18n();
-  if (!info) return <span className="lm-skeleton lm-skeleton-sm" />;
-  return (
-    <span className="lm-online">
-      <span className="lm-online-dot" aria-hidden="true" />
-      {info.onlineCount} {t.community.online}
-    </span>
-  );
-}
-
-export function DiscordCard({ info, headingLevel = 3 }: { info?: DiscordInfo; headingLevel?: HeadingLevel }) {
+export function DiscordCard({ headingLevel = 3 }: { headingLevel?: HeadingLevel }) {
   const { t } = useI18n();
   return (
     <LinkCard
@@ -103,7 +90,7 @@ export function DiscordCard({ info, headingLevel = 3 }: { info?: DiscordInfo; he
       accent="discord"
       icon="discord"
       title="Discord"
-      sub={info?.isFallback ? undefined : <DiscordPresence info={info} />}
+      sub={t.community.discordLabel}
       desc={t.community.discordDesc}
       cta={t.community.joinDiscord}
     />

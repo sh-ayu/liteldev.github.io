@@ -43,7 +43,6 @@ const zhHant: typeof en = {
     hostPlatforms: "Windows · Linux · macOS",
     installLip: "安裝 lip",
     hostTutorial: "教學：開你的第一個伺服器",
-    latest: "LeviLamina 最新版",
     developDesc: "用 C++ 基於 LeviLamina 寫原生模組，或用 JavaScript、Lua、Python 基於 LegacyScriptEngine 寫外掛。",
     firstMod: "編寫第一個模組",
     scripting: "腳本外掛",
@@ -141,10 +140,6 @@ const zhHant: typeof en = {
     description:
       "與構建基岩版模組未來的開發者們交流。獲取幫助、分享你的模組、為生態做貢獻。",
     joinDiscord: "加入 Discord",
-    online: "線上",
-    discordMembers: "Discord 成員",
-    totalStars: "總星標數",
-    onlineNow: "目前線上",
     coreProjects: "核心專案",
     // Community page
     pageTitle: "參與進來",
@@ -153,6 +148,7 @@ const zhHant: typeof en = {
     discordDesc: "獲取即時幫助，分享你的模組，與核心團隊和社群成員交流。",
     telegramTitle: "Telegram",
     telegramDesc: "加入我們的 Telegram 群組參與討論和獲取更新。",
+    discordLabel: "社群伺服器",
     telegramLabel: "社群群組",
     joinTelegram: "加入 Telegram",
     githubTitle: "GitHub",
