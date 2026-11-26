@@ -154,8 +154,8 @@ ShangguanXi/Advancements-ll-release
 ShangguanXi/FarmersDelight-ll-release
 ShrBox/BackupHelper
 ShrBox/ResourcePackEncryption
-Shulker-Studio/Shop
 Shulker-Studio/InventoryBackup
+Shulker-Studio/Shop
 Shulker-Studio/STweaks
 SkyEye-FAST/offer-flowers-faster-bedrock
 SnakyWarrior/SplitScreenMod
@@ -166,6 +166,7 @@ TelluriumDev/BanExplosion
 theaddonn/Do-A-Barrel-Roll-Bedrock
 Timiya-re/LL3_Mine2
 troveminecraft/ShanHai
+tutinoko2048/anti-bot
 Unknown-Bloom/LOICollectionA
 Unny984/Zoomidy
 VincentZyuApps/levilamina-plugin-mclistener-ws-server
